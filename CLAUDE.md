@@ -13,7 +13,12 @@ npm run verify      # typecheck + boundaries + freeze + tests. Must exit 0.
 npm test            # node --test, zero dependencies
 npm run mutate      # corrupts each knowledge-base row; every mutant must be killed
 npm run worksheet   # regenerates review/worksheet.md for a clinical reviewer
+npm run build       # compiles src/ to dist/ for the browser
+npm run serve       # serves dist/ on :5178 (preview config: .claude/launch.json)
 ```
+
+Three.js is loaded at runtime from a pinned CDN URL through the page's import map; only
+`src/render/` may import it.
 
 Node 24 runs the TypeScript directly. `typescript` and `@types/node` are the only
 dependencies, both dev-only and type-only. Do not add another without asking.
@@ -23,7 +28,9 @@ dependencies, both dev-only and type-only. Do not add another without asking.
 | Path | Is | May import |
 |---|---|---|
 | `src/kb/` | declarative data — no functions, no classes | `src/kb/` only |
-| `src/engine/` | pure functions over the knowledge base | `src/kb/`, `src/engine/` |
+| `src/engine/` | pure functions over the knowledge base; never `kb/render.ts` or `kb/mechanisms.ts` | `src/kb/`, `src/engine/` |
+| `src/geometry/` | pure geometry, testable under Node | `src/kb/`, `src/engine/`, `src/geometry/` |
+| `src/render/` | Three.js scene and panel; decides nothing | anything in `src/`, plus `three` |
 | `spec/expectations/` | frozen expected outputs, written before the engine | `src/kb/vocab.ts` only |
 | `test/`, `scripts/` | anything | anything |
 

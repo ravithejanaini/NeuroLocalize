@@ -14,7 +14,9 @@
     "check:freeze": "node scripts/check-freeze.ts",
     "mutate": "node scripts/mutate.ts",
     "worksheet": "node scripts/worksheet.ts",
-    "verify": "npm run typecheck && npm run check:boundaries && npm run check:freeze && npm test"
+    "verify": "npm run typecheck && npm run check:boundaries && npm run check:freeze && npm test",
+    "build": "node scripts/build.ts",
+    "serve": "node scripts/serve.ts"
   },
   "devDependencies": {
     "@types/node": "24.13.5",

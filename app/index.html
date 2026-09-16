@@ -1,0 +1,267 @@
+<title>NeuroLocalize</title>
+<meta name="description" content="Place a lesion in the spinal cord and watch which signals fail to arrive.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js" } }
+</script>
+<style>
+:root{
+  --ground:#EFF0F3; --surface:#FAFAFC; --sunk:#E6E8ED;
+  --ink:#14181F; --ink2:#4A515E; --ink3:#79818F;
+  --rule:#D3D7DF; --rule2:#AEB4C0;
+  --dc:#2F4A9E; --stt:#A8760F; --cst:#BC3B22; --focus:#2F4A9E;
+  /* The stage is a lightbox: dark in both themes, by design. */
+  --stage:#0E1118; --stage-cord:#C9CFDC; --stage-rule:#5F6878; --stage-grey:#8B94A3;
+  --stage-text:#A4ACBA; --stage-dim:#6F7888;
+  --dc-glow:#7F98EA; --stt-glow:#D6A63E; --cst-glow:#E8674B; --lesion:#E8674B;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Source Serif 4",Georgia,serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#121620; --surface:#171C27; --sunk:#0D111A;
+    --ink:#E9EBEF; --ink2:#A4ACBA; --ink3:#6F7888;
+    --rule:#262D3B; --rule2:#3F4857;
+    --dc:#7F98EA; --stt:#D6A63E; --cst:#E8674B; --focus:#7F98EA;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#121620; --surface:#171C27; --sunk:#0D111A;
+  --ink:#E9EBEF; --ink2:#A4ACBA; --ink3:#6F7888;
+  --rule:#262D3B; --rule2:#3F4857;
+  --dc:#7F98EA; --stt:#D6A63E; --cst:#E8674B; --focus:#7F98EA;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--ground);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+.bar{display:flex;align-items:baseline;gap:18px;padding:10px 18px;border-bottom:1px solid var(--rule);background:var(--surface);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-weight:700;font-size:19px;letter-spacing:-.015em}
+#status{font-family:var(--f-mono);font-size:11.5px;color:var(--ink2);letter-spacing:.02em;margin-right:auto}
+.edu{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+
+.app{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 400px;min-height:0}
+.stage{position:relative;background:var(--stage);min-height:0;overflow:hidden}
+.stage canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+.stage canvas:active{cursor:grabbing}
+#labels{position:absolute;inset:0;pointer-events:none}
+.lbl{position:absolute;left:0;top:0;font-family:var(--f-mono);font-size:10px;line-height:1;margin-top:-.5em;white-space:nowrap}
+.lbl-seg{color:var(--stage-text)}
+.lbl-vert{color:var(--stage-dim);margin-left:-2.4em}
+.lbl-seg.is-hit{color:var(--lesion);font-weight:600}
+
+.hud{position:absolute;display:flex;gap:6px;flex-wrap:wrap;font-family:var(--f-mono);font-size:10.5px;color:var(--stage-text)}
+.stations{top:12px;left:12px}
+.stations button{background:rgba(14,17,24,.7);border:1px solid #2C3342;color:var(--stage-text);padding:5px 10px;cursor:pointer;letter-spacing:.03em}
+.stations button[aria-pressed="true"]{background:var(--stage-cord);color:var(--stage);border-color:var(--stage-cord)}
+.stations button:hover{border-color:var(--stage-text)}
+.legend{top:12px;right:12px;flex-direction:column;gap:4px;margin:0;padding:8px 10px;list-style:none;background:rgba(14,17,24,.7);border:1px solid #2C3342}
+.legend li{display:flex;align-items:center;gap:8px}
+.legend i{width:16px;height:3px;border-radius:2px;display:block}
+.hud-foot{bottom:10px;left:12px;right:12px;flex-direction:column;gap:6px;pointer-events:none}
+.heads{display:flex;justify-content:space-between;text-transform:uppercase;letter-spacing:.12em;font-size:9.5px;color:var(--stage-dim)}
+.caveats{display:flex;flex-wrap:wrap;gap:2px 14px;color:var(--stage-dim);font-size:10px}
+.caveats span+span::before{content:"· ";color:#3A4252}
+.conv{margin:0;padding:0 0 0 16px;display:grid;gap:6px;font-size:12.5px;color:var(--ink2)}
+.hint{top:52px;left:12px;color:var(--stage-dim);font-size:10px}
+
+.panel{background:var(--surface);border-left:1px solid var(--rule);overflow-y:auto;min-height:0}
+.sec{padding:14px 18px 16px;border-bottom:1px solid var(--rule)}
+.sec-t{font-family:var(--f-mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin:0 0 10px;font-weight:500}
+.presets{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.preset{background:var(--surface);border:0;text-align:left;padding:8px 10px;cursor:pointer;display:flex;flex-direction:column;gap:1px}
+.preset:hover{background:var(--sunk)}
+.preset[aria-pressed="true"]{background:var(--ink);color:var(--ground)}
+.preset[aria-pressed="true"] .preset-pattern{color:var(--rule2)}
+.preset-label{font-family:var(--f-display);font-weight:600;font-size:13px;line-height:1.25}
+.preset-pattern{font-family:var(--f-mono);font-size:10px;color:var(--ink3)}
+.divider{grid-column:1/-1;background:var(--sunk);font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);padding:4px 10px}
+
+.row{display:flex;align-items:center;gap:10px;margin-top:8px}
+input[type=range]{flex:1;accent-color:var(--ink)}
+#level-readout{font-family:var(--f-mono);font-size:12px;color:var(--ink);margin:6px 0 0}
+.out{font-family:var(--f-mono);font-size:11px;color:var(--ink2);min-width:6.5em;text-align:right}
+.check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);margin-top:8px;cursor:pointer}
+.check input{accent-color:var(--ink)}
+
+.slice{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center}
+.slice svg{width:120px;height:120px;display:block}
+.slice .cord{fill:var(--sunk);stroke:var(--rule2);stroke-width:.02}
+.slice .cmp{fill:var(--rule2);opacity:.75}
+.slice .cmp-dorsal_column{fill:var(--dc);opacity:.9}
+.slice .cmp-anterolateral{fill:var(--stt);opacity:.9}
+.slice .cmp-lateral_cst{fill:var(--cst);opacity:.9}
+.slice .lesion{fill:url(#hatch);stroke:var(--cst);stroke-width:.03}
+.slice .hatch{stroke:var(--cst);stroke-width:.018}
+.slice .ori{font-family:var(--f-mono);font-size:.13px;fill:var(--ink3)}
+#slice-cap{font-family:var(--f-mono);font-size:11px;color:var(--ink2);margin:0 0 6px}
+.slice-note{font-size:12.5px;color:var(--ink2);margin:0}
+
+.ticks{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--rule)}
+.tick{display:flex;flex-direction:column;padding:6px 8px;cursor:pointer;border-right:1px solid var(--rule)}
+.tick:last-child{border-right:0}
+.tick input{position:absolute;opacity:0;pointer-events:none}
+.tick-name{font-family:var(--f-display);font-weight:600;font-size:12px}
+.tick-when{font-family:var(--f-mono);font-size:9.5px;color:var(--ink3)}
+.tick:has(input:checked){background:var(--ink);color:var(--ground)}
+.tick:has(input:checked) .tick-when{color:var(--rule2)}
+.tick:has(input:focus-visible){outline:2px solid var(--focus);outline-offset:-2px}
+
+.grp{padding:10px 0 12px;border-top:1px solid var(--rule)}
+.grp:first-child{border-top:0;padding-top:0}
+.grp-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.grp-h h3{font-family:var(--f-display);font-weight:600;font-size:13.5px;margin:0;margin-right:auto}
+.cites{display:flex;gap:3px;flex-wrap:wrap;align-items:center}
+.chip{font-family:var(--f-mono);font-size:9.5px;color:var(--ink2);text-decoration:none;border:1px solid var(--rule2);padding:0 4px;line-height:1.6}
+.chip:hover{color:var(--ink);border-color:var(--ink3)}
+.flag{font-family:var(--f-mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:0 4px;line-height:1.7;border:1px dashed var(--ink3);color:var(--ink3)}
+.kv{display:grid;grid-template-columns:78px 1fr;gap:8px;font-size:13px;line-height:1.45;padding:2px 0}
+.k{font-family:var(--f-mono);font-size:10.5px;color:var(--ink3);padding-top:2px}
+.v{font-family:var(--f-mono);font-size:11.5px;color:var(--ink2)}
+.st-lost,.st-absent,.st-umn,.st-lmn,.st-umn_lmn,.st-brisk,.st-sign-present{color:var(--ink);font-weight:600}
+.st-lost::before,.st-absent::before{content:"■ ";font-size:.8em}
+.st-impaired,.st-reduced{color:var(--ink)}
+.st-impaired::before,.st-reduced::before{content:"◧ ";font-size:.8em}
+.st-indeterminate,.st-sign-indeterminate{text-decoration:underline dotted;text-underline-offset:3px}
+.quiet,.st-normal,.st-sign-absent{color:var(--ink3);font-weight:400}
+.reflexes{border-collapse:collapse;width:100%;font-family:var(--f-mono);font-size:11px}
+.reflexes th{text-align:left;font-weight:400;color:var(--ink3);padding:2px 8px 2px 0;font-size:10.5px}
+.reflexes td{padding:2px 8px 2px 0}
+.pattern{font-size:13.5px;margin:2px 0;color:var(--ink)}
+.grp-note{font-size:12px;color:var(--ink3);margin:6px 0 0}
+
+.seg{display:inline-flex;border:1px solid var(--rule2)}
+.seg label{padding:4px 10px;cursor:pointer;font-family:var(--f-mono);font-size:11px;color:var(--ink2)}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){background:var(--ink);color:var(--ground)}
+.seg label:has(input:focus-visible){outline:2px solid var(--focus);outline-offset:-2px}
+.opt{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:var(--ink2)}
+.foot{padding:14px 18px 22px;font-size:12px;color:var(--ink3)}
+.foot a{color:var(--ink2)}
+
+@media (max-width:860px){
+  .app{grid-template-columns:1fr;grid-template-rows:58vh auto}
+  .panel{border-left:0;border-top:1px solid var(--rule);overflow:visible}
+  body{display:block}
+  .app{display:grid}
+  .legend,.hint,.caveats{display:none}
+  .bar{gap:4px 14px;padding:8px 14px}
+  .edu{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="bar">
+  <span class="brand">NeuroLocalize</span>
+  <span id="status" aria-live="polite">Loading…</span>
+  <span class="edu">Teaching tool · not for patient care</span>
+</header>
+
+<main class="app">
+  <div class="stage" id="viewport">
+    <div id="labels" aria-hidden="true"></div>
+    <div class="hud stations" role="group" aria-label="Camera">
+      <button type="button" data-station="whole" aria-pressed="false">Whole cord</button>
+      <button type="button" data-station="lesion" aria-pressed="true">Lesion</button>
+      <button type="button" data-station="axial" aria-pressed="false">Axial</button>
+      <button type="button" data-station="side" aria-pressed="false">Side</button>
+    </div>
+    <p class="hud hint">Drag to turn · scroll to zoom · shift-drag to move along the cord</p>
+    <ul class="hud legend">
+      <li><i style="background:var(--dc-glow)"></i>Posterior columns</li>
+      <li><i style="background:var(--stt-glow)"></i>Spinothalamic</li>
+      <li><i style="background:var(--cst-glow)"></i>Corticospinal</li>
+      <li><i style="background:var(--lesion);height:8px;opacity:.5"></i>Lesion</li>
+    </ul>
+    <div class="hud hud-foot">
+      <div class="heads"><span>← Vertebrae</span><span>Cord segments →</span></div>
+      <div class="caveats" aria-hidden="true">
+        <span>Cross-section 3× wider</span>
+        <span>Time slowed <b class="dilation">333×</b></span>
+        <span>Speeds inside the cord illustrative</span>
+        <span>Ruler interpolated</span>
+      </div>
+    </div>
+  </div>
+
+  <aside class="panel" aria-label="Instrument">
+    <section class="sec">
+      <h2 class="sec-t">Lesion</h2>
+      <div class="presets" id="presets"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-t">Level</h2>
+      <div class="row">
+        <input type="range" id="level" min="0" max="30" step="1" aria-label="Lesion level">
+      </div>
+      <p id="level-readout"></p>
+      <div class="row">
+        <input type="range" id="extent" min="1" max="6" step="1" aria-label="Lesion extent">
+        <span class="out" id="extent-out"></span>
+      </div>
+      <label class="check"><input type="checkbox" id="by-vertebra"> Place by vertebra, and see which segments it reaches</label>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-t">Slice</h2>
+      <div class="slice">
+        <div id="slice"></div>
+        <div>
+          <p id="slice-cap"></p>
+          <p class="slice-note">Coloured regions are the three long tracts. The hatched outline is what the lesion covers; coverage is measured, never assumed.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-t">Time since injury</h2>
+      <div class="ticks" id="time" role="radiogroup" aria-label="Time since injury"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-t">Findings</h2>
+      <div id="findings" aria-live="polite"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-t">Model</h2>
+      <div class="opt">
+        <span>Tract lamination <span class="quiet">(disputed — findings never change)</span></span>
+        <span class="seg" role="radiogroup" aria-label="Lamination">
+          <label><input type="radio" name="model" value="classical" checked>Classical</label>
+          <label><input type="radio" name="model" value="revised">Revised</label>
+        </span>
+      </div>
+      <div class="opt">
+        <span>Pain fibre shown</span>
+        <span class="seg" role="radiogroup" aria-label="Pain fibre">
+          <label><input type="radio" name="fibre" value="adelta" checked>Aδ · fast</label>
+          <label><input type="radio" name="fibre" value="c">C · slow</label>
+        </span>
+      </div>
+      <label class="check"><input type="checkbox" id="still"> Hold the signals still</label>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-t">Drawing conventions</h2>
+      <ul class="conv">
+        <li>The cross-section is drawn three times wider than true, so tracts can be told apart.</li>
+        <li>Time is slowed <b class="dilation">333×</b>. Speed ratios between fibres are kept exactly: a C-fibre pulse really is fifteen times slower than an Aδ pulse.</li>
+        <li>Peripheral and corticospinal speeds are sourced. Speeds of the posterior-column and spinothalamic axons inside the cord are not, and are drawn at one illustrative rate.</li>
+        <li>The segment-to-vertebra ruler is interpolated between sourced anchors, with every vertebra drawn the same height.</li>
+      </ul>
+    </section>
+
+    <footer class="foot">
+      Every finding is computed from a sourced knowledge base and checked against expectations written before the engine existed. Chips link to the source behind each group; “contested” and “convention” mark what is not settled.
+      Source and tests: <a href="https://github.com/ravithejanaini/NeuroLocalize" target="_blank" rel="noopener">github.com/ravithejanaini/NeuroLocalize</a>.
+    </footer>
+  </aside>
+</main>
+
+<script type="module" src="app/render/main.js"></script>

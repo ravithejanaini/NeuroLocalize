@@ -6,7 +6,7 @@ import { ALL_CASES as CASES } from '../spec/expectations/index.ts';
 import { KB } from '../src/kb/kb.ts';
 import { MECHANISMS } from '../src/kb/mechanisms.ts';
 import { RENDER } from '../src/kb/render.ts';
-import { SOURCE_IDS } from '../src/kb/sources.ts';
+import { SOURCE_IDS, SOURCES } from '../src/kb/sources.ts';
 import type { Meta } from '../src/kb/types.ts';
 import { metaRows } from './rows.ts';
 
@@ -41,6 +41,8 @@ describe('knowledge-base integrity', () => {
     const table = readFileSync(resolve(DOCS, 'SOURCES.md'), 'utf8');
     const documented = [...table.matchAll(/^\| (S\d\d) \|/gm)].map((m) => m[1]);
     assert.deepEqual(documented, [...SOURCE_IDS]);
+    const linked = [...table.matchAll(/^\| (S\d\d) \| \[([^\]]+)\]\(([^)]+)\)/gm)].map((m) => ({ id: m[1], title: m[2], url: m[3] }));
+    assert.deepEqual(SOURCES.map((s) => ({ id: s.id, title: s.title, url: s.url })), linked);
 
     const cited = new Set([
       ...rows.flatMap((m) => m.sources),

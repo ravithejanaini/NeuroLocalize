@@ -1,0 +1,241 @@
+// The instrument panel: findings written for a clinician, each group carrying the
+// knowledge-base rows that produced it and the sources behind those rows.
+import type { Findings } from '../engine/forward.ts';
+import type { Shape } from '../geometry/lesion3d.ts';
+import { CORD_COMPARTMENTS, discAt } from '../geometry/section.ts';
+import { SOURCES } from '../kb/sources.ts';
+import type { Kb, Meta, RenderKb } from '../kb/types.ts';
+import { REFLEXES, SEGMENTS, SIDES, type Segment, type SensoryState, type Side } from '../kb/vocab.ts';
+import { outline } from './scene.ts';
+
+const SIDE_NAME: Record<Side, string> = { L: 'Left', R: 'Right' };
+
+function escape(s: string): string {
+  return s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] ?? c);
+}
+
+function rowsById(kb: Kb): Map<string, Meta> {
+  const out = new Map<string, Meta>();
+  const visit = (node: unknown): void => {
+    if (Array.isArray(node)) {
+      for (const child of node) visit(child);
+      return;
+    }
+    if (node === null || typeof node !== 'object') return;
+    const rec = node as Record<string, unknown>;
+    const meta = rec.meta as Meta | undefined;
+    if (meta && typeof meta.id === 'string') out.set(meta.id, meta);
+    for (const [k, v] of Object.entries(rec)) if (k !== 'meta') visit(v);
+  };
+  visit(kb);
+  return out;
+}
+
+/** Runs of consecutive segments sharing a state, skipping the quiet ones. */
+export function runs<S extends string>(column: Readonly<Record<Segment, S>>, quiet: readonly S[]): { state: S; from: Segment; to: Segment }[] {
+  const out: { state: S; from: Segment; to: Segment }[] = [];
+  for (const seg of SEGMENTS) {
+    const state = column[seg];
+    if (quiet.includes(state)) continue;
+    const prev = out[out.length - 1];
+    const prevIdx = prev ? SEGMENTS.indexOf(prev.to) : -2;
+    if (prev && prev.state === state && prevIdx === SEGMENTS.indexOf(seg) - 1) prev.to = seg;
+    else out.push({ state, from: seg, to: seg });
+  }
+  return out;
+}
+
+const span = (r: { from: Segment; to: Segment }): string => (r.from === r.to ? r.from : `${r.from}–${r.to}`);
+
+const SENSORY_WORD: Record<SensoryState, string> = {
+  intact: 'intact',
+  impaired: 'reduced',
+  lost: 'lost',
+  indeterminate: 'uncertain',
+};
+
+type Group = { title: string; drivers: readonly string[]; body: string; note?: string };
+
+export class Panel {
+  private readonly meta: Map<string, Meta>;
+  private readonly findingsEl: HTMLElement;
+
+  constructor(kb: Kb, findingsEl: HTMLElement) {
+    this.meta = rowsById(kb);
+    this.findingsEl = findingsEl;
+  }
+
+  private cite(drivers: readonly string[]): string {
+    const rows = drivers.map((d) => this.meta.get(d)).filter((m): m is Meta => m !== undefined);
+    const ids = [...new Set(rows.flatMap((m) => m.sources))];
+    const chips = ids
+      .map((id) => {
+        const s = SOURCES.find((x) => x.id === id);
+        return s
+          ? `<a class="chip" href="${escape(s.url)}" target="_blank" rel="noopener" title="${escape(s.title)}">${id}</a>`
+          : '';
+      })
+      .join('');
+    const flags: string[] = [];
+    if (rows.some((m) => m.tier === 'T3')) flags.push('<span class="flag flag-t3" title="Sources disagree on part of this">contested</span>');
+    if (rows.some((m) => m.pendingSource)) flags.push('<span class="flag flag-pending" title="Part of this rests on a modelling convention">convention</span>');
+    return `<span class="cites">${chips}${flags.join('')}</span>`;
+  }
+
+  private sensoryLine(f: Findings, x: Side, m: 'pain_temperature' | 'posterior_column'): string {
+    const rs = runs(f.sensory[x][m], ['intact']);
+    if (rs.length === 0) return '<span class="quiet">intact</span>';
+    return rs.map((r) => `<span class="st st-${r.state}">${SENSORY_WORD[r.state]}</span> ${span(r)}`).join(' · ');
+  }
+
+  private motorLine(f: Findings, x: Side): string {
+    const column = Object.fromEntries(
+      SEGMENTS.map((seg) => [seg, `${f.motor[x][seg].lesion}|${f.motor[x][seg].tone}`]),
+    ) as Record<Segment, string>;
+    const rs = runs(column, ['none|normal']);
+    if (rs.length === 0) return '<span class="quiet">no weakness</span>';
+    const word: Record<string, string> = {
+      umn: 'upper-motor-neuron weakness',
+      lmn: 'lower-motor-neuron weakness',
+      umn_lmn: 'mixed upper and lower',
+    };
+    const tone: Record<string, string> = {
+      increased: 'spastic',
+      reduced: 'tone reduced',
+      indeterminate: 'tone not yet settled',
+      normal: '',
+    };
+    return rs
+      .map((r) => {
+        const [lesion = '', t = ''] = r.state.split('|');
+        const extra = tone[t] ? ` <span class="quiet">${tone[t]}</span>` : '';
+        return `<span class="st st-${lesion}">${word[lesion] ?? lesion}</span> ${span(r)}${extra}`;
+      })
+      .join('<br>');
+  }
+
+  update(f: Findings): void {
+    const reflexWord: Record<string, string> = {
+      normal: 'normal',
+      reduced: 'reduced',
+      absent: 'absent',
+      brisk: 'brisk',
+      indeterminate: 'unsettled',
+    };
+    const sided = (fn: (x: Side) => string): string =>
+      SIDES.map((x) => `<div class="kv"><span class="k">${SIDE_NAME[x]}</span><span class="v">${fn(x)}</span></div>`).join('');
+
+    const reflexRows = REFLEXES.map((r) => {
+      const cells = SIDES.map((x) => {
+        const s = f.reflexes[x][r];
+        return `<td class="st st-${s}">${reflexWord[s] ?? s}</td>`;
+      }).join('');
+      return `<tr><th>${r}</th>${cells}</tr>`;
+    }).join('');
+
+    const sign = (s: string): string => `<span class="st st-sign-${s}">${s === 'indeterminate' ? 'unsettled' : s}</span>`;
+    const bladder: Record<string, string> = {
+      normal: 'normal',
+      suprasacral: 'overactive — lesion above the sacral centre',
+      sacral: 'underactive, with retention',
+      impaired_in_spinal_shock: 'impaired during spinal shock',
+    };
+    const shock: Record<string, string> = {
+      expected: 'expected',
+      not_expected: 'not expected',
+      not_applicable: 'an acute-phase finding only',
+    };
+    const dys: Record<string, string> = {
+      susceptible: 'at risk',
+      possible: 'possible',
+      rare: 'rare at this level',
+      not_yet: 'not in the first month',
+      none: 'not at risk',
+    };
+
+    const patterns: string[] = [];
+    if (f.qualifiers.upper_limb_predominant_weakness) patterns.push('Arms weaker than legs, most of all the hands.');
+    if (f.qualifiers.sacral_sparing) patterns.push('Sacral sensation spared — the mark of a lesion inside the cord.');
+
+    const groups: Group[] = [
+      {
+        title: 'Pain and temperature',
+        drivers: ['pathway.spinothalamic', 'compartment.dorsal-root', 'observation.sacral-sparing'],
+        body: sided((x) => this.sensoryLine(f, x, 'pain_temperature')),
+        note: '“Uncertain” marks the one-to-three-segment band where the crossing point decides.',
+      },
+      {
+        title: 'Vibration, position, fine touch',
+        drivers: ['pathway.posterior-column', 'compartment.dorsal-root'],
+        body: sided((x) => this.sensoryLine(f, x, 'posterior_column')),
+      },
+      {
+        title: 'Motor',
+        drivers: ['pathway.corticospinal', 'compartment.lower-motor-neuron', 'observation.chronic-umn', 'observation.lmn'],
+        body: sided((x) => this.motorLine(f, x)),
+      },
+      {
+        title: 'Reflexes',
+        drivers: ['compartment.reflex-arc', 'observation.spinal-shock', 'observation.chronic-umn', ...REFLEXES.map((r) => `reflex.${r}`)],
+        body: `<table class="reflexes"><thead><tr><th></th><th>Left</th><th>Right</th></tr></thead><tbody>${reflexRows}</tbody></table>`,
+      },
+      {
+        title: 'Signs',
+        drivers: ['observation.babinski-level', 'autonomic.ciliospinal', 'observation.romberg'],
+        body:
+          `<div class="kv"><span class="k">Babinski</span><span class="v">${sign(f.babinski.L)} left · ${sign(f.babinski.R)} right</span></div>` +
+          `<div class="kv"><span class="k">Horner</span><span class="v">${sign(f.horner.L)} left · ${sign(f.horner.R)} right</span></div>` +
+          `<div class="kv"><span class="k">Romberg</span><span class="v">${sign(f.romberg)}</span></div>`,
+      },
+      {
+        title: 'Autonomic',
+        drivers: ['autonomic.micturition-centre', 'autonomic.bladder-control', 'observation.bladder', 'observation.neurogenic-shock', 'observation.dysreflexia'],
+        body:
+          `<div class="kv"><span class="k">Bladder</span><span class="v">${bladder[f.bladder] ?? f.bladder}</span></div>` +
+          `<div class="kv"><span class="k">Neurogenic shock</span><span class="v">${shock[f.neurogenicShock] ?? f.neurogenicShock}</span></div>` +
+          `<div class="kv"><span class="k">Dysreflexia</span><span class="v">${dys[f.dysreflexia] ?? f.dysreflexia}</span></div>`,
+      },
+    ];
+    if (patterns.length > 0) {
+      groups.unshift({
+        title: 'Pattern',
+        drivers: ['observation.arm-predominance', 'observation.sacral-sparing'],
+        body: patterns.map((p) => `<p class="pattern">${p}</p>`).join(''),
+      });
+    }
+
+    this.findingsEl.innerHTML = groups
+      .map(
+        (g) => `<section class="grp">
+          <header class="grp-h"><h3>${g.title}</h3>${this.cite(g.drivers)}</header>
+          ${g.body}
+          ${g.note ? `<p class="grp-note">${g.note}</p>` : ''}
+        </section>`,
+      )
+      .join('');
+  }
+}
+
+/** A flat cross-section diagram of the lesion at one segment, dorsal side up. */
+export function sliceSvg(render: RenderKb, shape: Shape | null, k: number): string {
+  const discs = SIDES.flatMap((side) =>
+    CORD_COMPARTMENTS.map((c) => {
+      const d = discAt(render, c, side, k);
+      return d ? `<circle class="cmp cmp-${c}" cx="${d.x.toFixed(3)}" cy="${(-d.z).toFixed(3)}" r="${d.r.toFixed(3)}"/>` : '';
+    }),
+  ).join('');
+  const lesion = shape
+    ? `<polygon class="lesion" points="${outline(shape)
+        .map((p) => `${p.x.toFixed(3)},${(-p.z).toFixed(3)}`)
+        .join(' ')}"/>`
+    : '';
+  return `<svg viewBox="-1.3 -1.3 2.6 2.6" role="img" aria-label="Cross-section at ${SEGMENTS[k] ?? ''}">
+    <defs><pattern id="hatch" width="0.06" height="0.06" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="0.06" class="hatch"/></pattern></defs>
+    <circle class="cord" cx="0" cy="0" r="1"/>
+    ${discs}
+    ${lesion}
+    <text class="ori" x="-1.22" y="0.05">L</text><text class="ori" x="1.1" y="0.05">R</text>
+    <text class="ori" x="-0.2" y="-1.12">dorsal</text>
+  </svg>`;
+}

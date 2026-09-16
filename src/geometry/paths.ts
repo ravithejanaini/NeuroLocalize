@@ -27,12 +27,16 @@ const PERIPHERY = 2.4;
 const MEDULLA = 0.8;
 const BRAIN = 1.6;
 
-const cmPerUnit = (render: RenderKb): number =>
+export const cmPerUnit = (render: RenderKb): number =>
   (render.cord.lengthCm[0] + render.cord.lengthCm[1]) / 2 / render.ruler.cordEndsAtVertebra;
 
+/** Drawn cord radius at segment k, in scene units (vertebral units). */
+export const radiusAt = (render: RenderKb, k: number): number =>
+  (widthCm(render, k) / 2 / cmPerUnit(render)) * EXAGGERATION;
+
 /** Scene coordinates: y up (rostral), x toward the patient's right, z dorsal. */
-function place(render: RenderKb, k: number, p: { x: number; z: number }): Vec3 {
-  const radius = (widthCm(render, k) / 2 / cmPerUnit(render)) * EXAGGERATION;
+export function place(render: RenderKb, k: number, p: { x: number; z: number }): Vec3 {
+  const radius = radiusAt(render, k);
   return { x: p.x * radius, y: -segmentMid(render, k), z: p.z * radius };
 }
 
