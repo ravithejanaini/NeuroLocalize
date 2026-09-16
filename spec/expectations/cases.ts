@@ -39,6 +39,35 @@ export const CASES: readonly Case[] = [
           'sensation at the lesion level itself',
         ],
       },
+      // A2: Ditunno phases 2 and 3 (S02), added after mutation testing.
+      {
+        timepoint: 'acute',
+        assertions: [
+          { kind: 'reflex', side: 'both', reflex: 'patellar', oneOf: ['absent'], cite: ['S02'], basis: 'stated',
+            note: 'phase 2: deep tendon reflexes remain absent' },
+          { kind: 'reflex', side: 'both', reflex: 'achilles', oneOf: ['absent'], cite: ['S02'], basis: 'stated' },
+          { kind: 'babinski', side: 'both', oneOf: ['absent'], cite: ['S02'], basis: 'composed' },
+          { kind: 'bladder', oneOf: ['impaired_in_spinal_shock'], cite: ['S02'], basis: 'stated' },
+          { kind: 'dysreflexia', oneOf: ['not_yet'], cite: ['S04'], basis: 'stated' },
+          { kind: 'neurogenicShock', oneOf: ['expected'], cite: ['S03'], basis: 'stated' },
+        ],
+        unasserted: ['muscle tone'],
+      },
+      {
+        timepoint: 'subacute',
+        assertions: [
+          { kind: 'reflex', side: 'both', reflex: 'patellar', oneOf: ['indeterminate', 'normal', 'brisk'], cite: ['S02'], basis: 'stated',
+            note: 'phase 3: reflexes usually return — so not absent' },
+          { kind: 'reflex', side: 'both', reflex: 'achilles', oneOf: ['indeterminate', 'normal', 'brisk'], cite: ['S02'], basis: 'stated' },
+          { kind: 'babinski', side: 'both', oneOf: ['indeterminate', 'present'], cite: ['S02'], basis: 'stated',
+            note: 'phase 3: the Babinski sign may appear' },
+          { kind: 'bladder', oneOf: ['impaired_in_spinal_shock'], cite: ['S02', 'S20'], basis: 'composed',
+            note: 'S20 defers bladder assessment until spinal shock has passed' },
+          { kind: 'dysreflexia', oneOf: ['not_yet'], cite: ['S04'], basis: 'stated',
+            note: 'uncommon in the first month' },
+        ],
+        unasserted: ['neurogenic shock: no source read gives its time window (R9)'],
+      },
       {
         timepoint: 'chronic',
         assertions: [
@@ -78,6 +107,30 @@ export const CASES: readonly Case[] = [
           { kind: 'bladder', oneOf: ['impaired_in_spinal_shock'], cite: ['S02'], basis: 'stated' },
         ],
         unasserted: ['muscle tone during spinal shock'],
+      },
+      // A2: Ditunno phases 2 and 3 (S02), added after mutation testing.
+      {
+        timepoint: 'acute',
+        assertions: [
+          { kind: 'reflex', side: 'both', reflex: 'patellar', oneOf: ['absent'], cite: ['S02'], basis: 'stated' },
+          { kind: 'reflex', side: 'both', reflex: 'achilles', oneOf: ['absent'], cite: ['S02'], basis: 'stated' },
+          { kind: 'babinski', side: 'both', oneOf: ['absent'], cite: ['S02'], basis: 'composed' },
+          { kind: 'bladder', oneOf: ['impaired_in_spinal_shock'], cite: ['S02'], basis: 'stated' },
+          { kind: 'dysreflexia', oneOf: ['not_yet'], cite: ['S04'], basis: 'stated' },
+          { kind: 'neurogenicShock', oneOf: ['not_expected'], cite: ['S03', 'S07'], basis: 'composed' },
+        ],
+        unasserted: ['muscle tone'],
+      },
+      {
+        timepoint: 'subacute',
+        assertions: [
+          { kind: 'reflex', side: 'both', reflex: 'patellar', oneOf: ['indeterminate', 'normal', 'brisk'], cite: ['S02'], basis: 'stated' },
+          { kind: 'reflex', side: 'both', reflex: 'achilles', oneOf: ['indeterminate', 'normal', 'brisk'], cite: ['S02'], basis: 'stated' },
+          { kind: 'babinski', side: 'both', oneOf: ['indeterminate', 'present'], cite: ['S02'], basis: 'stated' },
+          { kind: 'bladder', oneOf: ['impaired_in_spinal_shock'], cite: ['S02', 'S20'], basis: 'composed' },
+          { kind: 'dysreflexia', oneOf: ['not_yet'], cite: ['S04'], basis: 'stated' },
+        ],
+        unasserted: ['neurogenic shock: no source read gives its time window (R9)'],
       },
       {
         timepoint: 'chronic',

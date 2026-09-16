@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { CASES } from '../spec/expectations/cases.ts';
+import { ALL_CASES as CASES } from '../spec/expectations/index.ts';
 import { forward } from '../src/engine/forward.ts';
 import { check } from './harness.ts';
 

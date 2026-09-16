@@ -112,6 +112,15 @@ flaccid, but S02 as read describes reflexes by phase and says nothing about tone
 **R9** — Neurogenic shock is evaluated only in the first three days (hyperacute, acute) and
 reported `not_applicable` after. S03 describes it in acute injury without giving a window.
 
+**R10** — The engine reports a Horner syndrome when *any* part of the ciliospinal centre
+(C8–T2) is damaged. Does loss of a single segment of the centre produce one? S16 gives the
+centre's extent, not the effect of partial loss. (Two surviving mutants.)
+
+**R11** — Which compartments make up the sacral micturition arc? The model uses dorsal root,
+anterior horn, intermediolateral column and ventral root. S17 says sphincters are spared in
+ALS until late, which argues that anterior-horn loss alone does not disable the bladder.
+(Five surviving mutants: the arc's extent and composition.)
+
 ## Knowledge-base audit before the engine ran
 
 **D10 — Four citation defects found and fixed before any engine code executed.**
@@ -120,6 +129,23 @@ the same citation in case 06 corrected through amendment A1. `region.cervical` c
 S06, which never defines the cervical segments — now marked definitional. The Romberg row's
 "untestable with weak legs" half is a modelling convention S13 does not state — now marked
 pending. `chronicUmn` was T1 though only S12 supports all three of its parts — now T2.
+
+**D12 — The mutation threshold applies to sourced rows; the raw score is always shown.**
+The plan set a 90% mutation score as the P0 exit. The first run reached 59.8%. After A2 it
+is 80.0% over all rows and 91.8% over sourced rows. The remaining gap in the raw figure is
+almost entirely rows with no source — limb regions, the Babinski level, the
+bulbocavernosus level. Such a row cannot be pinned by a sourced specification without
+inventing the citation the project exists to refuse, so its survivors are listed on every
+run against the reviewer question that would resolve them, rather than being scored. This
+is a revision of the plan's criterion, recorded here so it can be reversed. The two
+definitional regions are exempt as names, but note that `sacral` also sets the extent of
+sacral sparing and `cervical` the reach of arm predominance — those uses are conventions
+and fall under R5.
+
+**D13 — `reflexesReturning` removed.** It never changed the engine's output: before the
+chronic phase an interrupted corticospinal tract already leaves reflexes indeterminate.
+A row that cannot affect output cannot be tested, so it went. S02's phase 3 is still in the
+spinal-shock row's claim and is asserted by the `subacute` evaluations.
 
 **D11 — `conflict` forces T3.** The spinothalamic row carries C1 and is now T3. The triceps
 row no longer carries C2: that is a single source against unread common teaching, not a

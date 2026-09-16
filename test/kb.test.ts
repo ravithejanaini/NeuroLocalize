@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
-import { CASES } from '../spec/expectations/cases.ts';
+import { ALL_CASES as CASES } from '../spec/expectations/index.ts';
 import { KB } from '../src/kb/kb.ts';
 import { MECHANISMS } from '../src/kb/mechanisms.ts';
 import { SOURCE_IDS } from '../src/kb/sources.ts';

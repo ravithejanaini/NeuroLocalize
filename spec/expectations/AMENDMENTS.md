@@ -30,3 +30,23 @@ situation the freeze exists to catch.
   directly.
 - **Why the knowledge base could not be corrected instead:** the error was in the
   expectation's citation, not in any fact the engine uses.
+
+## A2 — 2026-09-16 — boundary cases and missing phases, from mutation testing
+
+- **Changed:** additions only; no existing assertion was altered.
+  - `complete-T4` and `complete-T12` gain `acute` and `subacute` evaluations (S02 phases 2
+    and 3; S04's first-month window; S03 for neurogenic shock at the acute phase).
+  - `boundaries.ts` adds eighteen cases, each placed at a level a source states: autonomic
+    thresholds at T5, T6, T7, T10 and T11 (S03, S04); single-root lesions at C4, C7, T1,
+    L1, L4, L5 and S2, and a ventral-root lesion at S1 (S12, S19); a root lesion below the
+    micturition centre (S20); a spinothalamic-only central lesion (S06); and the
+    intermediolateral column inside, just above and just below the ciliospinal centre (S16).
+- **Why:** the first mutation run scored 59.8%. Among the survivors, 33 were boundaries or
+  phases that a source states exactly and no case probed — a weak specification, not a
+  missing fact.
+- **How circularity was avoided:** each lesion sits where the *source* puts a boundary,
+  and each expected value was written from that source before these cases were run. The
+  engine was not consulted for any value. Where a source is too soft to decide a boundary
+  segment (neurogenic shock at T6; C8 or L2 alone), the case says so in `unasserted`
+  instead of guessing.
+- **Result:** all 51 evaluations passed on first run; sourced-row mutation score 91.8%.

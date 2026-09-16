@@ -138,14 +138,11 @@ function reflexFor(map: LesionMap, kb: Kb, t: Timepoint, x: Side, reflex: Reflex
   const [from, to] = kb.reflexes[reflex].span;
   const segs = range(idx(from), idx(to));
   const arc = segs.map((k) => worst(kb.compartments.reflexArc.via.map((c) => map.damage(c, x, k))));
-  const shock = kb.observations.spinalShock;
-
   if (arc.every((d) => d === 2)) return 'absent';
-  if (shockAbove(map, idx(from))) {
-    if (shock.reflexesAbsent.includes(t)) return 'absent';
-    if (shock.reflexesReturning.includes(t)) return 'indeterminate';
-  }
+  if (shockAbove(map, idx(from)) && kb.observations.spinalShock.reflexesAbsent.includes(t)) return 'absent';
   const arcHurt = arc.some((d) => d > 0);
+  // Before the chronic phase an interrupted corticospinal tract leaves the reflex
+  // unsettled — including Ditunno phase 3, when reflexes are returning (S02).
   if (corticospinalAbove(map, kb, x, idx(from)) > 0) {
     if (t !== 'chronic' || arcHurt) return 'indeterminate';
     return kb.observations.chronicUmn.reflex;

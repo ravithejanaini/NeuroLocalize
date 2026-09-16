@@ -70,7 +70,6 @@ export type Kb = {
   readonly observations: {
     readonly spinalShock: Row<{
       readonly reflexesAbsent: readonly Timepoint[];
-      readonly reflexesReturning: readonly Timepoint[];
       readonly babinskiAbsent: readonly Timepoint[];
       readonly bladderImpaired: readonly Timepoint[];
     }>;

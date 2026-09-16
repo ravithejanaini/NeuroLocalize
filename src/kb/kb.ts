@@ -200,7 +200,6 @@ export const KB: Kb = {
         bookRef: 'pending',
       },
       reflexesAbsent: ['hyperacute', 'acute'],
-      reflexesReturning: ['subacute'],
       babinskiAbsent: ['hyperacute', 'acute'],
       bladderImpaired: ['hyperacute', 'acute', 'subacute'],
     },
