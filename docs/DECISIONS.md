@@ -105,3 +105,22 @@ sufficient. No source read gives the plantar reflex's segments.
 **R7** — Descending bladder and sympathetic control is modelled as a lateral-funiculus
 compartment that a unilateral lesion does not disable (S01: sphincter function generally
 spared in hemisection). Its position in the cord is not stated by any source read.
+
+**R8** — Muscle tone during spinal shock is reported `indeterminate`. It is widely taught as
+flaccid, but S02 as read describes reflexes by phase and says nothing about tone.
+
+**R9** — Neurogenic shock is evaluated only in the first three days (hyperacute, acute) and
+reported `not_applicable` after. S03 describes it in acute injury without giving a window.
+
+## Knowledge-base audit before the engine ran
+
+**D10 — Four citation defects found and fixed before any engine code executed.**
+`armPredominance` cited S05, whose central-cord row C4 excludes — removed, tier to T2, and
+the same citation in case 06 corrected through amendment A1. `region.cervical` claimed T1 on
+S06, which never defines the cervical segments — now marked definitional. The Romberg row's
+"untestable with weak legs" half is a modelling convention S13 does not state — now marked
+pending. `chronicUmn` was T1 though only S12 supports all three of its parts — now T2.
+
+**D11 — `conflict` forces T3.** The spinothalamic row carries C1 and is now T3. The triceps
+row no longer carries C2: that is a single source against unread common teaching, not a
+disagreement between sources read.

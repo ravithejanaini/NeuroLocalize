@@ -225,7 +225,7 @@ export const CASES: readonly Case[] = [
       {
         timepoint: 'acute',
         assertions: [
-          { kind: 'qualifier', qualifier: 'upper_limb_predominant_weakness', present: true, cite: ['S06', 'S05'], basis: 'stated' },
+          { kind: 'qualifier', qualifier: 'upper_limb_predominant_weakness', present: true, cite: ['S06'], basis: 'stated' },
           { kind: 'qualifier', qualifier: 'sacral_sparing', present: true, cite: ['S06'], basis: 'stated',
             note: 'S06: sacral sensation is usually preserved' },
           { kind: 'motor', side: 'both', span: ['C8', 'T1'], lesion: ['umn'], cite: ['S06'], basis: 'composed',

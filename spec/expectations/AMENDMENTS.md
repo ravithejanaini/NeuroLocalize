@@ -18,4 +18,15 @@ situation the freeze exists to catch.
 
 ---
 
-_No amendments._
+## A1 — 2026-09-16 — case `central-cord-C4-C6`, qualifier `upper_limb_predominant_weakness`
+
+- **Changed:** `cite: ['S06', 'S05']` → `cite: ['S06']`. The expected value (`present: true`)
+  is unchanged.
+- **Why:** conflict C4 in `DECISIONS.md` excludes S05's central-cord row, because two
+  separate queries reported it placing the syndrome in the thoracic cord and its raw text
+  could not be checked. Citing a row the project has declared unusable is a contradiction.
+  Found while auditing knowledge-base citations, before any engine code ran.
+- **Source still supporting the assertion:** S06, which states the upper-limb predominance
+  directly.
+- **Why the knowledge base could not be corrected instead:** the error was in the
+  expectation's citation, not in any fact the engine uses.
