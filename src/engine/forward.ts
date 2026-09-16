@@ -24,8 +24,12 @@ import {
   type Tone,
 } from '../kb/vocab.ts';
 import { idx, mapLesion, opposite, type Damage, type LesionMap, type LesionRegion } from './lesion.ts';
+import { crossingOffsets, damageAlong, motorRoute, sensoryRoute, type Route } from './routes.ts';
 
-export type { LesionRegion } from './lesion.ts';
+export type { LesionMap, LesionRegion } from './lesion.ts';
+export { mapLesion } from './lesion.ts';
+export type { Element, Route } from './routes.ts';
+export { crossingOffsets, motorRoute, sensoryRoute } from './routes.ts';
 
 export type MotorFinding = { readonly lesion: MotorLesion; readonly tone: Tone };
 
@@ -62,42 +66,19 @@ const range = (from: number, to: number): number[] => {
   return out;
 };
 
+/** State of one route: how the renderer's pulse ends, and what the engine reports for it. */
+export function routeState(map: LesionMap, kb: Kb, route: Route, inputIsSacral: boolean): SensoryState {
+  return STATE[worst(route.elements.map((e) => damageAlong(map, kb, e, inputIsSacral)))];
+}
+
+export const isSacral = (kb: Kb, s: number): boolean =>
+  within(s, kb.regions[kb.observations.sacralSparing.region].span);
+
 function sensoryFor(map: LesionMap, kb: Kb, x: Side, modality: SensoryModality, s: number): SensoryState {
-  const rootCarries = kb.compartments.dorsalRoot.carries.includes(modality);
-  const root: Damage = rootCarries ? map.damage('dorsal_root', x, s) : 0;
-
-  if (modality === 'posterior_column') {
-    const col = onSide(x, kb.pathways.posteriorColumn.ascendsOn);
-    return STATE[worst([root, ...range(0, s).map((k) => map.damage('dorsal_column', col, k))])];
-  }
-
-  const { crossingOffset, ascendsOn } = kb.pathways.spinothalamic;
-  const up = onSide(x, ascendsOn);
-  const sparing = kb.observations.sacralSparing;
-  const sacral = within(s, kb.regions[sparing.region].span);
-  const outcomes = new Set<SensoryState>();
-
-  for (let o = crossingOffset[0]; o <= crossingOffset[1]; o++) {
-    const cross = Math.max(0, s - o);
-    const tract = range(0, cross).map((k): Damage => {
-      const d = map.damage('anterolateral', up, k);
-      // Observation, not geometry: a partial central lesion spares sacral input (S06).
-      const spared =
-        sparing.compartment === 'anterolateral' && d === 1 && sacral && map.centralPartial('anterolateral', up, k);
-      return spared ? 0 : d;
-    });
-    outcomes.add(
-      STATE[
-        worst([
-          root,
-          ...range(cross, s).map((k) => map.damage('dorsal_horn', x, k)),
-          map.damage('commissure', 'L', cross),
-          map.damage('commissure', 'R', cross),
-          ...tract,
-        ])
-      ],
-    );
-  }
+  const offsets = modality === 'posterior_column' ? [0] : crossingOffsets(kb);
+  const outcomes = new Set(
+    offsets.map((o) => routeState(map, kb, sensoryRoute(kb, x, modality, s, o), isSacral(kb, s))),
+  );
   const [only] = outcomes;
   return outcomes.size === 1 && only ? only : 'indeterminate';
 }
@@ -117,14 +98,15 @@ function applyOverlap(column: Record<Segment, SensoryState>, kb: Kb): void {
 
 /** Damage to the corticospinal fibres serving side x, anywhere rostral to segment `below`. */
 function corticospinalAbove(map: LesionMap, kb: Kb, x: Side, below: number): Damage {
-  const tract = onSide(x, kb.pathways.corticospinal.descendsOn);
-  return worst(range(0, below - 1).map((k) => map.damage('lateral_cst', tract, k)));
+  const descending = motorRoute(kb, x, below).elements.slice(0, below);
+  return worst(descending.map((e) => map.damage(e.compartment, e.side, e.segment)));
 }
 
 const shockAbove = (map: LesionMap, below: number): boolean => map.transectionAt >= 0 && map.transectionAt < below;
 
 function motorFor(map: LesionMap, kb: Kb, t: Timepoint, x: Side, s: number): MotorFinding {
-  const lmn = worst(kb.compartments.motorNeuron.lowerMotorNeuron.map((c) => map.damage(c, x, s)));
+  const final = motorRoute(kb, x, s).elements.slice(s);
+  const lmn = worst(final.map((e) => map.damage(e.compartment, e.side, e.segment)));
   const umn = corticospinalAbove(map, kb, x, s);
 
   if (lmn === 2 || (lmn === 1 && umn === 0)) return { lesion: 'lmn', tone: kb.observations.lmn.tone };
