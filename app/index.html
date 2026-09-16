@@ -140,17 +140,60 @@ input[type=range]{flex:1;accent-color:var(--ink)}
 .seg label:has(input:checked){background:var(--ink);color:var(--ground)}
 .seg label:has(input:focus-visible){outline:2px solid var(--focus);outline-offset:-2px}
 .opt{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:var(--ink2)}
+.tabs{display:none}
+.slice .fib{font-family:var(--f-mono);font-size:.11px;font-weight:600;text-anchor:middle;dominant-baseline:central;fill:var(--ground);paint-order:stroke;stroke-width:.03px}
+.slice .fib[data-tract="dorsal_column"]{stroke:var(--dc)}
+.slice .fib[data-tract="anterolateral"]{stroke:var(--stt)}
+.slice .fib[data-tract="lateral_cst"]{stroke:var(--cst)}
+.keys{font-family:var(--f-mono);font-size:11px;color:var(--ink2);margin:0;line-height:1.9}
+kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);border-bottom-width:2px;padding:0 4px;background:var(--surface)}
+.bodymap{display:grid;grid-template-columns:132px 1fr;gap:12px;align-items:start}
+.bodymap svg{width:132px;height:auto;display:block}
+.bodymap .body{fill:var(--sunk);stroke:var(--rule2);stroke-width:1}
+.bodymap .side-lbl{font-family:var(--f-mono);font-size:8.5px;fill:var(--ink3)}
+.bodymap .dot{stroke:var(--ink);stroke-width:1.2;fill:var(--surface)}
+.bodymap .dot.st-lost{fill:var(--ink)}
+.bodymap .dot.st-impaired{fill:var(--ink2);fill-opacity:.45}
+.bodymap .dot.st-indeterminate{stroke-dasharray:2 1.6;fill:var(--surface)}
+.bodymap .dot.st-intact{stroke:var(--ink3)}
+.bm-toggle{margin-bottom:8px}
+.bodymap-side .kv{grid-template-columns:44px 1fr}
+.bodymap-side .v{font-size:11px;line-height:1.45}
+.myotomes{border-collapse:collapse;width:100%;font-family:var(--f-mono);font-size:10.5px;margin-top:10px}
+.myotomes th{text-align:left;font-weight:400;color:var(--ink3);padding:2px 6px 2px 0;vertical-align:top}
+.myotomes td{padding:2px 6px 2px 0;vertical-align:top}
+.myotomes .mv{color:var(--ink2);font-family:var(--f-body);font-size:12px}
+.myotomes .other{display:block;font-family:var(--f-mono);font-size:9.5px;color:var(--ink3)}
+.myotomes tr.contested th::after{content:" *";color:var(--ink3)}
+.myotomes .st-none{color:var(--ink3)}
 .foot{padding:14px 18px 22px;font-size:12px;color:var(--ink3)}
 .foot a{color:var(--ink2)}
 
 @media (max-width:860px){
-  .app{grid-template-columns:1fr;grid-template-rows:58vh auto}
-  .panel{border-left:0;border-top:1px solid var(--rule);overflow:visible}
-  body{display:block}
-  .app{display:grid}
+  /* D22: the stage keeps the top; the instrument is a sheet with a thumb-height tab bar. */
+  html,body{overflow:hidden}
+  .bar{gap:2px 12px;padding:6px 12px}
+  .brand{font-size:16px}
+  .edu{display:none}
+  .app{grid-template-columns:1fr;grid-template-rows:minmax(0,46fr) minmax(0,54fr)}
   .legend,.hint,.caveats{display:none}
-  .bar{gap:4px 14px;padding:8px 14px}
-  .edu{width:100%}
+  .stations{top:8px;left:8px;right:8px}
+  .stations button{flex:1;padding:9px 4px;min-height:40px}
+  .panel{border-left:0;border-top:1px solid var(--rule);overflow-y:auto;display:flex;flex-direction:column}
+  .panel > *{flex-shrink:0}
+  .panel > .sec,.panel > .foot{display:none}
+  .panel[data-tab="lesion"] > [data-sec="lesion"],
+  .panel[data-tab="slice"] > [data-sec="slice"],
+  .panel[data-tab="findings"] > [data-sec="findings"],
+  .panel[data-tab="model"] > [data-sec="model"]{display:block}
+  .tabs{display:grid;grid-template-columns:repeat(4,1fr);position:sticky;bottom:0;margin-top:auto;z-index:2;border-top:1px solid var(--rule);background:var(--surface);padding-bottom:env(safe-area-inset-bottom)}
+  .tabs button{border:0;background:transparent;min-height:52px;font-family:var(--f-display);font-weight:600;font-size:13px;color:var(--ink3);border-top:2px solid transparent;cursor:pointer}
+  .tabs button[aria-selected="true"]{color:var(--ink);border-top-color:var(--ink)}
+  .preset{min-height:52px}
+  input[type=range]{height:40px}
+  .check{min-height:40px}
+  .seg label{padding:10px 12px}
+  .tick{min-height:48px;justify-content:center}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -170,7 +213,7 @@ input[type=range]{flex:1;accent-color:var(--ink)}
       <button type="button" data-station="axial" aria-pressed="false">Axial</button>
       <button type="button" data-station="side" aria-pressed="false">Side</button>
     </div>
-    <p class="hud hint">Drag to turn · scroll to zoom · shift-drag to move along the cord</p>
+    <p class="hud hint">Drag to turn · scroll or pinch to zoom · shift-drag to move along the cord · keys 1–4</p>
     <ul class="hud legend">
       <li><i style="background:var(--dc-glow)"></i>Posterior columns</li>
       <li><i style="background:var(--stt-glow)"></i>Spinothalamic</li>
@@ -188,13 +231,13 @@ input[type=range]{flex:1;accent-color:var(--ink)}
     </div>
   </div>
 
-  <aside class="panel" aria-label="Instrument">
-    <section class="sec">
+  <aside class="panel" id="panel" aria-label="Instrument" data-tab="lesion">
+    <section class="sec" data-sec="lesion">
       <h2 class="sec-t">Lesion</h2>
       <div class="presets" id="presets"></div>
     </section>
 
-    <section class="sec">
+    <section class="sec" data-sec="lesion">
       <h2 class="sec-t">Level</h2>
       <div class="row">
         <input type="range" id="level" min="0" max="30" step="1" aria-label="Lesion level">
@@ -204,31 +247,35 @@ input[type=range]{flex:1;accent-color:var(--ink)}
         <input type="range" id="extent" min="1" max="6" step="1" aria-label="Lesion extent">
         <span class="out" id="extent-out"></span>
       </div>
-      <label class="check"><input type="checkbox" id="by-vertebra"> Place by vertebra, and see which segments it reaches</label>
+      <label class="check"><input type="checkbox" id="by-vertebra" aria-label="Place the lesion by vertebra"> Place by vertebra, and see which segments it reaches</label>
     </section>
 
-    <section class="sec">
+    <section class="sec" data-sec="slice">
       <h2 class="sec-t">Slice</h2>
       <div class="slice">
         <div id="slice"></div>
         <div>
           <p id="slice-cap"></p>
-          <p class="slice-note">Coloured regions are the three long tracts. The hatched outline is what the lesion covers; coverage is measured, never assumed.</p>
+          <p class="slice-note">Letters mark where fibres from the <b>A</b>rm, <b>T</b>runk, <b>L</b>eg and <b>S</b>acrum run at this level, under the chosen lamination. The hatch is what the lesion covers &mdash; measured, never assumed.</p>
         </div>
       </div>
+      <div class="row">
+        <input type="range" id="slice-level" min="0" max="30" step="1" aria-label="Slice level">
+      </div>
+      <label class="check"><input type="checkbox" id="slice-follow" checked aria-label="Keep the slice on the lesion"> Keep the slice on the lesion</label>
     </section>
 
-    <section class="sec">
+    <section class="sec" data-sec="lesion">
       <h2 class="sec-t">Time since injury</h2>
       <div class="ticks" id="time" role="radiogroup" aria-label="Time since injury"></div>
     </section>
 
-    <section class="sec">
+    <section class="sec" data-sec="findings">
       <h2 class="sec-t">Findings</h2>
       <div id="findings" aria-live="polite"></div>
     </section>
 
-    <section class="sec">
+    <section class="sec" data-sec="model">
       <h2 class="sec-t">Model</h2>
       <div class="opt">
         <span>Tract lamination <span class="quiet">(disputed — findings never change)</span></span>
@@ -244,10 +291,15 @@ input[type=range]{flex:1;accent-color:var(--ink)}
           <label><input type="radio" name="fibre" value="c">C · slow</label>
         </span>
       </div>
-      <label class="check"><input type="checkbox" id="still"> Hold the signals still</label>
+      <label class="check"><input type="checkbox" id="still" aria-label="Hold the signals still"> Hold the signals still</label>
     </section>
 
-    <section class="sec">
+    <section class="sec" data-sec="model">
+      <h2 class="sec-t">Keys</h2>
+      <p class="keys"><kbd>1</kbd>&ndash;<kbd>4</kbd> camera &middot; <kbd>[</kbd> <kbd>]</kbd> move the lesion &middot; <kbd>,</kbd> <kbd>.</kbd> move the slice &middot; drag to turn, pinch or scroll to zoom</p>
+    </section>
+
+    <section class="sec" data-sec="model">
       <h2 class="sec-t">Drawing conventions</h2>
       <ul class="conv">
         <li>The cross-section is drawn three times wider than true, so tracts can be told apart.</li>
@@ -257,10 +309,16 @@ input[type=range]{flex:1;accent-color:var(--ink)}
       </ul>
     </section>
 
-    <footer class="foot">
+    <footer class="foot" data-sec="model">
       Every finding is computed from a sourced knowledge base and checked against expectations written before the engine existed. Chips link to the source behind each group; “contested” and “convention” mark what is not settled.
       Source and tests: <a href="https://github.com/ravithejanaini/NeuroLocalize" target="_blank" rel="noopener">github.com/ravithejanaini/NeuroLocalize</a>.
     </footer>
+    <nav class="tabs" role="tablist" aria-label="Instrument sections">
+      <button type="button" role="tab" data-tab-btn="lesion">Lesion</button>
+      <button type="button" role="tab" data-tab-btn="slice">Slice</button>
+      <button type="button" role="tab" data-tab-btn="findings">Findings</button>
+      <button type="button" role="tab" data-tab-btn="model">Model</button>
+    </nav>
   </aside>
 </main>
 

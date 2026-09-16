@@ -42,6 +42,8 @@ Accessed 2026-09-16 unless noted.
 | S28 | [StatPearls — Neuroanatomy, Unmyelinated Nerve Fibers](https://www.ncbi.nlm.nih.gov/books/NBK554461/) | Arcilla, Tadi | 2023-01-02 | C about 1 m/s, second pain; Aδ about 15 m/s, first pain |
 | S29 | [Snooks & Swash, JNNP 1985 — Motor conduction velocity in the human spinal cord](https://pmc.ncbi.nlm.nih.gov/articles/PMC1028573/) | Snooks, Swash | 1985 | 67.4 ± 9.1 m/s between C6 and L1 vertebral levels, probably corticospinal |
 | S30 | [Radiopaedia — Spinal cord](https://radiopaedia.org/articles/spinal-cord) | Radiopaedia editors | 2026-07-31 | cord ends near the L1 body; enlargements C3–T2 and T9–T12; length 42–45 cm |
+| S31 | [StatPearls — Physiology, Spinal Cord](https://www.ncbi.nlm.nih.gov/books/NBK544267/) | Harrow-Mortelliti, Reddy, Jimsheleishvili | 2023-03-17 | myotomes C5–S2 (C8: wrist flexion, thumb extension) |
+| S32 | [StatPearls — Cervical Injury](https://www.ncbi.nlm.nih.gov/books/NBK448146/) | Waseem, Torlincasi, Hall | 2025-06-02 | cervical myotomes C5–C8 (C7 adds wrist flexion; C8: finger flexion) |
 
 ## Not used, and why
 

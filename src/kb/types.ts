@@ -110,7 +110,21 @@ export type LaminationProfile = {
 
 export type Disc = { readonly x: number; readonly z: number; readonly r: number };
 
+/** A point on the schematic front-view body, for the patient's left side. */
+export type BodyPoint = { readonly x: number; readonly y: number };
+export type Landmark = { readonly segment: Segment; readonly place: string; readonly at: readonly BodyPoint[] };
+export type MyotomeRow = {
+  readonly span: Span;
+  readonly movement: string;
+  readonly sources: readonly SourceId[];
+  /** Present when sources disagree; names the other account. */
+  readonly otherAccount?: string;
+};
+
 export type RenderKb = {
+  readonly dermatomeLandmarks: Row<{ readonly landmarks: readonly Landmark[] }>;
+  readonly saddle: Row<{ readonly span: Span; readonly place: string; readonly at: BodyPoint }>;
+  readonly myotomes: Row<{ readonly rows: readonly MyotomeRow[] }>;
   readonly cord: Row<{
     readonly lengthCm: Range;
     readonly widthCm: { readonly cervical: Range; readonly thoracic: Range; readonly lumbar: Range };

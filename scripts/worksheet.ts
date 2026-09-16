@@ -6,6 +6,7 @@ import { ALL_CASES } from '../spec/expectations/index.ts';
 import type { Assertion } from '../spec/expectations/types.ts';
 import { KB } from '../src/kb/kb.ts';
 import { MECHANISMS } from '../src/kb/mechanisms.ts';
+import { RENDER } from '../src/kb/render.ts';
 import { metaRows } from '../test/rows.ts';
 
 const ROOT = resolve(import.meta.dirname, '..');
@@ -68,7 +69,7 @@ const out: string[] = [
   'claims are what it teaches. Mark each one; where a claim is wrong, a one-line correction',
   'with a source is the most useful thing you can give.',
   '',
-  `${rows.length} knowledge-base claims, ${questions.length} open questions. ${scoreLine}`,
+  `${rows.length} knowledge-base claims, ${metaRows(RENDER).length} displayed facts, ${questions.length} open questions. ${scoreLine}`,
   'Claims are ordered by load-bearing weight: how many expected findings fail when the claim',
   'is corrupted. The first ten carry most of the engine.',
   '',
@@ -83,6 +84,23 @@ rows.forEach((m, i) => {
     `sources ${m.definitional ? '_definitional_' : cite(m.sources)}`,
     `weight ${weight.get(m.id) ?? 0}`,
   ];
+  if (m.conflict) tags.push(`conflict ${m.conflict}`);
+  out.push(tags.join(' · '));
+  if (m.pendingSource) out.push(`> ⚠ No source read supports all of this. ${m.pendingSource}`);
+  out.push('', box, 'Book reference (Brazis / Blumenfeld, page): ____', '');
+});
+
+const shown = metaRows(RENDER);
+out.push(
+  '## 1b. Facts the tool displays',
+  '',
+  'These do not change any computed finding, but they are drawn or printed: segment and',
+  'vertebra positions, myotomes, dermatome landmarks, fibre speeds and tract arrangement.',
+  '',
+);
+shown.forEach((m, i) => {
+  out.push(`**${rows.length + i + 1}. ${m.claim}**`);
+  const tags = [`\`${m.id}\``, `tier ${m.tier}`, `sources ${m.definitional ? '_definitional_' : cite(m.sources)}`];
   if (m.conflict) tags.push(`conflict ${m.conflict}`);
   out.push(tags.join(' · '));
   if (m.pendingSource) out.push(`> ⚠ No source read supports all of this. ${m.pendingSource}`);
@@ -121,4 +139,4 @@ for (const c of ALL_CASES) {
 
 mkdirSync(resolve(ROOT, 'review'), { recursive: true });
 writeFileSync(resolve(ROOT, 'review', 'worksheet.md'), `${out.join('\n')}\n`);
-console.log(`review/worksheet.md: ${rows.length} claims, ${questions.length} questions, ${composedCount} composed findings`);
+console.log(`review/worksheet.md: ${rows.length} engine claims, ${shown.length} displayed facts, ${questions.length} questions, ${composedCount} composed findings`);

@@ -87,6 +87,10 @@ account. Both are drawn; findings never depend on which (A—11).
 **C8 — Corticospinal lamination.** S06 reports the historical medial-arm arrangement and
 current evidence for a diffuse distribution. Both are drawn.
 
+**C9 — Myotomes at C7 and C8.** S31: C7 elbow extension; C8 wrist flexion and thumb
+extension. S32: C7 elbow extension and wrist flexion; C8 finger flexion. Both accounts
+are shown side by side.
+
 **C5 — Conus syndrome motor signs.**
 S09 and S14 describe UMN signs (hyperreflexia) in conus syndrome. A lesion confined to
 S2–Co1 produces no lower-limb hyperreflexia in this model, since the reflex arcs and the
@@ -194,6 +198,24 @@ selections. Roots lie outside the cord and are cut separately.
 
 **D20 — The cord is drawn straight.** No source read gives the cord's curvature, so the
 axis is vertical and the plan's "centreline spline" is deferred.
+
+## P2
+
+**D21 — The body map marks sourced landmarks; it does not paint dermatomes.** S21 gives
+landmarks for C6–C8, T1, T2, T4, T6, T10, L3–L5 and S1, and nothing for the rest. Filled
+dermatome regions would need boundaries no source read supplies — and whose disagreement
+S21 itself records. So the map lights each sourced landmark with the state of its segment,
+states the sensory level in words against those landmarks, and draws nothing for
+unsourced segments. The perianal (S3–S5) marker rests on "saddle anaesthesia" in S05, S09
+and S14 but its segment assignment is convention (R5), and it is flagged as such.
+
+**D22 — On a phone the instrument is a bottom sheet with tabs.** The stage keeps the top of
+the screen; Lesion, Slice, Findings and Model sit in a sheet whose tab bar is within reach
+of a thumb. On wide screens every section shows at once and the tabs are hidden.
+
+**D23 — The slice can leave the lesion.** A scrubber moves the axial slice anywhere along
+the cord and draws, under the chosen lamination model, where fibres from the arm, trunk,
+leg and sacrum sit at that level. It follows the lesion until moved.
 
 **D11 — `conflict` forces T3.** The spinothalamic row carries C1 and is now T3. The triceps
 row no longer carries C2: that is a single source against unread common teaching, not a

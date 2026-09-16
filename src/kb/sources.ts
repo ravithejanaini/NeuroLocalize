@@ -5,7 +5,7 @@ import type { SourceId } from './vocab.ts';
 export const SOURCE_IDS: readonly SourceId[] = [
   'S01', 'S02', 'S03', 'S04', 'S05', 'S06', 'S07', 'S08', 'S09', 'S10', 'S11', 'S12',
   'S13', 'S14', 'S15', 'S16', 'S17', 'S18', 'S19', 'S20', 'S21', 'S22', 'S23',
-  'S24', 'S25', 'S26', 'S27', 'S28', 'S29', 'S30',
+  'S24', 'S25', 'S26', 'S27', 'S28', 'S29', 'S30', 'S31', 'S32',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -41,4 +41,6 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S28', title: 'StatPearls — Neuroanatomy, Unmyelinated Nerve Fibers', url: 'https://www.ncbi.nlm.nih.gov/books/NBK554461/' },
   { id: 'S29', title: 'Snooks & Swash, JNNP 1985 — Motor conduction velocity in the human spinal cord', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC1028573/' },
   { id: 'S30', title: 'Radiopaedia — Spinal cord', url: 'https://radiopaedia.org/articles/spinal-cord' },
+  { id: 'S31', title: 'StatPearls — Physiology, Spinal Cord', url: 'https://www.ncbi.nlm.nih.gov/books/NBK544267/' },
+  { id: 'S32', title: 'StatPearls — Cervical Injury', url: 'https://www.ncbi.nlm.nih.gov/books/NBK448146/' },
 ];

@@ -3,6 +3,70 @@
 import type { RenderKb } from './types.ts';
 
 export const RENDER: RenderKb = {
+  dermatomeLandmarks: {
+    meta: {
+      id: 'render.dermatome-landmarks',
+      claim: 'C6 thumb; C7 middle finger; C8 little finger; T1 anteromedial forearm and arm; T2 medial arm to the axilla; T4 nipple; T6 xiphoid; T10 umbilicus; L3 medial knee; L4 anterior knee and medial malleolus; L5 dorsum of the foot and first three toes; S1 lateral malleolus. Body positions are schematic.',
+      sources: ['S21'],
+      tier: 'T2',
+      bookRef: 'pending',
+    },
+    // Front view, 200 × 360, patient's left drawn on the viewer's right. Mirrored for the right.
+    landmarks: [
+      { segment: 'C6', place: 'thumb', at: [{ x: 160, y: 226 }] },
+      { segment: 'C7', place: 'middle finger', at: [{ x: 153, y: 243 }] },
+      { segment: 'C8', place: 'little finger', at: [{ x: 145, y: 237 }] },
+      { segment: 'T1', place: 'anteromedial forearm and arm', at: [{ x: 143, y: 172 }] },
+      { segment: 'T2', place: 'medial arm to the axilla', at: [{ x: 136, y: 100 }] },
+      { segment: 'T4', place: 'nipple', at: [{ x: 118, y: 90 }] },
+      { segment: 'T6', place: 'xiphoid', at: [{ x: 104, y: 112 }] },
+      { segment: 'T10', place: 'umbilicus', at: [{ x: 104, y: 152 }] },
+      { segment: 'L3', place: 'medial knee', at: [{ x: 106, y: 252 }] },
+      { segment: 'L4', place: 'anterior knee and medial malleolus', at: [{ x: 116, y: 247 }, { x: 108, y: 329 }] },
+      { segment: 'L5', place: 'dorsum of the foot', at: [{ x: 116, y: 342 }] },
+      { segment: 'S1', place: 'lateral malleolus', at: [{ x: 126, y: 330 }] },
+    ],
+  },
+
+  saddle: {
+    meta: {
+      id: 'render.saddle',
+      claim: 'Loss around the anus and perineum — saddle anaesthesia — marks conus and cauda equina lesions; it is drawn for S3–S5.',
+      sources: ['S05', 'S09', 'S14'],
+      tier: 'T2',
+      bookRef: 'pending',
+      pendingSource: 'R5: no source read assigns the saddle to particular segments',
+    },
+    span: ['S3', 'S5'],
+    place: 'perianal',
+    at: { x: 104, y: 186 },
+  },
+
+  myotomes: {
+    meta: {
+      id: 'render.myotomes',
+      claim: 'C5 shoulder abduction; C6 elbow flexion and wrist extension; C7 elbow extension; C8 wrist flexion and thumb extension (S31) or finger flexion (S32); T1 finger abduction; T2–L1 chest wall and abdominal muscles; L2 hip flexion; L3 knee extension; L4 ankle dorsiflexion; L5 great toe extension; S1 ankle plantar flexion; S2 knee flexion.',
+      sources: ['S31', 'S32', 'S19'],
+      tier: 'T3',
+      bookRef: 'pending',
+      conflict: 'C9',
+    },
+    rows: [
+      { span: ['C5', 'C5'], movement: 'shoulder abduction', sources: ['S31', 'S32'] },
+      { span: ['C6', 'C6'], movement: 'elbow flexion, wrist extension', sources: ['S31', 'S32', 'S19'] },
+      { span: ['C7', 'C7'], movement: 'elbow extension', sources: ['S31', 'S32'], otherAccount: 'S32 adds wrist flexion' },
+      { span: ['C8', 'C8'], movement: 'wrist flexion, thumb extension', sources: ['S31'], otherAccount: 'S32: finger flexion' },
+      { span: ['T1', 'T1'], movement: 'finger abduction', sources: ['S31'] },
+      { span: ['T2', 'L1'], movement: 'chest wall and abdomen', sources: ['S31'] },
+      { span: ['L2', 'L2'], movement: 'hip flexion', sources: ['S31'] },
+      { span: ['L3', 'L3'], movement: 'knee extension', sources: ['S31'] },
+      { span: ['L4', 'L4'], movement: 'ankle dorsiflexion', sources: ['S31'] },
+      { span: ['L5', 'L5'], movement: 'great toe extension', sources: ['S31'] },
+      { span: ['S1', 'S1'], movement: 'ankle plantar flexion', sources: ['S31'] },
+      { span: ['S2', 'S2'], movement: 'knee flexion', sources: ['S31'] },
+    ],
+  },
+
   cord: {
     meta: {
       id: 'render.cord-dimensions',

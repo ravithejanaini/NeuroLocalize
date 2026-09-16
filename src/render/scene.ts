@@ -5,6 +5,7 @@ import { place, radiusAt } from '../geometry/paths.ts';
 import { segmentBounds, segmentMid, segmentTop } from '../geometry/ruler.ts';
 import { CORD_COMPARTMENTS, discAt } from '../geometry/section.ts';
 import type { Shape } from '../geometry/lesion3d.ts';
+import { outline } from '../geometry/outline.ts';
 import type { RenderKb } from '../kb/types.ts';
 import { SEGMENTS, SIDES, VERTEBRAE, type Compartment, type Side } from '../kb/vocab.ts';
 
@@ -35,39 +36,8 @@ export type Anatomy = {
   readonly labels: Label[];
   readonly maxRadius: number;
   setLesion(shape: Shape | null, top: number, bottom: number, segments: readonly number[]): void;
-  setSlice(at: number | null): void;
+  setSlice(at: number | null, insideLesion: boolean): void;
 };
-
-const arc = (from: number, to: number, steps: number): { x: number; z: number }[] =>
-  Array.from({ length: steps + 1 }, (_, i) => {
-    const a = from + ((to - from) * i) / steps;
-    return { x: Math.cos(a) * 1.04, z: Math.sin(a) * 1.04 };
-  });
-
-/** A lesion shape as a closed outline in the cross-section, clipped to the cord. */
-export function outline(shape: Shape): { x: number; z: number }[] {
-  const n = 72;
-  switch (shape.kind) {
-    case 'complete':
-      return arc(0, 2 * Math.PI, n).slice(0, n);
-    case 'half': {
-      // A continuous arc; the chord along the midline closes it.
-      const start = shape.side === 'L' ? Math.PI / 2 : -Math.PI / 2;
-      return arc(start, start + Math.PI, n / 2);
-    }
-    case 'ventral': {
-      const a0 = Math.asin(Math.max(-1, Math.min(1, shape.dorsalLimit / 1.04)));
-      return arc(Math.PI - a0, 2 * Math.PI + a0, n);
-    }
-    case 'ellipse':
-      return Array.from({ length: n }, (_, i) => {
-        const a = (2 * Math.PI * i) / n;
-        const p = { x: shape.x + Math.cos(a) * shape.rx, z: shape.z + Math.sin(a) * shape.rz };
-        const d = Math.hypot(p.x, p.z);
-        return d > 1.04 ? { x: (p.x / d) * 1.04, z: (p.z / d) * 1.04 } : p;
-      });
-  }
-}
 
 function label(text: string, className: string): HTMLElement {
   const el = document.createElement('span');
@@ -165,7 +135,7 @@ export function buildAnatomy(render: RenderKb, palette: Palette, layer: HTMLElem
   root.add(slice);
   let sliceShape: Shape | null = null;
 
-  const drawSlice = (k: number | null): void => {
+  const drawSlice = (k: number | null, insideLesion: boolean): void => {
     slice.clear();
     if (k === null) return;
     const radius = r(k);
@@ -183,7 +153,7 @@ export function buildAnatomy(render: RenderKb, palette: Palette, layer: HTMLElem
         slice.add(m);
       }
     }
-    if (sliceShape) {
+    if (sliceShape && insideLesion) {
       const pts = outline(sliceShape).map((p) => new THREE.Vector3(p.x * radius, y + 0.01, p.z * radius));
       const ring = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), lineMat(palette.lesion, 1));
       slice.add(ring);
@@ -216,8 +186,8 @@ export function buildAnatomy(render: RenderKb, palette: Palette, layer: HTMLElem
       lesionMesh = group;
       root.add(group);
     },
-    setSlice(k) {
-      drawSlice(k);
+    setSlice(k, insideLesion) {
+      drawSlice(k, insideLesion);
     },
   };
 }

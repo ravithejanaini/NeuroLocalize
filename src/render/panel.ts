@@ -1,12 +1,11 @@
 // The instrument panel: findings written for a clinician, each group carrying the
 // knowledge-base rows that produced it and the sources behind those rows.
 import type { Findings } from '../engine/forward.ts';
-import type { Shape } from '../geometry/lesion3d.ts';
-import { CORD_COMPARTMENTS, discAt } from '../geometry/section.ts';
 import { SOURCES } from '../kb/sources.ts';
 import type { Kb, Meta, RenderKb } from '../kb/types.ts';
-import { REFLEXES, SEGMENTS, SIDES, type Segment, type SensoryState, type Side } from '../kb/vocab.ts';
-import { outline } from './scene.ts';
+import { RENDER } from '../kb/render.ts';
+import { REFLEXES, SEGMENTS, SIDES, type Segment, type SensoryModality, type SensoryState, type Side } from '../kb/vocab.ts';
+import { bodyMapSvg, myotomeTable, sensoryLevelText } from './svg.ts';
 
 const SIDE_NAME: Record<Side, string> = { L: 'Left', R: 'Right' };
 
@@ -14,7 +13,7 @@ function escape(s: string): string {
   return s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] ?? c);
 }
 
-function rowsById(kb: Kb): Map<string, Meta> {
+function rowsById(root: object): Map<string, Meta> {
   const out = new Map<string, Meta>();
   const visit = (node: unknown): void => {
     if (Array.isArray(node)) {
@@ -27,7 +26,7 @@ function rowsById(kb: Kb): Map<string, Meta> {
     if (meta && typeof meta.id === 'string') out.set(meta.id, meta);
     for (const [k, v] of Object.entries(rec)) if (k !== 'meta') visit(v);
   };
-  visit(kb);
+  visit(root);
   return out;
 }
 
@@ -61,7 +60,7 @@ export class Panel {
   private readonly findingsEl: HTMLElement;
 
   constructor(kb: Kb, findingsEl: HTMLElement) {
-    this.meta = rowsById(kb);
+    this.meta = new Map([...rowsById(kb), ...rowsById(RENDER)]);
     this.findingsEl = findingsEl;
   }
 
@@ -114,7 +113,7 @@ export class Panel {
       .join('<br>');
   }
 
-  update(f: Findings): void {
+  update(f: Findings, bodyModality: SensoryModality, render: RenderKb = RENDER): void {
     const reflexWord: Record<string, string> = {
       normal: 'normal',
       reduced: 'reduced',
@@ -157,7 +156,19 @@ export class Panel {
     if (f.qualifiers.upper_limb_predominant_weakness) patterns.push('Arms weaker than legs, most of all the hands.');
     if (f.qualifiers.sacral_sparing) patterns.push('Sacral sensation spared — the mark of a lesion inside the cord.');
 
+    const modalityName = bodyModality === 'pain_temperature' ? 'pain and temperature' : 'vibration and position';
     const groups: Group[] = [
+      {
+        title: 'Body map',
+        drivers: ['render.dermatome-landmarks', 'render.saddle'],
+        body:
+          `<div class="bodymap"><div class="bodymap-svg">${bodyMapSvg(render, f, bodyModality)}</div>` +
+          `<div class="bodymap-side"><div class="seg bm-toggle" role="radiogroup" aria-label="Body map sensation">` +
+          `<label><input type="radio" name="bodymap" value="pain_temperature"${bodyModality === 'pain_temperature' ? ' checked' : ''}>Pain</label>` +
+          `<label><input type="radio" name="bodymap" value="posterior_column"${bodyModality === 'posterior_column' ? ' checked' : ''}>Vibration</label></div>` +
+          sided((x) => sensoryLevelText(render, f, x, bodyModality)) +
+          `<p class="grp-note">Dots mark sourced landmarks for ${modalityName}: ■ lost, ◧ reduced, dashed uncertain, hollow intact. The diamond is the saddle, whose segments are a convention.</p></div></div>`,
+      },
       {
         title: 'Pain and temperature',
         drivers: ['pathway.spinothalamic', 'compartment.dorsal-root', 'observation.sacral-sparing'],
@@ -171,8 +182,8 @@ export class Panel {
       },
       {
         title: 'Motor',
-        drivers: ['pathway.corticospinal', 'compartment.lower-motor-neuron', 'observation.chronic-umn', 'observation.lmn'],
-        body: sided((x) => this.motorLine(f, x)),
+        drivers: ['pathway.corticospinal', 'compartment.lower-motor-neuron', 'observation.chronic-umn', 'observation.lmn', 'render.myotomes'],
+        body: sided((x) => this.motorLine(f, x)) + myotomeTable(render, f),
       },
       {
         title: 'Reflexes',
@@ -214,28 +225,4 @@ export class Panel {
       )
       .join('');
   }
-}
-
-/** A flat cross-section diagram of the lesion at one segment, dorsal side up. */
-export function sliceSvg(render: RenderKb, shape: Shape | null, k: number): string {
-  const discs = SIDES.flatMap((side) =>
-    CORD_COMPARTMENTS.map((c) => {
-      const d = discAt(render, c, side, k);
-      return d ? `<circle class="cmp cmp-${c}" cx="${d.x.toFixed(3)}" cy="${(-d.z).toFixed(3)}" r="${d.r.toFixed(3)}"/>` : '';
-    }),
-  ).join('');
-  const lesion = shape
-    ? `<polygon class="lesion" points="${outline(shape)
-        .map((p) => `${p.x.toFixed(3)},${(-p.z).toFixed(3)}`)
-        .join(' ')}"/>`
-    : '';
-  return `<svg viewBox="-1.3 -1.3 2.6 2.6" role="img" aria-label="Cross-section at ${SEGMENTS[k] ?? ''}">
-    <defs><pattern id="hatch" width="0.06" height="0.06" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-      <line x1="0" y1="0" x2="0" y2="0.06" class="hatch"/></pattern></defs>
-    <circle class="cord" cx="0" cy="0" r="1"/>
-    ${discs}
-    ${lesion}
-    <text class="ori" x="-1.22" y="0.05">L</text><text class="ori" x="1.1" y="0.05">R</text>
-    <text class="ori" x="-0.2" y="-1.12">dorsal</text>
-  </svg>`;
 }

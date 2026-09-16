@@ -5,11 +5,12 @@ import { spanOf, toRegions, type Shape } from '../geometry/lesion3d.ts';
 import { segmentMid, segmentsBetween } from '../geometry/ruler.ts';
 import { KB } from '../kb/kb.ts';
 import { RENDER } from '../kb/render.ts';
-import { SEGMENTS, TIMEPOINTS, VERTEBRAE, type Timepoint } from '../kb/vocab.ts';
-import { Panel, sliceSvg } from './panel.ts';
+import { SEGMENTS, TIMEPOINTS, VERTEBRAE, type SensoryModality, type Timepoint } from '../kb/vocab.ts';
+import { Panel } from './panel.ts';
 import { PRESETS, type Preset } from './presets.ts';
 import { DILATION, PulseField } from './pulses.ts';
 import { buildAnatomy, lesionMidY, type Palette } from './scene.ts';
+import { sliceSvg } from './svg.ts';
 
 const $ = <T extends HTMLElement>(sel: string): T => {
   const el = document.querySelector<T>(sel);
@@ -39,6 +40,9 @@ type State = {
   timepoint: Timepoint;
   model: 'classical' | 'revised';
   painFibre: 'adelta' | 'c';
+  bodyModality: SensoryModality;
+  slice: number;
+  followSlice: boolean;
 };
 
 const first = PRESETS[0];
@@ -51,6 +55,9 @@ const state: State = {
   timepoint: 'chronic',
   model: 'classical',
   painFibre: 'adelta',
+  bodyModality: 'pain_temperature',
+  slice: 0,
+  followSlice: true,
 };
 
 // ── scene ────────────────────────────────────────────────────────────────
@@ -68,11 +75,20 @@ scene.add(anatomy.root);
 const pulses = new PulseField(scene, KB, RENDER, palette);
 const panel = new Panel(KB, $('#findings'));
 
+let currentSegments: number[] = [];
+let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 // ── camera: a small orbit with named stations and eased moves ───────────
 type View = { theta: number; phi: number; radius: number; y: number };
 const view: View = { theta: -0.55, phi: 1.32, radius: 34, y: -11 };
 let tween: { from: View; to: View; start: number; ms: number } | null = null;
+let currentStation = 'lesion';
 const ease = (t: number): number => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+
+const sliceLevel = (): number => {
+  const mid = currentSegments[Math.floor(currentSegments.length / 2)];
+  return state.followSlice && mid !== undefined ? mid : state.slice;
+};
 
 function station(name: string): View {
   const y = lesionMidY(RENDER, currentSegments);
@@ -80,7 +96,7 @@ function station(name: string): View {
     case 'lesion':
       return { theta: -0.7, phi: 1.2, radius: 9, y };
     case 'axial':
-      return { theta: 0, phi: 0.06, radius: 5.5, y };
+      return { theta: 0, phi: 0.06, radius: 5.5, y: -segmentMid(RENDER, sliceLevel()) };
     case 'side':
       return { theta: -Math.PI / 2, phi: Math.PI / 2, radius: 12, y };
     default:
@@ -89,15 +105,17 @@ function station(name: string): View {
 }
 
 function go(name: string): void {
+  currentStation = name;
   const to = station(name);
-  if (reduced) {
-    Object.assign(view, to);
-    return;
-  }
-  tween = { from: { ...view }, to, start: performance.now(), ms: 900 };
   document.querySelectorAll<HTMLButtonElement>('[data-station]').forEach((b) => {
     b.setAttribute('aria-pressed', String(b.dataset.station === name));
   });
+  if (reduced) {
+    Object.assign(view, to);
+    tween = null;
+    return;
+  }
+  tween = { from: { ...view }, to, start: performance.now(), ms: 900 };
 }
 
 function placeCamera(): void {
@@ -110,26 +128,46 @@ function placeCamera(): void {
   camera.lookAt(0, y, 0);
 }
 
-let dragging: { x: number; y: number } | null = null;
-renderer.domElement.addEventListener('pointerdown', (e) => {
-  dragging = { x: e.clientX, y: e.clientY };
-  renderer.domElement.setPointerCapture(e.pointerId);
+// Pointer: one finger turns (shift moves along the cord), two fingers pinch to zoom.
+const pointers = new Map<number, { x: number; y: number }>();
+let pinch = 0;
+const canvas = renderer.domElement;
+canvas.addEventListener('pointerdown', (e) => {
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  canvas.setPointerCapture(e.pointerId);
   tween = null;
+  if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    if (a && b) pinch = Math.hypot(a.x - b.x, a.y - b.y);
+  }
 });
-renderer.domElement.addEventListener('pointermove', (e) => {
-  if (!dragging) return;
-  const dx = e.clientX - dragging.x;
-  const dy = e.clientY - dragging.y;
-  dragging = { x: e.clientX, y: e.clientY };
-  if (e.shiftKey) {
-    view.y += dy * 0.03 * (view.radius / 20);
-  } else {
+canvas.addEventListener('pointermove', (e) => {
+  const prev = pointers.get(e.pointerId);
+  if (!prev) return;
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    if (!a || !b) return;
+    const d = Math.hypot(a.x - b.x, a.y - b.y);
+    if (pinch > 0) view.radius = Math.min(60, Math.max(2.5, (view.radius * pinch) / d));
+    pinch = d;
+    return;
+  }
+  const dx = e.clientX - prev.x;
+  const dy = e.clientY - prev.y;
+  if (e.shiftKey) view.y += dy * 0.03 * (view.radius / 20);
+  else {
     view.theta -= dx * 0.008;
     view.phi = Math.min(Math.PI - 0.05, Math.max(0.05, view.phi - dy * 0.008));
   }
 });
-renderer.domElement.addEventListener('pointerup', () => (dragging = null));
-renderer.domElement.addEventListener(
+const release = (e: PointerEvent): void => {
+  pointers.delete(e.pointerId);
+  if (pointers.size < 2) pinch = 0;
+};
+canvas.addEventListener('pointerup', release);
+canvas.addEventListener('pointercancel', release);
+canvas.addEventListener(
   'wheel',
   (e) => {
     e.preventDefault();
@@ -139,8 +177,6 @@ renderer.domElement.addEventListener(
 );
 
 // ── state → everything ───────────────────────────────────────────────────
-let currentSegments: number[] = [];
-
 function lesionNow(): { regions: LesionRegion[]; shape: Shape | null; top: number; bottom: number } {
   const p = state.preset;
   if (p.kind === 'system') return { regions: [...p.regions], shape: null, top: 0, bottom: 0 };
@@ -177,14 +213,21 @@ function apply(): void {
   currentSegments = lesion.shape ? segmentsBetween(RENDER, lesion.top, lesion.bottom) : [...map.segments];
   const findings = forward(lesion.regions, state.timepoint, { laminationModel: state.model });
 
+  const k = sliceLevel();
+  state.slice = k;
+  const inside = lesion.shape !== null && currentSegments.includes(k);
   anatomy.setLesion(lesion.shape, lesion.top, lesion.bottom, lesion.shape ? currentSegments : []);
-  const mid = currentSegments[Math.floor(currentSegments.length / 2)] ?? null;
-  anatomy.setSlice(lesion.shape ? mid : null);
+  anatomy.setSlice(k, inside);
   pulses.setLesion(map);
-  panel.update(findings);
+  panel.update(findings, state.bodyModality);
 
-  $('#slice').innerHTML = mid !== null && lesion.shape ? sliceSvg(RENDER, lesion.shape, mid) : '<p class="quiet">This pattern selects tracts rather than occupying a place, so there is no single slice.</p>';
-  $('#slice-cap').textContent = mid !== null && lesion.shape ? `Axial slice at ${SEGMENTS[mid]}` : 'No slice';
+  $('#slice').innerHTML = sliceSvg(RENDER, k, state.model, inside ? lesion.shape : null);
+  $('#slice-cap').textContent = `${SEGMENTS[k] ?? ''} — ${
+    lesion.shape ? (inside ? 'inside the lesion' : 'outside the lesion') : 'this pattern selects tracts, not a place'
+  }`;
+  const sliceInput = $<HTMLInputElement>('#slice-level');
+  sliceInput.value = String(k);
+  $<HTMLInputElement>('#slice-follow').checked = state.followSlice;
   $('#level-readout').textContent = levelReadout();
   $('#status').textContent = `${state.preset.label} · ${state.preset.pattern} · ${state.timepoint}`;
 
@@ -195,6 +238,7 @@ function apply(): void {
   level.value = String(state.level);
   $<HTMLInputElement>('#extent').value = String(state.extent);
   $('#extent-out').textContent = `${state.extent} ${state.byVertebra ? 'vertebra' : 'segment'}${state.extent > 1 ? 's' : ''}`;
+  if (currentStation === 'axial') go('axial');
 }
 
 // ── controls ─────────────────────────────────────────────────────────────
@@ -204,13 +248,11 @@ presetList.innerHTML = PRESETS.map((p, i) => {
     PRESETS[i - 1]?.kind === p.kind
       ? ''
       : `<div class="divider">${p.kind === 'focal' ? 'Placed in space' : 'Selects tracts'}</div>`;
-  return `${heading}<button type="button" class="preset" data-preset="${p.id}" aria-pressed="false">
+  return `${heading}<button type="button" class="preset" data-preset="${p.id}" aria-pressed="false" aria-label="${p.label} — ${p.pattern}">
     <span class="preset-label">${p.label}</span><span class="preset-pattern">${p.pattern}</span></button>`;
 }).join('');
-presetList.addEventListener('click', (e) => {
-  const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-preset]');
-  const p = PRESETS.find((x) => x.id === btn?.dataset.preset);
-  if (!p) return;
+
+function choose(p: Preset): void {
   state.preset = p;
   if (p.kind === 'focal') {
     state.byVertebra = false;
@@ -218,22 +260,27 @@ presetList.addEventListener('click', (e) => {
     state.level = SEGMENTS.indexOf(p.level);
     state.extent = p.extent;
   }
-  syncPresets();
-  apply();
-  if (p.kind === 'focal') go('lesion');
-  else go('whole');
-});
-function syncPresets(): void {
+  state.followSlice = true;
   presetList.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach((b) => {
-    b.setAttribute('aria-pressed', String(b.dataset.preset === state.preset.id));
+    b.setAttribute('aria-pressed', String(b.dataset.preset === p.id));
   });
-}
-
-$<HTMLInputElement>('#level').addEventListener('input', (e) => {
-  state.level = Number((e.target as HTMLInputElement).value);
   apply();
-  go('lesion');
+  go(p.kind === 'focal' ? 'lesion' : 'whole');
+}
+presetList.addEventListener('click', (e) => {
+  const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-preset]');
+  const p = PRESETS.find((x) => x.id === btn?.dataset.preset);
+  if (p) choose(p);
 });
+
+function setLevel(value: number): void {
+  const max = (state.byVertebra ? VERTEBRAE.length : SEGMENTS.length) - 1;
+  state.level = Math.max(0, Math.min(max, value));
+  state.followSlice = true;
+  apply();
+  if (currentStation !== 'axial') go('lesion');
+}
+$<HTMLInputElement>('#level').addEventListener('input', (e) => setLevel(Number((e.target as HTMLInputElement).value)));
 $<HTMLInputElement>('#extent').addEventListener('input', (e) => {
   state.extent = Number((e.target as HTMLInputElement).value);
   apply();
@@ -248,6 +295,17 @@ $<HTMLInputElement>('#by-vertebra').addEventListener('change', (e) => {
   apply();
 });
 
+function setSlice(value: number): void {
+  state.slice = Math.max(0, Math.min(SEGMENTS.length - 1, value));
+  state.followSlice = false;
+  apply();
+}
+$<HTMLInputElement>('#slice-level').addEventListener('input', (e) => setSlice(Number((e.target as HTMLInputElement).value)));
+$<HTMLInputElement>('#slice-follow').addEventListener('change', (e) => {
+  state.followSlice = (e.target as HTMLInputElement).checked;
+  apply();
+});
+
 const timeInputs = $('#time');
 timeInputs.innerHTML = TIMEPOINTS.map(
   (t, i) => `<label class="tick"><input type="radio" name="time" value="${t}" ${t === state.timepoint ? 'checked' : ''}>
@@ -256,6 +314,15 @@ timeInputs.innerHTML = TIMEPOINTS.map(
 timeInputs.addEventListener('change', (e) => {
   state.timepoint = (e.target as HTMLInputElement).value as Timepoint;
   apply();
+});
+
+// The body-map toggle is re-rendered with the findings, so listen on the container.
+$('#findings').addEventListener('change', (e) => {
+  const input = e.target as HTMLInputElement;
+  if (input.name !== 'bodymap') return;
+  state.bodyModality = input.value as SensoryModality;
+  apply();
+  document.querySelector<HTMLInputElement>(`input[name="bodymap"][value="${state.bodyModality}"]`)?.focus();
 });
 
 function bindToggle(name: string, onChange: (value: string) => void): void {
@@ -280,8 +347,37 @@ document.querySelectorAll<HTMLButtonElement>('[data-station]').forEach((b) => {
   b.addEventListener('click', () => go(b.dataset.station ?? 'whole'));
 });
 
+// Phone tabs (D22). On wide screens the CSS shows every section and hides the tab bar.
+const panelEl = $('#panel');
+function showTab(name: string): void {
+  panelEl.dataset.tab = name;
+  document.querySelectorAll<HTMLButtonElement>('[data-tab-btn]').forEach((b) => {
+    const on = b.dataset.tabBtn === name;
+    b.setAttribute('aria-selected', String(on));
+    b.tabIndex = on ? 0 : -1;
+  });
+}
+document.querySelectorAll<HTMLButtonElement>('[data-tab-btn]').forEach((b) => {
+  b.addEventListener('click', () => showTab(b.dataset.tabBtn ?? 'lesion'));
+});
+showTab('lesion');
+
+// Keyboard: 1–4 stations, [ ] move the lesion, , . move the slice.
+const STATIONS = ['whole', 'lesion', 'axial', 'side'];
+window.addEventListener('keydown', (e) => {
+  const typing = e.target instanceof Element && e.target.closest('input, textarea, select') !== null;
+  if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+  const station = STATIONS[Number(e.key) - 1];
+  if (station) go(station);
+  else if (e.key === '[' && state.preset.kind === 'focal') setLevel(state.level - 1);
+  else if (e.key === ']' && state.preset.kind === 'focal') setLevel(state.level + 1);
+  else if (e.key === ',') setSlice(state.slice - 1);
+  else if (e.key === '.') setSlice(state.slice + 1);
+  else return;
+  e.preventDefault();
+});
+
 const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-let reduced = motionQuery.matches;
 const motionToggle = $<HTMLInputElement>('#still');
 motionToggle.checked = reduced;
 function setReduced(on: boolean): void {
@@ -339,10 +435,8 @@ function frame(now: number): void {
   requestAnimationFrame(frame);
 }
 
-syncPresets();
 pulses.setOptions({ model: state.model, painFibre: state.painFibre });
 if (reduced) pulses.setFrozen(true);
-apply();
+choose(first);
 resize();
-go('lesion');
 requestAnimationFrame(frame);

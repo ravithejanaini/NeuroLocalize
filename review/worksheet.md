@@ -6,7 +6,7 @@ Thank you for checking this. It is a teaching tool, not clinical software, and t
 claims are what it teaches. Mark each one; where a claim is wrong, a one-line correction
 with a source is the most useful thing you can give.
 
-30 knowledge-base claims, 11 open questions. Mutation score 91.8% over sourced rows, 80.0% over all rows.
+30 knowledge-base claims, 13 displayed facts, 11 open questions. Mutation score 91.8% over sourced rows, 80.0% over all rows.
 Claims are ordered by load-bearing weight: how many expected findings fail when the claim
 is corrupted. The first ten carry most of the engine.
 
@@ -194,6 +194,92 @@ Book reference (Brazis / Blumenfeld, page): ____
 **30. A Babinski sign requires corticospinal interruption rostral to the lumbosacral segments.**
 `observation.babinski-level` · tier T2 · sources [S12](https://www.ncbi.nlm.nih.gov/books/NBK531502/) · weight 0
 > ⚠ No source read supports all of this. R6: no source read gives the plantar reflex’s segments; L5 is a modelling choice
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+## 1b. Facts the tool displays
+
+These do not change any computed finding, but they are drawn or printed: segment and
+vertebra positions, myotomes, dermatome landmarks, fibre speeds and tract arrangement.
+
+**31. C6 thumb; C7 middle finger; C8 little finger; T1 anteromedial forearm and arm; T2 medial arm to the axilla; T4 nipple; T6 xiphoid; T10 umbilicus; L3 medial knee; L4 anterior knee and medial malleolus; L5 dorsum of the foot and first three toes; S1 lateral malleolus. Body positions are schematic.**
+`render.dermatome-landmarks` · tier T2 · sources [S21](https://www.ncbi.nlm.nih.gov/books/NBK535401/)
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**32. Loss around the anus and perineum — saddle anaesthesia — marks conus and cauda equina lesions; it is drawn for S3–S5.**
+`render.saddle` · tier T2 · sources [S05](https://www.msdmanuals.com/professional/multimedia/table/spinal-cord-syndromes), [S09](https://www.ncbi.nlm.nih.gov/books/NBK537200/), [S14](https://www.ncbi.nlm.nih.gov/books/NBK545227/)
+> ⚠ No source read supports all of this. R5: no source read assigns the saddle to particular segments
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**33. C5 shoulder abduction; C6 elbow flexion and wrist extension; C7 elbow extension; C8 wrist flexion and thumb extension (S31) or finger flexion (S32); T1 finger abduction; T2–L1 chest wall and abdominal muscles; L2 hip flexion; L3 knee extension; L4 ankle dorsiflexion; L5 great toe extension; S1 ankle plantar flexion; S2 knee flexion.**
+`render.myotomes` · tier T3 · sources [S31](https://www.ncbi.nlm.nih.gov/books/NBK544267/), [S32](https://www.ncbi.nlm.nih.gov/books/NBK448146/), [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/) · conflict C9
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**34. The adult cord is 42–45 cm long; about 0.64–0.83 cm wide in the thoracic region and 1.27–1.33 cm in the cervical and lumbar regions.**
+`render.cord-dimensions` · tier T2 · sources [S30](https://radiopaedia.org/articles/spinal-cord), [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/)
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**35. The cervical enlargement spans C5–T1 (S24) or C3–T1 (S26); the lumbar enlargement L2–S3 (S24) or L1–S2 (S26). Drawn over the union.**
+`render.enlargements` · tier T3 · sources [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S26](https://nba.uth.tmc.edu/neuroscience/m/s2/chapter03.html) · conflict C6
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**36. C1 begins at the foramen magnum and C8 lies at the C7 vertebra; the lower thoracic cord runs three segments ahead of the vertebrae; the conus (S2–Co1) lies at L1 and the cord ends at L1–L2. Positions between these anchors are interpolated.**
+`render.segment-ruler` · tier T2 · sources [S26](https://nba.uth.tmc.edu/neuroscience/m/s2/chapter03.html), [S14](https://www.ncbi.nlm.nih.gov/books/NBK545227/), [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S30](https://radiopaedia.org/articles/spinal-cord)
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**37. The lateral horn is present only from T1 to L2.**
+`render.lateral-horn` · tier T1 · sources [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S07](https://www.ncbi.nlm.nih.gov/books/NBK560731/)
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**38. The fasciculus gracilis lies medially and carries the lower body; the fasciculus cuneatus lies laterally, exists at T6 and above, and carries the upper body.**
+`render.posterior-column-somatotopy` · tier T2 · sources [S27](https://www.ncbi.nlm.nih.gov/books/NBK507888/), [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/)
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**39. Posterior columns lie dorsally with gracilis medial; the lateral corticospinal tract in the lateral funiculus; the spinothalamic tract anterolaterally; grey matter forms an H around the central canal. Coordinates are a schematic, not measurements.**
+`render.cross-section-layout` · tier T2 · sources [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S27](https://www.ncbi.nlm.nih.gov/books/NBK507888/)
+> ⚠ No source read supports all of this. the positions of the descending autonomic pathway and the roots are schematic (R7)
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**40. Aβ fibres conduct at 16–100 m/s, Aδ at 5–30 (about 15), C at 0.2–2 (about 1); the corticospinal tract at about 67 m/s.**
+`render.conduction-velocity` · tier T2 · sources [S25](https://www.ncbi.nlm.nih.gov/books/NBK547731/), [S28](https://www.ncbi.nlm.nih.gov/books/NBK554461/), [S29](https://pmc.ncbi.nlm.nih.gov/articles/PMC1028573/)
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**41. Posterior-column and spinothalamic axons inside the cord are drawn at one illustrative speed.**
+`render.intraspinal-speed` · tier T2 · sources _none_
+> ⚠ No source read supports all of this. D14: no source read gives their conduction velocity
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**42. Classical: lumbar and sacral fibres dorsolateral, cervical ventromedial. Revised (cordotomy mapping): lower-limb fibres superficial and posterior, shifting ventrally on ascent; upper-limb fibres deep and anterior, some posterior. Positions schematic.**
+`render.lamination-spinothalamic` · tier T3 · sources [S23](https://academic.oup.com/braincomms/article/7/3/fcaf237/8165923) · conflict C7
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**43. Historical: arm fibres medial in the lateral corticospinal tract. Current: arm and leg fibres diffusely distributed. Positions schematic.**
+`render.lamination-corticospinal` · tier T3 · sources [S06](https://www.ncbi.nlm.nih.gov/books/NBK441932/) · conflict C8
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
