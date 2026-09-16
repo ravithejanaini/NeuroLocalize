@@ -1,0 +1,23 @@
+{
+  "name": "neurolocalize",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Lesion-localization engine for teaching. Education only; not clinical decision support.",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test \"test/**/*.test.ts\"",
+    "check:boundaries": "node scripts/check-boundaries.ts",
+    "check:freeze": "node scripts/check-freeze.ts",
+    "mutate": "node scripts/mutate.ts",
+    "worksheet": "node scripts/worksheet.ts",
+    "verify": "npm run typecheck && npm run check:boundaries && npm run check:freeze && npm test"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.5",
+    "typescript": "5.9.3"
+  }
+}

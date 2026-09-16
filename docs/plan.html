@@ -1,0 +1,825 @@
+<title>NeuroLocalize Build Plan</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#EFF0F3; --surface:#FAFAFC; --sunk:#E6E8ED;
+  --ink:#14181F; --ink2:#4A515E; --ink3:#79818F;
+  --rule:#D3D7DF; --rule2:#AEB4C0;
+  --cst:#BC3B22; --dc:#2F4A9E; --stt:#A8760F;
+  --myelin:#2E3F96;
+  --measure:68ch;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#121620; --surface:#1A1F2B; --sunk:#0D111A;
+    --ink:#E9EBEF; --ink2:#A4ACBA; --ink3:#6F7888;
+    --rule:#2A3140; --rule2:#3F4857;
+    --cst:#E8674B; --dc:#7F98EA; --stt:#D6A63E;
+    --myelin:#7F98EA;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#121620; --surface:#1A1F2B; --sunk:#0D111A;
+  --ink:#E9EBEF; --ink2:#A4ACBA; --ink3:#6F7888;
+  --rule:#2A3140; --rule2:#3F4857;
+  --cst:#E8674B; --dc:#7F98EA; --stt:#D6A63E;
+  --myelin:#7F98EA;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--f-body);
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px 96px}
+
+.mast{padding:44px 0 0;border-bottom:1px solid var(--rule)}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink3);display:flex;gap:18px;flex-wrap:wrap}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(34px,6vw,58px);
+  line-height:1.02;letter-spacing:-.022em;margin:14px 0 10px;text-wrap:balance}
+.standfirst{font-size:20px;line-height:1.5;color:var(--ink2);max-width:60ch;margin:0 0 26px}
+.mast-meta{display:flex;gap:0;flex-wrap:wrap;border-top:1px solid var(--rule);margin-top:8px}
+.mast-meta div{flex:1 1 150px;padding:12px 16px 14px;border-right:1px solid var(--rule)}
+.mast-meta div:last-child{border-right:0}
+.mast-meta dt{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink3);margin:0 0 3px}
+.mast-meta dd{margin:0;font-family:var(--f-display);font-weight:600;font-size:15px}
+
+section{padding-top:56px}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--ink);
+  padding-bottom:7px;margin-bottom:24px}
+.sec-num{font-family:var(--f-mono);font-size:12px;font-weight:600;color:var(--ink3);
+  letter-spacing:.06em;flex:none}
+h2{font-family:var(--f-display);font-weight:700;font-size:clamp(22px,3.4vw,31px);
+  letter-spacing:-.015em;margin:0;line-height:1.1}
+h3{font-family:var(--f-display);font-weight:600;font-size:18px;letter-spacing:-.005em;
+  margin:32px 0 8px;line-height:1.25}
+p{margin:0 0 15px;max-width:var(--measure)}
+.lede{font-size:18.5px;color:var(--ink2);max-width:62ch}
+a{color:var(--myelin);text-decoration-thickness:1px;text-underline-offset:2px}
+strong{font-weight:600}
+code{font-family:var(--f-mono);font-size:.87em;background:var(--sunk);
+  padding:1px 5px;border-radius:2px}
+
+.instrument{background:var(--sunk);border:1px solid var(--rule);margin:28px 0 8px}
+.inst-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:10px 14px;border-bottom:1px solid var(--rule)}
+.inst-label{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink3);margin-right:auto}
+.btn{font-family:var(--f-mono);font-size:11px;letter-spacing:.04em;padding:6px 11px;
+  background:transparent;color:var(--ink2);border:1px solid var(--rule2);cursor:pointer;
+  transition:background .12s,color .12s}
+.btn:hover{color:var(--ink);border-color:var(--ink3)}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.btn:focus-visible{outline:2px solid var(--myelin);outline-offset:2px}
+#stage{display:block;width:100%;height:440px;touch-action:none;cursor:ns-resize}
+.readout{border-top:1px solid var(--rule);padding:14px 16px;background:var(--surface)}
+.readout .syn{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--ink3);margin-bottom:9px}
+.readout ul{margin:0;padding:0;list-style:none;display:grid;gap:7px}
+.readout li{font-size:14.5px;line-height:1.45;padding-left:16px;position:relative;color:var(--ink2)}
+.readout li::before{content:"";position:absolute;left:0;top:.56em;width:8px;height:1px;
+  background:var(--rule2)}
+.readout li b{color:var(--ink);font-weight:600}
+.key{display:flex;gap:16px;flex-wrap:wrap;padding:9px 16px;border-top:1px solid var(--rule);
+  font-family:var(--f-mono);font-size:10.5px;color:var(--ink3);background:var(--surface)}
+.key span{display:flex;align-items:center;gap:6px}
+.key i{width:14px;height:3px;display:block;border-radius:2px}
+.caption{font-family:var(--f-mono);font-size:11.5px;line-height:1.55;color:var(--ink3);
+  max-width:74ch;margin:10px 0 0}
+
+.tbl-scroll{overflow-x:auto;margin:18px 0 6px;border-top:1px solid var(--ink);
+  border-bottom:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:14.5px}
+th{font-family:var(--f-mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink3);text-align:left;padding:9px 14px 9px 0;font-weight:500;
+  border-bottom:1px solid var(--rule);vertical-align:bottom}
+td{padding:11px 14px 11px 0;border-bottom:1px solid var(--rule);vertical-align:top;
+  color:var(--ink2);line-height:1.45}
+td:first-child{color:var(--ink);font-family:var(--f-display);font-weight:600;font-size:14px;
+  padding-right:20px}
+tr:last-child td{border-bottom:0}
+
+.ledger{display:grid;gap:0;margin:20px 0 6px;border-top:1px solid var(--ink)}
+.defect{display:grid;grid-template-columns:62px 1fr;gap:0 18px;
+  padding:15px 0;border-bottom:1px solid var(--rule)}
+.defect .id{font-family:var(--f-mono);font-size:11px;font-weight:600;color:var(--cst);
+  letter-spacing:.04em;padding-top:2px}
+.defect h4{font-family:var(--f-display);font-size:16px;font-weight:600;margin:0 0 4px;
+  line-height:1.3}
+.defect p{font-size:14.5px;line-height:1.5;color:var(--ink2);margin:0 0 6px;max-width:64ch}
+.defect .fix{font-size:14px;color:var(--ink2);max-width:64ch;margin:0;
+  padding-left:13px;border-left:2px solid var(--dc)}
+.defect .fix b{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dc);display:block;margin-bottom:2px;font-weight:600}
+
+.stack{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);margin:20px 0 6px}
+.layer{background:var(--surface);padding:16px 18px;display:grid;
+  grid-template-columns:78px 1fr;gap:0 18px;align-items:start}
+.layer .tag{font-family:var(--f-mono);font-size:11px;font-weight:600;color:var(--ink3);
+  letter-spacing:.06em;padding-top:3px}
+.layer h4{font-family:var(--f-display);font-size:16px;font-weight:600;margin:0 0 4px}
+.layer p{font-size:14.5px;line-height:1.5;margin:0;color:var(--ink2);max-width:62ch}
+
+.phase{border-top:1px solid var(--rule);padding:22px 0}
+.phase:first-of-type{border-top:2px solid var(--ink)}
+.phase-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.phase-id{font-family:var(--f-mono);font-size:12px;font-weight:600;color:var(--ground);
+  background:var(--ink);padding:2px 7px;letter-spacing:.04em}
+.phase-head h3{margin:0;font-size:19px}
+.phase-goal{font-size:15px;color:var(--ink2);margin:0 0 14px;max-width:64ch}
+.steps{margin:0;padding:0 0 0 18px;list-style:none;display:grid;gap:9px;
+  border-left:1px solid var(--rule)}
+.steps li{font-size:14.5px;line-height:1.5;color:var(--ink2);max-width:66ch}
+.steps li b{font-family:var(--f-mono);font-size:11px;font-weight:600;color:var(--ink);
+  letter-spacing:.03em;margin-right:7px}
+.exit{margin:14px 0 0;padding:10px 14px;background:var(--sunk);font-size:14px;
+  color:var(--ink2);max-width:66ch;border-left:2px solid var(--dc)}
+.exit b{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dc);display:block;margin-bottom:2px}
+
+.swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);margin:18px 0 6px}
+.sw{background:var(--surface)}
+.sw .chip{height:52px;display:block}
+.sw .meta{display:block;padding:9px 12px 11px}
+.sw .nm{font-family:var(--f-display);font-size:13px;font-weight:600;display:block}
+.sw .hx{font-family:var(--f-mono);font-size:10.5px;color:var(--ink3);letter-spacing:.04em}
+
+.no-list{margin:14px 0 6px;padding:0;list-style:none;display:grid;gap:6px;max-width:var(--measure)}
+.no-list li{font-size:14.5px;color:var(--ink2);padding-left:20px;position:relative;line-height:1.5}
+.no-list li::before{content:"\00d7";position:absolute;left:2px;top:-1px;color:var(--cst);
+  font-family:var(--f-mono);font-size:14px}
+
+.note{border-left:3px solid var(--stt);padding:2px 0 2px 16px;margin:20px 0;max-width:64ch}
+.note p{font-size:15px;color:var(--ink2);margin:0}
+.note .t{font-family:var(--f-mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--stt);font-weight:600;display:block;margin-bottom:3px}
+
+footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--rule);
+  font-family:var(--f-mono);font-size:11px;color:var(--ink3);line-height:1.7}
+@media (max-width:620px){
+  body{font-size:16px}
+  .defect{grid-template-columns:1fr;gap:6px}
+  .layer{grid-template-columns:1fr;gap:5px}
+  #stage{height:390px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow"><span>Build plan &mdash; revision C</span><span>16 September 2026</span><span>Both open risks resolved</span></div>
+  <h1>NeuroLocalize</h1>
+  <p class="standfirst">A real-time 3D lesion-localization engine spanning cortex to muscle. You place a lesion and watch the signal die where it dies &mdash; the deficit is something you observe, not something you are told.</p>
+  <dl class="mast-meta">
+    <div><dt>Scope</dt><dd>Cord &rarr; plexus &rarr; brainstem</dd></div>
+    <div><dt>Engine</dt><dd>Bidirectional</dd></div>
+    <div><dt>Defects found</dt><dd>12, across two audits</dd></div>
+    <div><dt>Status</dt><dd>Awaiting go on P0</dd></div>
+  </dl>
+</header>
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>The mechanic</h2></div>
+  <p class="lede">Every tool in this space renders the answer. This one renders the reason. Impulses travel the tracts at their real conduction velocities; when one meets a lesion it is extinguished, and everything downstream goes dark. The darkness <em>is</em> the deficit.</p>
+  <p>Below is that mechanic, in two dimensions, running. It is a preview of the core loop, not the product &mdash; the build renders it in 3D with true cross-sectional somatotopy. Drag the lesion up and down the cord. Change its pattern.</p>
+
+  <div class="instrument">
+    <div class="inst-bar">
+      <span class="inst-label">Longitudinal schematic &mdash; drag to set level</span>
+      <button class="btn" data-pat="hemisection" aria-pressed="true">Hemisection</button>
+      <button class="btn" data-pat="central" aria-pressed="false">Central</button>
+      <button class="btn" data-pat="anterior" aria-pressed="false">Anterior</button>
+      <button class="btn" data-pat="complete" aria-pressed="false">Complete</button>
+    </div>
+    <canvas id="stage"></canvas>
+    <div class="key">
+      <span><i style="background:#2F4A9E"></i>Dorsal column &mdash; vibration, proprioception</span>
+      <span><i style="background:#A8760F"></i>Spinothalamic &mdash; pain, temperature</span>
+      <span><i style="background:#BC3B22"></i>Corticospinal &mdash; motor</span>
+    </div>
+    <div class="readout">
+      <div class="syn" id="syn">Brown-S&eacute;quard syndrome</div>
+      <ul id="deficits"></ul>
+    </div>
+  </div>
+  <p class="caption">Pulse speed encodes conduction velocity. Dorsal-column fibres are large and myelinated (A&beta;, 35&ndash;75 m/s); spinothalamic fibres are thin or unmyelinated (A&delta; and C, 0.5&ndash;30 m/s). The amber pulses visibly lag &mdash; which is why pain arrives second, and why the animation speed is a fact rather than a flourish.</p>
+
+  <div class="note">
+    <span class="t">Why this beats the field</span>
+    <p>Watch a right-sided amber pulse cross the midline near its entry level and then die inside a <em>left</em> hemisection, while a left indigo pulse dies on the side it entered. That is Brown-S&eacute;quard's dissociation &mdash; contralateral pain loss, ipsilateral column loss &mdash; derived in front of you in about eight seconds. No table, no mnemonic, no memorising which one crosses where.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>Audit of revision A</h2></div>
+  <p class="lede">Twelve defects across two audit passes. Seven are factual or modelling errors that would have shipped wrong clinical output or made whole syndromes uncomputable; three are method failures; two are research failures. The last two, A&mdash;11 and A&mdash;12, came out of resolving the open risks and are the most consequential of the set &mdash; they landed on the feature this product was being built around.</p>
+
+  <div class="ledger">
+    <div class="defect"><div class="id">A&mdash;01</div><div>
+      <h4>Spinal shock would have produced a wrong answer</h4>
+      <p>An acute complete transection gives <em>flaccid</em> paralysis, areflexia and no Babinski for days to weeks. The revision-A engine had no time axis and would have confidently emitted hyperreflexia and an upgoing plantar from minute one &mdash; wrong in precisely the setting that matters most, acute trauma.</p>
+      <p class="fix"><b>Correction</b>Time becomes a required argument, not an option: <code>forward(site, extent, side, timepoint)</code> over hyperacute / acute / subacute / chronic. The bug becomes the differentiator &mdash; a time scrubber no competing tool has.</p>
+    </div></div>
+
+    <div class="defect"><div class="id">A&mdash;02</div><div>
+      <h4>Decussation was modelled as a scalar</h4>
+      <p>It is not one shape. The dorsal columns cross at a fixed point (internal arcuate fibres, caudal medulla) and the corticospinal tract at another (pyramidal decussation). The spinothalamic tract crosses <em>segmentally</em> &mdash; fibres ascend one to two levels in Lissauer's tract, then cross at that level. Its crossing point is a function of the entering segment.</p>
+      <p class="fix"><b>Correction</b><code>decussation</code> becomes a typed union: <code>Fixed(site)</code> or <code>Segmental(s =&gt; s + 1..2)</code>. Without this the two-segment offset of the contralateral sensory level cannot be derived, and that offset is the examinable detail.</p>
+    </div></div>
+
+    <div class="defect"><div class="id">A&mdash;03</div><div>
+      <h4>One coordinate system where there are two</h4>
+      <p>Cord segment is not vertebral level. The offset grows caudally &mdash; roughly +1 cervically, +2 upper thoracic, +3 lower thoracic &mdash; and the cord ends at L1&ndash;L2, so every lumbar and sacral segment is packed between T10 and L1. A T10 vertebral fracture injures lumbosacral cord. Revision A had a single ruler and would have been wrong for every thoracolumbar injury.</p>
+      <p class="fix"><b>Correction</b>Two coordinate systems with an explicit map, and both rulers rendered side by side in 3D. Nobody visualises this offset spatially; everybody gets it wrong.</p>
+    </div></div>
+
+    <div class="defect"><div class="id">A&mdash;04</div><div>
+      <h4>No reflex arc entity</h4>
+      <p>A reflex needs an afferent limb, a cord segment, an efferent limb and descending inhibition. Without modelling it, the engine cannot produce the upper- versus lower-motor-neuron boundary at the lesion level, the inverted supinator jerk, or &mdash; critically &mdash; the bulbocavernosus and anal reflexes that separate conus medullaris from cauda equina. That distinction is a surgical emergency call.</p>
+      <p class="fix"><b>Correction</b><code>ReflexArc</code> is promoted to a first-class entity in the knowledge base.</p>
+    </div></div>
+
+    <div class="defect"><div class="id">A&mdash;05</div><div>
+      <h4>Autonomic pathways were treated as signs, not pathways</h4>
+      <p>Sympathetic outflow exists only at T1&ndash;L2. That single fact generates Horner's syndrome from lesions above T1, autonomic dysreflexia only above T6, neurogenic shock, and the spastic-versus-flaccid bladder split at the conus. Listing "Horner's" as an output sign rather than modelling the pathway means none of it can be derived.</p>
+      <p class="fix"><b>Correction</b>Autonomic joins the pathway families, with its own outflow range and course.</p>
+    </div></div>
+
+    <div class="defect"><div class="id">A&mdash;06</div><div>
+      <h4>Grey matter, white matter and root entry zone were conflated</h4>
+      <p>A lesion at the C6 segment produces three separate effects: lower-motor-neuron loss in the C6 myotome, upper-motor-neuron signs in everything below, and ascending sensory loss from below. A syrinx damages crossing fibres in the anterior white commissure specifically; polio damages the anterior horn. Revision A's <code>extent</code> enum could not express the compartment.</p>
+      <p class="fix"><b>Correction</b>Lesion volumes are defined against anatomical compartments, not a flat enum.</p>
+    </div></div>
+
+    <div class="defect"><div class="id">A&mdash;07</div><div>
+      <h4>Reverse mode used boolean logic on three-valued data</h4>
+      <p>A real examination yields present, absent, <em>or not tested</em>. Collapsing that to a boolean makes the engine treat an untested finding as a negative one, which produces confident nonsense.</p>
+      <p class="fix"><b>Correction</b>Three-valued findings throughout &mdash; and this unlocks the single most useful feature in the product, described in section 05.</p>
+    </div></div>
+
+    <div class="defect"><div class="id">A&mdash;08</div><div>
+      <h4>The validation was circular</h4>
+      <p>"The classic syndromes are the test suite" proves nothing if the same person writes the engine and the expected outputs from the same understanding. It tests self-consistency, not correctness.</p>
+      <p class="fix"><b>Correction</b>Expected outputs are transcribed from Brazis with page citations and committed <em>before</em> any engine code exists. The engine is then written to satisfy a specification it cannot influence.</p>
+    </div></div>
+
+    <div class="defect"><div class="id">A&mdash;09</div><div>
+      <h4>An inference was reported as a finding</h4>
+      <p>I described MedMaster's 3D as "pre-rendered". I inferred that from a product page; I never verified it. It may well be interactive.</p>
+      <p class="fix"><b>Correction</b>Flagged as unverified in section 03. It is a free download &mdash; the honest resolution is to install it before P1 and record what it actually does.</p>
+    </div></div>
+
+    <div class="defect"><div class="id">A&mdash;10</div><div>
+      <h4>I researched the wrong competitive landscape</h4>
+      <p>Revision A surveyed Western medical-education literature. The real contest for an Indian MBBS student's evening hours is Marrow, PrepLadder, Cerebellum and Anki.</p>
+      <p class="fix"><b>Correction</b>Checked. Those platforms are video, question banks and notes &mdash; no interactive 3D layer. This does not compete with them; it fills a slot they leave empty, which also means it should interoperate rather than try to replace them.</p>
+    </div></div>
+
+    <div class="defect"><div class="id">A&mdash;11</div><div>
+      <h4>The differentiator was built on contested anatomy</h4>
+      <p>Revisions A and B both named somatotopic lamination as the reason this product deserves to exist, and stated it as settled: sacral fibres lateral, cervical medial. It is not settled. Two incompatible models are live in the literature &mdash; the classical medial-to-lateral arrangement, and an anterior-to-posterior arrangement derived from CT-guided cordotomy mapping in awake patients. The same work notes that earlier cordotomy technique may have biased the classical version, and that scattered leg fibres appear more ventrally, and arm fibres more dorsomedially, than the textbook allows.</p>
+      <p class="fix"><b>Correction</b>Separate <em>observation</em> from <em>mechanism</em> in the knowledge base, and never let the engine derive a robust observation from a contested mechanism. Then render both models and let the user switch between them. Section 05 carries the architecture; section 10 carries the reasoning.</p>
+    </div></div>
+
+    <div class="defect"><div class="id">A&mdash;12</div><div>
+      <h4>Lamination is not constant along the cord</h4>
+      <p>Step 1.3 specified one canonical cross-section lofted along the centreline. But lower-body fibres <em>shift ventrally as they ascend</em> and sit exclusively ventral to the dentate ligament by cervical levels. The cross-section rotates as you climb. A single lofted profile &mdash; the exact thing revision B specified &mdash; is anatomically wrong, and it would have been wrong in the one rendering this product exists to get right.</p>
+      <p class="fix"><b>Correction</b>Somatotopy becomes a function of level, not a constant profile: <code>lamination(tract, level)</code> interpolated between sampled levels, with the dentate ligament rendered as the landmark the evidence is actually expressed against.</p>
+    </div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>Prior art</h2></div>
+  <p class="lede">Bidirectional localization exists, but only in 2D, gated or legacy. Real-time 3D exists, but only as atlases that cannot reason. Nothing occupies both squares.</p>
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr><th>Tool</th><th>What it is</th><th>What it leaves open</th></tr></thead>
+    <tbody>
+      <tr><td>Neurologic Localization Made Ridiculously Simple</td>
+        <td>Free desktop download from MedMaster. Animated 3D brain rotations, specimen photographs. Genuinely does symptom&nbsp;&rarr;&nbsp;site mapping. <em>Interactivity of the 3D unverified &mdash; see A&mdash;09.</em></td>
+        <td>Desktop only, brain-centric. No cord somatotopy, no plexus, no mobile.</td></tr>
+      <tr><td>Neuro-Logic</td>
+        <td>MedEdPORTAL. 51 cases; the learner selects candidate levels and is drilled on the pathway missed.</td>
+        <td>2D. Account-gated. A fixed case set rather than free exploration.</td></tr>
+      <tr><td>BMC Med Educ 2026</td>
+        <td>Student-built, AI-assisted 3D simulation of upper-limb nerve lesions mapping to motor, sensory and reflex deficits. Pilot-tested against a slide review; helped most at low baseline knowledge.</td>
+        <td>Pilot study, no public URL. Upper limb only. Validates both the concept and the build method.</td></tr>
+      <tr><td>Complete Anatomy, Visible Body, BioDigital, 3D Organon</td>
+        <td>Excellent real-time 3D atlases.</td>
+        <td>Atlases, not engines. You view anatomy; nothing reasons from lesion to deficit.</td></tr>
+      <tr><td>Kenhub, Osmosis, Geeky Medics, AnatomyIQ</td>
+        <td>2D cross-sections, articles, spaced-repetition quizzing.</td>
+        <td>2D. No somatotopy in space, no inference.</td></tr>
+      <tr><td>Marrow, PrepLadder, Cerebellum</td>
+        <td>The actual Indian PG-prep stack: video, question banks, notes.</td>
+        <td>No interactive 3D layer at all. Complementary, not competitive.</td></tr>
+      <tr><td>3D-printed plexus models</td>
+        <td>Several 2025&ndash;26 papers. Cheap, tactile, effective.</td>
+        <td>Physical. No deficit computation, no distribution.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="caption">The differentiator is not that it is 3D. It is that tract <em>somatotopy</em> is rendered in space, and rendered honestly &mdash; including the fact that the spinothalamic arrangement is genuinely disputed, and that it changes as you ascend the cord. Every atlas draws one cross-section and implies it is final. Showing two competing models, level by level, and letting a learner switch between them is not a compromise forced by the uncertainty; it is a better education than any of these tools currently give. A flat diagram physically cannot carry it.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>Hard constraint: ISNCSCI licensing</h2></div>
+  <p>The American Spinal Injury Association owns the copyright to the International Standards worksheet. It <strong>may be copied freely but must not be altered</strong> without permission, and derivative works or any commercial use require a signed licence with no modifications accepted. Revision A built its entire accuracy strategy on reshaping that data into an app interface. That is a derivative work.</p>
+  <h3>Resolution</h3>
+  <p>Anatomical facts are not copyrightable; a specific selection, arrangement and rendering of them is. So: draw our own dermatome geometry from primary literature, cite ISNCSCI as the standard the reader should consult, and never reproduce the worksheet or a recognisable redraw of it. If this is ever monetised, obtain the licence first.</p>
+  <div class="note">
+    <span class="t">And the maps genuinely disagree</span>
+    <p>Foerster 1933, Keegan &amp; Garrett 1948 and Lee 2008 do not agree on dermatome boundaries &mdash; and Lee's evidence-based review found that Keegan &amp; Garrett, the map most widely reproduced in textbooks, is also the most flawed. Rather than picking one silently, the tool renders the disagreement: the consensus core of each dermatome solid, the contested margins hatched. The field's messiest problem becomes the most honest teaching feature in the product.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><h2>Architecture</h2></div>
+  <p class="lede">One decision governs everything else: this is an inference engine over an anatomical graph, and 3D is its rendering layer. Build it the other way round &mdash; a 3D viewer with facts attached &mdash; and you get a demo that cannot answer a question it was not pre-authored to answer.</p>
+  <div class="stack">
+    <div class="layer"><span class="tag">L1</span><div><h4>Knowledge base</h4>
+      <p>Declarative data, never code. Structures, pathways, reflex arcs, autonomic outflow, signs, lesion compartments, and the segment-to-vertebra map. Every row carries its source, edition and page. A neurologist can audit the whole thing without opening a source file &mdash; which is the only way external review is ever going to actually happen.</p></div></div>
+    <div class="layer"><span class="tag">L2</span><div><h4>Engine</h4>
+      <p>Pure functions. Zero rendering, zero framework, fully unit-testable. <code>forward(site, extent, side, time)</code> traverses every pathway and asks one question of each &mdash; does it intersect the lesion, and on which side of its own decussation? That single comparison yields every ipsilateral-versus-contralateral answer in the product. <code>reverse(findings)</code> inverts it.</p></div></div>
+    <div class="layer"><span class="tag">L3</span><div><h4>Geometry</h4>
+      <p>Parametric and generated &mdash; no licensed mesh data, which is what keeps this shippable at all. A neuraxis centreline spline with cervical and lumbar enlargements, conus at L1 and cauda equina below; a canonical cross-section with real somatotopic lamination lofted along it. The plexus as splines from root exits through trunks, divisions and cords, positioned against clavicle and first rib.</p></div></div>
+    <div class="layer"><span class="tag">L4</span><div><h4>Motion and render</h4>
+      <p>Three.js, pinned. Tube geometry along splines; a GPU-instanced impulse system whose velocities are read from the knowledge base rather than chosen for looks. The camera moves between named stations rather than offering unstructured orbit.</p></div></div>
+    <div class="layer"><span class="tag">L5</span><div><h4>Instrument</h4>
+      <p>Forward mode: place a lesion, watch deficits resolve. Reverse mode: enter findings, get ranked loci and a next-best-test recommendation. Presentation mode: strip the chrome and drive it from a phone while teaching an intern at a bedside.</p></div></div>
+  </div>
+
+  <h3>Observation and mechanism are separate rows</h3>
+  <p>This is the structural fix for A&mdash;11, and it generalises well beyond sacral sparing. A great deal of clinical medicine consists of <strong>robust observations attached to contested mechanisms</strong>. Conflating them means that when the mechanism is revised, everything built on it silently becomes wrong.</p>
+  <p>So the knowledge base separates them. <code>Observation</code> rows record what is reliably seen and are what the engine reasons over. <code>Mechanism</code> rows record why it is thought to happen, carry their competing accounts, and drive only the rendering and the explanation. Sacral sparing in an intramedullary lesion is an observation used diagnostically every day; peripheral fibre position is one proposed explanation for it. <strong>The engine derives the observation directly. If the lamination models are revised tomorrow, every deficit this tool computes is still correct.</strong></p>
+
+  <h3>Confidence tiers</h3>
+  <p>Every knowledge-base row carries a tier, and the interface is not permitted to render a lower tier with the confidence of a higher one.</p>
+  <ul class="steps" style="margin-bottom:15px">
+    <li><b>T1</b>Uncontested, and agreeing across every source consulted. The corticospinal tract decussates at the pyramids.</li>
+    <li><b>T2</b>Standard teaching resting on a single authority, or where the other sources are silent rather than contradictory.</li>
+    <li><b>T3</b>Genuinely contested, with the competing positions named and cited. Spinothalamic lamination lives here.</li>
+  </ul>
+  <p>Two sources minimum per row, and <strong>disagreement between them promotes the row to T3 automatically rather than being resolved by whoever is typing.</strong> That single rule is what stops an author's preference from quietly becoming the tool's fact, and it is the closest thing to peer review that exists before an actual peer arrives.</p>
+
+  <h3>The feature that falls out of defect A&mdash;07</h3>
+  <p>Once findings are three-valued, reverse mode can do something no tool in this space does. Given a partial examination it ranks candidate loci &mdash; and then computes <strong>which single untested finding best discriminates between the top two candidates</strong>. Not "here is the answer," but "you have narrowed it to conus versus cauda equina; test the bulbocavernosus reflex, and here is what each result would mean."</p>
+  <p>That is what an experienced neurologist actually does on a ward round, it is the hardest thing to teach, and it is the reason this stays useful to her at thirty-five. It is also, precisely, information gain over a hypothesis set &mdash; a solved computation once the knowledge base is honest.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><h2>Motion system</h2></div>
+  <p class="lede">Motion is the argument, not the polish. Four mechanisms, each teaching something a static render cannot.</p>
+
+  <h3>Propagation and extinction</h3>
+  <p>Impulses originate at receptors and travel centrally; motor impulses originate at cortex and travel out to muscle. When a pulse meets a lesion it is extinguished and the path beyond it darkens. You are not reading a deficit &mdash; you are watching a signal fail to arrive.</p>
+
+  <h3>Conduction velocity as information</h3>
+  <p>Pulse speed is read from fibre type, not chosen. Large myelinated dorsal-column fibres visibly outrun thin spinothalamic fibres, so the animation itself explains why pain is the slower sensation. Every speed in the render is a number from the knowledge base.</p>
+
+  <h3>The decussation race</h3>
+  <p>Fire a dorsal-column and a spinothalamic impulse from the same dermatome simultaneously. One climbs the entire cord before crossing in the medulla; the other crosses within two segments. Run that once and the dissociation in Brown-S&eacute;quard stops being a fact to be memorised.</p>
+
+  <h3>Somatotopy under load &mdash; and under dispute</h3>
+  <p>Pulses from sacral and cervical dermatomes occupy visibly different positions inside the same tract, and those positions shift as the pulse ascends. Place a central lesion and watch which fibres die and which escape. Sacral sparing stops being a phrase and becomes something observed &mdash; and it is that observation which tells a clinician the lesion is inside the cord rather than pressing on it.</p>
+  <p>But the arrangement itself is disputed, so the tool ships <strong>a model switch rather than an answer</strong>. Run the same lesion under the classical medial-to-lateral lamination and under the anterior-to-posterior model from cordotomy mapping, and see where the two predict differently. Nothing else in this field lets a learner do that, and it is a more honest account of how anatomy is actually known. The deficits the engine reports do not change when the switch is thrown &mdash; they come from observation rows, not from the contested geometry.</p>
+
+  <div class="note">
+    <span class="t">Camera discipline</span>
+    <p>Free orbit is available but is not the default. The tool moves between named stations &mdash; axial cross-section, sagittal, plexus, whole neuraxis &mdash; with eased transitions, because a learner dropped into unconstrained 3D spends their attention on navigation instead of anatomy. Motion respects <code>prefers-reduced-motion</code>: pulses become static position markers and every deficit stays derivable.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">07</span><h2>Design language</h2></div>
+  <p class="lede">Drawn from the histology bench and the reading room, not from software. The reference is a Luxol fast blue myelin stain &mdash; deep blue-violet myelin against pale grey matter &mdash; which is the literal appearance of the object being modelled.</p>
+
+  <div class="swatches">
+    <div class="sw"><span class="chip" style="background:#2F4A9E"></span><span class="meta"><span class="nm">Myelin</span><span class="hx">#2F4A9E &middot; dorsal column</span></span></div>
+    <div class="sw"><span class="chip" style="background:#A8760F"></span><span class="meta"><span class="nm">Ochre</span><span class="hx">#A8760F &middot; spinothalamic</span></span></div>
+    <div class="sw"><span class="chip" style="background:#BC3B22"></span><span class="meta"><span class="nm">Vermilion</span><span class="hx">#BC3B22 &middot; corticospinal</span></span></div>
+    <div class="sw"><span class="chip" style="background:#EFF0F3"></span><span class="meta"><span class="nm">Slide</span><span class="hx">#EFF0F3 &middot; ground</span></span></div>
+    <div class="sw"><span class="chip" style="background:#14181F"></span><span class="meta"><span class="nm">Ink</span><span class="hx">#14181F &middot; type</span></span></div>
+  </div>
+  <p class="caption">Three tract hues chosen to survive deuteranopia: blue, ochre and vermilion stay separable when green sensitivity is lost. Neutrals carry a slight indigo bias so they read as chosen rather than inherited.</p>
+
+  <h3>The governing rule</h3>
+  <p><strong>Chroma is a data channel.</strong> If a thing is not data, it has no hue. The entire interface &mdash; panels, rules, labels, controls &mdash; is achromatic. Saturation appears only where it encodes a modality. This is what stops the screen looking like a consumer app and starts it looking like an instrument, and it means a learner can trust that colour always means something.</p>
+
+  <h3>Type</h3>
+  <p>Archivo for display, an engineered grotesque with the flavour of a clinical form header. Source Serif 4 for reading, because this is a tool with a great deal to explain. IBM Plex Mono for every measurement, segment label and power grade, with tabular figures so columns of numbers align. Anatomical nomenclature is set exactly, with eponyms secondary &mdash; <em>anterior white commissure</em> first, Brown-S&eacute;quard second.</p>
+
+  <h3>Explicitly refused</h3>
+  <ul class="no-list">
+    <li>Cards. Rounded boxes floating on a background, one radius and one shadow stamped on everything, flattening every hierarchy into a grid of equal tiles.</li>
+    <li>Gradient heroes, glassmorphism, drop shadows, purple-to-blue anything.</li>
+    <li>Emoji as section markers, and decorative numbering that encodes nothing. The phases below are numbered because they are genuinely ordered; nothing else is.</li>
+    <li>Inter and Space Grotesk &mdash; the safe defaults that make unrelated products look like the same product.</li>
+    <li>Big-number tiles. There is no metric here worth a hero figure.</li>
+    <li>Bouncy easing. Motion here represents conduction, and conduction does not overshoot and settle.</li>
+  </ul>
+  <p>Density is deliberate. This screen should look like it belongs to someone who knows what they are doing; for this audience, slightly intimidating is the correct register.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">08</span><h2>Execution</h2></div>
+  <p class="lede">Seven phases. Each ends in something that stands alone, and the first ships no pixels at all &mdash; because accuracy is the risk worth retiring first.</p>
+
+  <div class="phase">
+    <div class="phase-head"><span class="phase-id">P0</span><h3>Ground truth and engine</h3></div>
+    <p class="phase-goal">No 3D. No interface. Prove the reasoning is correct before anything is drawn, so that every later bug is a rendering bug.</p>
+    <ul class="steps">
+      <li><b>0.1</b>Transcribe expected outputs for fifteen classic cord syndromes from Brazis and Blumenfeld, with page citations, into a frozen expectations file. This happens <em>first</em>, before engine code exists &mdash; it is the fix for defect A&mdash;08 and it only works if the order is respected.</li>
+      <li><b>0.2</b>Define knowledge-base schemas: <code>Structure</code>, <code>Pathway</code> with union-typed decussation, <code>ReflexArc</code>, <code>AutonomicOutflow</code>, <code>Sign</code>, <code>LesionVolume</code> over anatomical compartments, the segment-to-vertebra map, and the <code>Observation</code> / <code>Mechanism</code> split with confidence tiers.</li>
+      <li><b>0.3</b>Populate the cord: three long tracts with level-sampled somatotopy under both lamination models, spinocerebellar, sympathetic outflow T1&ndash;L2, the major reflex arcs, thirty-one segments, and both rulers. Two sources per row; disagreement promotes to T3 rather than being resolved by hand.</li>
+      <li><b>0.4</b>Implement <code>forward()</code> with the time axis, so spinal shock resolves correctly at hyperacute and upper-motor-neuron signs emerge by chronic. The engine reads observation rows only &mdash; it must return identical output under either lamination model, and a test asserts exactly that.</li>
+      <li><b>0.5</b>Run against the frozen expectations. Iterate the knowledge base &mdash; never the expectations &mdash; until every case passes.</li>
+      <li><b>0.6</b>Mutation-test the suite. Deliberately corrupt each knowledge-base row in turn and require a test to fail. A suite that survives its own data being wrong is theatre, and a confirmation-only suite of fifteen happy cases is exactly the kind that does.</li>
+      <li><b>0.7</b>Emit the review worksheet &mdash; every claim as a one-line statement with its citation and a yes / no / unsure box, ordered by how much rests on it. This is a P0 <em>deliverable</em>, not a P1 chore, so that clinical review runs in parallel with rendering instead of blocking it.</li>
+    </ul>
+    <p class="exit"><b>Exit</b>Fifteen of fifteen syndromes reproduce from a specification written before the engine, including the conus-versus-cauda distinction and the two-segment contralateral offset. Mutation score above 90 per cent. Review worksheet generated and sent. Zero lines of rendering code written.</p>
+  </div>
+
+  <div class="phase">
+    <div class="phase-head"><span class="phase-id">P1</span><h3>Geometry and the motion core</h3></div>
+    <p class="phase-goal">Build the thing that makes this worth existing: signals that travel, and die.</p>
+    <ul class="steps">
+      <li><b>1.1</b>Neuraxis centreline spline with cervical and lumbar enlargements, conus at L1&ndash;L2, cauda equina below.</li>
+      <li><b>1.2</b>Dual ruler rendered in space &mdash; cord segment and vertebral level side by side, their divergence visible. This is defect A&mdash;03 turned into a feature.</li>
+      <li><b>1.3</b>Tract tubes whose cross-sectional lamination is <em>a function of level</em>, not a single lofted profile &mdash; lower-body fibres migrating ventrally as they ascend, with the dentate ligament rendered as the landmark the evidence is expressed against. Both lamination models built, switchable. This is the A&mdash;12 fix and it is the hardest geometry in the project.</li>
+      <li><b>1.4</b>GPU-instanced impulse system. Velocities read from fibre type in the knowledge base. Extinction on lesion intersection, with downstream darkening.</li>
+      <li><b>1.5</b>Lesion as a manipulable 3D volume; live intersection against tract geometry, with results fed to the P0 engine rather than computed in the renderer.</li>
+      <li><b>1.6</b>Camera stations with eased transitions; a reduced-motion path that keeps every deficit derivable without animation.</li>
+    </ul>
+    <p class="exit"><b>Exit</b>Place a lesion anywhere on the cord, watch the correct signals extinguish, and confirm the rendered deficits match P0's engine output exactly. First shareable build.</p>
+  </div>
+
+  <div class="phase">
+    <div class="phase-head"><span class="phase-id">P2</span><h3>The instrument</h3></div>
+    <p class="phase-goal">Make it operable rather than merely impressive.</p>
+    <ul class="steps">
+      <li><b>2.1</b>Implement the design language as a token system &mdash; chroma reserved for modality, achromatic chrome, both themes designed rather than inverted.</li>
+      <li><b>2.2</b>Deficit panel: motor grid, sensory body map with contested dermatome margins hatched, reflexes, sphincters, autonomic.</li>
+      <li><b>2.3</b>Axial cross-section scrubber &mdash; move the cutting plane up and down the cord like reading a scan, with the tract lamination live.</li>
+      <li><b>2.4</b>Time scrubber across hyperacute to chronic, driving the A&mdash;01 fix.</li>
+      <li><b>2.5</b>Touch, one-handed phone layout, keyboard navigation, visible focus.</li>
+    </ul>
+    <p class="exit"><b>Exit</b>Fully usable one-handed on a phone in a ward corridor.</p>
+  </div>
+
+  <div class="phase">
+    <div class="phase-head"><span class="phase-id">P3</span><h3>Reverse mode and next-best-test</h3></div>
+    <p class="phase-goal">Invert the engine. This is the phase that makes it a clinical instrument rather than a study aid.</p>
+    <ul class="steps">
+      <li><b>3.1</b>Three-valued findings entry &mdash; present, absent, not tested &mdash; on the same body map used for output.</li>
+      <li><b>3.2</b>Locus ranking by parsimony, with explicit flagging when no single lesion explains the findings.</li>
+      <li><b>3.3</b>Information-gain ranking over untested findings; surface the one test that best discriminates the top two candidates, and what each result would mean.</li>
+      <li><b>3.4</b>Show the working. Every ranking is explained by the pathways that support and contradict it, because an answer she cannot audit is an answer she cannot trust on a ward.</li>
+    </ul>
+    <p class="exit"><b>Exit</b>Enter a Brown-S&eacute;quard examination; the correct locus ranks first, and the tool names the next test worth doing.</p>
+  </div>
+
+  <div class="phase">
+    <div class="phase-head"><span class="phase-id">P4</span><h3>Brachial plexus</h3></div>
+    <p class="phase-goal">Same engine, new geometry and new knowledge-base rows. No new architecture &mdash; which is the test of whether the architecture was right.</p>
+    <ul class="steps">
+      <li><b>4.1</b>Plexus splines: roots through trunks, divisions, cords and terminal branches, positioned against clavicle and first rib so the divisions genuinely sit behind it.</li>
+      <li><b>4.2</b>Knowledge-base rows for every segment of the braid, plus the terminal nerves and their motor, sensory and reflex territories.</li>
+      <li><b>4.3</b>Lesion sites: Erb's point, Klumpke, posterior cord and the common entrapments &mdash; with upper-limb reflexes wired to the P0 reflex model.</li>
+      <li><b>4.4</b>Root versus plexus versus peripheral nerve discrimination, which is the actual clinical question and the reason this module exists.</li>
+    </ul>
+    <p class="exit"><b>Exit</b>Wrist drop, claw hand and winged scapula all derive correctly from lesion placement, and reverse mode distinguishes a C8 root lesion from a lower-trunk lesion from an ulnar neuropathy.</p>
+  </div>
+
+  <div class="phase">
+    <div class="phase-head"><span class="phase-id">P5</span><h3>Above the cord</h3></div>
+    <p class="phase-goal">Brainstem, internal capsule and cortex. This is what converts a third-year tool into a career-long one.</p>
+    <ul class="steps">
+      <li><b>5.1</b>Brainstem with cranial nerve nuclei; crossed findings fall out of the existing decussation model without new machinery.</li>
+      <li><b>5.2</b>Named vascular territories &mdash; lateral medullary, basilar perforators &mdash; layered over the same geometry.</li>
+      <li><b>5.3</b>Internal capsule and cortical homunculus, giving the cortical-versus-capsular distinction.</li>
+      <li><b>5.4</b>Full-neuraxis reverse mode: one examination, candidate loci ranked from cortex to muscle.</li>
+    </ul>
+    <p class="exit"><b>Exit</b>A lateral medullary syndrome derives correctly, crossed findings and all, from the same engine written in P0.</p>
+  </div>
+
+  <div class="phase">
+    <div class="phase-head"><span class="phase-id">P6</span><h3>Practice and teaching</h3></div>
+    <p class="phase-goal">Turn an explorable model into something that compounds.</p>
+    <ul class="steps">
+      <li><b>6.1</b>Procedural case generation &mdash; unlimited cases from the model rather than a fixed set of fifty-one, each with a derivable answer and a visible explanation.</li>
+      <li><b>6.2</b>Spaced repetition over generated cases, scheduling by which pathways she actually gets wrong rather than by topic.</li>
+      <li><b>6.3</b>Presentation mode: chrome stripped, large type, driven from a phone while teaching at a bedside. Doctors teach constantly; a tool that helps her explain is a tool she keeps.</li>
+      <li><b>6.4</b>Offline PWA. Hospital basements have no signal, and that is exactly where she will want it.</li>
+    </ul>
+    <p class="exit"><b>Exit</b>Usable with no network, generating novel cases, scheduling review by weakness.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">09</span><h2>Open risks</h2></div>
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr><th>Risk</th><th>Standing</th><th>Handling</th></tr></thead>
+    <tbody>
+      <tr><td>No clinical reviewer</td><td>Resolved structurally &mdash; see section 10</td><td>Replaced with a review <em>system</em>: two-source triangulation with automatic promotion on disagreement, confidence tiers the interface must honour, mutation-tested expectations, citations surfaced in-product so the user reviews continuously, and a generated worksheet that makes expert review a twenty-minute job. Human review is still wanted and still scheduled &mdash; it is no longer the only thing standing between this and being wrong.</td></tr>
+      <tr><td>Spinothalamic lamination</td><td>Resolved &mdash; and promoted to a feature</td><td>Genuinely contested: medial-to-lateral versus anterior-to-posterior, and level-dependent either way. Both models are built and switchable; the engine reads observation rows so its output is identical under either. Defects A&mdash;11 and A&mdash;12.</td></tr>
+      <tr><td>ISNCSCI derivative work</td><td>Live legal constraint</td><td>Own geometry from primary literature; cite the standard, never redraw the worksheet. Licence required before any monetisation.</td></tr>
+      <tr><td>Scope creep past P4</td><td>Likely</td><td>P0 through P3 is a complete, defensible product on the cord alone. Everything after is optional and must be treated that way.</td></tr>
+      <tr><td>Three.js payload on Indian mobile data</td><td>Unmeasured</td><td>Measure at P1. Geometry is generated rather than loaded, so the payload is code, not meshes &mdash; but this needs a real number before it is claimed.</td></tr>
+      <tr><td>MedMaster capability</td><td>Unverified &mdash; defect A&mdash;09</td><td>Install it before P1 and record what it actually does.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">10</span><h2>Resolving the reviewer problem</h2></div>
+  <p class="lede">You cannot resolve "no clinical reviewer" by asserting that one will appear. You resolve it by building a system that is hard to be wrong in, and then making expert review cheap enough that it actually happens.</p>
+
+  <h3>Six mechanisms, in order of how much they carry</h3>
+  <ul class="steps" style="margin-bottom:18px">
+    <li><b>1</b><strong>Two sources per row, disagreement auto-promotes.</strong> Every claim is checked against two independent authorities. When they conflict, the row becomes T3 and both positions are recorded &mdash; it is never settled by whoever is typing. This is the mechanism that would have caught A&mdash;11 before it reached a plan document, and it is the one doing the most work here.</li>
+    <li><b>2</b><strong>Mutation testing.</strong> Corrupt each row and require something to fail. This measures whether the test suite can detect wrongness at all &mdash; which fifteen passing happy-path cases never did. A row nothing tests is a row nobody is checking.</li>
+    <li><b>3</b><strong>The engine cannot depend on contested rows.</strong> Observation and mechanism are separate, and a test asserts that <code>forward()</code> returns identical output under either lamination model. Contested anatomy can be wrong without the clinical output being wrong.</li>
+    <li><b>4</b><strong>Citations surfaced in-product.</strong> Every claim is tap-to-source. This makes the user a continuous reviewer &mdash; she owns the textbooks, and a tool that says "Brazis, page 214" next to a claim she can check is a tool that gets corrected rather than trusted.</li>
+    <li><b>5</b><strong>The generated worksheet.</strong> Claims as one-line statements with citation and a yes / no / unsure box, ordered by load-bearing weight. Fifty claims in twenty minutes on a phone. The difference between a favour someone declines and one they actually do is almost entirely how well you packaged the ask.</li>
+    <li><b>6</b><strong>Unreviewed status shipped honestly.</strong> Per-module review state visible in the tool, clearing as review lands. A learner should know which parts have been checked by a human and which have not.</li>
+  </ul>
+
+  <h3>And the schedule fix, which matters as much as any of them</h3>
+  <p>In revision B, clinical review sat after P0 and blocked P1. That put the project's largest risk on the critical path and made it dependent on someone else's calendar. Moving worksheet generation into P0 as a deliverable means <strong>review runs in parallel with rendering work</strong>. If it comes back clean, nothing was lost. If it comes back with corrections, they land in the knowledge base while the geometry is still being built &mdash; which is the cheapest moment for them to land.</p>
+
+  <div class="note">
+    <span class="t">Who to actually ask</span>
+    <p>Her own neurology faculty first. A third-year asking a professor to sanity-check a tool she is using is a normal and welcome interaction, not an imposition &mdash; and it is a better opening than a cold approach from a stranger. Then neurology residents, who are closest to the localization examination and quickest to spot a wrong deficit. The worksheet is built for exactly that reader: no code, no context needed, just claims and citations.</p>
+  </div>
+</section>
+
+<footer>
+  Revision C &middot; audited 16 September 2026 &middot; supersedes revisions A and B<br>
+  Educational tool. Not clinical decision support. No patient data.<br>
+  Sources: Brazis, Masdeu &amp; Biller, <em>Localization in Clinical Neurology</em> &middot; Blumenfeld, <em>Neuroanatomy Through Clinical Cases</em>, 3e &middot; Standring, <em>Gray's Anatomy</em>, 42e &middot; Lee, McPhee &amp; Stringer, <em>Clinical Anatomy</em> 2008 &middot; Preston &amp; Shapiro, <em>Electromyography and Neuromuscular Disorders</em> &middot; <em>The human spinothalamic tract: lessons from cordotomy</em>, Brain Communications 2025 &middot; Vedantam et al., somatotopy of the human spinothalamic tract, <em>J Neurosurg Spine</em> 2019
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var cv=document.getElementById('stage');
+  if(!cv) return;
+  var ctx=cv.getContext('2d');
+  var W=0,H=0,dpr=Math.min(window.devicePixelRatio||1,2);
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var LANE={dc:20,cst:44,stt:66};
+  var pattern='hemisection';
+  var lesionY=0.52;
+  var BAND=26;
+
+  function css(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+  var C={};
+  function readColors(){
+    C.dc=css('--dc')||'#2F4A9E'; C.cst=css('--cst')||'#BC3B22'; C.stt=css('--stt')||'#A8760F';
+    C.ink=css('--ink')||'#14181F'; C.ink3=css('--ink3')||'#79818F';
+    C.rule=css('--rule')||'#D3D7DF'; C.rule2=css('--rule2')||'#AEB4C0';
+    C.ground=css('--sunk')||'#E6E8ED';
+  }
+
+  function resize(){
+    var r=cv.getBoundingClientRect();
+    W=Math.max(300,r.width); H=Math.max(300,r.height);
+    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    readColors();
+  }
+
+  function yTop(){return 58;}
+  function yBot(){return H-34;}
+  function lesionPx(){return yTop()+(yBot()-yTop())*lesionY;}
+
+  function mk(pts){
+    var seg=[],tot=0;
+    for(var i=1;i<pts.length;i++){
+      var dx=pts[i][0]-pts[i-1][0], dy=pts[i][1]-pts[i-1][1];
+      var L=Math.sqrt(dx*dx+dy*dy); seg.push(L); tot+=L;
+    }
+    return {pts:pts,seg:seg,len:tot};
+  }
+  function at(p,d){
+    if(d<=0) return {x:p.pts[0][0],y:p.pts[0][1],i:0};
+    var acc=0;
+    for(var i=0;i<p.seg.length;i++){
+      if(acc+p.seg[i]>=d){
+        var t=p.seg[i]===0?0:(d-acc)/p.seg[i];
+        var a=p.pts[i],b=p.pts[i+1];
+        return {x:a[0]+(b[0]-a[0])*t, y:a[1]+(b[1]-a[1])*t, i:i};
+      }
+      acc+=p.seg[i];
+    }
+    var n=p.pts.length-1;
+    return {x:p.pts[n][0],y:p.pts[n][1],i:p.seg.length-1};
+  }
+
+  function pathFor(kind,s,yE){
+    var M=W/2, T=yTop(), body=Math.min(118,W*0.30);
+    if(kind==='dc'){
+      return mk([[M+s*body,yE],[M+s*LANE.dc,yE],[M+s*LANE.dc,T],
+                 [M-s*LANE.dc,T-17],[M-s*LANE.dc,16]]);
+    }
+    if(kind==='stt'){
+      var c=Math.max(T+8,yE-30);
+      return mk([[M+s*body,yE],[M+s*34,yE],[M+s*7,Math.max(T+8,yE-20)],
+                 [M-s*7,c],[M-s*LANE.stt,Math.max(T+6,c-12)],
+                 [M-s*LANE.stt,T],[M-s*LANE.stt,16]]);
+    }
+    return mk([[M+s*LANE.cst,16],[M+s*LANE.cst,T-17],[M-s*LANE.cst,T],
+               [M-s*LANE.cst,yE],[M-s*body,yE]]);
+  }
+
+  var SPEED={dc:150,cst:138,stt:46};
+  var P=[];
+  function spawn(){
+    var kinds=['dc','stt','stt','cst'];
+    var k=kinds[(Math.random()*kinds.length)|0];
+    var s=Math.random()<0.5?-1:1;
+    var span=yBot()-yTop();
+    var yE=yTop()+40+Math.random()*(span-56);
+    P.push({k:k,s:s,p:pathFor(k,s,yE),d:0,dead:0,life:0,hx:0,hy:0});
+  }
+
+  function blocked(x,y){
+    var M=W/2, L=lesionPx();
+    if(y<L-BAND/2||y>L+BAND/2) return false;
+    var dx=Math.abs(x-M);
+    if(dx>96) return false;
+    if(pattern==='complete')    return true;
+    if(pattern==='hemisection') return x<M;
+    if(pattern==='central')     return dx<15;
+    if(pattern==='anterior')    return dx>30;
+    return false;
+  }
+
+  function cordOutline(){
+    var M=W/2,T=yTop(),B=yBot();
+    ctx.strokeStyle=C.rule; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(M-84,T); ctx.lineTo(M-84,B);
+    ctx.moveTo(M+84,T); ctx.lineTo(M+84,B); ctx.stroke();
+    ctx.save(); ctx.setLineDash([2,4]); ctx.strokeStyle=C.rule2;
+    ctx.beginPath(); ctx.moveTo(M,T-20); ctx.lineTo(M,B); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.setLineDash([5,4]); ctx.strokeStyle=C.rule2;
+    ctx.beginPath(); ctx.moveTo(M-96,T); ctx.lineTo(M+96,T); ctx.stroke(); ctx.restore();
+    ctx.fillStyle=C.ink3;
+    ctx.font='500 10px "IBM Plex Mono",monospace';
+    ctx.textAlign='left';  ctx.fillText('MEDULLA — DECUSSATION', M-96, T-9);
+    ctx.fillText('LEFT', M-96, B+15);
+    ctx.textAlign='right'; ctx.fillText('RIGHT', M+96, B+15);
+    ctx.textAlign='left';
+  }
+
+  function lesionDraw(){
+    var M=W/2,L=lesionPx(),h=BAND,x0,x1;
+    if(pattern==='hemisection'){x0=M-92;x1=M;}
+    else if(pattern==='central'){x0=M-15;x1=M+15;}
+    else {x0=M-92;x1=M+92;}
+    ctx.save();
+    ctx.fillStyle=C.cst; ctx.globalAlpha=0.13;
+    ctx.fillRect(x0,L-h/2,x1-x0,h);
+    ctx.globalAlpha=0.55; ctx.strokeStyle=C.cst; ctx.lineWidth=1;
+    ctx.strokeRect(x0+0.5,L-h/2+0.5,x1-x0-1,h-1);
+    if(pattern==='anterior'){
+      ctx.globalAlpha=1; ctx.fillStyle=C.ground;
+      ctx.fillRect(M-30,L-h/2+1,60,h-2);
+      ctx.globalAlpha=0.4; ctx.strokeStyle=C.rule2;
+      ctx.strokeRect(M-30.5,L-h/2+0.5,61,h-1);
+    }
+    ctx.restore();
+    ctx.fillStyle=C.cst;
+    ctx.font='600 9.5px "IBM Plex Mono",monospace';
+    ctx.textAlign='left';
+    ctx.fillText('LESION', M-92, L-h/2-6);
+  }
+
+  var last=0,raf=null;
+  function frame(ts){
+    if(!last) last=ts;
+    var dt=Math.min(0.05,(ts-last)/1000); last=ts;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle=C.ground; ctx.fillRect(0,0,W,H);
+    cordOutline(); lesionDraw();
+
+    if(P.length<70 && Math.random()<0.55) spawn();
+
+    for(var i=P.length-1;i>=0;i--){
+      var q=P[i];
+      if(!q.dead){
+        q.d+=SPEED[q.k]*dt;
+        if(q.d>q.p.len){ P.splice(i,1); continue; }
+        var pos=at(q.p,q.d);
+        if(blocked(pos.x,pos.y)){ q.dead=1; q.life=0; q.hx=pos.x; q.hy=pos.y; }
+        else {
+          ctx.globalAlpha=0.9; ctx.fillStyle=C[q.k];
+          ctx.beginPath(); ctx.arc(pos.x,pos.y,2.6,0,6.2832); ctx.fill();
+          ctx.globalAlpha=0.18;
+          ctx.beginPath(); ctx.arc(pos.x,pos.y,6,0,6.2832); ctx.fill();
+          ctx.globalAlpha=1;
+        }
+      } else {
+        q.life+=dt;
+        if(q.life>0.45){ P.splice(i,1); continue; }
+        var a=1-q.life/0.45;
+        ctx.globalAlpha=a*0.8; ctx.strokeStyle=C[q.k]; ctx.lineWidth=1.2;
+        ctx.beginPath(); ctx.arc(q.hx,q.hy,3+10*(1-a),0,6.2832); ctx.stroke();
+        ctx.globalAlpha=1;
+      }
+    }
+    raf=requestAnimationFrame(frame);
+  }
+
+  var DEF={
+    hemisection:{n:'Brown-Séquard syndrome',d:[
+      '<b>Ipsilateral</b> upper-motor-neuron weakness below the level &mdash; the corticospinal tract crossed at the pyramids, far above.',
+      '<b>Ipsilateral</b> loss of vibration and proprioception below the level &mdash; the dorsal column has not crossed yet.',
+      '<b>Contralateral</b> loss of pain and temperature, beginning one to two segments below &mdash; the spinothalamic tract crossed near its entry.',
+      '<b>Ipsilateral</b> lower-motor-neuron signs and a narrow band of all-modality loss at the level itself.']},
+    central:{n:'Central cord / syringomyelia',d:[
+      '<b>Suspended, bilateral</b> loss of pain and temperature in a cape distribution &mdash; only fibres crossing the anterior white commissure at this level are interrupted.',
+      '<b>Preserved</b> vibration and proprioception; the dorsal columns lie outside the lesion.',
+      '<b>Sacral sparing</b> &mdash; a robust observation, and the finding that separates an intramedullary lesion from something pressing on the cord from outside. The <em>mechanism</em> is contested: peripheral fibre position is the classical account, but human cordotomy mapping disputes the arrangement. Observation T1, mechanism T3.',
+      'Arms are affected before legs &mdash; cervical corticospinal fibres lie most medially, which is far less disputed than the spinothalamic arrangement.']},
+    anterior:{n:'Anterior spinal artery syndrome',d:[
+      '<b>Bilateral</b> upper-motor-neuron weakness below the level.',
+      '<b>Bilateral</b> loss of pain and temperature below the level.',
+      '<b>Preserved</b> vibration and proprioception &mdash; the dorsal columns are supplied by the posterior spinal arteries and survive.',
+      'That dissociation is the whole diagnosis, and it is why the indigo pulses keep climbing.']},
+    complete:{n:'Complete transection',d:[
+      '<b>Below the level</b>, all modalities lost, with sphincter and autonomic involvement.',
+      '<b>Acutely: flaccid and areflexic.</b> Spinal shock. Upper-motor-neuron signs emerge over days to weeks &mdash; an engine without a time axis gets this wrong, which is defect A&mdash;01.',
+      'Above T6, watch for autonomic dysreflexia once the reflex arcs return.',
+      'Sympathetic outflow is T1&ndash;L2 only, so a cervical lesion also produces neurogenic shock.']}
+  };
+  var synEl=document.getElementById('syn'), defEl=document.getElementById('deficits');
+  function paintReadout(){
+    var d=DEF[pattern];
+    synEl.textContent=d.n;
+    defEl.innerHTML=d.d.map(function(x){return '<li>'+x+'</li>';}).join('');
+  }
+
+  function drawStill(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle=C.ground; ctx.fillRect(0,0,W,H);
+    cordOutline(); lesionDraw();
+    [['dc',-1],['dc',1],['stt',-1],['stt',1],['cst',-1],['cst',1]].forEach(function(pair){
+      var k=pair[0],s=pair[1];
+      var p=pathFor(k,s,yTop()+(yBot()-yTop())*0.70);
+      for(var d=0; d<p.len; d+=26){
+        var pos=at(p,d);
+        ctx.globalAlpha=blocked(pos.x,pos.y)?0.14:0.75;
+        ctx.fillStyle=C[k];
+        ctx.beginPath(); ctx.arc(pos.x,pos.y,2.4,0,6.2832); ctx.fill();
+        ctx.globalAlpha=1;
+      }
+    });
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.btn[data-pat]'),function(b){
+    b.addEventListener('click',function(){
+      pattern=b.getAttribute('data-pat');
+      Array.prototype.forEach.call(document.querySelectorAll('.btn[data-pat]'),function(o){
+        o.setAttribute('aria-pressed', o===b ? 'true':'false');
+      });
+      paintReadout();
+      if(reduce) drawStill();
+    });
+  });
+
+  function setFromY(cy){
+    var r=cv.getBoundingClientRect();
+    var t=((cy-r.top)-yTop())/(yBot()-yTop());
+    lesionY=Math.max(0.08,Math.min(0.92,t));
+    if(reduce) drawStill();
+  }
+  var dragging=false;
+  cv.addEventListener('pointerdown',function(e){dragging=true;try{cv.setPointerCapture(e.pointerId);}catch(err){}setFromY(e.clientY);});
+  cv.addEventListener('pointermove',function(e){if(dragging)setFromY(e.clientY);});
+  cv.addEventListener('pointerup',function(){dragging=false;});
+  cv.addEventListener('pointercancel',function(){dragging=false;});
+
+  function boot(){
+    resize(); paintReadout();
+    if(reduce){ drawStill(); }
+    else { last=0; if(raf) cancelAnimationFrame(raf); raf=requestAnimationFrame(frame); }
+  }
+  window.addEventListener('resize',function(){ resize(); if(reduce) drawStill(); });
+  if(window.matchMedia){
+    var mq=window.matchMedia('(prefers-color-scheme: dark)');
+    if(mq.addEventListener) mq.addEventListener('change',function(){readColors();if(reduce)drawStill();});
+  }
+  boot();
+})();
+</script>
