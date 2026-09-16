@@ -90,6 +90,59 @@ export type Kb = {
   };
 };
 
+// ─── Render-only knowledge (P1). The engine is forbidden to import any of this. ───
+
+export type Range = readonly [number, number];
+/** classical: the textbook arrangement. revised: the account current evidence supports. */
+export type LaminationModel = 'classical' | 'revised';
+/** Position inside a tract, each axis in [-1, 1]. */
+export type TractPoint = { readonly lateral: number; readonly dorsal: number };
+/**
+ * Where a fibre sits in its tract, by the body region it serves, at the cervical and
+ * lumbar ends of the cord. Levels between are interpolated.
+ */
+export type LaminationProfile = {
+  readonly upperLimb: { readonly cervical: TractPoint; readonly lumbar: TractPoint };
+  readonly lowerLimb: { readonly cervical: TractPoint; readonly lumbar: TractPoint };
+  /** 0 keeps fibres ordered; 1 scatters them across the whole tract. */
+  readonly scatter: number;
+};
+
+export type Disc = { readonly x: number; readonly z: number; readonly r: number };
+
+export type RenderKb = {
+  readonly cord: Row<{
+    readonly lengthCm: Range;
+    readonly widthCm: { readonly cervical: Range; readonly thoracic: Range; readonly lumbar: Range };
+  }>;
+  readonly enlargements: Row<{ readonly cervical: readonly Span[]; readonly lumbar: readonly Span[] }>;
+  readonly ruler: Row<{
+    /** Segment at the top edge of a vertebra, in order. Between anchors, interpolated. */
+    readonly anchors: readonly { readonly segment: Segment; readonly vertebraTop: number }[];
+    readonly cordEndsAtVertebra: number;
+  }>;
+  readonly lateralHorn: Row<{ readonly span: Span }>;
+  readonly posteriorColumn: Row<{ readonly cuneatusCarriesRostralTo: Segment }>;
+  /**
+   * Cross-section on the left side, in units of cord radius: x lateral (negative = left),
+   * z dorsal. The right side mirrors x.
+   */
+  readonly layout: Row<{ readonly discs: Readonly<Record<Compartment, Disc>> }>;
+  readonly speeds: Row<{
+    readonly abeta: Range;
+    readonly adelta: Range;
+    readonly c: Range;
+    readonly adeltaTypical: number;
+    readonly cTypical: number;
+    readonly corticospinal: number;
+  }>;
+  readonly intraspinalSpeed: Row<{ readonly illustrative: number }>;
+  readonly lamination: {
+    readonly spinothalamic: Row<{ readonly models: Readonly<Record<LaminationModel, LaminationProfile>> }>;
+    readonly corticospinal: Row<{ readonly models: Readonly<Record<LaminationModel, LaminationProfile>> }>;
+  };
+};
+
 /** A mechanism explains an observation. The engine is forbidden to import these. */
 export type Mechanism = {
   readonly meta: Meta;

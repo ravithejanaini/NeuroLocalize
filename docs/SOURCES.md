@@ -35,6 +35,13 @@ Accessed 2026-09-16 unless noted.
 | S21 | [StatPearls — Anatomy, Skin, Dermatomes](https://www.ncbi.nlm.nih.gov/books/NBK535401/) | Whitman, Launico, Adigun | 2023-10-24 | dermatomes overlap extensively; Lee 2008 contests Foerster and Keegan & Garrett |
 | S22 | [StatPearls — Anatomy, Abdomen and Pelvis, Pudendal Nerve](https://www.ncbi.nlm.nih.gov/books/NBK554736/) | Kinter, Newton | 2023-02-10 | pudendal nerve from S2–S4. Does **not** mention the bulbocavernosus reflex |
 | S23 | [Brain Communications 2025 — The human spinothalamic tract: lessons from cordotomy](https://academic.oup.com/braincomms/article/7/3/fcaf237/8165923) | not recorded | 2025 | lamination contested; lower-body fibres shift ventrally on ascent |
+| S24 | [StatPearls — Neuroanatomy, Spinal Cord Morphology](https://www.ncbi.nlm.nih.gov/books/NBK545206/) | Ganapathy, Reddy, Tadi | 2024-09-10 | enlargements C5–T1 and L2–S3; cord ends L1–L2; cross-section layout; lateral horn T1–L2; widths by region |
+| S25 | [StatPearls — Neuroanatomy, Touch Receptor](https://www.ncbi.nlm.nih.gov/books/NBK547731/) | Whitehead, Grider | 2023-07-24 | conduction velocities: Aβ 16–100, Aδ 5–30, C 0.2–2 m/s |
+| S26 | [Neuroscience Online (UTHealth) — Anatomy of the Spinal Cord, ch. 3](https://nba.uth.tmc.edu/neuroscience/m/s2/chapter03.html) | Dafny | not recorded | cord from foramen magnum to L1 or L2; C8 nerve exits below C7; thoracic and upper lumbar offset of three segments; enlargements C3–T1 and L1–S2 |
+| S27 | [StatPearls — Neuroanatomy, Posterior Column](https://www.ncbi.nlm.nih.gov/books/NBK507888/) | Al-Chalabi, Reddy, Alsalman | 2023-04-08 | gracilis medial, lower limbs; cuneatus lateral, T6 and above |
+| S28 | [StatPearls — Neuroanatomy, Unmyelinated Nerve Fibers](https://www.ncbi.nlm.nih.gov/books/NBK554461/) | Arcilla, Tadi | 2023-01-02 | C about 1 m/s, second pain; Aδ about 15 m/s, first pain |
+| S29 | [Snooks & Swash, JNNP 1985 — Motor conduction velocity in the human spinal cord](https://pmc.ncbi.nlm.nih.gov/articles/PMC1028573/) | Snooks, Swash | 1985 | 67.4 ± 9.1 m/s between C6 and L1 vertebral levels, probably corticospinal |
+| S30 | [Radiopaedia — Spinal cord](https://radiopaedia.org/articles/spinal-cord) | Radiopaedia editors | 2026-07-31 | cord ends near the L1 body; enlargements C3–T2 and T9–T12; length 42–45 cm |
 
 ## Not used, and why
 

@@ -3,7 +3,7 @@ import type { Kb, Meta } from '../src/kb/types.ts';
 
 export type Located = { readonly path: readonly (string | number)[]; readonly meta: Meta };
 
-export function locateRows(kb: Kb): Located[] {
+export function locateRows(root: Kb | object): Located[] {
   const out: Located[] = [];
   const visit = (node: unknown, path: (string | number)[]): void => {
     if (Array.isArray(node)) {
@@ -15,8 +15,8 @@ export function locateRows(kb: Kb): Located[] {
     if ('meta' in record) out.push({ path, meta: record.meta as Meta });
     for (const [k, v] of Object.entries(record)) if (k !== 'meta') visit(v, [...path, k]);
   };
-  visit(kb, []);
+  visit(root, []);
   return out;
 }
 
-export const metaRows = (kb: Kb): Meta[] => locateRows(kb).map((r) => r.meta);
+export const metaRows = (root: Kb | object): Meta[] => locateRows(root).map((r) => r.meta);

@@ -10,7 +10,7 @@ describe('engine contract', () => {
       for (const ev of kase.evaluations) {
         assert.deepEqual(
           forward(kase.lesion, ev.timepoint, { laminationModel: 'classical' }),
-          forward(kase.lesion, ev.timepoint, { laminationModel: 'cordotomy' }),
+          forward(kase.lesion, ev.timepoint, { laminationModel: 'revised' }),
           `${kase.id} at ${ev.timepoint}`,
         );
       }

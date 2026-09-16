@@ -49,7 +49,7 @@ export type ForwardOptions = {
    * Which spinothalamic lamination the renderer should draw. Findings must not depend on
    * it — a test enforces that — because the arrangement is disputed (S23).
    */
-  readonly laminationModel?: 'classical' | 'cordotomy';
+  readonly laminationModel?: 'classical' | 'revised';
 };
 
 const STATE: Record<Damage, SensoryState> = { 0: 'intact', 1: 'impaired', 2: 'lost' };

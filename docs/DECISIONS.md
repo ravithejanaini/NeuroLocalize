@@ -76,6 +76,17 @@ Two separate queries both reported that S05 places central cord syndrome in the 
 cord. Every other source places it in the cervical cord. The raw table text could not be
 obtained, so the row is excluded rather than cited either way.
 
+**C6 — Extent of the cord enlargements.** S24: cervical C5–T1, lumbar L2–S3. S26: cervical
+C3–T1, lumbar L1–S2. S30 gives C3–T2 and T9–T12, in vertebral terms. The render draws the
+union of the two segmental claims.
+
+**C7 — Spinothalamic lamination.** S23 reports the classical arrangement and a revised one
+from cordotomy mapping, noting that earlier technique may have biased the classical
+account. Both are drawn; findings never depend on which (A—11).
+
+**C8 — Corticospinal lamination.** S06 reports the historical medial-arm arrangement and
+current evidence for a diffuse distribution. Both are drawn.
+
 **C5 — Conus syndrome motor signs.**
 S09 and S14 describe UMN signs (hyperreflexia) in conus syndrome. A lesion confined to
 S2–Co1 produces no lower-limb hyperreflexia in this model, since the reflex arcs and the
@@ -146,6 +157,34 @@ and fall under R5.
 chronic phase an interrupted corticospinal tract already leaves reflexes indeterminate.
 A row that cannot affect output cannot be tested, so it went. S02's phase 3 is still in the
 spinal-shock row's claim and is asserted by the `subacute` evaluations.
+
+## P1
+
+**D14 — Tract speed is not fibre speed.** The plan animated the spinothalamic tract at
+the speed of Aδ and C fibres. Those are the *peripheral* afferents, which end in the dorsal
+horn; the tract is made of second-order axons whose conduction velocity no source read
+gives. The render therefore splits every sensory pulse: the peripheral leg runs at the
+sourced fibre speed (S25, S28), which is where first and second pain genuinely separate,
+and the intraspinal leg of the posterior-column and spinothalamic routes runs at a rate
+marked illustrative on screen. The corticospinal leg has a source (S29).
+
+**D15 — Time is dilated, ratios are not.** Real conduction crosses the cord in
+milliseconds. The render slows time by one fixed factor and keeps every velocity ratio
+linear, so a C-fibre pulse is genuinely about fifteen times slower than an Aδ pulse.
+
+**D16 — The segment-to-vertebra ruler is anchored and interpolated.** No source read gives
+a per-segment table. The anchors that sources do give — C1 at the foramen magnum and C8
+at C7 (S26), a three-segment offset in the lower thoracic cord (S26), the conus S2–Co1 at
+L1 (S14) — are joined linearly, and the render says so. Vertebral heights are drawn equal.
+
+**D17 — Enlargements are drawn over the union of the claims.** Cervical: C5–T1 (S24),
+C3–T1 (S26). Lumbar: L2–S3 (S24), L1–S2 (S26). S30's figures are vertebral and agree with
+the anchored ruler. T3.
+
+**D18 — The render never decides a deficit.** Geometry turns a 3D lesion into the same
+`LesionRegion[]` the engine already accepts, and pulse extinction is read from the engine's
+own routes. A test asserts that a pulse dies exactly when the engine reports the input
+lost.
 
 **D11 — `conflict` forces T3.** The spinothalamic row carries C1 and is now T3. The triceps
 row no longer carries C2: that is a single source against unread common teaching, not a

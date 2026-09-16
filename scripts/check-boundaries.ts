@@ -102,8 +102,8 @@ for (const file of [...walk('src'), ...walk('spec')]) {
       if (!inside(target, 'src/kb') && !inside(target, 'src/engine')) {
         flag(file, 'engine-layer', `imports ${rel(target)}`);
       }
-      if (rel(target) === 'src/kb/mechanisms.ts') {
-        flag(file, 'engine-ignores-mechanisms', 'mechanism rows explain; they must not drive output');
+      if (rel(target) === 'src/kb/mechanisms.ts' || rel(target) === 'src/kb/render.ts') {
+        flag(file, 'engine-ignores-mechanisms', `${rel(target)} explains or draws; it must not drive output`);
       }
     }
     if (here.startsWith('spec/') && !inside(target, 'spec') && rel(target) !== 'src/kb/vocab.ts') {

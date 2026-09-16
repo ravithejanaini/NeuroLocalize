@@ -5,12 +5,13 @@ import { describe, it } from 'node:test';
 import { ALL_CASES as CASES } from '../spec/expectations/index.ts';
 import { KB } from '../src/kb/kb.ts';
 import { MECHANISMS } from '../src/kb/mechanisms.ts';
+import { RENDER } from '../src/kb/render.ts';
 import { SOURCE_IDS } from '../src/kb/sources.ts';
 import type { Meta } from '../src/kb/types.ts';
 import { metaRows } from './rows.ts';
 
 const DOCS = resolve(import.meta.dirname, '..', 'docs');
-const rows: Meta[] = [...metaRows(KB), ...MECHANISMS.map((m) => m.meta)];
+const rows: Meta[] = [...metaRows(KB), ...metaRows(RENDER), ...MECHANISMS.map((m) => m.meta)];
 
 describe('knowledge-base integrity', () => {
   it('every row is sourced, pending with a reason, or definitional', () => {
