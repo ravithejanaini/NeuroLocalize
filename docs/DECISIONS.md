@@ -186,6 +186,15 @@ the anchored ruler. T3.
 own routes. A test asserts that a pulse dies exactly when the engine reports the input
 lost.
 
+**D19 — Focal lesions are volumes; system degenerations are tract selections.** A
+hemisection, an infarct or a syrinx occupies space, so the render places a shape and
+*measures* which compartments it covers. Subacute combined degeneration, tabes and motor
+neuron disease select tracts regardless of position, so they stay as direct compartment
+selections. Roots lie outside the cord and are cut separately.
+
+**D20 — The cord is drawn straight.** No source read gives the cord's curvature, so the
+axis is vertical and the plan's "centreline spline" is deferred.
+
 **D11 — `conflict` forces T3.** The spinothalamic row carries C1 and is now T3. The triceps
 row no longer carries C2: that is a single source against unread common teaching, not a
 disagreement between sources read.

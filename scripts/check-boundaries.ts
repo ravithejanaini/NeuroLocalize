@@ -84,7 +84,9 @@ for (const file of [...walk('src'), ...walk('spec')]) {
 
   for (const spec of specifiers(sf)) {
     if (!spec.startsWith('.')) {
-      if (here.startsWith('src/')) flag(file, 'portable', `non-relative import "${spec}" — src must run in a browser`);
+      const pinnedLibrary = here.startsWith('src/render/') && spec === 'three';
+      if (here.startsWith('src/') && !pinnedLibrary)
+        flag(file, 'portable', `non-relative import "${spec}" — only src/render may import "three"`);
       else if (here.startsWith('spec/')) flag(file, 'spec-isolation', `non-relative import "${spec}"`);
       continue;
     }
@@ -105,6 +107,9 @@ for (const file of [...walk('src'), ...walk('spec')]) {
       if (rel(target) === 'src/kb/mechanisms.ts' || rel(target) === 'src/kb/render.ts') {
         flag(file, 'engine-ignores-mechanisms', `${rel(target)} explains or draws; it must not drive output`);
       }
+    }
+    if (here.startsWith('src/geometry/') && !['src/kb', 'src/engine', 'src/geometry'].some((d) => inside(target, d))) {
+      flag(file, 'geometry-layer', `imports ${rel(target)} — geometry is pure and may not reach the renderer`);
     }
     if (here.startsWith('spec/') && !inside(target, 'spec') && rel(target) !== 'src/kb/vocab.ts') {
       flag(file, 'spec-isolation', `imports ${rel(target)} — expectations may see only the vocabulary`);
