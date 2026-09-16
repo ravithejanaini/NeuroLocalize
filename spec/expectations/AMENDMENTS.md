@@ -50,3 +50,19 @@ situation the freeze exists to catch.
   segment (neurogenic shock at T6; C8 or L2 alone), the case says so in `unasserted`
   instead of guessing.
 - **Result:** all 51 evaluations passed on first run; sourced-row mutation score 91.8%.
+
+## A3 — 2026-09-17 — reverse inference (P3)
+
+- **Changed:** addition only. `reverse.ts` adds eight examinations, nine evaluations.
+- **Why:** P3 adds inference from findings to lesion. As in P0, its specification is
+  written and committed before any reverse code exists.
+- **What is asserted:** properties of the ranking — which family ranks first, where the
+  lesion's rostral end must lie, whether any single candidate explains the findings, and
+  that the suggested next test separates the top two. No score, probability or rank
+  number is asserted, because those depend on modelling constants (D24) rather than on
+  a source.
+- **Sources:** each case names them; the level constraints are composed from the posterior
+  column and spinothalamic routes (S01, S15) and the dermatome landmarks (S21).
+- **A constraint on the candidate set, stated here so it cannot drift:** bilateral root
+  lesions start at L1 or lower, because S09 describes the cauda equina as the roots from
+  L1 down. The spinal-shock case depends on it.

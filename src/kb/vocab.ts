@@ -64,3 +64,29 @@ export type Dysreflexia = 'susceptible' | 'possible' | 'rare' | 'not_yet' | 'non
 export type Qualifier = 'upper_limb_predominant_weakness' | 'sacral_sparing';
 
 export type SourceId = `S${number}`;
+
+// ---- reverse mode ----------------------------------------------------------
+// Families of candidate lesion that reverse inference chooses between.
+export const LESION_FAMILIES = [
+  'complete',
+  'hemicord_left',
+  'hemicord_right',
+  'anterior',
+  'posterior',
+  'central_small',
+  'central_cord',
+  'root_left',
+  'root_right',
+  'roots_bilateral',
+  'posterolateral',
+  'dorsal_root_column',
+  'motor_neuron',
+] as const;
+export type LesionFamily = (typeof LESION_FAMILIES)[number];
+
+export type SensoryObservation = 'normal' | 'abnormal';
+export type StrengthObservation = 'normal' | 'weak';
+/** 'reduced' covers a reflex that is reduced or absent. */
+export type ReflexObservation = 'normal' | 'reduced' | 'brisk';
+export type SignObservation = 'present' | 'absent';
+export type BladderObservation = 'normal' | 'overactive' | 'retention';
