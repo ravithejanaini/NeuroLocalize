@@ -1,5 +1,7 @@
 // Signals in motion. Each pulse follows a path from the geometry layer and stops where
-// fate() — the engine's own route judgement — says it stops (D18).
+// fate() — the engine's own route judgement — says it stops (D18). Pulses to and from the
+// arm run the same cord route, then the plexus route limbPath() builds from the engine's
+// (D27), and stop at the first place the plexus lesion cuts.
 import * as THREE from 'three';
 import { crossingOffsets, type LesionMap } from '../engine/forward.ts';
 import { isSacral } from '../engine/forward.ts';
@@ -13,8 +15,10 @@ import {
   type Path,
   type PathOptions,
 } from '../geometry/paths.ts';
-import type { Kb, RenderKb } from '../kb/types.ts';
-import { SEGMENTS, type Side } from '../kb/vocab.ts';
+import { mapPlexus, type PlexusMap } from '../engine/limb.ts';
+import { limbFate, limbPath, suppliesOf, TARGETS, type LimbPath, type Target } from '../geometry/plexus.ts';
+import type { Kb, RenderKb, Span } from '../kb/types.ts';
+import { MUSCLES, SEGMENTS, type Muscle, type Segment, type Side, type SkinArea } from '../kb/vocab.ts';
 import type { Palette } from './scene.ts';
 
 /** Real conduction crosses the cord in milliseconds; everything is slowed by this (D15). */
@@ -22,15 +26,28 @@ export const DILATION = 333;
 
 type Kind = 'pain' | 'posterior' | 'motor';
 
+/** The arm part of a pulse: where its plexus route sits within the whole path. */
+type LimbLeg = {
+  readonly dir: 'motor' | 'sense';
+  readonly lp: LimbPath;
+  readonly side: Side;
+  /** Index in the whole path of the limb path's first point. */
+  readonly offset: number;
+};
+
 type Pulse = {
   readonly kind: Kind;
   readonly path: Path;
   readonly times: readonly number[];
   readonly sacral: boolean;
+  readonly limb?: LimbLeg;
   t: number;
   fate: Fate;
   flashed: boolean;
 };
+
+const spanSegs = (span: Span | null | undefined): Segment[] =>
+  span ? SEGMENTS.slice(SEGMENTS.indexOf(span[0]), SEGMENTS.indexOf(span[1]) + 1) : [];
 
 type Flash = { mesh: THREE.Mesh; age: number };
 
@@ -75,6 +92,8 @@ export class PulseField {
   private readonly mesh: THREE.InstancedMesh;
   private readonly cache = new Map<string, { path: Path; times: number[] }>();
   private map: LesionMap | null = null;
+  private pmap: PlexusMap = mapPlexus([]);
+  private readonly limbCache = new Map<string, { path: Path; times: number[]; limb: LimbLeg } | null>();
   private options: PathOptions = { model: 'classical', painFibre: 'adelta' };
   private frozen = false;
   private readonly tmp = new THREE.Object3D();
@@ -103,18 +122,40 @@ export class PulseField {
     scene.add(this.mesh);
   }
 
-  setLesion(map: LesionMap): void {
+  setLesion(map: LesionMap, pmap: PlexusMap = mapPlexus([])): void {
     this.map = map;
+    this.pmap = pmap;
     for (const p of this.pulses) {
-      p.fate = fate(map, this.kb, p.path, p.sacral);
+      p.fate = this.fateOf(p.path, p.sacral, p.limb);
       p.flashed = false;
     }
     if (this.frozen) this.seedStill();
   }
 
+  /** The cord's verdict and the plexus's, in the order the pulse meets them. */
+  private fateOf(path: Path, sacral: boolean, limb?: LimbLeg): Fate {
+    const map = this.map;
+    if (!map) return { diesAtPoint: -1, dimmed: false };
+    const cord = fate(map, this.kb, path, sacral);
+    if (!limb) return cord;
+    const arm = limbFate(this.pmap, limb.lp, limb.side);
+    if (limb.dir === 'motor') {
+      if (cord.diesAtPoint >= 0) return cord;
+      return { diesAtPoint: arm.diesAt >= 0 ? arm.diesAt + limb.offset : -1, dimmed: cord.dimmed || arm.dimmed };
+    }
+    // A sensory pulse meets the most distal cut first.
+    const n = limb.lp.points.length;
+    const cut = [...limb.lp.sitePoint.entries()]
+      .filter(([site]) => this.pmap.damage(site, limb.side) === 2)
+      .sort((a, b) => b[1] - a[1])[0];
+    if (cut) return { diesAtPoint: n - 1 - cut[1], dimmed: arm.dimmed };
+    return { diesAtPoint: cord.diesAtPoint, dimmed: cord.dimmed || arm.dimmed };
+  }
+
   setOptions(options: PathOptions): void {
     this.options = options;
     this.cache.clear();
+    this.limbCache.clear();
     this.pulses.length = 0;
     if (this.frozen) this.seedStill();
   }
@@ -143,10 +184,78 @@ export class PulseField {
     if (!this.map || this.pulses.length >= this.max) return;
     const { path, times } = this.pathFor(kind, side, s, offset);
     const sacral = kind !== 'motor' && isSacral(this.kb, s);
-    this.pulses.push({ kind, path, times, sacral, t, fate: fate(this.map, this.kb, path, sacral), flashed: false });
+    this.pulses.push({ kind, path, times, sacral, t, fate: this.fateOf(path, sacral), flashed: false });
+  }
+
+  /** A pulse between the cord and a muscle or patch of skin, through one root and one nerve. */
+  private limbPathFor(target: Target, supplyIndex: number, root: Segment, side: Side): { path: Path; times: number[]; limb: LimbLeg } | null {
+    const key = `${target}|${supplyIndex}|${root}|${side}`;
+    if (this.limbCache.has(key)) return this.limbCache.get(key) ?? null;
+    const supply = suppliesOf(this.kb, target)[supplyIndex];
+    const lp = supply ? limbPath(this.kb, this.render, supply, root, target, side) : null;
+    let entry: { path: Path; times: number[]; limb: LimbLeg } | null = null;
+    if (lp) {
+      const s = SEGMENTS.indexOf(root);
+      if ((MUSCLES as readonly string[]).includes(target)) {
+        const mp = motorPath(this.kb, this.render, side, s, this.options);
+        const offset = mp.points.length - 1;
+        const points = [...mp.points.slice(0, offset), ...lp.points];
+        const legs = mp.legs.map((l, i) => (i === mp.legs.length - 1 ? { ...l, to: points.length - 1 } : l));
+        const path: Path = { points, legs, elementPoint: mp.elementPoint, route: mp.route };
+        entry = { path, times: timeline(this.render, path), limb: { dir: 'motor', lp, side, offset } };
+      } else {
+        const sp = sensoryPath(this.kb, this.render, side, 'posterior_column', s, 0, this.options);
+        const n = lp.points.length;
+        const points = [...[...lp.points].reverse(), ...sp.points.slice(1)];
+        const path: Path = {
+          points,
+          legs: [
+            { from: 0, to: n, speed: 'abeta' },
+            { from: n, to: points.length - 1, speed: 'illustrative' },
+          ],
+          elementPoint: sp.elementPoint.map((i) => i - 1 + n),
+          route: sp.route,
+        };
+        entry = { path, times: timeline(this.render, path), limb: { dir: 'sense', lp, side, offset: 0 } };
+      }
+    }
+    this.limbCache.set(key, entry);
+    return entry;
+  }
+
+  private spawnLimb(t = 0, pick = Math.random): void {
+    if (!this.map || this.pulses.length >= this.max) return;
+    const target = TARGETS[Math.floor(pick() * TARGETS.length)];
+    if (!target) return;
+    const row = (MUSCLES as readonly string[]).includes(target)
+      ? this.kb.plexus.muscles[target as Muscle]
+      : this.kb.plexus.skin[target as SkinArea];
+    const roots = [...spanSegs(row.roots), ...spanSegs(row.disputedRoots)];
+    const root = roots[Math.floor(pick() * roots.length)];
+    const supplies = suppliesOf(this.kb, target);
+    const supplyIndex = Math.floor(pick() * supplies.length);
+    const side: Side = pick() < 0.5 ? 'L' : 'R';
+    if (!root) return;
+    const entry = this.limbPathFor(target, supplyIndex, root, side);
+    if (!entry) return;
+    const kind: Kind = entry.limb.dir === 'motor' ? 'motor' : 'posterior';
+    this.pulses.push({
+      kind,
+      path: entry.path,
+      times: entry.times,
+      sacral: false,
+      limb: entry.limb,
+      t,
+      fate: this.fateOf(entry.path, false, entry.limb),
+      flashed: false,
+    });
   }
 
   private spawnRandom(): void {
+    if (Math.random() < 0.35) {
+      this.spawnLimb();
+      return;
+    }
     const r = Math.random();
     const kind: Kind = r < 0.42 ? 'pain' : r < 0.74 ? 'posterior' : 'motor';
     const side: Side = Math.random() < 0.5 ? 'L' : 'R';
@@ -159,6 +268,18 @@ export class PulseField {
   private seedStill(): void {
     this.pulses.length = 0;
     this.clearFlashes();
+    // A fixed, repeatable spread of arm pulses, held part-way along.
+    let seed = 7;
+    const pick = (): number => {
+      seed = (seed * 16807) % 2147483647;
+      return seed / 2147483647;
+    };
+    for (let i = 0; i < 40; i++) {
+      const before = this.pulses.length;
+      this.spawnLimb(0, pick);
+      const p = this.pulses[before];
+      if (p) p.t = (p.times[p.times.length - 1] ?? 0) * (0.3 + pick() * 0.6);
+    }
     const offsets = crossingOffsets(this.kb);
     const mid = offsets[Math.floor(offsets.length / 2)] ?? 1;
     for (let s = 0; s < SEGMENTS.length; s += 2) {

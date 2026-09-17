@@ -1,7 +1,7 @@
 // Examination mode, as HTML strings: entering findings, the ranked candidates, the next test
 // and the working. No DOM and no Three.js, so it is tested under Node.
 import type { Group, Observation, ReverseResult, Slot, Verdict } from '../engine/reverse.ts';
-import { slotKey } from '../engine/reverse.ts';
+import { SITE_NAME, slotKey } from '../engine/reverse.ts';
 import type { RenderKb } from '../kb/types.ts';
 import {
   MUSCLES,
@@ -218,7 +218,9 @@ export function examTables(render: RenderKb, findings: Findings): string {
 
 // ── results ──────────────────────────────────────────────────────────────
 
-export function levelText(g: Pick<Group, 'family' | 'rostral' | 'caudal' | 'members'>): string {
+export function levelText(g: Pick<Group, 'family' | 'rostral' | 'caudal' | 'members' | 'sites'>): string {
+  if (g.sites.length > 3) return `any of ${g.sites.length} places — ${g.sites.slice(0, 2).map((s) => SITE_NAME[s]).join(', ')}, …`;
+  if (g.sites.length > 0) return g.sites.map((s) => SITE_NAME[s]).join(' or ');
   if (['posterolateral', 'dorsal_root_column', 'motor_neuron'].includes(g.family)) return 'fixed distribution';
   const [ra, rb] = g.rostral;
   const [ca, cb] = g.caudal;
@@ -256,7 +258,11 @@ export function suggestionHtml(render: RenderKb, result: ReverseResult, tested: 
   if (!s) return '<p class="quiet">No remaining test on the map would change the ranking much — the findings already settle it.</p>';
   const outcomes = s.outcomes
     .map((o) => {
-      const lead = o.leader ? `${FAMILY_NAME[o.leader.family]}, upper end ${o.leader.rostral}` : 'no clear leader';
+      const lead = o.leader
+        ? o.leader.site
+          ? `${FAMILY_NAME[o.leader.family]}: ${SITE_NAME[o.leader.site]}`
+          : `${FAMILY_NAME[o.leader.family]}, upper end ${o.leader.rostral}`
+        : 'no clear leader';
       return `<li><b>${valueWord(o.value)}</b> <span class="quiet">(${(o.probability * 100).toFixed(0)}%)</span> → ${escape(lead)}</li>`;
     })
     .join('');
@@ -279,7 +285,9 @@ export function workingHtml(render: RenderKb, verdicts: readonly Verdict[], grou
     )
     .join('');
   const rep = group.members[0];
-  const at = rep
+  const at = rep?.site
+    ? `at the ${SITE_NAME[rep.site]}`
+    : rep
     ? rep.rostral === rep.caudal
       ? `at ${SEGMENTS[rep.rostral] ?? ''}`
       : `${SEGMENTS[rep.rostral] ?? ''}–${SEGMENTS[rep.caudal] ?? ''}`

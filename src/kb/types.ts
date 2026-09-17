@@ -3,6 +3,7 @@
 import type {
   BladderState,
   Compartment,
+  Deformity,
   Muscle,
   Nerve,
   PlexusCord,
@@ -104,6 +105,8 @@ export type Plexus = {
     >
   >;
   readonly reflexMuscles: Row<{ readonly muscles: Readonly<Partial<Record<Reflex, Muscle>>> }>;
+  /** A deformity follows when every listed muscle has lower-motor-neuron weakness (D36). */
+  readonly deformities: Readonly<Record<Deformity, Row<{ readonly muscles: readonly Muscle[] }>>>;
 };
 
 export type Kb = {

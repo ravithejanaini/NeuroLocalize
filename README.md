@@ -1,23 +1,40 @@
 # NeuroLocalize
 
-Place a lesion in the spinal cord; get the deficits it produces, and why.
-
-This repository is phase P0 of the plan in `docs/plan.html`: the knowledge base, the
-engine and the tests that prove the engine right. There is no 3D yet. That is deliberate —
-accuracy is the risk worth retiring before anything is drawn.
+Place a lesion anywhere from the spinal cord to a nerve in the hand, and see the deficits it
+produces and why. Or enter an examination, and see where the lesion could be, which test
+would tell the candidates apart, and the reasoning behind every ranking.
 
 > **Educational use only.** This is not a clinical decision-support tool and must not be
 > used to assess a real patient.
 
+## What is built
+
+| Phase | What it adds |
+|---|---|
+| P0 | Knowledge base, forward engine, frozen expectations, mutation testing, review worksheet |
+| P1 | The cord in 3D, with signals that travel and stop where the engine says they stop |
+| P2 | Body map, myotome grid, slice scrubber, phone layout |
+| P3 | Examination mode: ranked candidates, the next test worth doing, and the working |
+| P4 | The brachial plexus: roots, trunks, divisions, cords and nine nerves in 3D; fourteen muscles, seven nerve territories and five deformities (winged scapula, waiter's tip, wrist drop, claw hand, ape hand); examination mode separates root from plexus from nerve |
+
+P5 (above the cord) and P6 (practice and offline use) are planned in `docs/plan.html`.
+
 ## How accuracy is enforced
 
-- **Expected outputs were written first**, from 23 open-access sources that were actually
-  read, and frozen in git (`expectations-frozen`) before any engine code existed.
-- **Every fact carries its source.** Unsourced facts are marked and printed on every run.
+- **Expected outputs are written first**, from 46 open-access sources that were actually
+  read (`docs/SOURCES.md`), and committed before the code they test. Every later change to
+  an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
+- **Every fact carries its source.** Where sources disagree, both positions are recorded
+  and the finding is reported as uncertain rather than settled by typing
+  (`docs/DECISIONS.md`). Unsourced facts are marked and printed on every run.
 - **Observations are separate from mechanisms.** Contested explanations — tract
   lamination above all — can be wrong without the computed deficits being wrong.
-- **Mutation testing** corrupts every knowledge-base row and requires a test to fail.
-- **A review worksheet** turns clinical review into a list of claims with citations.
+- **What is drawn is what is computed.** Signal paths in 3D are built from the engine's own
+  routes, and tests hold the drawing to them.
+- **Mutation testing** corrupts every knowledge-base value and requires a frozen forward
+  case or a frozen examination to fail.
+- **A review worksheet** (`review/worksheet.md`) turns clinical review into a list of
+  claims with citations and open questions.
 
 ## Run it
 
@@ -26,4 +43,9 @@ Requires Node 24 or later.
 ```bash
 npm install
 npm run verify
+npm run build
+npm run serve
 ```
+
+Then open http://localhost:5178. Three.js loads from a pinned CDN URL; everything else is
+in this repository.

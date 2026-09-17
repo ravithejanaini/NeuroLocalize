@@ -230,7 +230,7 @@ export type Outcome = {
   readonly value: Value;
   readonly probability: number;
   /** The single most likely candidate if this result were seen. */
-  readonly leader: { readonly family: LesionFamily; readonly rostral: Segment } | null;
+  readonly leader: { readonly family: LesionFamily; readonly rostral: Segment; readonly site?: PlexusSite } | null;
 };
 
 export type Suggestion = {
@@ -351,7 +351,9 @@ export function reverse(
       outcomes.push({
         value: v,
         probability: pv,
-        leader: leader ? { family: leader.h.family, rostral: segName(leader.h.rostral) } : null,
+        leader: leader
+          ? { family: leader.h.family, rostral: segName(leader.h.rostral), ...(leader.h.site ? { site: leader.h.site } : {}) }
+          : null,
       });
     }
     const gain = h0 - expected;

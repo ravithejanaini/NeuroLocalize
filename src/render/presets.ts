@@ -1,8 +1,9 @@
 // The lesions the instrument offers. Focal lesions are shapes placed in space (D19);
-// system degenerations select tracts directly and ignore the level controls.
+// system degenerations select tracts directly and ignore the level controls; limb lesions
+// sit at a named place beyond the roots, on the side the arm control chooses.
 import type { LesionRegion } from '../engine/forward.ts';
 import { SHAPES, type Shape } from '../geometry/lesion3d.ts';
-import type { Segment } from '../kb/vocab.ts';
+import type { PlexusSite, Segment } from '../kb/vocab.ts';
 
 type Common = { readonly id: string; readonly label: string; readonly pattern: string };
 export type FocalPreset = Common & {
@@ -12,7 +13,8 @@ export type FocalPreset = Common & {
   readonly extent: number;
 };
 export type SystemPreset = Common & { readonly kind: 'system'; readonly regions: readonly LesionRegion[] };
-export type Preset = FocalPreset | SystemPreset;
+export type LimbPreset = Common & { readonly kind: 'limb'; readonly site: PlexusSite };
+export type Preset = FocalPreset | SystemPreset | LimbPreset;
 
 const both = ['L', 'R'] as const;
 
@@ -48,4 +50,22 @@ export const PRESETS: readonly Preset[] = [
     id: 'cauda', kind: 'system', label: 'Roots L3 to coccygeal', pattern: 'Cauda equina',
     regions: [{ at: { segments: ['L3', 'Co1'] }, sides: both, compartments: ['dorsal_root', 'ventral_root'], severity: 'complete', portion: 'whole' }],
   },
+  {
+    id: 'roots-c8-t1', kind: 'system', label: 'Left C8 and T1 roots', pattern: 'Klumpke, with Horner',
+    regions: [{ at: { segments: ['C8', 'T1'] }, sides: ['L'], compartments: ['dorsal_root', 'ventral_root'], severity: 'complete', portion: 'whole' }],
+  },
+  { id: 'upper-trunk', kind: 'limb', label: 'Upper trunk', pattern: 'Erb palsy', site: 'upper_trunk' },
+  { id: 'lower-trunk', kind: 'limb', label: 'Lower trunk', pattern: 'Klumpke palsy', site: 'lower_trunk' },
+  { id: 'posterior-cord', kind: 'limb', label: 'Posterior cord', pattern: 'Axillary + radial', site: 'posterior_cord' },
+  { id: 'medial-cord', kind: 'limb', label: 'Medial cord', pattern: 'Ulnar + median, radial spared', site: 'medial_cord' },
+  { id: 'long-thoracic', kind: 'limb', label: 'Long thoracic nerve', pattern: 'Winged scapula', site: 'long_thoracic' },
+  { id: 'axillary', kind: 'limb', label: 'Axillary nerve', pattern: 'After shoulder dislocation', site: 'axillary' },
+  { id: 'musculocutaneous', kind: 'limb', label: 'Musculocutaneous', pattern: 'Weak elbow flexion', site: 'musculocutaneous' },
+  { id: 'radial-axilla', kind: 'limb', label: 'Radial, in the axilla', pattern: 'Wrist drop, triceps weak', site: 'radial_axilla' },
+  { id: 'radial-groove', kind: 'limb', label: 'Radial, spiral groove', pattern: 'Wrist drop, triceps spared', site: 'radial_spiral_groove' },
+  { id: 'pin', kind: 'limb', label: 'Posterior interosseous', pattern: 'Finger drop, no numbness', site: 'posterior_interosseous' },
+  { id: 'median-elbow', kind: 'limb', label: 'Median, at the elbow', pattern: 'High median lesion', site: 'median_elbow' },
+  { id: 'median-wrist', kind: 'limb', label: 'Median, at the wrist', pattern: 'Carpal tunnel', site: 'median_wrist' },
+  { id: 'ulnar-elbow', kind: 'limb', label: 'Ulnar, at the elbow', pattern: 'Claw hand, cubital tunnel', site: 'ulnar_elbow' },
+  { id: 'ulnar-wrist', kind: 'limb', label: 'Ulnar, at the wrist', pattern: 'Guyon canal', site: 'ulnar_wrist' },
 ];

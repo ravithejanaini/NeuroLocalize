@@ -4,10 +4,13 @@
 // each root it needs.
 import type { Kb, Span, Supply } from '../kb/types.ts';
 import {
+  DEFORMITIES,
   MUSCLES,
   SEGMENTS,
   SENSORY_MODALITIES,
   SKIN_AREAS,
+  type Deformity,
+  type MotorLesion,
   type Muscle,
   type MuscleState,
   type Nerve,
@@ -19,6 +22,7 @@ import {
   type SensoryModality,
   type SensoryState,
   type Severity,
+  type SignState,
   type Side,
   type SkinArea,
   type Trunk,
@@ -126,18 +130,41 @@ function requireRoute(kb: Kb, supply: Supply, root: Segment, what: string): Limb
 
 /** What forward() already knows about the cord and roots, at each segment. */
 export type CordView = {
-  motorHit(side: Side, s: Segment): boolean;
+  motor(side: Side, s: Segment): MotorLesion;
   sensory(side: Side, m: SensoryModality, s: Segment): SensoryState;
 };
 
-export function muscleState(kb: Kb, pmap: PlexusMap, cord: CordView, side: Side, muscle: Muscle): MuscleState {
+/** A muscle's strength, and whether any of its weakness is of the lower motor neuron. */
+export type MuscleFinding = { readonly state: MuscleState; readonly lowerMotor: boolean };
+
+export function muscleFinding(kb: Kb, pmap: PlexusMap, cord: CordView, side: Side, muscle: Muscle): MuscleFinding {
   const row = kb.plexus.muscles[muscle];
-  const hit = (root: Segment, route: LimbRoute | null): boolean =>
-    cord.motorHit(side, root) || (route !== null && routeDamage(pmap, route, side) > 0);
-  const definite = spanSegments(row.roots).some((r) => hit(r, requireRoute(kb, row.supply, r, muscle)));
-  if (definite) return 'weak';
-  const disputed = spanSegments(row.disputedRoots).some((r) => hit(r, limbRoute(kb, row.supply, r)));
-  return disputed ? 'indeterminate' : 'normal';
+  // 'none' | 'upper' | 'lower' for one root's fibres to this muscle.
+  const hit = (root: Segment, route: LimbRoute | null): 'none' | 'upper' | 'lower' => {
+    if (route !== null && routeDamage(pmap, route, side) > 0) return 'lower';
+    const m = cord.motor(side, root);
+    return m === 'none' ? 'none' : m === 'umn' ? 'upper' : 'lower';
+  };
+  const definite = spanSegments(row.roots).map((r) => hit(r, requireRoute(kb, row.supply, r, muscle)));
+  const disputed = spanSegments(row.disputedRoots).map((r) => hit(r, limbRoute(kb, row.supply, r)));
+  const lowerMotor = [...definite, ...disputed].includes('lower');
+  if (definite.some((h) => h !== 'none')) return { state: 'weak', lowerMotor };
+  return { state: disputed.some((h) => h !== 'none') ? 'indeterminate' : 'normal', lowerMotor };
+}
+
+export const muscleState = (kb: Kb, pmap: PlexusMap, cord: CordView, side: Side, muscle: Muscle): MuscleState =>
+  muscleFinding(kb, pmap, cord, side, muscle).state;
+
+/**
+ * D36: present when every listed muscle is weak from a lower-motor-neuron lesion; absent
+ * when any is strong; otherwise indeterminate — including weakness of the upper motor
+ * neuron, after which no source read describes these deformities.
+ */
+export function deformityState(kb: Kb, found: (m: Muscle) => MuscleFinding, deformity: Deformity): SignState {
+  const muscles = kb.plexus.deformities[deformity].muscles.map(found);
+  if (muscles.length === 0) throw new Error(`${deformity} names no muscle`);
+  if (muscles.some((m) => m.state === 'normal')) return 'absent';
+  return muscles.every((m) => m.state === 'weak' && m.lowerMotor) ? 'present' : 'indeterminate';
 }
 
 const LEVEL: Record<Exclude<SensoryState, 'indeterminate'>, Damage> = { intact: 0, impaired: 1, lost: 2 };
@@ -188,20 +215,26 @@ export function limbReflex(kb: Kb, pmap: PlexusMap, side: Side, reflex: Reflex, 
 
 export type LimbFindings = {
   readonly muscles: Readonly<Record<Side, Readonly<Record<Muscle, MuscleState>>>>;
+  readonly deformities: Readonly<Record<Side, Readonly<Record<Deformity, SignState>>>>;
   readonly skin: Readonly<Record<Side, Readonly<Record<SensoryModality, Readonly<Record<SkinArea, SensoryState>>>>>>;
 };
 
 export function limbFindings(kb: Kb, pmap: PlexusMap, cord: CordView, sides: readonly Side[]): LimbFindings {
   const muscles = {} as Record<Side, Record<Muscle, MuscleState>>;
+  const deformities = {} as Record<Side, Record<Deformity, SignState>>;
   const skin = {} as Record<Side, Record<SensoryModality, Record<SkinArea, SensoryState>>>;
   for (const x of sides) {
+    const found = new Map(MUSCLES.map((m) => [m, muscleFinding(kb, pmap, cord, x, m)] as const));
+    const get = (m: Muscle): MuscleFinding => found.get(m) ?? { state: 'normal', lowerMotor: false };
     muscles[x] = {} as Record<Muscle, MuscleState>;
-    for (const m of MUSCLES) muscles[x][m] = muscleState(kb, pmap, cord, x, m);
+    for (const m of MUSCLES) muscles[x][m] = get(m).state;
+    deformities[x] = {} as Record<Deformity, SignState>;
+    for (const d of DEFORMITIES) deformities[x][d] = deformityState(kb, get, d);
     skin[x] = {} as Record<SensoryModality, Record<SkinArea, SensoryState>>;
     for (const mod of SENSORY_MODALITIES) {
       skin[x][mod] = {} as Record<SkinArea, SensoryState>;
       for (const a of SKIN_AREAS) skin[x][mod][a] = skinState(kb, pmap, cord, x, mod, a);
     }
   }
-  return { muscles, skin };
+  return { muscles, deformities, skin };
 }

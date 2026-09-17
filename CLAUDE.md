@@ -1,6 +1,7 @@
 # NeuroLocalize — agent instructions
 
-A lesion-localization engine for teaching neuroanatomy, with a 3D front end to come.
+A lesion-localization engine for teaching neuroanatomy — spinal cord, roots, brachial plexus
+and arm nerves — with a 3D instrument in front of it.
 **Education only. Not clinical decision support. No patient data, ever.**
 
 Plan: `docs/plan.html` (published revision C). Sources: `docs/SOURCES.md`.
@@ -43,11 +44,11 @@ browser-portable: no `node:` imports.
 1. **Never invent a citation.** A source id is cited only if that source was read. A
    book page nobody has read is `bookRef: 'pending'`. A fact with no read source is
    `pendingSource: '<reason>'` and is printed on every test run.
-2. **Expectations are frozen** — forward cases in `cases.ts` and `boundaries.ts`, reverse
-   cases in `reverse.ts`. `spec/expectations/` changed after the
-   `expectations-frozen` tag fails the build unless `spec/expectations/AMENDMENTS.md`
-   changes in the same diff with the reason and the source. Fix the knowledge base,
-   not the expectation.
+2. **Expectations are frozen** — forward cases in `cases.ts`, `boundaries.ts` and
+   `plexus.ts`; reverse cases in `reverse.ts` and `reverse-plexus.ts`. A file in
+   `spec/expectations/` changed after the `expectations-frozen` tag fails the build unless
+   `spec/expectations/AMENDMENTS.md` names it and gives the reason and the source. Fix the
+   knowledge base, not the expectation.
 3. **The engine never reads mechanism rows.** `src/kb/mechanisms.ts` explains
    observations; it cannot drive output. A test asserts identical output under every
    lamination model.

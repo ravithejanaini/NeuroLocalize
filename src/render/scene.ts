@@ -19,6 +19,9 @@ export type Palette = {
   readonly stt: string;
   readonly cst: string;
   readonly lesion: string;
+  readonly nerve: string;
+  readonly nervePost: string;
+  readonly artery: string;
 };
 
 export const TRACT_COLOUR = (p: Palette, c: Compartment): string =>
@@ -30,7 +33,8 @@ const basic = (color: string, opacity: number): THREE.MeshBasicMaterial =>
 const lineMat = (color: string, opacity: number): THREE.LineBasicMaterial =>
   new THREE.LineBasicMaterial({ color, transparent: true, opacity });
 
-export type Label = { readonly el: HTMLElement; readonly at: THREE.Vector3 };
+/** `limb` labels belong to the arm and are shown only when the camera is there. */
+export type Label = { readonly el: HTMLElement; readonly at: THREE.Vector3; readonly limb?: boolean };
 
 export type Anatomy = {
   readonly root: THREE.Group;

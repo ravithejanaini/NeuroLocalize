@@ -387,6 +387,59 @@ export const PLEXUS: Plexus = {
     },
   },
 
+  deformities: {
+    winged_scapula: {
+      meta: {
+        id: 'deformity.winged-scapula',
+        claim: 'Weakness of serratus anterior lets the scapula wing medially.',
+        sources: ['S44', 'S35'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      muscles: ['serratus_anterior'],
+    },
+    waiters_tip: {
+      meta: {
+        id: 'deformity.waiters-tip',
+        claim: 'Loss of the axillary, suprascapular and musculocutaneous muscles leaves the arm adducted, internally rotated, extended at the elbow and pronated: the waiter’s tip.',
+        sources: ['S33', 'S35'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      muscles: ['deltoid', 'supraspinatus', 'biceps'],
+    },
+    wrist_drop: {
+      meta: {
+        id: 'deformity.wrist-drop',
+        claim: 'Weakness of the radial wrist extensors gives wrist drop.',
+        sources: ['S39', 'S40'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      muscles: ['wrist_extensors'],
+    },
+    claw_hand: {
+      meta: {
+        id: 'deformity.claw-hand',
+        claim: 'Weakness of the intrinsic hand muscles, represented here by the interossei, gives a claw hand.',
+        sources: ['S38', 'S36', 'S33'],
+        tier: 'T2',
+        bookRef: p,
+      },
+      muscles: ['interossei'],
+    },
+    ape_hand: {
+      meta: {
+        id: 'deformity.ape-hand',
+        claim: 'Weakness of the median thenar muscles, represented by abductor pollicis brevis, flattens the thenar eminence: the ape hand.',
+        sources: ['S41', 'S33'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      muscles: ['thumb_abductor'],
+    },
+  },
+
   reflexMuscles: {
     meta: {
       id: 'plexus.reflex-muscles',

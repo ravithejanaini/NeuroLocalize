@@ -392,3 +392,24 @@ only by a reverse examination). The 13 survivors from P0 are unchanged. The 22 n
   hold them: each mapped muscle must perform the movement its sourced myotome row names, and
   named landmarks must read through named nerves.
 - *Open:* the superficial flexor's roots extended to C7 — no C7 case asserts it.
+
+**D36 — A deformity is derived, not stored.** Each of the five (winged scapula, waiter's
+tip, wrist drop, claw hand, ape hand) names the muscles its sources tie it to. It is
+*present* when every one of them is weak from a lower-motor-neuron lesion — a cut on its
+nerve route, or anterior horn or ventral root loss — *absent* when any is strong, and
+*indeterminate* otherwise. Weakness of the upper motor neuron alone leaves it
+indeterminate: the sources describe these postures after nerve injury, and none read
+describes them after a cord or brain lesion. Claw hand is represented by the interossei and
+ape hand by abductor pollicis brevis, the intrinsic muscles the sources name (S38, S41).
+Amendment A6 froze the expected deformities before this rule was written.
+
+**D37 — P4 closes at 93.8% on sourced rows.** The third run (596 mutants, 559 killed) adds
+the deformity rows. Its only new survivors are the waiter's tip losing one of its three
+muscles: no frozen case weakens exactly two of the deltoid, supraspinatus and biceps, and
+writing one would mean asserting a posture no source describes for that lesion. The rule is
+recorded as partly pinned rather than tested with an invented expectation.
+
+**D38 — The arm is examined from the front.** The arm camera looks from in front of the
+patient, as the body map is drawn, so the patient's left arm is on the viewer's right; the
+cord views keep their original dorsal angle. Arm labels appear only when the camera is near
+the arm, and the arm is drawn shortened, which the stage says.

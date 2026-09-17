@@ -14,6 +14,7 @@
   --stage:#0E1118; --stage-cord:#C9CFDC; --stage-rule:#5F6878; --stage-grey:#8B94A3;
   --stage-text:#A4ACBA; --stage-dim:#6F7888;
   --dc-glow:#7F98EA; --stt-glow:#D6A63E; --cst-glow:#E8674B; --lesion:#E8674B;
+  --nerve-glow:#E3CF8F; --nerve-post:#B9A36B; --artery:#B8565A;
   --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
   --f-body:"Source Serif 4",Georgia,serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
@@ -53,6 +54,8 @@ button,input{font:inherit;color:inherit}
 .lbl-seg{color:var(--stage-text)}
 .lbl-vert{color:var(--stage-dim);margin-left:-2.4em}
 .lbl-seg.is-hit{color:var(--lesion);font-weight:600}
+.lbl-limb{color:var(--nerve-glow);font-size:9.5px;opacity:.9}
+.lbl-land{color:var(--stage-dim);font-style:italic}
 
 .hud{position:absolute;display:flex;gap:6px;flex-wrap:wrap;font-family:var(--f-mono);font-size:10.5px;color:var(--stage-text)}
 .stations{top:12px;left:12px}
@@ -220,6 +223,26 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
 .w-fits .w-tag{color:var(--ink)}
 .w-what{color:var(--ink)}
 .w-why{grid-column:2;color:var(--ink2);font-size:11.5px}
+.deforms{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 8px}
+.deform{font-family:var(--f-display);font-weight:600;font-size:12.5px;padding:4px 9px;border:1px solid var(--ink);background:var(--ink);color:var(--ground);display:inline-flex;align-items:baseline;gap:6px}
+.deform-indeterminate{background:transparent;color:var(--ink);border-style:dashed}
+.deform-side{font-family:var(--f-mono);font-weight:400;font-size:9.5px;opacity:.75}
+.arm{border-collapse:collapse;width:100%;font-family:var(--f-mono);font-size:10.5px;margin-top:4px}
+.arm th{text-align:left;font-weight:400;color:var(--ink2);font-family:var(--f-body);font-size:12px;padding:2px 6px 2px 0;vertical-align:top}
+.arm thead th{font-family:var(--f-mono);font-size:9.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em}
+.arm td{padding:2px 6px 2px 0;vertical-align:top}
+.arm tr.calm th,.arm tr.calm td{color:var(--ink3)}
+.mus-name{display:block;font-family:var(--f-mono);font-size:9.5px;color:var(--ink3)}
+.st-mus-weak{color:var(--ink);font-weight:600}
+.st-mus-weak::before{content:"■ ";font-size:.8em}
+.st-mus-normal{color:var(--ink3)}
+.st-mus-indeterminate{text-decoration:underline dotted;text-underline-offset:3px}
+.arm-more{margin-top:6px}
+.arm-more summary{font-family:var(--f-mono);font-size:10.5px;color:var(--ink2);cursor:pointer;padding:3px 0}
+.extable .mus{font-family:var(--f-body);font-size:11.5px;color:var(--ink2)}
+.bodymap .dot.patch{stroke-width:1}
+.exdot.patch > *{stroke-dasharray:none}
+.exdot.patch.ex-untested > *{stroke-dasharray:1.5 1.5}
 .foot{padding:14px 18px 22px;font-size:12px;color:var(--ink3)}
 .foot a{color:var(--ink2)}
 
@@ -277,13 +300,15 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
       <button type="button" data-station="lesion" aria-pressed="true">Lesion</button>
       <button type="button" data-station="axial" aria-pressed="false">Axial</button>
       <button type="button" data-station="side" aria-pressed="false">Side</button>
+      <button type="button" data-station="arm" aria-pressed="false">Arm</button>
     </div>
-    <p class="hud hint">Drag to turn · scroll or pinch to zoom · shift-drag to move along the cord · keys 1–4</p>
+    <p class="hud hint">Drag to turn · scroll or pinch to zoom · shift-drag to move along the cord · keys 1–5</p>
     <ul class="hud legend">
       <li><i style="background:var(--dc-glow)"></i>Posterior columns</li>
       <li><i style="background:var(--stt-glow)"></i>Spinothalamic</li>
       <li><i style="background:var(--cst-glow)"></i>Corticospinal</li>
-      <li><i style="background:var(--lesion);height:8px;opacity:.5"></i>Lesion</li>
+      <li><i style="background:var(--nerve-glow)"></i>Plexus and nerves</li>
+      <li><i style="background:var(--lesion);height:8px;opacity:.5"></i>Lesion · weak muscle · numb skin</li>
     </ul>
     <div class="hud hud-foot">
       <div class="heads"><span>← Vertebrae</span><span>Cord segments →</span></div>
@@ -292,6 +317,7 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
         <span>Time slowed <b class="dilation">333×</b></span>
         <span>Speeds inside the cord illustrative</span>
         <span>Ruler interpolated</span>
+        <span>Arm shortened, plexus schematic</span>
       </div>
     </div>
   </div>
@@ -313,6 +339,13 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
         <span class="out" id="extent-out"></span>
       </div>
       <label class="check"><input type="checkbox" id="by-vertebra" aria-label="Place the lesion by vertebra"> Place by vertebra, and see which segments it reaches</label>
+      <div class="opt" id="limb-side-row" hidden>
+        <span>Which arm</span>
+        <span class="seg" role="radiogroup" aria-label="Which arm">
+          <label><input type="radio" name="limb-side" value="L" checked>Left</label>
+          <label><input type="radio" name="limb-side" value="R">Right</label>
+        </span>
+      </div>
     </section>
 
     <section class="sec" data-sec="lesion" data-mode="examine" id="exam-panel" hidden>
@@ -397,7 +430,7 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
 
     <section class="sec" data-sec="model">
       <h2 class="sec-t">Keys</h2>
-      <p class="keys"><kbd>1</kbd>&ndash;<kbd>4</kbd> camera &middot; <kbd>[</kbd> <kbd>]</kbd> move the lesion &middot; <kbd>,</kbd> <kbd>.</kbd> move the slice &middot; drag to turn, pinch or scroll to zoom</p>
+      <p class="keys"><kbd>1</kbd>&ndash;<kbd>5</kbd> camera &middot; <kbd>[</kbd> <kbd>]</kbd> move the lesion &middot; <kbd>,</kbd> <kbd>.</kbd> move the slice &middot; drag to turn, pinch or scroll to zoom</p>
     </section>
 
     <section class="sec" data-sec="model">
@@ -407,6 +440,7 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
         <li>Time is slowed <b class="dilation">333×</b>. Speed ratios between fibres are kept exactly: a C-fibre pulse really is fifteen times slower than an Aδ pulse.</li>
         <li>Peripheral and corticospinal speeds are sourced. Speeds of the posterior-column and spinothalamic axons inside the cord are not, and are drawn at one illustrative rate.</li>
         <li>The segment-to-vertebra ruler is interpolated between sourced anchors, with every vertebra drawn the same height.</li>
+        <li>The arm is drawn shortened and the plexus is schematic. What is sourced is the order of things: trunks between the scalenes and over the first rib, divisions behind the clavicle, cords named around the axillary artery, and where each branch leaves its nerve.</li>
       </ul>
     </section>
 

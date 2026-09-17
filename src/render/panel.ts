@@ -5,6 +5,7 @@ import { SOURCES } from '../kb/sources.ts';
 import type { Kb, Meta, RenderKb } from '../kb/types.ts';
 import { RENDER } from '../kb/render.ts';
 import { REFLEXES, SEGMENTS, SIDES, type Segment, type SensoryModality, type SensoryState, type Side } from '../kb/vocab.ts';
+import { armAffected, armMuscleTable, armSkinTable, deformityChips } from './arm.ts';
 import { bodyMapSvg, myotomeTable, sensoryLevelText } from './svg.ts';
 
 const SIDE_NAME: Record<Side, string> = { L: 'Left', R: 'Right' };
@@ -160,14 +161,14 @@ export class Panel {
     const groups: Group[] = [
       {
         title: 'Body map',
-        drivers: ['render.dermatome-landmarks', 'render.saddle'],
+        drivers: ['render.dermatome-landmarks', 'render.saddle', 'render.skin-patches'],
         body:
           `<div class="bodymap"><div class="bodymap-svg">${bodyMapSvg(render, f, bodyModality)}</div>` +
           `<div class="bodymap-side"><div class="seg bm-toggle" role="radiogroup" aria-label="Body map sensation">` +
           `<label><input type="radio" name="bodymap" value="pain_temperature"${bodyModality === 'pain_temperature' ? ' checked' : ''}>Pain</label>` +
           `<label><input type="radio" name="bodymap" value="posterior_column"${bodyModality === 'posterior_column' ? ' checked' : ''}>Vibration</label></div>` +
           sided((x) => sensoryLevelText(render, f, x, bodyModality)) +
-          `<p class="grp-note">Dots mark sourced landmarks for ${modalityName}: ■ lost, ◧ reduced, dashed uncertain, hollow intact. The diamond is the saddle, whose segments are a convention.</p></div></div>`,
+          `<p class="grp-note">Dots mark sourced landmarks for ${modalityName}: ■ lost, ◧ reduced, dashed uncertain, hollow intact. The diamond is the saddle, whose segments are a convention. Small squares are nerve territories; on the arm, the landmarks are read through their nerves too.</p></div></div>`,
       },
       {
         title: 'Pain and temperature',
@@ -184,6 +185,26 @@ export class Panel {
         title: 'Motor',
         drivers: ['pathway.corticospinal', 'compartment.lower-motor-neuron', 'observation.chronic-umn', 'observation.lmn', 'render.myotomes'],
         body: sided((x) => this.motorLine(f, x)) + myotomeTable(render, f),
+      },
+      {
+        title: 'Arm',
+        drivers: [
+          'plexus.trunks',
+          'plexus.cords',
+          'nerve.radial',
+          'nerve.median',
+          'nerve.ulnar',
+          'deformity.winged-scapula',
+          'deformity.waiters-tip',
+          'deformity.wrist-drop',
+          'deformity.claw-hand',
+          'deformity.ape-hand',
+        ],
+        body: armAffected(f)
+          ? `${deformityChips(f)}<details class="arm-more" open><summary>Muscle by muscle</summary>${armMuscleTable(f)}</details>` +
+            `<details class="arm-more"><summary>Nerve territories</summary>${armSkinTable(f)}</details>`
+          : '<p class="quiet">Every arm muscle strong and every territory intact.</p>',
+        note: 'Uncertain marks a root the sources disagree about; a deformity is only called after lower-motor-neuron weakness.',
       },
       {
         title: 'Reflexes',

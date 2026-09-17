@@ -60,6 +60,8 @@ function describe(a: Assertion | LimbAssertion): string {
       return `lesion resolves to segments ${span(a.span)}`;
     case 'muscle':
       return `${SIDE[a.side]} · ${words(a.muscles)} → ${any(a.oneOf)}`;
+    case 'deformity':
+      return `${SIDE[a.side]} · ${a.deformity.replace(/_/g, ' ')} → ${any(a.oneOf)}`;
     case 'skin':
       return `${SIDE[a.side]} · ${a.modality === 'all' ? 'all sensation' : a.modality.replace('_', ' ')} · ${words(a.areas)} → ${any(a.oneOf)}`;
     default:

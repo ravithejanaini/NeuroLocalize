@@ -67,6 +67,12 @@ export function check(a: Assertion | LimbAssertion, f: Findings): string[] {
           if (miss(got, a.oneOf)) out.push(`muscle ${x} ${m}: got ${got}, expected ${show(a.oneOf)}`);
         }
       break;
+    case 'deformity':
+      for (const x of sidesOf(a.side)) {
+        const got = f.deformities[x][a.deformity];
+        if (miss(got, a.oneOf)) out.push(`deformity ${x} ${a.deformity}: got ${got}, expected ${show(a.oneOf)}`);
+      }
+      break;
     case 'skin':
       for (const x of sidesOf(a.side))
         for (const m of a.modality === 'all' ? SENSORY_MODALITIES : [a.modality])

@@ -260,7 +260,7 @@ export function forward(lesion: readonly AnyRegion[], timepoint: Timepoint, opti
     SIDES.some((x) => ['lost', 'impaired'].includes(sensory[x].pain_temperature[justAbove]));
 
   const limb = limbFindings(kb, pmap, {
-    motorHit: (x, s) => motor[x][s].lesion !== 'none',
+    motor: (x, s) => motor[x][s].lesion,
     sensory: (x, m, s) => sensory[x][m][s],
   }, SIDES);
 

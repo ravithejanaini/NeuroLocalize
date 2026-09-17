@@ -6,7 +6,7 @@ Thank you for checking this. It is a teaching tool, not clinical software, and t
 claims are what it teaches. Mark each one; where a claim is wrong, a one-line correction
 with a source is the most useful thing you can give.
 
-65 knowledge-base claims, 17 displayed facts, 19 open questions. Mutation score 94.1% over sourced rows, 90.6% over all rows.
+70 knowledge-base claims, 17 displayed facts, 19 open questions. Mutation score 94.1% over sourced rows, 90.6% over all rows.
 Claims are ordered by load-bearing weight: how many expected findings fail when the claim
 is corrupted. The first ten carry most of the engine.
 
@@ -402,7 +402,37 @@ Book reference (Brazis / Blumenfeld, page): ____
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**65. A Babinski sign requires corticospinal interruption rostral to the lumbosacral segments.**
+**65. Weakness of serratus anterior lets the scapula wing medially.**
+`deformity.winged-scapula` · tier T1 · sources [S44](https://www.ncbi.nlm.nih.gov/books/NBK535396/), [S35](https://www.ncbi.nlm.nih.gov/books/NBK513260/) · weight 0
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**66. Loss of the axillary, suprascapular and musculocutaneous muscles leaves the arm adducted, internally rotated, extended at the elbow and pronated: the waiter’s tip.**
+`deformity.waiters-tip` · tier T1 · sources [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/), [S35](https://www.ncbi.nlm.nih.gov/books/NBK513260/) · weight 0
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**67. Weakness of the radial wrist extensors gives wrist drop.**
+`deformity.wrist-drop` · tier T1 · sources [S39](https://www.ncbi.nlm.nih.gov/books/NBK532993/), [S40](https://www.ncbi.nlm.nih.gov/books/NBK537304/) · weight 0
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**68. Weakness of the intrinsic hand muscles, represented here by the interossei, gives a claw hand.**
+`deformity.claw-hand` · tier T2 · sources [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/), [S36](https://www.ncbi.nlm.nih.gov/books/NBK531500/), [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/) · weight 0
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**69. Weakness of the median thenar muscles, represented by abductor pollicis brevis, flattens the thenar eminence: the ape hand.**
+`deformity.ape-hand` · tier T1 · sources [S41](https://www.ncbi.nlm.nih.gov/books/NBK448084/), [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/) · weight 0
+
+☐ true ☐ false ☐ unsure
+Book reference (Brazis / Blumenfeld, page): ____
+
+**70. A Babinski sign requires corticospinal interruption rostral to the lumbosacral segments.**
 `observation.babinski-level` · tier T2 · sources [S12](https://www.ncbi.nlm.nih.gov/books/NBK531502/) · weight 0
 > ⚠ No source read supports all of this. R6: no source read gives the plantar reflex’s segments; L5 is a modelling choice
 
@@ -414,106 +444,106 @@ Book reference (Brazis / Blumenfeld, page): ____
 These do not change any computed finding, but they are drawn or printed: segment and
 vertebra positions, myotomes, dermatome landmarks, fibre speeds and tract arrangement.
 
-**66. Each trunk divides beneath the clavicle; the three posterior divisions form the posterior cord and the anterior divisions form the lateral and medial cords.**
+**71. Each trunk divides beneath the clavicle; the three posterior divisions form the posterior cord and the anterior divisions form the lateral and medial cords.**
 `render.plexus-divisions` · tier T1 · sources [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/)
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**67. The roots pass between the anterior and middle scalenes; the trunks cross the first rib; the divisions pass beneath and behind the clavicle; the cords are named by where they lie around the axillary artery. Positions are schematic and the arm is drawn shortened.**
+**72. The roots pass between the anterior and middle scalenes; the trunks cross the first rib; the divisions pass beneath and behind the clavicle; the cords are named by where they lie around the axillary artery. Positions are schematic and the arm is drawn shortened.**
 `render.limb-layout` · tier T1 · sources [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/), [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/)
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**68. Dorsal scapular C5; long thoracic C5–C6, C7 disputed; suprascapular C5–C6; axillary C5–C6; musculocutaneous C5–C6, C7 disputed; radial C5–T1; median C6–T1, C5 disputed; ulnar and medial antebrachial cutaneous C8–T1.**
+**73. Dorsal scapular C5; long thoracic C5–C6, C7 disputed; suprascapular C5–C6; axillary C5–C6; musculocutaneous C5–C6, C7 disputed; radial C5–T1; median C6–T1, C5 disputed; ulnar and medial antebrachial cutaneous C8–T1.**
 `render.nerve-roots` · tier T3 · sources [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/), [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/), [S41](https://www.ncbi.nlm.nih.gov/books/NBK448084/), [S42](https://www.ncbi.nlm.nih.gov/books/NBK493212/), [S43](https://www.ncbi.nlm.nih.gov/books/NBK534199/), [S44](https://www.ncbi.nlm.nih.gov/books/NBK535396/), [S45](https://www.ncbi.nlm.nih.gov/books/NBK551638/), [S46](https://www.ncbi.nlm.nih.gov/books/NBK545249/) · conflict C12
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**69. C6 thumb; C7 middle finger; C8 little finger; T1 anteromedial forearm and arm; T2 medial arm to the axilla; T4 nipple; T6 xiphoid; T10 umbilicus; L3 medial knee; L4 anterior knee and medial malleolus; L5 dorsum of the foot and first three toes; S1 lateral malleolus. Body positions are schematic.**
+**74. C6 thumb; C7 middle finger; C8 little finger; T1 anteromedial forearm and arm; T2 medial arm to the axilla; T4 nipple; T6 xiphoid; T10 umbilicus; L3 medial knee; L4 anterior knee and medial malleolus; L5 dorsum of the foot and first three toes; S1 lateral malleolus. Body positions are schematic.**
 `render.dermatome-landmarks` · tier T2 · sources [S21](https://www.ncbi.nlm.nih.gov/books/NBK535401/)
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**70. Loss around the anus and perineum — saddle anaesthesia — marks conus and cauda equina lesions; it is drawn for S3–S5.**
+**75. Loss around the anus and perineum — saddle anaesthesia — marks conus and cauda equina lesions; it is drawn for S3–S5.**
 `render.saddle` · tier T2 · sources [S05](https://www.msdmanuals.com/professional/multimedia/table/spinal-cord-syndromes), [S09](https://www.ncbi.nlm.nih.gov/books/NBK537200/), [S14](https://www.ncbi.nlm.nih.gov/books/NBK545227/)
 > ⚠ No source read supports all of this. R5: no source read assigns the saddle to particular segments
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**71. The regimental badge lies over the lower lateral deltoid; the musculocutaneous nerve supplies the lateral forearm; the superficial radial nerve the back of the hand at the first web space. Body positions are schematic; the web space is on the back of the hand, drawn at its edge.**
+**76. The regimental badge lies over the lower lateral deltoid; the musculocutaneous nerve supplies the lateral forearm; the superficial radial nerve the back of the hand at the first web space. Body positions are schematic; the web space is on the back of the hand, drawn at its edge.**
 `render.skin-patches` · tier T2 · sources [S42](https://www.ncbi.nlm.nih.gov/books/NBK493212/), [S43](https://www.ncbi.nlm.nih.gov/books/NBK534199/), [S39](https://www.ncbi.nlm.nih.gov/books/NBK532993/)
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**72. C5 shoulder abduction; C6 elbow flexion and wrist extension; C7 elbow extension; C8 wrist flexion and thumb extension (S31) or finger flexion (S32); T1 finger abduction; T2–L1 chest wall and abdominal muscles; L2 hip flexion; L3 knee extension; L4 ankle dorsiflexion; L5 great toe extension; S1 ankle plantar flexion; S2 knee flexion.**
+**77. C5 shoulder abduction; C6 elbow flexion and wrist extension; C7 elbow extension; C8 wrist flexion and thumb extension (S31) or finger flexion (S32); T1 finger abduction; T2–L1 chest wall and abdominal muscles; L2 hip flexion; L3 knee extension; L4 ankle dorsiflexion; L5 great toe extension; S1 ankle plantar flexion; S2 knee flexion.**
 `render.myotomes` · tier T3 · sources [S31](https://www.ncbi.nlm.nih.gov/books/NBK544267/), [S32](https://www.ncbi.nlm.nih.gov/books/NBK448146/), [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/) · conflict C9
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**73. The adult cord is 42–45 cm long; about 0.64–0.83 cm wide in the thoracic region and 1.27–1.33 cm in the cervical and lumbar regions.**
+**78. The adult cord is 42–45 cm long; about 0.64–0.83 cm wide in the thoracic region and 1.27–1.33 cm in the cervical and lumbar regions.**
 `render.cord-dimensions` · tier T2 · sources [S30](https://radiopaedia.org/articles/spinal-cord), [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/)
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**74. The cervical enlargement spans C5–T1 (S24) or C3–T1 (S26); the lumbar enlargement L2–S3 (S24) or L1–S2 (S26). Drawn over the union.**
+**79. The cervical enlargement spans C5–T1 (S24) or C3–T1 (S26); the lumbar enlargement L2–S3 (S24) or L1–S2 (S26). Drawn over the union.**
 `render.enlargements` · tier T3 · sources [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S26](https://nba.uth.tmc.edu/neuroscience/m/s2/chapter03.html) · conflict C6
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**75. C1 begins at the foramen magnum and C8 lies at the C7 vertebra; the lower thoracic cord runs three segments ahead of the vertebrae; the conus (S2–Co1) lies at L1 and the cord ends at L1–L2. Positions between these anchors are interpolated.**
+**80. C1 begins at the foramen magnum and C8 lies at the C7 vertebra; the lower thoracic cord runs three segments ahead of the vertebrae; the conus (S2–Co1) lies at L1 and the cord ends at L1–L2. Positions between these anchors are interpolated.**
 `render.segment-ruler` · tier T2 · sources [S26](https://nba.uth.tmc.edu/neuroscience/m/s2/chapter03.html), [S14](https://www.ncbi.nlm.nih.gov/books/NBK545227/), [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S30](https://radiopaedia.org/articles/spinal-cord)
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**76. The lateral horn is present only from T1 to L2.**
+**81. The lateral horn is present only from T1 to L2.**
 `render.lateral-horn` · tier T1 · sources [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S07](https://www.ncbi.nlm.nih.gov/books/NBK560731/)
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**77. The fasciculus gracilis lies medially and carries the lower body; the fasciculus cuneatus lies laterally, exists at T6 and above, and carries the upper body.**
+**82. The fasciculus gracilis lies medially and carries the lower body; the fasciculus cuneatus lies laterally, exists at T6 and above, and carries the upper body.**
 `render.posterior-column-somatotopy` · tier T2 · sources [S27](https://www.ncbi.nlm.nih.gov/books/NBK507888/), [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/)
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**78. Posterior columns lie dorsally with gracilis medial; the lateral corticospinal tract in the lateral funiculus; the spinothalamic tract anterolaterally; grey matter forms an H around the central canal. Coordinates are a schematic, not measurements.**
+**83. Posterior columns lie dorsally with gracilis medial; the lateral corticospinal tract in the lateral funiculus; the spinothalamic tract anterolaterally; grey matter forms an H around the central canal. Coordinates are a schematic, not measurements.**
 `render.cross-section-layout` · tier T2 · sources [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S27](https://www.ncbi.nlm.nih.gov/books/NBK507888/)
 > ⚠ No source read supports all of this. the positions of the descending autonomic pathway and the roots are schematic (R7)
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**79. Aβ fibres conduct at 16–100 m/s, Aδ at 5–30 (about 15), C at 0.2–2 (about 1); the corticospinal tract at about 67 m/s.**
+**84. Aβ fibres conduct at 16–100 m/s, Aδ at 5–30 (about 15), C at 0.2–2 (about 1); the corticospinal tract at about 67 m/s.**
 `render.conduction-velocity` · tier T2 · sources [S25](https://www.ncbi.nlm.nih.gov/books/NBK547731/), [S28](https://www.ncbi.nlm.nih.gov/books/NBK554461/), [S29](https://pmc.ncbi.nlm.nih.gov/articles/PMC1028573/)
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**80. Posterior-column and spinothalamic axons inside the cord are drawn at one illustrative speed.**
+**85. Posterior-column and spinothalamic axons inside the cord are drawn at one illustrative speed.**
 `render.intraspinal-speed` · tier T2 · sources _none_
 > ⚠ No source read supports all of this. D14: no source read gives their conduction velocity
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**81. Classical: lumbar and sacral fibres dorsolateral, cervical ventromedial. Revised (cordotomy mapping): lower-limb fibres superficial and posterior, shifting ventrally on ascent; upper-limb fibres deep and anterior, some posterior. Positions schematic.**
+**86. Classical: lumbar and sacral fibres dorsolateral, cervical ventromedial. Revised (cordotomy mapping): lower-limb fibres superficial and posterior, shifting ventrally on ascent; upper-limb fibres deep and anterior, some posterior. Positions schematic.**
 `render.lamination-spinothalamic` · tier T3 · sources [S23](https://academic.oup.com/braincomms/article/7/3/fcaf237/8165923) · conflict C7
 
 ☐ true ☐ false ☐ unsure
 Book reference (Brazis / Blumenfeld, page): ____
 
-**82. Historical: arm fibres medial in the lateral corticospinal tract. Current: arm and leg fibres diffusely distributed. Positions schematic.**
+**87. Historical: arm fibres medial in the lateral corticospinal tract. Current: arm and leg fibres diffusely distributed. Positions schematic.**
 `render.lamination-corticospinal` · tier T3 · sources [S06](https://www.ncbi.nlm.nih.gov/books/NBK441932/) · conflict C8
 
 ☐ true ☐ false ☐ unsure
@@ -558,7 +588,7 @@ For context. The engine never uses these; they drive only the teaching layer.
 
 ## 4. Composed expectations
 
-243 expected findings are not stated by any single source; they follow from
+273 expected findings are not stated by any single source; they follow from
 several stated facts. They are the most likely place for a reasoning error. Each line is
 what the tool will teach for that lesion.
 
@@ -769,6 +799,8 @@ what the tool will teach for that lesion.
 
 ### Left upper trunk — _Erb palsy_
 
+- ☐ chronic · left · claw hand → absent — [S35](https://www.ncbi.nlm.nih.gov/books/NBK513260/) — _A6: the hand muscles are spared_
+- ☐ chronic · left · ape hand → absent — [S35](https://www.ncbi.nlm.nih.gov/books/NBK513260/) — _A6_
 - ☐ chronic · left · wrist extensors → weak — [S35](https://www.ncbi.nlm.nih.gov/books/NBK513260/), [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/) — _the waiter’s tip wrist is flexed; wrist extension is C6_
 - ☐ chronic · left · brachioradialis → weak — [S12](https://www.ncbi.nlm.nih.gov/books/NBK531502/), [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/) — _a C5–C6 muscle whose fibres all pass the upper trunk_
 - ☐ chronic · left · triceps → normal — [S35](https://www.ncbi.nlm.nih.gov/books/NBK513260/), [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/) — _C7 is involved only in extended Erb palsy_
@@ -783,6 +815,9 @@ what the tool will teach for that lesion.
 
 ### Left lower trunk — _Klumpke palsy, postganglionic_
 
+- ☐ chronic · left · wrist drop → absent — [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/), [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/) — _A6: the radial wrist extensors are C6_
+- ☐ chronic · left · winged scapula → absent — [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/) — _A6_
+- ☐ chronic · left · waiters tip → absent — [S35](https://www.ncbi.nlm.nih.gov/books/NBK513260/), [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/) — _A6_
 - ☐ chronic · left · finger flexor superficial, wrist flexor ulnar → weak — [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/), [S31](https://www.ncbi.nlm.nih.gov/books/NBK544267/), [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/) — _C8 muscles; the lower trunk carries C8_
 - ☐ chronic · left · thumb extensor → weak — [S31](https://www.ncbi.nlm.nih.gov/books/NBK544267/), [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S40](https://www.ncbi.nlm.nih.gov/books/NBK537304/) — _thumb extension is C8 (S31) and reaches the radial nerve through the posterior division of the lower trunk (S34)_
 - ☐ chronic · left · deltoid, biceps, supraspinatus, rhomboids, serratus anterior, brachioradialis, wrist extensors → normal — [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/), [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/)
@@ -824,12 +859,15 @@ what the tool will teach for that lesion.
 
 ### Left C5 and C6 roots — _upper plexus avulsion: the same roots as Erb palsy, taken proximally_
 
+- ☐ chronic · left · waiters tip → present — [S35](https://www.ncbi.nlm.nih.gov/books/NBK513260/), [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/) — _A6: the same muscles as Erb palsy_
+- ☐ chronic · left · winged scapula → present — [S35](https://www.ncbi.nlm.nih.gov/books/NBK513260/), [S44](https://www.ncbi.nlm.nih.gov/books/NBK535396/) — _A6: the long thoracic nerve takes C5–C6 from the roots_
 - ☐ chronic · left · deltoid, supraspinatus, biceps, wrist extensors, brachioradialis → weak — [S35](https://www.ncbi.nlm.nih.gov/books/NBK513260/), [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/)
 - ☐ chronic · left · triceps, thumb abductor, finger flexor ulnar, interossei → normal — [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/), [S35](https://www.ncbi.nlm.nih.gov/books/NBK513260/)
 - ☐ chronic · left · horner → absent — [S16](https://www.ncbi.nlm.nih.gov/books/NBK500000/)
 
 ### Left C7 root — _C7 radiculopathy, with the sources that disagree about C7 left open_
 
+- ☐ chronic · left · wrist drop → absent — [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/) — _A6_
 - ☐ chronic · left · deltoid, biceps, rhomboids, thumb abductor, finger flexor ulnar, interossei → normal — [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/)
 - ☐ chronic · left · all sensation · thumb, little finger → intact — [S21](https://www.ncbi.nlm.nih.gov/books/NBK535401/)
 - ☐ chronic · left · wrist extensors, brachioradialis → normal — [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/) — _A5: both are C6_
@@ -852,6 +890,7 @@ what the tool will teach for that lesion.
 
 ### Left T1 root, examined at the arm — _T1 radiculopathy: interossei and a Horner syndrome_
 
+- ☐ chronic · left · claw hand → present — [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/), [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/) — _A6: the interossei are the T1 key muscles_
 - ☐ chronic · left · thumb abductor → weak — [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/) — _R15_
 - ☐ chronic · left · finger flexor ulnar, finger flexor superficial → normal — [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/), [S32](https://www.ncbi.nlm.nih.gov/books/NBK448146/) — _finger flexion is C8_
 - ☐ chronic · left · wrist flexor ulnar, thumb extensor → normal — [S31](https://www.ncbi.nlm.nih.gov/books/NBK544267/) — _C8 movements in S31_
@@ -869,12 +908,17 @@ what the tool will teach for that lesion.
 
 ### Left suprascapular nerve — _weak shoulder abduction and external rotation with the deltoid spared_
 
+- ☐ chronic · left · waiters tip → absent — [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/) — _A6_
+- ☐ chronic · left · winged scapula → absent — [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/) — _A6_
 - ☐ chronic · left · supraspinatus → weak — [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/)
 - ☐ chronic · left · rhomboids, serratus anterior, deltoid, biceps, triceps, brachioradialis, wrist extensors, thumb extensor, wrist flexor ulnar, finger flexor superficial, finger flexor ulnar, thumb abductor, interossei → normal — [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S42](https://www.ncbi.nlm.nih.gov/books/NBK493212/)
 - ☐ chronic · left · all sensation · shoulder badge, lateral forearm, dorsal web, thumb, middle finger, little finger, medial forearm → intact — [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/)
 
 ### Left posterior cord — _axillary and radial nerves together_
 
+- ☐ chronic · left · wrist drop → present — [S39](https://www.ncbi.nlm.nih.gov/books/NBK532993/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/) — _A6: the whole radial nerve_
+- ☐ chronic · left · claw hand → absent — [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/) — _A6_
+- ☐ chronic · left · waiters tip → absent — [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/) — _A6: the suprascapular and musculocutaneous nerves are spared_
 - ☐ chronic · left · deltoid → weak — [S42](https://www.ncbi.nlm.nih.gov/books/NBK493212/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/) — _the axillary nerve leaves the posterior cord_
 - ☐ chronic · left · triceps, brachioradialis, wrist extensors, thumb extensor → weak — [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/), [S39](https://www.ncbi.nlm.nih.gov/books/NBK532993/), [S40](https://www.ncbi.nlm.nih.gov/books/NBK537304/) — _the whole radial nerve_
 - ☐ chronic · left · biceps, supraspinatus, rhomboids, serratus anterior, thumb abductor, finger flexor ulnar, interossei, finger flexor superficial → normal — [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/)
@@ -887,6 +931,9 @@ what the tool will teach for that lesion.
 
 ### Left medial cord — _like a lower trunk lesion, but the radial nerve is spared_
 
+- ☐ chronic · left · claw hand → present — [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/) — _A6_
+- ☐ chronic · left · ape hand → present — [S41](https://www.ncbi.nlm.nih.gov/books/NBK448084/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/) — _A6_
+- ☐ chronic · left · wrist drop → absent — [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/) — _A6_
 - ☐ chronic · left · thumb abductor, finger flexor ulnar, interossei, wrist flexor ulnar, finger flexor superficial → weak — [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/), [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/), [S41](https://www.ncbi.nlm.nih.gov/books/NBK448084/) — _ulnar nerve, and the medial-cord contribution to the median nerve_
 - ☐ chronic · left · thumb extensor → normal — [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S40](https://www.ncbi.nlm.nih.gov/books/NBK537304/) — _its C8 fibres run in the posterior division, which the medial cord does not contain_
 - ☐ chronic · left · triceps, deltoid, biceps, wrist extensors → normal — [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/)
@@ -897,6 +944,7 @@ what the tool will teach for that lesion.
 
 ### Left ulnar nerve at the elbow — _cubital tunnel: claw hand without medial forearm loss_
 
+- ☐ chronic · left · wrist drop → absent — [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/) — _A6_
 - ☐ chronic · left · wrist flexor ulnar → weak — [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/) — _modelled as supplied below the elbow site (R17)_
 - ☐ chronic · left · all sensation · thumb, middle finger → intact — [S41](https://www.ncbi.nlm.nih.gov/books/NBK448084/)
 - ☐ chronic · left · triceps reflex → normal — [S12](https://www.ncbi.nlm.nih.gov/books/NBK531502/)
@@ -906,10 +954,14 @@ what the tool will teach for that lesion.
 
 ### Left ulnar nerve at the wrist — _Guyon canal: the long flexor is spared_
 
+- ☐ chronic · left · claw hand → present — [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/) — _A6: the intrinsic muscles are supplied beyond the canal_
+- ☐ chronic · left · ape hand → absent — [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/) — _A6_
 - ☐ chronic · left · finger flexor ulnar, wrist flexor ulnar → normal — [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/), [S36](https://www.ncbi.nlm.nih.gov/books/NBK531500/) — _supplied in the forearm, above the canal_
 
 ### Left radial nerve at the spiral groove — _wrist drop with triceps spared_
 
+- ☐ chronic · left · claw hand → absent — [S39](https://www.ncbi.nlm.nih.gov/books/NBK532993/) — _A6_
+- ☐ chronic · left · winged scapula → absent — [S39](https://www.ncbi.nlm.nih.gov/books/NBK532993/) — _A6_
 - ☐ chronic · left · deltoid, biceps, thumb abductor, finger flexor ulnar, interossei → normal — [S39](https://www.ncbi.nlm.nih.gov/books/NBK532993/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/)
 - ☐ chronic · left · all sensation · thumb → impaired — [S46](https://www.ncbi.nlm.nih.gov/books/NBK545249/), [S41](https://www.ncbi.nlm.nih.gov/books/NBK448084/) — _the radial side of the thumb is lost; the median palmar thumb is kept_
 - ☐ chronic · left · all sensation · little finger, middle finger, shoulder badge → intact — [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/), [S41](https://www.ncbi.nlm.nih.gov/books/NBK448084/), [S42](https://www.ncbi.nlm.nih.gov/books/NBK493212/)
@@ -926,6 +978,7 @@ what the tool will teach for that lesion.
 
 ### Left median nerve at the wrist — _carpal tunnel_
 
+- ☐ chronic · left · claw hand → absent — [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/) — _A6_
 - ☐ chronic · left · finger flexor superficial → normal — [S41](https://www.ncbi.nlm.nih.gov/books/NBK448084/) — _PIP flexion is weak only in high lesions_
 - ☐ chronic · left · finger flexor ulnar, interossei → normal — [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/)
 - ☐ chronic · left · all sensation · thumb → impaired — [S41](https://www.ncbi.nlm.nih.gov/books/NBK448084/), [S46](https://www.ncbi.nlm.nih.gov/books/NBK545249/) — _palmar thumb lost, radial side kept_
@@ -933,23 +986,30 @@ what the tool will teach for that lesion.
 
 ### Left median nerve at the elbow — _high median lesion_
 
+- ☐ chronic · left · ape hand → present — [S41](https://www.ncbi.nlm.nih.gov/books/NBK448084/) — _A6_
+- ☐ chronic · left · claw hand → absent — [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/) — _A6_
 - ☐ chronic · left · thumb abductor → weak — [S41](https://www.ncbi.nlm.nih.gov/books/NBK448084/)
 - ☐ chronic · left · finger flexor ulnar, interossei, wrist flexor ulnar → normal — [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/)
 - ☐ chronic · left · all sensation · little finger, medial forearm → intact — [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/)
 
 ### Left axillary nerve — _after shoulder dislocation_
 
+- ☐ chronic · left · waiters tip → absent — [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/) — _A6: the posture needs the suprascapular and musculocutaneous nerves too_
+- ☐ chronic · left · winged scapula → absent — [S42](https://www.ncbi.nlm.nih.gov/books/NBK493212/) — _A6_
 - ☐ chronic · left · rhomboids, serratus anterior, supraspinatus, biceps, triceps, brachioradialis, wrist extensors, thumb extensor, wrist flexor ulnar, finger flexor superficial, finger flexor ulnar, thumb abductor, interossei → normal — [S42](https://www.ncbi.nlm.nih.gov/books/NBK493212/)
 - ☐ chronic · left · all sensation · lateral forearm, dorsal web, thumb, middle finger, little finger, medial forearm → intact — [S42](https://www.ncbi.nlm.nih.gov/books/NBK493212/)
 
 ### Left musculocutaneous nerve — _weak elbow flexion with lateral forearm numbness_
 
+- ☐ chronic · left · waiters tip → absent — [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/) — _A6_
 - ☐ chronic · left · brachioradialis, deltoid, wrist extensors → normal — [S40](https://www.ncbi.nlm.nih.gov/books/NBK537304/), [S42](https://www.ncbi.nlm.nih.gov/books/NBK493212/)
 - ☐ chronic · left · biceps reflex → reduced or absent — [S12](https://www.ncbi.nlm.nih.gov/books/NBK531502/), [S43](https://www.ncbi.nlm.nih.gov/books/NBK534199/)
 - ☐ chronic · left · brachioradialis reflex → normal — [S40](https://www.ncbi.nlm.nih.gov/books/NBK537304/)
 
 ### Left long thoracic nerve — _winged scapula_
 
+- ☐ chronic · left · waiters tip → absent — [S44](https://www.ncbi.nlm.nih.gov/books/NBK535396/) — _A6_
+- ☐ chronic · left · wrist drop → absent — [S44](https://www.ncbi.nlm.nih.gov/books/NBK535396/) — _A6_
 - ☐ chronic · left · rhomboids, supraspinatus, deltoid, biceps, triceps, brachioradialis, wrist extensors, thumb extensor, wrist flexor ulnar, finger flexor superficial, finger flexor ulnar, thumb abductor, interossei → normal — [S44](https://www.ncbi.nlm.nih.gov/books/NBK535396/)
 - ☐ chronic · left · all sensation · shoulder badge, lateral forearm, dorsal web, thumb, middle finger, little finger, medial forearm → intact — [S44](https://www.ncbi.nlm.nih.gov/books/NBK535396/) — _a motor nerve_
 
