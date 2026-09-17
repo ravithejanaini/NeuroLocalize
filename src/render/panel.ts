@@ -143,8 +143,9 @@ export class Panel {
     };
     const shock: Record<string, string> = {
       expected: 'expected',
+      possible: 'possible — it can last four to five weeks',
       not_expected: 'not expected',
-      not_applicable: 'an acute-phase finding only',
+      not_applicable: 'not expected after the first month',
     };
     const dys: Record<string, string> = {
       susceptible: 'at risk',

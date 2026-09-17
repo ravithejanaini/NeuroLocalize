@@ -78,8 +78,8 @@ describe('plexus drawing matches the engine (D27)', () => {
         }
       }
     }
-    // 20 muscle paths (one per root, disputed included) and 16 skin paths.
-    assert.equal(paths, 36);
+    // 21 muscle paths (one per root, disputed included — C8 to the interossei since A9) and 16 skin paths.
+    assert.equal(paths, 37);
   });
 
   it('draws each branch after exactly as many named places as the knowledge base says', () => {

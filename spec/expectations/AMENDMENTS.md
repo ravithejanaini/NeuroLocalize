@@ -169,18 +169,39 @@ situation the freeze exists to catch.
   somatotopy — written before these cases were run.
 - **Knowledge-base and engine changes from the same run** are in `DECISIONS.md` (D46).
 
+## A9 — Corrections from the clinical audit (2026-09-17)
+
+- **Changed:** strengthened, and one case given a value it previously left open.
+  - `cases.ts`, complete transection at T4: tone is `reduced` in the first three days, the
+    bulbocavernosus reflex is not asserted absent in shock, and neurogenic shock is
+    `possible` in the subacute phase. At T12 it stays `not_expected` in that phase.
+  - `brain.ts`, lateral medulla: the Romberg test is `indeterminate`.
+  - `plexus.ts`, C8 root: the interossei are `indeterminate` (was unasserted, R12).
+  - `vocab.ts` gains the `possible` neurogenic-shock value these cases need.
+- **Why:** an audit read the worksheet against the sources and found values the model gave
+  that its own sources contradict. S02 says spinal shock is flaccid and that the
+  bulbocavernosus reflex returns within the first day; the engine had tone `indeterminate`
+  and the reflex `absent`. S03 says neurogenic shock can persist for four to five weeks; the
+  engine stopped it at three days. S67 says vestibular and cerebellar disease both disturb
+  the Romberg test; the engine called it absent in Wallenberg syndrome, so examination mode
+  counted a positive Romberg against the right answer. S68 gives the interossei C8 as well
+  as T1.
+- **How circularity was avoided:** each value is quoted from the source before the engine
+  was changed, and every new assertion failed against the unchanged engine (recorded in the
+  commit). S67 and S68 were read for this amendment.
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
 |---|---|
-| `cases.ts` | A1, A2 |
+| `cases.ts` | A1, A2, A9 |
 | `boundaries.ts` | A2 |
 | `index.ts` | A2 (exports the boundary cases) |
 | `reverse.ts` | A3 |
 | `types.ts` | A4, A6, A7 |
-| `plexus.ts` | A4, A5, A6 |
+| `plexus.ts` | A4, A5, A6, A9 |
 | `reverse-plexus.ts` | A4, A5 |
-| `brain.ts` | A7, A8 |
+| `brain.ts` | A7, A8, A9 |
 | `reverse-brain.ts` | A7 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

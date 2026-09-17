@@ -156,8 +156,8 @@ export const BRAIN: Brain = {
   oculomotor: {
     meta: {
       id: 'brain.oculomotor',
-      claim: 'A lesion of the oculomotor nucleus or fascicles in the midbrain gives a third nerve palsy on the same side.',
-      sources: ['S62', 'S50'],
+      claim: 'A lesion of the oculomotor fascicles in the midbrain gives a third nerve palsy on the same side. A lesion of the nucleus itself is not modelled: it gives bilateral ptosis or none, and weakens the opposite superior rectus.',
+      sources: ['S62', 'S50', 'S70'],
       tier: 'T1',
       bookRef: p,
     },

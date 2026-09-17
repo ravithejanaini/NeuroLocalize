@@ -8,6 +8,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S24', 'S25', 'S26', 'S27', 'S28', 'S29', 'S30', 'S31', 'S32',
   'S33', 'S34', 'S35', 'S36', 'S37', 'S38', 'S39', 'S40', 'S41', 'S42', 'S43', 'S44', 'S45', 'S46',
   'S47', 'S48', 'S49', 'S50', 'S51', 'S52', 'S53', 'S54', 'S55', 'S56', 'S57', 'S58', 'S59', 'S60', 'S61', 'S62', 'S63', 'S64', 'S65', 'S66',
+  'S67', 'S68', 'S69', 'S70',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -79,4 +80,8 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S64', title: 'StatPearls — Neuroanatomy, Nucleus Ambiguus', url: 'https://www.ncbi.nlm.nih.gov/books/NBK547744/' },
   { id: 'S65', title: 'StatPearls — Brainstem Stroke', url: 'https://www.ncbi.nlm.nih.gov/books/NBK560896/' },
   { id: 'S66', title: 'StatPearls — Neurosurgery, Sensory Homunculus', url: 'https://www.ncbi.nlm.nih.gov/books/NBK549841/' },
+  { id: 'S67', title: 'StatPearls — Romberg Test', url: 'https://www.ncbi.nlm.nih.gov/books/NBK563187/' },
+  { id: 'S68', title: 'StatPearls — Anatomy, Shoulder and Upper Limb, Hand Interossei Muscles', url: 'https://www.ncbi.nlm.nih.gov/books/NBK534772/' },
+  { id: 'S69', title: 'StatPearls — Neuroanatomy, White Rami Communicans', url: 'https://www.ncbi.nlm.nih.gov/books/NBK549910/' },
+  { id: 'S70', title: 'Cornblath — Diplopia Due to Ocular Motor Cranial Neuropathies (Continuum, 2014)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/' },
 ];

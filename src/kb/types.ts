@@ -196,17 +196,31 @@ export type Kb = {
   readonly observations: {
     readonly spinalShock: Row<{
       readonly reflexesAbsent: readonly Timepoint[];
+      /** Reflexes that return within the first day (S02), so never asserted absent in shock. */
+      readonly returnEarly: readonly Reflex[];
+      /** Tone below the lesion while the tendon reflexes are absent. */
+      readonly tone: Tone;
       readonly babinskiAbsent: readonly Timepoint[];
       readonly bladderImpaired: readonly Timepoint[];
     }>;
-    readonly neurogenicShock: Row<{ readonly strictlyAbove: Segment; readonly during: readonly Timepoint[] }>;
+    readonly neurogenicShock: Row<{
+      readonly strictlyAbove: Segment;
+      readonly during: readonly Timepoint[];
+      /** Phases in which it may persist (S03: up to four to five weeks). */
+      readonly mayPersist: readonly Timepoint[];
+    }>;
     readonly dysreflexia: Row<{ readonly atOrAbove: Segment; readonly rareBelow: Segment; readonly from: readonly Timepoint[] }>;
     readonly chronicUmn: Row<{ readonly reflex: 'brisk'; readonly tone: Tone; readonly babinskiPresent: boolean }>;
     readonly babinski: Row<{ readonly corticospinalRostralTo: Segment }>;
     readonly lmn: Row<{ readonly tone: Tone; readonly partialReflex: 'reduced' }>;
     readonly armPredominance: Row<{ readonly compartment: Compartment; readonly region: 'cervical' }>;
     readonly sacralSparing: Row<{ readonly compartment: Compartment; readonly region: 'sacral' }>;
-    readonly romberg: Row<{ readonly region: 'lowerLimb'; readonly untestableWithWeakLegs: boolean }>;
+    readonly romberg: Row<{
+      readonly region: 'lowerLimb';
+      readonly untestableWithWeakLegs: boolean;
+      /** Vestibular or cerebellar signs make the test unreadable (S67). */
+      readonly unreadableWithVertigoOrAtaxia: boolean;
+    }>;
     readonly overlap: Row<{ readonly isolatedLossReadsAs: SensoryState }>;
     readonly bladder: Row<{
       readonly aboveCentre: BladderState;

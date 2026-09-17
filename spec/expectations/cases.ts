@@ -33,9 +33,14 @@ export const CASES: readonly Case[] = [
           { kind: 'bladder', oneOf: ['impaired_in_spinal_shock'], cite: ['S02'], basis: 'stated' },
           { kind: 'horner', side: 'both', oneOf: ['absent'], cite: ['S16'], basis: 'composed',
             note: 'T4 lies below the ciliospinal centre at C8–T2' },
+          // A9: S02 describes spinal shock as flaccid paralysis, and has the bulbocavernosus
+          // reflex among the first to return, within phase 1.
+          { kind: 'motor', side: 'both', span: ['T5', 'Co1'], lesion: ['umn'], tone: ['reduced'], cite: ['S02'], basis: 'stated',
+            note: 'A9: flaccid paralysis in spinal shock' },
+          { kind: 'reflex', side: 'both', reflex: 'bulbocavernosus', oneOf: ['indeterminate'], cite: ['S02'], basis: 'stated',
+            note: 'A9: among the first reflexes to return, within the first day' },
         ],
         unasserted: [
-          'muscle tone during spinal shock: no source read states it',
           'sensation at the lesion level itself',
         ],
       },
@@ -50,12 +55,18 @@ export const CASES: readonly Case[] = [
           { kind: 'bladder', oneOf: ['impaired_in_spinal_shock'], cite: ['S02'], basis: 'stated' },
           { kind: 'dysreflexia', oneOf: ['not_yet'], cite: ['S04'], basis: 'stated' },
           { kind: 'neurogenicShock', oneOf: ['expected'], cite: ['S03'], basis: 'stated' },
+          { kind: 'motor', side: 'both', span: ['T5', 'Co1'], lesion: ['umn'], tone: ['reduced'], cite: ['S02'], basis: 'stated',
+            note: 'A9: deep tendon reflexes are still absent; the paralysis is flaccid' },
+          { kind: 'reflex', side: 'both', reflex: 'bulbocavernosus', oneOf: ['indeterminate', 'normal'], cite: ['S02'], basis: 'stated',
+            note: 'A9: phase 2 — cutaneous reflexes return while tendon reflexes stay absent' },
         ],
-        unasserted: ['muscle tone'],
+        unasserted: [],
       },
       {
         timepoint: 'subacute',
         assertions: [
+          { kind: 'neurogenicShock', oneOf: ['possible'], cite: ['S03'], basis: 'stated',
+            note: 'A9: symptoms have been documented to persist for 4 to 5 weeks' },
           { kind: 'reflex', side: 'both', reflex: 'patellar', oneOf: ['indeterminate', 'normal', 'brisk'], cite: ['S02'], basis: 'stated',
             note: 'phase 3: reflexes usually return — so not absent' },
           { kind: 'reflex', side: 'both', reflex: 'achilles', oneOf: ['indeterminate', 'normal', 'brisk'], cite: ['S02'], basis: 'stated' },
@@ -66,7 +77,7 @@ export const CASES: readonly Case[] = [
           { kind: 'dysreflexia', oneOf: ['not_yet'], cite: ['S04'], basis: 'stated',
             note: 'uncommon in the first month' },
         ],
-        unasserted: ['neurogenic shock: no source read gives its time window (R9)'],
+        unasserted: ['neurogenic shock beyond five weeks: S03 gives no later window'],
       },
       {
         timepoint: 'chronic',
@@ -128,9 +139,10 @@ export const CASES: readonly Case[] = [
           { kind: 'reflex', side: 'both', reflex: 'achilles', oneOf: ['indeterminate', 'normal', 'brisk'], cite: ['S02'], basis: 'stated' },
           { kind: 'babinski', side: 'both', oneOf: ['indeterminate', 'present'], cite: ['S02'], basis: 'stated' },
           { kind: 'bladder', oneOf: ['impaired_in_spinal_shock'], cite: ['S02', 'S20'], basis: 'composed' },
+          { kind: 'neurogenicShock', oneOf: ['not_expected'], cite: ['S03', 'S07'], basis: 'composed', note: 'A9: below T6 in every phase' },
           { kind: 'dysreflexia', oneOf: ['not_yet'], cite: ['S04'], basis: 'stated' },
         ],
-        unasserted: ['neurogenic shock: no source read gives its time window (R9)'],
+        unasserted: ['neurogenic shock beyond five weeks: S03 gives no later window'],
       },
       {
         timepoint: 'chronic',

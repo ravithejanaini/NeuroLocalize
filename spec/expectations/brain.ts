@@ -65,6 +65,9 @@ export const BRAIN_CASES: readonly BrainCase[] = [
         face('R', 'none', { cite: ['S48'], basis: 'composed' }),
         { kind: 'babinski', side: 'both', oneOf: ['absent'], cite: ['S54'], basis: 'composed' },
         { kind: 'reflex', side: 'both', reflex: 'biceps', oneOf: ['normal'], cite: ['S12', 'S47'], basis: 'composed' },
+        // A9: an uncompensated vestibular lesion can make the Romberg test positive, and a
+        // cerebellar patient is unsteady with the eyes open, so the test cannot be read (S67).
+        { kind: 'romberg', oneOf: ['indeterminate'], cite: ['S67'], basis: 'stated', note: 'A9: vestibular and cerebellar signs make it unreadable' },
       ],
       unasserted: [
         'nystagmus, hiccups and taste: not modelled',

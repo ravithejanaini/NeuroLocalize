@@ -23,7 +23,7 @@ teaching from a phone.
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 66 open-access sources that were actually
+- **Expected outputs are written first**, from 70 open-access sources that were actually
   read (`docs/SOURCES.md`), and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

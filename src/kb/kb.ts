@@ -121,10 +121,9 @@ export const KB: Kb = {
       meta: {
         id: 'autonomic.sympathetic-root-compartment',
         claim: 'The preganglionic sympathetic fibres leave in the ventral root, so a dorsal root lesion alone spares them.',
-        sources: [],
+        sources: ['S69', 'S16'],
         tier: 'T2',
         bookRef: 'pending',
-        pendingSource: 'R19: S16 says the fibres leave the cord at T1 without naming the root',
       },
       compartment: 'ventral_root',
     },
@@ -220,25 +219,28 @@ export const KB: Kb = {
     spinalShock: {
       meta: {
         id: 'observation.spinal-shock',
-        claim: 'Below a complete lesion, deep tendon reflexes are absent for the first three days and return from day four; the Babinski sign may appear from day four; bladder control is impaired throughout.',
+        claim: 'Spinal shock is a flaccid paralysis. Below a complete lesion, deep tendon reflexes are absent for the first three days and return from day four, while the bulbocavernosus reflex is among the first to return, within the first day; the Babinski sign may appear from day four; bladder control is impaired throughout.',
         sources: ['S02'],
         tier: 'T2',
         bookRef: 'pending',
       },
       reflexesAbsent: ['hyperacute', 'acute'],
+      returnEarly: ['bulbocavernosus'],
+      tone: 'reduced',
       babinskiAbsent: ['hyperacute', 'acute'],
       bladderImpaired: ['hyperacute', 'acute', 'subacute'],
     },
     neurogenicShock: {
       meta: {
         id: 'observation.neurogenic-shock',
-        claim: 'Neurogenic shock follows acute cord injury chiefly above T6.',
+        claim: 'Neurogenic shock follows acute cord injury chiefly above T6, and its symptoms may persist for four to five weeks.',
         sources: ['S03', 'S15'],
         tier: 'T2',
         bookRef: 'pending',
       },
       strictlyAbove: 'T6',
       during: ['hyperacute', 'acute'],
+      mayPersist: ['subacute'],
     },
     dysreflexia: {
       meta: {
@@ -311,14 +313,15 @@ export const KB: Kb = {
     romberg: {
       meta: {
         id: 'observation.romberg',
-        claim: 'Proprioceptive loss in the legs produces a positive Romberg test. It is reported as untestable when the legs are weak.',
-        sources: ['S13'],
+        claim: 'Proprioceptive loss in the legs produces a positive Romberg test. Uncompensated vestibular dysfunction can also make it positive, and cerebellar patients are unsteady with the eyes open, so it is not read when either is present. It is reported as untestable when the legs are weak.',
+        sources: ['S13', 'S67'],
         tier: 'T2',
         bookRef: 'pending',
-        pendingSource: 'the weak-legs exclusion is a modelling convention; S13 states only the first sentence',
+        pendingSource: 'the weak-legs exclusion is a modelling convention; no source read states it',
       },
       region: 'lowerLimb',
       untestableWithWeakLegs: true,
+      unreadableWithVertigoOrAtaxia: true,
     },
     overlap: {
       meta: {

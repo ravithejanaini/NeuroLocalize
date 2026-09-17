@@ -145,9 +145,11 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
         // A5
         felt(['lateral_forearm', 'shoulder_badge'], { cite: ['S33', 'S42'], basis: 'composed', note: 'A5: neither nerve carries C8' }),
         spared(['serratus_anterior', 'rhomboids'], { cite: ['S34', 'S37'], basis: 'composed', note: 'A5: C5–C7 nerves' }),
+        // A9: S68 gives the interossei C8 and T1, T1 the primary segment (R12).
+        { kind: 'muscle', side: 'L', muscles: ['interossei'], oneOf: ['indeterminate'], cite: ['S68'], basis: 'stated',
+          note: 'A9: C8 contributes, T1 is primary' },
       ],
       unasserted: [
-        'interossei: S19 and S31 give them to T1; no source read says what C8 loss does to them (R12)',
         'triceps reflex: C8 alone is not described by S12',
       ],
     }],

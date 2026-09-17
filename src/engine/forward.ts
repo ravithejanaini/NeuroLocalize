@@ -131,8 +131,11 @@ function motorFor(map: LesionMap, bmap: BrainMap, kb: Kb, t: Timepoint, x: Side,
   if (lmn === 2 || (lmn === 1 && umn === 0)) return { lesion: 'lmn', tone: kb.observations.lmn.tone };
   if (lmn === 1) return { lesion: 'umn_lmn', tone: 'indeterminate' };
   if (umn === 0) return { lesion: 'none', tone: 'normal' };
-  // R8: no source read states tone before an upper-motor-neuron lesion is established.
-  return { lesion: 'umn', tone: t === 'chronic' ? kb.observations.chronicUmn.tone : 'indeterminate' };
+  if (t === 'chronic') return { lesion: 'umn', tone: kb.observations.chronicUmn.tone };
+  // Spinal shock is a flaccid paralysis while the tendon reflexes are absent (S02, A9).
+  const shock = kb.observations.spinalShock;
+  if (shockAbove(map, s) && shock.reflexesAbsent.includes(t)) return { lesion: 'umn', tone: shock.tone };
+  return { lesion: 'umn', tone: 'indeterminate' };
 }
 
 function reflexFor(map: LesionMap, bmap: BrainMap, kb: Kb, t: Timepoint, x: Side, reflex: Reflex): ReflexState {
@@ -140,7 +143,11 @@ function reflexFor(map: LesionMap, bmap: BrainMap, kb: Kb, t: Timepoint, x: Side
   const segs = range(idx(from), idx(to));
   const arc = segs.map((k) => worst(kb.compartments.reflexArc.via.map((c) => map.damage(c, x, k))));
   if (arc.every((d) => d === 2)) return 'absent';
-  if (shockAbove(map, idx(from)) && kb.observations.spinalShock.reflexesAbsent.includes(t)) return 'absent';
+  const shock = kb.observations.spinalShock;
+  if (shockAbove(map, idx(from)) && shock.reflexesAbsent.includes(t)) {
+    // S02: the bulbocavernosus reflex is among the first to return, within the first day.
+    return shock.returnEarly.includes(reflex) ? 'indeterminate' : 'absent';
+  }
   const arcHurt = arc.some((d) => d > 0);
   // Before the chronic phase an interrupted corticospinal tract leaves the reflex
   // unsettled — including Ditunno phase 3, when reflexes are returning (S02).
@@ -192,9 +199,11 @@ function bladderFor(map: LesionMap, kb: Kb, t: Timepoint): BladderState {
 
 function neurogenicShockFor(map: LesionMap, kb: Kb, t: Timepoint): NeurogenicShock {
   const rule = kb.observations.neurogenicShock;
-  if (!rule.during.includes(t)) return 'not_applicable';
+  const acute = rule.during.includes(t);
+  if (!acute && !rule.mayPersist.includes(t)) return 'not_applicable';
   const level = bilateralAutonomicLevel(map);
-  return level >= 0 && level < idx(rule.strictlyAbove) ? 'expected' : 'not_expected';
+  if (!(level >= 0 && level < idx(rule.strictlyAbove))) return 'not_expected';
+  return acute ? 'expected' : 'possible';
 }
 
 function dysreflexiaFor(map: LesionMap, kb: Kb, t: Timepoint): Dysreflexia {
@@ -249,11 +258,19 @@ export function forward(lesion: readonly AnyRegion[], timepoint: Timepoint, opti
       return seg !== undefined && motor[x][seg].lesion !== 'none';
     }),
   );
-  const romberg: SignState = !legSense
-    ? 'absent'
-    : kb.observations.romberg.untestableWithWeakLegs && weakLegs
-      ? 'indeterminate'
-      : 'present';
+  // S67: vestibular dysfunction can make the test positive, and cerebellar ataxia makes a
+  // patient unsteady with the eyes open, so either leaves the test unreadable.
+  const brain = brainFindings(kb, bmap);
+  const unreadable =
+    kb.observations.romberg.unreadableWithVertigoOrAtaxia &&
+    (brain.vertigo !== 'absent' || SIDES.some((x) => brain.ataxia[x] !== 'absent'));
+  const romberg: SignState = unreadable
+    ? 'indeterminate'
+    : !legSense
+      ? 'absent'
+      : kb.observations.romberg.untestableWithWeakLegs && weakLegs
+        ? 'indeterminate'
+        : 'present';
 
   const arms = kb.observations.armPredominance;
   const armPredominant = map.segments.some(
@@ -281,7 +298,7 @@ export function forward(lesion: readonly AnyRegion[], timepoint: Timepoint, opti
 
   return {
     ...limb,
-    ...brainFindings(kb, bmap),
+    ...brain,
     resolvedSegments: map.segments.map((k) => SEGMENTS[k]).filter((s): s is Segment => s !== undefined),
     sensory,
     motor,

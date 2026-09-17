@@ -1,0 +1,199 @@
+<title>NeuroLocalize Clinical Audit</title>
+<meta name="description" content="An item-by-item audit of what NeuroLocalize teaches: corrections made with their sources, points for a clinician to decide, answers to the open questions, and what to build and test next.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#EFF0F3; --surface:#FAFAFC; --sunk:#E4E6EC;
+  --ink:#14181F; --ink2:#474E5B; --ink3:#737B89;
+  --rule:#D3D7DF; --rule2:#AEB4C0; --link:#2F4A9E; --focus:#2F4A9E;
+  --fixed:#27704A; --fixed-bg:#E3F0E8;
+  --ask:#8F650C; --ask-bg:#F4ECD9;
+  --agree:#2F4A9E; --agree-bg:#E3E8F6;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Source Serif 4",Georgia,serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#11151E; --surface:#171C27; --sunk:#0C1018;
+    --ink:#E9EBEF; --ink2:#A9B0BD; --ink3:#747D8C;
+    --rule:#272E3C; --rule2:#404958; --link:#8FA6EE; --focus:#8FA6EE;
+    --fixed:#6FC495; --fixed-bg:#15291F;
+    --ask:#DDB25A; --ask-bg:#2B2413;
+    --agree:#8FA6EE; --agree-bg:#1A2138;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#11151E; --surface:#171C27; --sunk:#0C1018;
+  --ink:#E9EBEF; --ink2:#A9B0BD; --ink3:#747D8C;
+  --rule:#272E3C; --rule2:#404958; --link:#8FA6EE; --focus:#8FA6EE;
+  --fixed:#6FC495; --fixed-bg:#15291F;
+  --ask:#DDB25A; --ask-bg:#2B2413;
+  --agree:#8FA6EE; --agree-bg:#1A2138;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--link)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+main{max-width:920px;margin:0 auto;padding-inline:16px;padding-block:32px 80px}
+header.head{display:grid;gap:12px;padding-bottom:24px;border-bottom:1px solid var(--rule)}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:0}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,5vw,42px);line-height:1.05;letter-spacing:-.02em;margin:0;text-wrap:balance}
+.lede{margin:0;max-width:66ch;font-size:17.5px;color:var(--ink2)}
+.scope{margin:0;max-width:66ch;font-size:14.5px;background:var(--ask-bg);border-left:3px solid var(--ask);padding:8px 12px}
+.scope b{color:var(--ask);font-family:var(--f-display)}
+
+.tally{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:24px 0 8px}
+.tally div{background:var(--surface);padding:12px 14px;display:grid;gap:2px}
+.tally b{font-family:var(--f-display);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+.tally span{font-size:13px;color:var(--ink2)}
+.tally .t-fixed b{color:var(--fixed)} .tally .t-ask b{color:var(--ask)} .tally .t-agree b{color:var(--agree)}
+
+section{padding-top:36px}
+h2{font-family:var(--f-display);font-weight:700;font-size:23px;letter-spacing:-.01em;margin:0 0 6px}
+h2 + p{margin:0 0 16px;color:var(--ink2);max-width:66ch}
+h3{font-family:var(--f-display);font-weight:600;font-size:16px;margin:0}
+
+.wrap{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--rule)}
+thead th{font-family:var(--f-mono);font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);background:var(--sunk)}
+tbody tr:last-child td{border-bottom:0}
+td code,.mono{font-family:var(--f-mono);font-size:12px;color:var(--ink2)}
+.was{color:var(--ink3);text-decoration:line-through;text-decoration-color:var(--rule2)}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:10.5px;padding:1px 6px;border:1px solid currentColor;white-space:nowrap}
+.c-fixed{color:var(--fixed);background:var(--fixed-bg)}
+.c-ask{color:var(--ask);background:var(--ask-bg)}
+.c-agree{color:var(--agree);background:var(--agree-bg)}
+
+.qs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(270px,100%),1fr));gap:10px;list-style:none;margin:0;padding:0}
+.qs li{background:var(--surface);border:1px solid var(--rule);padding:10px 12px;display:grid;gap:4px;font-size:14px}
+.qs .qh{display:flex;gap:8px;align-items:baseline;justify-content:space-between}
+.qs .qh b{font-family:var(--f-mono);font-size:12px}
+.qs p{margin:0;color:var(--ink2)}
+
+.road{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.road li{background:var(--surface);border:1px solid var(--rule);padding:12px 14px;display:grid;grid-template-columns:3.5em 1fr;gap:4px 12px}
+.road .pri{font-family:var(--f-mono);font-size:11px;color:var(--ink3);padding-top:3px}
+.road p{margin:0;color:var(--ink2);font-size:14.5px;grid-column:2}
+.road .why{font-size:13.5px;color:var(--ink3)}
+
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--rule);padding:14px 16px;display:grid;gap:6px;align-content:start}
+.card p,.card ul{margin:0;font-size:14.5px;color:var(--ink2)}
+.card ul{padding-left:18px;display:grid;gap:4px}
+.foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--rule);font-size:13.5px;color:var(--ink3)}
+@media print{body{background:#fff}.wrap{overflow:visible}}
+</style>
+
+<main>
+  <header class="head">
+    <p class="eyebrow">NeuroLocalize · clinical audit · 17 September 2026</p>
+    <h1>What the tool teaches, checked line by line</h1>
+    <p class="lede">All 213 review items were audited: 101 claims the engine computes from, 18 drawn facts, 25 open questions and 69 lesion cases with 384 derived findings. Each was read against standard neurology and neuroanatomy teaching and against the source it cites. Seven errors were corrected in the model, each only after its source was read. Nine further points need a clinician's decision.</p>
+    <p class="scope"><b>Who did this.</b> This audit was done by Claude, an AI model, working as a neurologist, an anatomist and a research scientist would. It is not a licensed clinician's sign-off, and the review page still waits for one. What it adds is that the clinician now starts from a model with its known errors already fixed, and a short list of the points that need a clinician's judgement.</p>
+  </header>
+
+  <div class="tally" role="list">
+    <div class="t-fixed" role="listitem"><b>7</b><span>errors corrected, each with a source read for it</span></div>
+    <div class="t-ask" role="listitem"><b>9</b><span>points flagged for a clinician to decide</span></div>
+    <div class="t-agree" role="listitem"><b>4 of 25</b><span>open questions now settled by a source</span></div>
+    <div role="listitem"><b>4</b><span>new sources read (S67–S70), 70 in all</span></div>
+    <div role="listitem"><b>234</b><span>tests passing after the corrections</span></div>
+  </div>
+
+  <section id="fixed">
+    <h2>Corrected in the model</h2>
+    <p>Each is a value the tool taught that its own sources contradict. The frozen expectations were changed first, by a recorded amendment (A9). The new assertions failed against the old engine and pass against the corrected one.</p>
+    <div class="wrap"><table>
+      <thead><tr><th>Topic</th><th>The tool taught</th><th>Now teaches</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>Tone in spinal shock</td><td class="was">tone “uncertain” below a fresh transection</td><td>reduced — spinal shock is a flaccid paralysis while the tendon reflexes are absent</td><td><a href="https://www.ncbi.nlm.nih.gov/books/NBK448163/">S02</a></td></tr>
+        <tr><td>Bulbocavernosus reflex in spinal shock</td><td class="was">absent for the first three days, like the tendon reflexes</td><td>not called absent: it is among the first reflexes to return, within the first day</td><td><a href="https://www.ncbi.nlm.nih.gov/books/NBK448163/">S02</a></td></tr>
+        <tr><td>Neurogenic shock</td><td class="was">a first-three-days finding only</td><td>possible through the first month above T6; symptoms can persist four to five weeks</td><td><a href="https://www.ncbi.nlm.nih.gov/books/NBK459361/">S03</a></td></tr>
+        <tr><td>Romberg test beside vertigo or ataxia</td><td class="was">absent in Wallenberg syndrome — so a positive Romberg counted against the right answer</td><td>not read when vestibular or cerebellar signs are present</td><td><a href="https://www.ncbi.nlm.nih.gov/books/NBK563187/">S67</a></td></tr>
+        <tr><td>Interossei and the C8 root</td><td class="was">T1 only, so strong after a C8 root lesion</td><td>C8 and T1, T1 primary; after C8 loss alone their strength is left open</td><td><a href="https://www.ncbi.nlm.nih.gov/books/NBK534772/">S68</a></td></tr>
+        <tr><td>Sympathetic outflow</td><td class="was">“leaves in the ventral root”, with no source read</td><td>the same fact, now sourced</td><td><a href="https://www.ncbi.nlm.nih.gov/books/NBK549910/">S69</a></td></tr>
+        <tr><td>Oculomotor lesions in the midbrain</td><td class="was">“nucleus or fascicles” give the same palsy</td><td>fascicles only; a nuclear lesion gives bilateral ptosis or none, and weakens the opposite superior rectus (not yet modelled)</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/">S70</a></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="ask">
+    <h2>For a clinician to decide</h2>
+    <p>These are audit opinions. No source read settles them, so the model is unchanged until a reviewer, or a source, decides.</p>
+    <div class="wrap"><table>
+      <thead><tr><th>Where</th><th>The tool says</th><th>Audit opinion</th></tr></thead>
+      <tbody>
+        <tr><td>Bladder circuit <span class="mono">R11</span></td><td>anterior-horn loss at S2–S4 causes retention</td><td>Onuf's nucleus in the anterior horn serves the external sphincter, not the detrusor. The detrusor circuit is probably the dorsal root, the sacral parasympathetic neurons and the ventral root.</td></tr>
+        <tr><td>Cubital tunnel <span class="mono">R17</span></td><td>flexor carpi ulnaris weak</td><td>often spared clinically; “uncertain” is safer</td></tr>
+        <tr><td>One-sided lesion above the brainstem <span class="mono">R24</span></td><td>palate on both sides uncertain</td><td>usually no detectable palatal weakness</td></tr>
+        <tr><td>T1 root lesion</td><td>claw hand present</td><td>a single T1 root rarely produces a full claw; “uncertain” is safer</td></tr>
+        <tr><td>T1 root lesion</td><td>long finger flexors strong</td><td>both flexors take T1 as well; “uncertain” is safer</td></tr>
+        <tr><td>C7 root lesion</td><td>thumb extension strong</td><td>the thumb extensors are C7–C8; C7 radiculopathy weakens finger and thumb extension</td></tr>
+        <tr><td>C6 root lesion</td><td>deltoid strong</td><td>the deltoid is C5–C6; “uncertain” is safer</td></tr>
+        <tr><td>S1 dermatome landmark</td><td>lateral malleolus</td><td>the international standard (ISNCSCI) key point is the lateral heel</td></tr>
+        <tr><td>C5 key movement</td><td>shoulder abduction (the classic chart)</td><td>the international standard (ISNCSCI) key muscle is elbow flexion at C5; show both, since Indian exams use both</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="questions">
+    <h2>The 25 open questions, answered</h2>
+    <p><span class="chip c-fixed">settled</span> means a source now decides it. <span class="chip c-agree">agree</span> means the model's choice matches standard teaching and still wants a citation. <span class="chip c-ask">change</span> is an audit opinion for the clinician.</p>
+    <ul class="qs">
+      <li><div class="qh"><b>R1</b><span class="chip c-agree">agree</span></div><p>Crossed pain loss begins one to two segments below a hemisection.</p></li>
+      <li><div class="qh"><b>R2</b><span class="chip c-agree">agree</span></div><p>A single root gives reduced, rarely absent, sensation.</p></li>
+      <li><div class="qh"><b>R3</b><span class="chip c-agree">agree</span></div><p>Upper motor neuron signs in conus syndrome come from involvement above S2.</p></li>
+      <li><div class="qh"><b>R4</b><span class="chip c-agree">agree</span></div><p>Bulbocavernosus reflex S2–S4 through the pudendal nerve is standard; it still needs a direct source.</p></li>
+      <li><div class="qh"><b>R5</b><span class="chip c-agree">agree</span></div><p>Upper limb C5–T1 is right. The lower limb is taught as L1 or L2 to S2, and the saddle as S3–S5 (sometimes S2–S5).</p></li>
+      <li><div class="qh"><b>R6</b><span class="chip c-agree">agree</span></div><p>The plantar reflex is L5–S1; a lesion above it is needed for a Babinski sign.</p></li>
+      <li><div class="qh"><b>R7</b><span class="chip c-agree">agree</span></div><p>Control from both sides lets sphincters survive a hemisection.</p></li>
+      <li><div class="qh"><b>R8</b><span class="chip c-fixed">settled</span></div><p>Flaccid, per S02. Now modelled.</p></li>
+      <li><div class="qh"><b>R9</b><span class="chip c-fixed">settled</span></div><p>Up to four to five weeks, per S03. Now modelled.</p></li>
+      <li><div class="qh"><b>R10</b><span class="chip c-ask">change</span></div><p>T1 carries most oculosympathetic outflow. C8 or T2 alone should be “uncertain”, not “present”.</p></li>
+      <li><div class="qh"><b>R11</b><span class="chip c-ask">change</span></div><p>Take the anterior horn out of the detrusor arc (see above).</p></li>
+      <li><div class="qh"><b>R12</b><span class="chip c-fixed">settled</span></div><p>C8 and T1, T1 primary, per S68. Now modelled.</p></li>
+      <li><div class="qh"><b>R13</b><span class="chip c-agree">agree</span></div><p>The white ramus leaves before the trunk forms. A Horner syndrome with a plexus injury points to the roots.</p></li>
+      <li><div class="qh"><b>R14</b><span class="chip c-agree">agree</span></div><p>Triceps is C7-dominant, with smaller C6 and C8 parts.</p></li>
+      <li><div class="qh"><b>R15</b><span class="chip c-agree">agree</span></div><p>Abductor pollicis brevis is T1-dominant; C8 alone gives mild weakness at most.</p></li>
+      <li><div class="qh"><b>R16</b><span class="chip c-agree">agree</span></div><p>One Guyon site is a fair simplification for a student.</p></li>
+      <li><div class="qh"><b>R17</b><span class="chip c-ask">change</span></div><p>Flexor carpi ulnaris is often spared in cubital tunnel syndrome.</p></li>
+      <li><div class="qh"><b>R18</b><span class="chip c-agree">agree</span></div><p>Brachioradialis is C5–C6.</p></li>
+      <li><div class="qh"><b>R19</b><span class="chip c-fixed">settled</span></div><p>Ventral root, per S69.</p></li>
+      <li><div class="qh"><b>R20</b><span class="chip c-agree">agree</span></div><p>The trunk sits near the vertex at the ACA–MCA border, and the neck with the MCA. Leaving both unassigned is honest.</p></li>
+      <li><div class="qh"><b>R21</b><span class="chip c-ask">change</span></div><p>Label facial sensation as pain and temperature. Facial touch runs through the principal nucleus in the pons and is spared in Wallenberg syndrome.</p></li>
+      <li><div class="qh"><b>R22</b><span class="chip c-ask">change</span></div><p>Crossed trigeminothalamic fibres ascend beside the spinothalamic tract, so a lateral pontine or midbrain lesion should numb the opposite face.</p></li>
+      <li><div class="qh"><b>R23</b><span class="chip c-ask">change</span></div><p>Add ataxic hemiparesis (lacunar, pons or capsule) when lacunes are extended.</p></li>
+      <li><div class="qh"><b>R24</b><span class="chip c-ask">change</span></div><p>Usually no detectable palatal weakness from a one-sided lesion above the brainstem.</p></li>
+      <li><div class="qh"><b>R25</b><span class="chip c-agree">agree</span></div><p>The fibres to the hypoglossal nucleus leave the pyramid in the medulla and cross there.</p></li>
+    </ul>
+  </section>
+
+  <section id="next">
+    <h2>What to build next, for a medical student</h2>
+    <p>Ordered by how often each comes up in MBBS exams and on the wards, and how much of the existing engine it reuses.</p>
+    <ol class="road">
+      <li><span class="pri">1</span><h3>Subacute combined degeneration and other tract combinations</h3><p>Vitamin B12 deficiency takes the posterior and lateral columns together: extensor plantars with absent ankle jerks when a neuropathy coexists. Every compartment it needs already exists; this is a preset and a frozen case.</p><p class="why">Reuses the cord engine. Very high-yield.</p></li>
+      <li><span class="pri">2</span><h3>The leg: lumbosacral plexus and nerves</h3><p>Common fibular (foot drop, with ankle inversion spared) against an L5 root (inversion weak). Also the tibial, sciatic, femoral and obturator nerves, and meralgia paraesthetica.</p><p class="why">Reuses the plexus engine. The most asked peripheral-nerve question after the hand.</p></li>
+      <li><span class="pri">3</span><h3>Visual pathways</h3><p>Optic nerve, chiasm, tract, radiation and cortex: monocular loss, bitemporal hemianopia, homonymous defects, quadrantanopias and macular sparing.</p><p class="why">New module. Examined everywhere.</p></li>
+      <li><span class="pri">4</span><h3>Eye movements</h3><p>Internuclear ophthalmoplegia (MLF), the one-and-a-half syndrome, and nuclear against fascicular third nerve lesions (S70 is already read).</p><p class="why">Extends the brainstem model.</p></li>
+      <li><span class="pri">5</span><h3>The facial nerve below the pons</h3><p>Bell's palsy along the nerve: taste, hyperacusis and lacrimation separate the sites. Also the cerebellopontine angle.</p><p class="why">Extends the face model.</p></li>
+      <li><span class="pri">6</span><h3>Cerebellum, basal ganglia and cortex</h3><p>Hemisphere against vermis signs, and aphasias. Also neglect and Gerstmann syndrome, and the PCA territory.</p><p class="why">Needs new signs in the examination.</p></li>
+      <li><span class="pri">7</span><h3>The standard spinal cord injury exam (ISNCSCI)</h3><p>Use its key sensory points and key muscles, the neurological level and the ASIA impairment grade, beside the classic charts.</p><p class="why">The form students meet in orthopaedics and emergency postings.</p></li>
+    </ol>
+  </section>
+
+  <section id="science">
+    <h2>How to know it works</h2>
+    <p>Passing tests shows the tool agrees with its sources. These studies would show that the sources are right, the answers are right, and students learn from it.</p>
+    <div class="cols">
+      <div class="card"><h3>Clinical validation</h3><ul><li>Two independent reviewers fill in the review page; measure their agreement (Cohen's κ) and have a third settle disagreements.</li><li>Replace every “book reference pending” with a textbook page supplied by a reviewer, not guessed.</li><li>Re-read the cited StatPearls chapters once a year; they are revised.</li></ul></div>
+      <div class="card"><h3>Diagnostic accuracy</h3><ul><li>Collect 100 published or textbook case vignettes with a known lesion site. Report how often examination mode ranks the right answer first, and in its top three, by region.</li><li>Compare against a few clinicians given the same findings.</li></ul></div>
+      <div class="card"><h3>Question quality</h3><ul><li>Once students use it, score each generated case for difficulty (proportion right) and discrimination. Retire cases that strong students miss.</li><li>Check that distractors are chosen roughly evenly; an option nobody picks teaches nothing.</li></ul></div>
+      <div class="card"><h3>Learning</h3><ul><li>Pre-test, four weeks of use, post-test, then a delayed test, against a group reading the textbook chapter. At a college this needs ethics approval.</li><li>With enough answers, replace the fixed review intervals with a fitted scheduler such as FSRS.</li></ul></div>
+    </div>
+  </section>
+
+  <p class="foot">Sources added for this audit: <a href="https://www.ncbi.nlm.nih.gov/books/NBK563187/">S67 StatPearls, Romberg Test</a> · <a href="https://www.ncbi.nlm.nih.gov/books/NBK534772/">S68 StatPearls, Hand Interossei Muscles</a> · <a href="https://www.ncbi.nlm.nih.gov/books/NBK549910/">S69 StatPearls, White Rami Communicans</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/">S70 Cornblath, Continuum 2014</a>. The full record is in <span class="mono">docs/DECISIONS.md</span> (D53) and <span class="mono">spec/expectations/AMENDMENTS.md</span> (A9) at <a href="https://github.com/ravithejanaini/NeuroLocalize">github.com/ravithejanaini/NeuroLocalize</a>. NeuroLocalize is a teaching tool, not for patient care.</p>
+</main>

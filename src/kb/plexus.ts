@@ -288,13 +288,14 @@ export const PLEXUS: Plexus = {
     interossei: {
       meta: {
         id: 'muscle.interossei',
-        claim: 'The interossei are the T1 key muscles and are supplied by the ulnar nerve in the hand.',
-        sources: ['S19', 'S31', 'S38'],
+        claim: 'The interossei are the T1 key muscles and are supplied by the ulnar nerve in the hand, from C8 and T1 with T1 primary; C8 loss alone leaves their strength open.',
+        sources: ['S19', 'S31', 'S38', 'S68'],
         tier: 'T1',
         bookRef: p,
       },
       supply: { nerve: 'ulnar', after: 2 },
       roots: ['T1', 'T1'],
+      disputedRoots: ['C8', 'C8'],
       myotome: 'T1',
     },
   },

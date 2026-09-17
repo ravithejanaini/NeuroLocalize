@@ -9,7 +9,8 @@ StatPearls chapters are published on NCBI Bookshelf under CC BY-NC-ND 4.0. MSD M
 content could only be queried for paraphrase; its raw table text was not obtained.
 
 Accessed 2026-09-16 unless noted. S33–S46 were read on 2026-09-17 for P4 and S47–S66 the same day for P5; S16 and S19 were
-read again that day for the facts added to their rows.
+read again that day for the facts added to their rows. S67–S70 were read on 2026-09-17 for
+the clinical audit (A9, D53).
 
 | Id | Source | Authors | Last updated | Used for |
 |---|---|---|---|---|
@@ -79,6 +80,10 @@ read again that day for the facts added to their rows.
 | S64 | [StatPearls — Neuroanatomy, Nucleus Ambiguus](https://www.ncbi.nlm.nih.gov/books/NBK547744/) | Petko, Das | 2026-06-19 | ventrolateral rostral medulla; a lesion gives ipsilateral dysphagia, hoarseness and palatal weakness, the uvula deviating away; predominantly bilateral supranuclear control, so a unilateral supranuclear lesion gives milder weakness; PICA and vertebral supply |
 | S65 | [StatPearls — Brainstem Stroke](https://www.ncbi.nlm.nih.gov/books/NBK560896/) | Gowda, Munakomi | 2026-01-31 | crossed signs — ipsilateral cranial nerve palsy with contralateral motor or sensory loss — mark brainstem stroke; ipsilateral limb ataxia; the classic syndromes and their structures |
 | S66 | [StatPearls — Neurosurgery, Sensory Homunculus](https://www.ncbi.nlm.nih.gov/books/NBK549841/) | Nguyen, Duong | 2023-07-24 | postcentral gyrus from medial to lateral: genitals and lower limb, neck, shoulder and torso, upper limb and hand, face; ACA supplies the medial part (contralateral leg), MCA the lateral (contralateral arm and face) |
+| S67 | [StatPearls — Romberg Test](https://www.ncbi.nlm.nih.gov/books/NBK563187/) | Forbes Kaprive, Munakomi, Cronovich | 2023-08-13 | a positive test denotes sensory ataxia; uncompensated unilateral or bilateral vestibular dysfunction can also make it positive; in cerebellar disease the patient is often unsteady with the eyes open as well |
+| S68 | [StatPearls — Anatomy, Shoulder and Upper Limb, Hand Interossei Muscles](https://www.ncbi.nlm.nih.gov/books/NBK534772/) | Valenzuela, Varacallo | 2025-04-27 | all interossei from the deep branch of the ulnar nerve, which originates from C8 and T1, T1 the primary segment; ulnar claw hand from weakness of the third and fourth lumbricals and the interossei |
+| S69 | [StatPearls — Neuroanatomy, White Rami Communicans](https://www.ncbi.nlm.nih.gov/books/NBK549910/) | Cheng, Tadi | 2023-07-24 | sympathetic neurons leave the cord from the intermediolateral column through the ventral root; the column spans T1–L2 |
+| S70 | [Cornblath — Diplopia Due to Ocular Motor Cranial Neuropathies (Continuum, 2014)](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/) | Cornblath | 2014 | the superior rectus subnuclei serve the opposite eye; one central caudal nucleus serves both levators, so a nuclear third nerve lesion gives bilateral ptosis or none |
 
 ## Not used, and why
 

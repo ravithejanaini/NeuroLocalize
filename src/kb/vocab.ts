@@ -58,7 +58,8 @@ export type ReflexState = 'normal' | 'reduced' | 'absent' | 'brisk' | 'indetermi
 export type SignState = 'present' | 'absent' | 'indeterminate';
 // suprasacral: overactive detrusor ± dyssynergia. sacral: hypoactive or atonic (S20).
 export type BladderState = 'normal' | 'suprasacral' | 'sacral' | 'impaired_in_spinal_shock';
-export type NeurogenicShock = 'expected' | 'not_expected' | 'not_applicable';
+// possible: past the acute phase, when S03 says symptoms may persist for 4–5 weeks (A9).
+export type NeurogenicShock = 'expected' | 'possible' | 'not_expected' | 'not_applicable';
 // not_yet: first month after injury (S04). rare: below T10 (S04).
 export type Dysreflexia = 'susceptible' | 'possible' | 'rare' | 'not_yet' | 'none';
 export type Qualifier = 'upper_limb_predominant_weakness' | 'sacral_sparing';

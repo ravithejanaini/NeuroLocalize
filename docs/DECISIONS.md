@@ -590,3 +590,37 @@ each review records the worksheet version it was given on.
   and then the knowledge base changes (or a frozen expectation, by amendment), or the reason
   it does not is recorded here. Rule 1 still holds.
 
+
+**D53 — A clinical audit, and what it changed.** The worksheet was audited item by item
+against standard neurology and neuroanatomy teaching and the cited sources. The audit was
+done by Claude, not by a licensed clinician; it finds errors, but it is not the sign-off D52
+waits for. Where it proposed a change, the source was read first (S67–S70), and only sourced
+changes touched the model (A9):
+- *Spinal shock is flaccid* (S02). Tone below a transection is `reduced` while the tendon
+  reflexes are absent; it was `indeterminate` (R8, resolved).
+- *The bulbocavernosus reflex returns early* (S02: within phase 1). It is no longer reported
+  absent in shock; it was.
+- *Neurogenic shock may last four to five weeks* (S03). It is `possible` in the subacute
+  phase above T6; it was `not_applicable` (R9, resolved).
+- *The Romberg test is not read beside vertigo or ataxia* (S67). Examination mode had counted
+  a positive Romberg against Wallenberg syndrome.
+- *The interossei take C8 as well as T1, T1 primary* (S68). A C8 root lesion leaves them
+  `indeterminate` (R12, resolved: the model had said strong).
+- *Sympathetic fibres leave in the ventral root* (S69). The row is now sourced (R19,
+  resolved).
+- *An oculomotor nucleus lesion is not a fascicle lesion* (S70). The claim now names only the
+  fascicles the model lesions, and says what a nuclear lesion does instead.
+
+Audit opinions not applied, because no source read settles them — each is a question for
+the clinician (D52):
+- R11: the anterior horn probably should not be in the detrusor arc; Onuf's nucleus there
+  serves the external sphincter (S20 names it), not the detrusor.
+- R17: the flexor carpi ulnaris is often spared in cubital tunnel syndrome; `indeterminate`
+  would be safer than `weak`.
+- R24: a one-sided supranuclear lesion usually leaves no detectable palatal weakness.
+- T1 root: a claw hand from T1 alone, and strong long finger flexors (which also take T1),
+  are both stated more firmly than the clinic supports.
+- C7 root: thumb extension (C7–C8) is asserted strong; `indeterminate` would be safer.
+  C6 root: the deltoid (C5–C6) is asserted strong; the same applies.
+- The S1 landmark is the lateral heel in the international standard (ISNCSCI); the model
+  draws the lateral malleolus.
