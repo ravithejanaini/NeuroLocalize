@@ -3,7 +3,7 @@
 // sit at a named place beyond the roots, on the side the arm control chooses.
 import type { LesionRegion } from '../engine/forward.ts';
 import { SHAPES, type Shape } from '../geometry/lesion3d.ts';
-import type { PlexusSite, Segment, Territory } from '../kb/vocab.ts';
+import type { PlexusSite, Segment, Territory, VisionPlace } from '../kb/vocab.ts';
 
 type Common = { readonly id: string; readonly label: string; readonly pattern: string };
 export type FocalPreset = Common & {
@@ -15,7 +15,8 @@ export type FocalPreset = Common & {
 export type SystemPreset = Common & { readonly kind: 'system'; readonly regions: readonly LesionRegion[]; readonly leg?: true };
 export type LimbPreset = Common & { readonly kind: 'limb'; readonly site: PlexusSite; readonly leg?: true };
 export type BrainPreset = Common & { readonly kind: 'brain'; readonly territory: Territory };
-export type Preset = FocalPreset | SystemPreset | LimbPreset | BrainPreset;
+export type VisionPreset = Common & { readonly kind: 'vision'; readonly place: VisionPlace };
+export type Preset = FocalPreset | SystemPreset | LimbPreset | BrainPreset | VisionPreset;
 
 const both = ['L', 'R'] as const;
 
@@ -113,4 +114,12 @@ export const PRESETS: readonly Preset[] = [
   { id: 'thalamus', kind: 'brain', label: 'Lateral thalamus', pattern: 'Pure sensory lacune', territory: 'thalamus' },
   { id: 'mca', kind: 'brain', label: 'Lateral cortex', pattern: 'MCA: face and arm', territory: 'mca_cortex' },
   { id: 'aca', kind: 'brain', label: 'Medial cortex', pattern: 'ACA: leg', territory: 'aca_cortex' },
+  // P8: the visual pathway.
+  { id: 'optic-nerve', kind: 'vision', label: 'Optic nerve', pattern: 'One eye blind, pupil defect', place: 'optic_nerve' },
+  { id: 'chiasm', kind: 'vision', label: 'Optic chiasm', pattern: 'Bitemporal hemianopia', place: 'chiasm' },
+  { id: 'optic-tract', kind: 'vision', label: 'Optic tract', pattern: 'Hemianopia with a pupil defect', place: 'optic_tract' },
+  { id: 'meyer-loop', kind: 'vision', label: 'Meyer loop (temporal)', pattern: 'Superior quadrantanopia', place: 'meyer_loop' },
+  { id: 'parietal-radiation', kind: 'vision', label: 'Parietal radiation', pattern: 'Inferior quadrantanopia', place: 'parietal_radiation' },
+  { id: 'pca-occipital', kind: 'vision', label: 'Occipital cortex (PCA)', pattern: 'Hemianopia, macula spared', place: 'pca_occipital' },
+  { id: 'occipital-cortex', kind: 'vision', label: 'Whole occipital cortex', pattern: 'Hemianopia, macula lost', place: 'occipital_cortex' },
 ];

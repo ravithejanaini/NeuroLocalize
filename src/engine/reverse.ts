@@ -8,12 +8,16 @@ import {
   PLACES,
   PLEXUS_SITES,
   SEGMENTS,
+  SIDES,
   SKIN_AREAS,
   type BladderObservation,
   type BodyRegion,
   type BrainCompartment,
   type BrainLevel,
   type CranialSign,
+  type FieldSector,
+  VISUAL_PARTS,
+  type VisualPart,
   type FaceWeaknessObservation,
   type LesionFamily,
   type Muscle,
@@ -30,10 +34,11 @@ import {
   type Timepoint,
 } from '../kb/vocab.ts';
 import { mapBrain, regionOf, type BrainMap } from './brain.ts';
-import { forward, isBrain, isCord, isPlexus, isSacral, type Findings } from './forward.ts';
+import { forward, isBrain, isCord, isPlexus, isSacral, isVision, type Findings } from './forward.ts';
 import { hypotheses, type Hypothesis } from './hypotheses.ts';
 import { mapLesion, type LesionMap } from './lesion.ts';
 import { limbRoute, mapPlexus, routeDamage, routeSites, routesTo, type PlexusMap } from './limb.ts';
+import { mapVision, sideOfSector, type VisionMap } from './vision.ts';
 import { crossingOffsets, damageAlong, motorRoute, sensoryRoute, type Element } from './routes.ts';
 
 export type Span = readonly [Segment, Segment];
@@ -52,7 +57,10 @@ export type Observation =
   | { readonly kind: 'face_weakness'; readonly side: Side; readonly value: FaceWeaknessObservation }
   | { readonly kind: 'cranial'; readonly side: Side; readonly sign: CranialSign; readonly value: SignObservation }
   | { readonly kind: 'ataxia'; readonly side: Side; readonly value: SignObservation }
-  | { readonly kind: 'vertigo'; readonly value: SignObservation };
+  | { readonly kind: 'vertigo'; readonly value: SignObservation }
+  /** P8: one sector of one eye's visual field, and the relative afferent pupillary defect. */
+  | { readonly kind: 'field'; readonly eye: Side; readonly sector: FieldSector; readonly value: SensoryObservation }
+  | { readonly kind: 'rapd'; readonly side: Side; readonly value: SignObservation };
 
 /** An observation not yet made: everything but its value. */
 export type Slot = Observation extends infer O ? (O extends Observation ? Omit<O, 'value'> : never) : never;
@@ -80,6 +88,8 @@ const DOMAIN: Record<Observation['kind'], readonly string[]> = {
   cranial: ['present', 'absent'],
   ataxia: ['present', 'absent'],
   vertigo: ['present', 'absent'],
+  field: ['normal', 'abnormal'],
+  rapd: ['present', 'absent'],
 };
 
 const idx = (s: Segment): number => SEGMENTS.indexOf(s);
@@ -106,6 +116,10 @@ export const slotKey = (s: Slot): string => {
       return `${s.kind}|${s.side}`;
     case 'cranial':
       return `cranial|${s.side}|${s.sign}`;
+    case 'field':
+      return `field|${s.eye}|${s.sector}`;
+    case 'rapd':
+      return `rapd|${s.side}`;
     default:
       return s.kind;
   }
@@ -158,6 +172,14 @@ export function predict(f: Findings, s: Slot, kb: Kb = KB): Value | 'unknown' {
     }
     case 'vertigo':
       return f.vertigo === 'indeterminate' ? 'unknown' : f.vertigo;
+    case 'field': {
+      const state = f.fields[s.eye][s.sector];
+      return state === 'indeterminate' ? 'unknown' : state === 'lost' ? 'abnormal' : 'normal';
+    }
+    case 'rapd': {
+      const r = f.rapd[s.side];
+      return r === 'indeterminate' ? 'unknown' : r;
+    }
     case 'reflex': {
       const r = f.reflexes[s.side][s.reflex];
       return r === 'indeterminate' ? 'unknown' : r === 'absent' ? 'reduced' : r;
@@ -355,7 +377,9 @@ function groupsOf(scored: readonly Scored[], post: readonly number[]): Group[] {
         open: first.open,
       };
     })
-    .sort((a, b) => b.posterior - a.posterior);
+    // Fewest conflicts first, then by posterior (D59): a candidate the examination
+    // contradicts is listed below one it does not, whatever its prior.
+    .sort((a, b) => a.mismatches - b.mismatches || b.posterior - a.posterior);
 }
 
 const entropy = (ps: readonly number[]): number => -ps.reduce((a, p) => (p > 0 ? a + p * Math.log2(p) : a), 0);
@@ -449,6 +473,13 @@ const PLEXUS_SITE_SET: ReadonlySet<string> = new Set<string>(PLEXUS_SITES);
 
 /** Plain names for the places beyond the cord and roots, as the working speaks of them. */
 export const SITE_NAME: Record<Place, string> = {
+  optic_nerve: 'optic nerve',
+  chiasm: 'optic chiasm',
+  optic_tract: 'optic tract',
+  meyer_loop: 'Meyer loop, in the temporal lobe',
+  parietal_radiation: 'parietal optic radiation',
+  pca_occipital: 'occipital cortex (posterior cerebral artery), pole spared',
+  occipital_cortex: 'whole occipital cortex',
   lateral_medullary: 'lateral medulla',
   medial_medullary: 'medial medulla',
   ventral_pons: 'ventral pons',
@@ -487,6 +518,18 @@ export const SITE_NAME: Record<Place, string> = {
   tibial: 'tibial nerve',
   common_fibular: 'common fibular nerve at the fibular neck',
 };
+/** Plain names for the parts of the visual pathway, as the working speaks of them. */
+const PART_TEXT: Record<VisualPart, string> = {
+  optic_nerve: 'optic nerve',
+  chiasm: 'chiasm',
+  optic_tract: 'optic tract',
+  meyer_loop: 'Meyer loop',
+  parietal_radiation: 'parietal optic radiation',
+  calcarine_lower: 'calcarine cortex below the fissure',
+  calcarine_upper: 'calcarine cortex above the fissure',
+  occipital_pole: 'occipital pole',
+};
+
 const where = (e: Element): string => `${SIDE[e.side]} ${PLACE[e.compartment] ?? e.compartment} at ${segName(e.segment)}`;
 
 function firstCut(map: LesionMap, kb: Kb, elements: readonly Element[], sacral: boolean): Element | null {
@@ -578,6 +621,27 @@ function muscleReason(map: LesionMap, kb: Kb, pmap: PlexusMap, side: Side, muscl
   return [...causes];
 }
 
+/** The parts of the visual pathway a lesion cuts that carry this sector of this eye's field. */
+function visionCuts(kb: Kb, vmap: VisionMap, eye: Side, sector: FieldSector): string[] {
+  const out = new Set<string>();
+  const at = sideOfSector(eye, sector);
+  const vertical = sector.endsWith('_superior') ? 'upper' : sector.endsWith('_inferior') ? 'lower' : null;
+  for (const part of VISUAL_PARTS) {
+    const row = kb.vision.parts[part];
+    for (const side of SIDES) {
+      if (vmap.damage(part, side) === 0) continue;
+      if (row.eye === 'same' && side !== eye) continue;
+      const serves = row.field === 'whole' ? true : row.field === 'temporal' ? at === eye : at === (side === 'L' ? 'R' : 'L');
+      if (!serves) continue;
+      const carries = vertical
+        ? row.quadrants === 'both' || row.quadrants === vertical
+        : row.centre !== 'none';
+      if (carries) out.add(`the ${row.eye === 'same' || kb.vision.places.chiasm.parts.includes(part) ? '' : `${SIDE[side]} `}${PART_TEXT[part]} is cut`.replace('the  ', 'the '));
+    }
+  }
+  return [...out];
+}
+
 function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypothesis, o: Observation, f: Findings): string {
   const b = kb.brain;
   const bodyCut = (kind: 'motor' | 'posterior_column' | 'pain_temperature', x: Side, k: number): string | null => {
@@ -624,6 +688,27 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
     case 'vertigo': {
       const c = (['L', 'R'] as const).map((s) => brainCut(bmap, b.vertigo.steps, s, 'face')).filter((x): x is string => x !== null);
       return c.length ? c.map(damaged).join('; ') : 'the vestibular nuclei are intact';
+    }
+    case 'field': {
+      const vmap = mapVision(kb, h.regions.filter(isVision));
+      const cuts = visionCuts(kb, vmap, o.eye, o.sector);
+      if (cuts.length) return cuts.join('; ');
+      return 'every part of the visual pathway carrying that part of the field is intact';
+    }
+    case 'rapd': {
+      const vmap = mapVision(kb, h.regions.filter(isVision));
+      const causes = new Set<string>();
+      for (const part of VISUAL_PARTS) {
+        const row = kb.vision.parts[part];
+        for (const side of SIDES) {
+          if (vmap.damage(part, side) === 0) continue;
+          if (row.rapd === 'same' && side === o.side) causes.add(`the ${SIDE[side]} ${PART_TEXT[part]} is cut`);
+          if (row.rapd === 'opposite' && side !== o.side) causes.add(`the ${SIDE[side]} ${PART_TEXT[part]} is cut, and the defect shows in the other eye`);
+          if (row.rapd === 'open') causes.add('a chiasmal lesion may take more of one eye’s fibres than the other');
+        }
+      }
+      if (causes.size) return [...causes].join('; ');
+      return 'nothing in front of the lateral geniculate nucleus is cut on that side';
     }
     case 'muscle': {
       const causes = muscleReason(map, kb, pmap, o.side, o.muscle);

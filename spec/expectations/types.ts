@@ -10,6 +10,8 @@ import type {
   Compartment,
   Deformity,
   Dysreflexia,
+  FieldSector,
+  FieldState,
   MotorLesion,
   Muscle,
   MuscleState,
@@ -28,6 +30,7 @@ import type {
   SkinArea,
   SourceId,
   Timepoint,
+  VisualPart,
   Tone,
   Vertebra,
 } from '../../src/kb/vocab.ts';
@@ -163,4 +166,39 @@ export type BrainCase = {
   readonly pattern: string;
   readonly lesion: readonly (LesionRegion | PlexusRegion | BrainRegion)[];
   readonly evaluations: readonly BrainEvaluation[];
+};
+
+// ─── The visual pathway (amendment A11) ─────────────────────────────────────
+
+/** A lesion of the visual pathway. The chiasm is midline: its sides are ignored. */
+export type VisionRegion = {
+  readonly vision: VisualPart;
+  readonly sides: readonly Side[];
+  readonly severity: Severity;
+};
+
+export type VisionAssertion = Evidence &
+  (
+    | {
+        readonly kind: 'field';
+        /** Which eye's field; 'both' asserts the same of each eye. */
+        readonly eye: Side | 'both';
+        readonly sectors: readonly FieldSector[];
+        readonly oneOf: readonly FieldState[];
+      }
+    | (Sided & { readonly kind: 'rapd'; readonly oneOf: readonly SignState[] })
+  );
+
+export type VisionEvaluation = {
+  readonly timepoint: Timepoint;
+  readonly assertions: readonly (Assertion | LimbAssertion | BrainAssertion | VisionAssertion)[];
+  readonly unasserted: readonly string[];
+};
+
+export type VisionCase = {
+  readonly id: string;
+  readonly title: string;
+  readonly pattern: string;
+  readonly lesion: readonly (LesionRegion | PlexusRegion | BrainRegion | VisionRegion)[];
+  readonly evaluations: readonly VisionEvaluation[];
 };

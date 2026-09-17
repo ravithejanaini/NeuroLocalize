@@ -1,6 +1,6 @@
 # NeuroLocalize
 
-Place a lesion anywhere from the cortex to a nerve in the hand or foot, and see the deficits it
+Place a lesion anywhere from the eye and the cortex to a nerve in the hand or foot, and see the deficits it
 produces and why. Or enter an examination, and see where the lesion could be, which test
 would tell the candidates apart, and the reasoning behind every ranking. Or practise:
 generated cases, scheduled by the pathways you get wrong, and a presentation mode for
@@ -20,11 +20,12 @@ teaching from a phone.
 | P4 | The brachial plexus: roots, trunks, divisions, cords and nine nerves in 3D; fourteen muscles, seven nerve territories and five deformities (winged scapula, waiter's tip, wrist drop, claw hand, ape hand); examination mode separates root from plexus from nerve |
 | P5 | Above the cord: medulla, pons, midbrain, thalamus, internal capsule and the motor and sensory homunculus; facial sensation and strength (forehead sparing), five cranial nerve signs, ataxia and vertigo; nine named territories from the lateral medulla to the ACA cortex; examination mode ranks candidates from cortex to muscle |
 | P6 | Practice: cases generated from the model and checked by it, answers explained by the engine's own working, review scheduled by the pathways answered wrongly; progress kept in the browser with save and load to a file; presentation mode; offline use from the standalone build |
+| P8 | The visual pathway: optic nerve, chiasm, tract, Meyer loop, parietal radiation and occipital cortex; each eye's field in six sectors with the pupil; monocular loss, bitemporal hemianopia, both quadrantanopias, and hemianopia with or without macular sparing |
 | P7 | The leg: lumbar and sacral plexuses and nine nerves in 3D, eleven muscles, nine territories, foot drop and the Trendelenburg gait; examination mode separates the fibular nerve from L5, the sciatic nerve from the plexus, and the femoral nerve from the lumbar roots |
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 90 open-access sources that were actually
+- **Expected outputs are written first**, from 97 open-access sources that were actually
   read (`docs/SOURCES.md`), and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

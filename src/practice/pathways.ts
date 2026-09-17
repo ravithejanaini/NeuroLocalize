@@ -5,7 +5,7 @@ import type { Findings } from '../engine/forward.ts';
 import type { Hypothesis } from '../engine/hypotheses.ts';
 import type { Observation } from '../engine/reverse.ts';
 import { KB } from '../kb/kb.ts';
-import { MUSCLES, SEGMENTS, SIDES, type Segment, type Side } from '../kb/vocab.ts';
+import { FIELD_SECTORS, MUSCLES, SEGMENTS, SIDES, type Segment, type Side } from '../kb/vocab.ts';
 
 export const PATHWAYS = [
   'spinothalamic',
@@ -18,6 +18,7 @@ export const PATHWAYS = [
   'corticobulbar',
   'cranial_nuclei',
   'cerebellar_vestibular',
+  'visual',
 ] as const;
 export type Pathway = (typeof PATHWAYS)[number];
 
@@ -32,6 +33,7 @@ export const PATHWAY_NAME: Record<Pathway, { readonly name: string; readonly wha
   corticobulbar: { name: 'Face from above', what: 'lower-face weakness with the forehead spared' },
   cranial_nuclei: { name: 'Cranial nerve nuclei', what: 'third nerve, abduction, gaze, tongue, palate and the whole face' },
   cerebellar_vestibular: { name: 'Ataxia and vertigo', what: 'the cerebellar peduncles and vestibular nuclei' },
+  visual: { name: 'Visual fields', what: 'the optic nerve, chiasm, tract, radiations and occipital cortex, and the pupil' },
 };
 
 const hurt = (s: string): boolean => s === 'lost' || s === 'impaired';
@@ -74,6 +76,7 @@ export function pathwaysOf(f: Findings, h: Hypothesis): Pathway[] {
     if (f.ataxia[x] === 'present') out.add('cerebellar_vestibular');
   }
   if (f.vertigo === 'present') out.add('cerebellar_vestibular');
+  if (SIDES.some((x) => FIELD_SECTORS.some((s) => f.fields[x][s] === 'lost')) || SIDES.some((x) => f.rapd[x] === 'present')) out.add('visual');
   return PATHWAYS.filter((p) => out.has(p));
 }
 
@@ -147,6 +150,12 @@ export function pathwaysShown(observations: readonly Observation[], f: Findings,
       case 'ataxia':
       case 'vertigo':
         if (o.value === 'present') out.add('cerebellar_vestibular');
+        break;
+      case 'field':
+        if (o.value === 'abnormal') out.add('visual');
+        break;
+      case 'rapd':
+        if (o.value === 'present') out.add('visual');
         break;
     }
   }

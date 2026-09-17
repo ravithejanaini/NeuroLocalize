@@ -26,6 +26,8 @@ import type {
   SourceId,
   Timepoint,
   Tone,
+  VisionPlace,
+  VisualPart,
   Territory,
   Trunk,
   Vertebra,
@@ -176,6 +178,28 @@ export type Brain = {
   >;
 };
 
+// ─── The visual pathway (P8) ───
+/**
+ * What one part of the visual pathway carries. `eye`: its own eye's fibres, or both eyes'.
+ * `field`: the whole field, the temporal half-fields (the crossing nasal fibres), or the
+ * half-field opposite the part's side. `quadrants`: which half of the periphery. `centre`:
+ * whether it carries the centre of that half-field with the rest, only the centre, half of
+ * it (one quadrant's worth), or none. `rapd`: which pupil shows a relative afferent defect.
+ */
+export type VisionPartRow = Row<{
+  readonly eye: 'same' | 'both';
+  readonly field: 'whole' | 'temporal' | 'opposite';
+  readonly quadrants: 'both' | 'upper' | 'lower' | 'none';
+  readonly centre: 'with' | 'half' | 'only' | 'none';
+  readonly rapd: 'same' | 'opposite' | 'none' | 'open';
+}>;
+
+export type Vision = {
+  readonly parts: Readonly<Record<VisualPart, VisionPartRow>>;
+  readonly places: Readonly<Record<VisionPlace, Row<{ readonly parts: readonly VisualPart[]; readonly midline?: boolean }>>>;
+  readonly rapd: Row<{ readonly bothSidesUnsettled: boolean }>;
+};
+
 export type Kb = {
   readonly pathways: {
     readonly posteriorColumn: Row<{ readonly ascendsOn: Laterality }>;
@@ -208,6 +232,7 @@ export type Kb = {
   };
   readonly plexus: Plexus;
   readonly brain: Brain;
+  readonly vision: Vision;
   readonly observations: {
     readonly spinalShock: Row<{
       readonly reflexesAbsent: readonly Timepoint[];

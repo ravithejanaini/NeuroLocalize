@@ -4,6 +4,7 @@
 import {
   COMPARTMENTS,
   PLEXUS_SITES,
+  VISION_PLACES,
   SEGMENTS,
   SIDES,
   TERRITORIES,
@@ -14,6 +15,7 @@ import {
   type Segment,
 } from '../kb/vocab.ts';
 import { KB } from '../kb/kb.ts';
+import { placeRegions } from './vision.ts';
 import type { Kb } from '../kb/types.ts';
 import type { AnyRegion } from './forward.ts';
 import type { LesionRegion } from './lesion.ts';
@@ -169,6 +171,21 @@ export function hypotheses(): readonly Hypothesis[] {
         caudal: nominal,
         regions: territoryRegions(KB, territory, side),
         site: territory,
+      });
+    }
+  }
+  // The visual pathway (P8): each named place, either side; the chiasm is midline.
+  for (const place of VISION_PLACES) {
+    const midline = KB.vision.places[place].midline === true;
+    for (const side of midline ? (['L'] as const) : SIDES) {
+      const family: LesionFamily = midline ? 'visual_chiasm' : side === 'L' ? 'visual_left' : 'visual_right';
+      out.push({
+        id: `${family}:${place}`,
+        family,
+        rostral: nominal,
+        caudal: nominal,
+        regions: placeRegions(KB, place, side),
+        site: place,
       });
     }
   }

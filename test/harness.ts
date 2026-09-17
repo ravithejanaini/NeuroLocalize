@@ -1,10 +1,11 @@
 // Judges engine output against frozen expectations. Shared by the test suite and the
 // mutation harness, so both apply exactly the same rules.
-import type { Assertion, BrainAssertion, BrainCase, Case, LimbAssertion, LimbCase, Span } from '../spec/expectations/types.ts';
+import type { Assertion, BrainAssertion, BrainCase, Case, LimbAssertion, LimbCase, Span, VisionAssertion, VisionCase } from '../spec/expectations/types.ts';
 import type { ReverseCase } from '../spec/expectations/reverse.ts';
 import { BRAIN_CASES } from '../spec/expectations/brain.ts';
 import type { BrainReverseCase } from '../spec/expectations/reverse-brain.ts';
 import type { LimbReverseCase } from '../spec/expectations/reverse-plexus.ts';
+import type { VisionReverseCase } from '../spec/expectations/reverse-vision.ts';
 import { forward, type Findings } from '../src/engine/forward.ts';
 import { predict, prepareSync, reverse, slotKey, type Observation, type Slot } from '../src/engine/reverse.ts';
 import type { Kb } from '../src/kb/types.ts';
@@ -17,7 +18,7 @@ const sidesOf = (s: Side | 'both'): Side[] => (s === 'both' ? ['L', 'R'] : [s]);
 const miss = <T>(got: T, allowed: readonly T[]): boolean => !allowed.includes(got);
 const show = (xs: readonly unknown[]): string => `[${xs.join(', ')}]`;
 
-export function check(a: Assertion | LimbAssertion | BrainAssertion, f: Findings): string[] {
+export function check(a: Assertion | LimbAssertion | BrainAssertion | VisionAssertion, f: Findings): string[] {
   const out: string[] = [];
   switch (a.kind) {
     case 'sensory':
@@ -86,6 +87,19 @@ export function check(a: Assertion | LimbAssertion | BrainAssertion, f: Findings
     case 'vertigo':
       if (miss(f.vertigo, a.oneOf)) out.push(`vertigo: got ${f.vertigo}, expected ${show(a.oneOf)}`);
       break;
+    case 'field':
+      for (const x of a.eye === 'both' ? (['L', 'R'] as const) : [a.eye])
+        for (const sector of a.sectors) {
+          const got = f.fields[x][sector];
+          if (miss(got, a.oneOf)) out.push(`field ${x} ${sector}: got ${got}, expected ${show(a.oneOf)}`);
+        }
+      break;
+    case 'rapd':
+      for (const x of sidesOf(a.side)) {
+        const got = f.rapd[x];
+        if (miss(got, a.oneOf)) out.push(`rapd ${x}: got ${got}, expected ${show(a.oneOf)}`);
+      }
+      break;
     case 'deformity':
       for (const x of sidesOf(a.side)) {
         const got = f.deformities[x][a.deformity];
@@ -113,7 +127,7 @@ export function check(a: Assertion | LimbAssertion | BrainAssertion, f: Findings
   return out;
 }
 
-export function runCase(kase: Case | LimbCase | BrainCase, kb?: Kb): Failure[] {
+export function runCase(kase: Case | LimbCase | BrainCase | VisionCase, kb?: Kb): Failure[] {
   const failures: Failure[] = [];
   for (const ev of kase.evaluations) {
     const findings = forward(kase.lesion, ev.timepoint, kb ? { kb } : {});
@@ -124,12 +138,12 @@ export function runCase(kase: Case | LimbCase | BrainCase, kb?: Kb): Failure[] {
   return failures;
 }
 
-export const runAll = (cases: readonly (Case | LimbCase | BrainCase)[], kb?: Kb): Failure[] => cases.flatMap((c) => runCase(c, kb));
+export const runAll = (cases: readonly (Case | LimbCase | BrainCase | VisionCase)[], kb?: Kb): Failure[] => cases.flatMap((c) => runCase(c, kb));
 
 // ── reverse ──────────────────────────────────────────────────────────────
 
 /** Every way a ranking breaks a frozen reverse expectation, one message each. */
-export function reverseFailures(kase: ReverseCase | LimbReverseCase | BrainReverseCase, slots: readonly Slot[], kb?: Kb): Failure[] {
+export function reverseFailures(kase: ReverseCase | LimbReverseCase | BrainReverseCase | VisionReverseCase, slots: readonly Slot[], kb?: Kb): Failure[] {
   const out: Failure[] = [];
   const idx = (s: Segment): number => SEGMENTS.indexOf(s);
   const observations: readonly Observation[] = kase.observations;

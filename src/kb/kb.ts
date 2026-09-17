@@ -2,6 +2,7 @@
 // Each row's `claim` is what a clinical reviewer is asked to confirm.
 import { BRAIN } from './brain.ts';
 import { PLEXUS } from './plexus.ts';
+import { VISION } from './vision.ts';
 import type { Kb } from './types.ts';
 
 export const KB: Kb = {
@@ -213,6 +214,7 @@ export const KB: Kb = {
   },
 
   plexus: PLEXUS,
+  vision: VISION,
   brain: BRAIN,
 
   observations: {

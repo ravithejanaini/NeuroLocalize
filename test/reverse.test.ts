@@ -3,6 +3,7 @@ import { describe, it } from 'node:test';
 import { BRAIN_REVERSE_CASES } from '../spec/expectations/reverse-brain.ts';
 import { LIMB_REVERSE_CASES } from '../spec/expectations/reverse-plexus.ts';
 import { LEG_REVERSE_CASES } from '../spec/expectations/reverse-leg.ts';
+import { VISION_REVERSE_CASES } from '../spec/expectations/reverse-vision.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
 import { hypotheses } from '../src/engine/hypotheses.ts';
@@ -17,7 +18,7 @@ import { examSlots } from '../src/render/slots.ts';
 const SLOTS = examSlots(RENDER);
 
 describe('frozen reverse expectations (A3, A4, A7)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES]) {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });
@@ -31,7 +32,8 @@ describe('reverse engine contract', () => {
     // then per side 14 arm and 11 leg muscles and the 3 arm and 6 leg patches that are not
     // landmarks (D30, P7), and per side facial sensation, facial strength, ataxia and five
     // cranial signs, plus vertigo (P5)
-    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 8 + 1);
+    // P8 adds, per side, six sectors of that eye's field and its pupil.
+    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 8 + 1 + 2 * 7);
   });
 
   it('with no findings, prefers nothing in particular and still suggests a test', () => {

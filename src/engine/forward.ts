@@ -26,16 +26,19 @@ import {
 import { idx, mapLesion, opposite, type Damage, type LesionMap, type LesionRegion } from './lesion.ts';
 import { brainBodyDamage, brainFindings, brainHorner, mapBrain, type BrainFindings, type BrainMap, type BrainRegion } from './brain.ts';
 import { limbFindings, limbReflex, mapPlexus, type LimbFindings, type PlexusRegion } from './limb.ts';
+import { mapVision, visionFindings, type VisionFindings, type VisionRegion } from './vision.ts';
 import { crossingOffsets, damageAlong, motorRoute, sensoryRoute, type Route } from './routes.ts';
 
 export type { LesionMap, LesionRegion } from './lesion.ts';
 export type { PlexusRegion } from './limb.ts';
 export type { BrainRegion } from './brain.ts';
+export type { VisionRegion } from './vision.ts';
 
 /** Anything forward() can be asked about: a region of the cord or roots, or a place beyond them. */
-export type AnyRegion = LesionRegion | PlexusRegion | BrainRegion;
+export type AnyRegion = LesionRegion | PlexusRegion | BrainRegion | VisionRegion;
 export const isPlexus = (r: AnyRegion): r is PlexusRegion => 'plexus' in r;
 export const isBrain = (r: AnyRegion): r is BrainRegion => 'brain' in r;
+export const isVision = (r: AnyRegion): r is VisionRegion => 'vision' in r;
 export const isCord = (r: AnyRegion): r is LesionRegion => 'at' in r;
 export { mapLesion } from './lesion.ts';
 export type { Element, Route } from './routes.ts';
@@ -56,7 +59,8 @@ export type Findings = {
   readonly dysreflexia: Dysreflexia;
   readonly qualifiers: Readonly<Record<Qualifier, boolean>>;
 } & LimbFindings &
-  BrainFindings;
+  BrainFindings &
+  VisionFindings;
 
 export type ForwardOptions = {
   readonly kb?: Kb;
@@ -221,6 +225,7 @@ export function forward(lesion: readonly AnyRegion[], timepoint: Timepoint, opti
   const map = mapLesion(lesion.filter(isCord), kb);
   const pmap = mapPlexus(lesion.filter(isPlexus));
   const bmap = mapBrain(kb, lesion.filter(isBrain));
+  const vmap = mapVision(kb, lesion.filter(isVision));
 
 
   const sensory = {} as Record<Side, Record<SensoryModality, Record<Segment, SensoryState>>>;
@@ -299,6 +304,7 @@ export function forward(lesion: readonly AnyRegion[], timepoint: Timepoint, opti
   return {
     ...limb,
     ...brain,
+    ...visionFindings(kb, vmap),
     resolvedSegments: map.segments.map((k) => SEGMENTS[k]).filter((s): s is Segment => s !== undefined),
     sensory,
     motor,

@@ -8,7 +8,8 @@ import { ALL_CASES as CORD_CASES } from '../spec/expectations/index.ts';
 import { BRAIN_CASES } from '../spec/expectations/brain.ts';
 import { PLEXUS_CASES } from '../spec/expectations/plexus.ts';
 import { LEG_CASES } from '../spec/expectations/leg.ts';
-import type { Assertion, BrainAssertion, LimbAssertion } from '../spec/expectations/types.ts';
+import { VISION_CASES } from '../spec/expectations/vision.ts';
+import type { Assertion, BrainAssertion, LimbAssertion, VisionAssertion } from '../spec/expectations/types.ts';
 import { KB } from '../src/kb/kb.ts';
 import { MECHANISMS } from '../src/kb/mechanisms.ts';
 import { RENDER } from '../src/kb/render.ts';
@@ -24,7 +25,7 @@ const span = (s: readonly [string, string]): string => (s[0] === s[1] ? s[0] : `
 const any = (xs: readonly string[]): string => xs.join(' or ');
 const words = (xs: readonly string[]): string => xs.map((x) => x.replace(/_/g, ' ')).join(', ');
 
-export function describe(a: Assertion | LimbAssertion | BrainAssertion): string {
+export function describe(a: Assertion | LimbAssertion | BrainAssertion | VisionAssertion): string {
   switch (a.kind) {
     case 'sensory':
       return `${SIDE[a.side]} · ${a.modality === 'all' ? 'all sensation' : a.modality.replace('_', ' ')} · ${span(a.span)} → ${any(a.oneOf)}`;
@@ -49,6 +50,10 @@ export function describe(a: Assertion | LimbAssertion | BrainAssertion): string 
       return `${SIDE[a.side]} · ${a.sign.replace(/_/g, ' ')} → ${any(a.oneOf)}`;
     case 'vertigo':
       return `vertigo → ${any(a.oneOf)}`;
+    case 'field':
+      return `${a.eye === 'both' ? 'both eyes' : `${SIDE[a.eye]} eye`} · field · ${words(a.sectors)} → ${any(a.oneOf)}`;
+    case 'rapd':
+      return `${SIDE[a.side]} · afferent pupillary defect → ${any(a.oneOf)}`;
     case 'deformity':
       return `${SIDE[a.side]} · ${a.deformity.replace(/_/g, ' ')} → ${any(a.oneOf)}`;
     case 'skin':
@@ -98,7 +103,7 @@ export function buildWorksheet(): Worksheet {
   }
 
   let k = 0;
-  for (const c of [...CORD_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES]) {
+  for (const c of [...CORD_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES]) {
     const findings: Finding[] = c.evaluations.flatMap((e) =>
       e.assertions
         .filter((a) => a.basis === 'composed')

@@ -67,7 +67,7 @@ describe('progress on the page', () => {
     p = record(p, ['corticospinal'], false, now, 1);
     p = record(p, ['spinothalamic'], true, now, 2);
     const html = progressHtml(p, now);
-    assert.equal(count(html, /class="pp[ "]/g), 10);
+    assert.equal(count(html, /class="pp[ "]/g), 11, 'ten pathways, and the visual fields since P8');
     assert.ok(html.indexOf('Upper motor neuron') < html.indexOf('Pain and temperature'), 'the missed pathway comes first');
     assert.match(html, /<b>2<\/b> answered · <b>50%<\/b> right · <b>1<\/b> pathway due/);
   });

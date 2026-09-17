@@ -7,6 +7,7 @@ import { mapBrain } from '../engine/brain.ts';
 import { territoryRegions } from '../engine/hypotheses.ts';
 import { mapPlexus } from '../engine/limb.ts';
 import { hypotheses, type Hypothesis } from '../engine/hypotheses.ts';
+import { placeRegions } from '../engine/vision.ts';
 import {
   explain,
   isPrepared,
@@ -312,6 +313,7 @@ function placedLesion(): Shown {
     return { regions: [{ plexus: p.site, sides: [state.limbSide], severity: 'complete' }], shape: null, top: 0, bottom: 0 };
   }
   if (p.kind === 'brain') return { regions: territoryRegions(KB, p.territory, state.limbSide), shape: null, top: 0, bottom: 0 };
+  if (p.kind === 'vision') return { regions: placeRegions(KB, p.place, state.limbSide), shape: null, top: 0, bottom: 0 };
   let top: number;
   let bottom: number;
   if (state.byVertebra) {
@@ -330,6 +332,10 @@ function levelReadout(): string {
   if (state.preset.kind === 'system') return 'Set by the pattern';
   if (state.preset.kind === 'limb') return `${state.limbSide === 'L' ? 'Left' : 'Right'} ${SITE_NAME[state.preset.site]} — beyond the roots`;
   if (state.preset.kind === 'brain') return `${state.limbSide === 'L' ? 'Left' : 'Right'} ${SITE_NAME[state.preset.territory]} — above the cord`;
+  if (state.preset.kind === 'vision') {
+    const midline = KB.vision.places[state.preset.place].midline === true;
+    return `${midline ? 'The' : state.limbSide === 'L' ? 'Left' : 'Right'} ${SITE_NAME[state.preset.place]} — the visual pathway`;
+  }
   if (state.byVertebra) {
     const v = VERTEBRAE[state.level] ?? '';
     const segs = currentSegments.map((k) => SEGMENTS[k]);
@@ -352,7 +358,10 @@ function applyPlace(): void {
 
   const focal = state.preset.kind === 'focal';
   for (const id of ['#level', '#extent', '#by-vertebra']) ($(id) as HTMLInputElement).disabled = !focal;
-  $('#limb-side-row').hidden = state.preset.kind !== 'limb' && state.preset.kind !== 'brain';
+  $('#limb-side-row').hidden =
+    state.preset.kind !== 'limb' &&
+    state.preset.kind !== 'brain' &&
+    !(state.preset.kind === 'vision' && KB.vision.places[state.preset.place].midline !== true);
   const level = $<HTMLInputElement>('#level');
   level.max = String((state.byVertebra ? VERTEBRAE.length : SEGMENTS.length) - 1);
   level.value = String(state.level);
@@ -641,7 +650,9 @@ presetList.innerHTML = PRESETS.map((p, i) => {
                 ? legOf(p)
                   ? 'The leg, beyond the roots'
                   : 'The arm, beyond the roots'
-                : 'Above the cord'
+                : p.kind === 'vision'
+                  ? 'The visual pathway'
+                  : 'Above the cord'
         }</div>`;
   return `${heading}<button type="button" class="preset" data-preset="${p.id}" aria-pressed="false" aria-label="${p.label} — ${p.pattern}">
     <span class="preset-label">${p.label}</span><span class="preset-pattern">${p.pattern}</span></button>`;
@@ -661,7 +672,19 @@ function choose(p: Preset): void {
   });
   if (p.kind === 'limb') armSide = state.limbSide;
   apply();
-  go(p.kind === 'focal' ? 'lesion' : p.kind === 'limb' ? (p.leg ? 'leg' : 'arm') : p.kind === 'brain' ? 'brain' : p.leg ? 'leg' : 'whole');
+  go(
+    p.kind === 'focal'
+      ? 'lesion'
+      : p.kind === 'limb'
+        ? p.leg
+          ? 'leg'
+          : 'arm'
+        : p.kind === 'brain' || p.kind === 'vision'
+          ? 'brain'
+          : p.leg
+            ? 'leg'
+            : 'whole',
+  );
 }
 presetList.addEventListener('click', (e) => {
   const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-preset]');

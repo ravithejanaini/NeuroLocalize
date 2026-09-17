@@ -704,3 +704,55 @@ depends on where the lateral sural cutaneous branch leaves, which no source read
 **R28** — The hip adductors are modelled with no sourced roots, so an L3 or L4 root lesion
 leaves adduction uncertain. Which roots should be given, and from which source?
 
+## P8 — the visual pathway
+
+The analysis written before any P8 code is `docs/P8-analysis.md`; S91–S97 were read for it.
+
+### Source conflicts
+
+**C26 — Congruity.** A congruous homonymous defect is taught as a sign of a lesion behind the
+lateral geniculate nucleus. S97 reports that about 60% of optic radiation lesions and 50% of
+optic tract lesions are congruous, which is too weak to localise by. Not modelled; the
+pupil, not congruity, separates tract from cortex here (S92, S97).
+
+**C27 — The pupil in a chiasmal lesion.** S95 says a chiasmal lesion may give a relative
+afferent pupillary defect when one eye loses more fibres than the other. The model therefore
+leaves the pupils unsettled for a chiasmal lesion rather than calling them normal.
+
+**C28 — How much of the centre macular sparing keeps.** S97 gives 5° to 25°. The model has
+one central sector on each side of fixation and does not grade it.
+
+### Decisions
+
+**D59 — The ranked list puts conflicts before probability.** Until P8 the candidates were
+ranked by posterior alone. A family with one candidate (the chiasm) holds the whole family's
+prior, which is 20 times a nerve candidate's share, and that is exactly the cost of one
+contradicted finding under the 5% noise model (log 20 ≈ −log 0.05). A numb lateral thigh
+therefore ranked a chiasmal lesion above the lateral femoral cutaneous nerve. Groups are now
+ordered by how many findings they contradict, then by posterior. Candidates that conflict are
+still listed, with their conflicts counted, so a mis-recorded finding is recoverable.
+
+**D60 — The field is examined in sectors, not degrees.** Each eye has four peripheral
+quadrants and the centre either side of fixation: enough for monocular loss, bitemporal
+hemianopia, homonymous hemianopia, both quadrantanopias and macular sparing, and no more
+(C28). A part that carries only half of the centre — Meyer loop, the parietal radiation, one
+calcarine bank — leaves the central sector unsettled rather than lost.
+
+**D61 — The pupil is the sign that crosses the geniculate.** An optic nerve lesion gives a
+defect on its own side, an optic tract lesion on the opposite side, and nothing behind the
+lateral geniculate nucleus gives one (S95, S97). When both sides are equally affected the
+model reports the pupils unsettled, because a relative defect compares the two eyes; no
+source read states this, so the row is marked pending.
+
+### Reviewer questions
+
+**R29** — C27: should a chiasmal lesion be taught as giving no pupillary defect, rather than
+leaving it unsettled?
+
+**R30** — D61: with both optic nerves equally damaged, is "no relative defect" the better
+teaching than "unsettled"?
+
+**R31** — The posterior cerebral artery also supplies the thalamus and midbrain (S94). Should
+the occipital place be offered as a whole-territory lesion, with the thalamic and midbrain
+findings the brain model already has?
+

@@ -25,6 +25,9 @@ export const FAMILY_NAME: Record<LesionFamily, string> = {
   brainstem_right: 'Right brainstem',
   hemisphere_left: 'Left hemisphere',
   hemisphere_right: 'Right hemisphere',
+  visual_left: 'Left visual pathway',
+  visual_right: 'Right visual pathway',
+  visual_chiasm: 'Optic chiasm',
 };
 
 export type Placed = {

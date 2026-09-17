@@ -6,6 +6,7 @@ import type { Kb, Meta, RenderKb } from '../kb/types.ts';
 import { RENDER } from '../kb/render.ts';
 import { REFLEXES, SEGMENTS, SIDES, type Segment, type SensoryModality, type SensoryState, type Side } from '../kb/vocab.ts';
 import { ARM, deformityChips, LEG, limbAffected, muscleTable, skinTable } from './arm.ts';
+import { visionAffected, visionPanel } from './vision.ts';
 import { headHtml } from './head.ts';
 import { bodyMapSvg, myotomeTable, sensoryLevelText } from './svg.ts';
 
@@ -226,6 +227,23 @@ export class Panel {
             `<details class="arm-more"><summary>Nerve territories</summary>${skinTable(f, ARM)}</details>`
           : '<p class="quiet">Every arm muscle strong and every territory intact.</p>',
         note: 'Uncertain marks a root the sources disagree about; a deformity is only called after lower-motor-neuron weakness.',
+      },
+      {
+        title: 'Vision',
+        drivers: [
+          'vision.optic-nerve',
+          'vision.chiasm',
+          'vision.optic-tract',
+          'vision.meyer-loop',
+          'vision.parietal-radiation',
+          'vision.calcarine-lower',
+          'vision.calcarine-upper',
+          'vision.occipital-pole',
+        ],
+        body: visionAffected(f)
+          ? visionPanel(f)
+          : '<p class="quiet">Both visual fields full, both pupils equal.</p>',
+        note: 'Each eye’s field is drawn as the patient sees it: the temporal half away from the nose, the centre split at fixation. Not modelled: acuity, colour, congruity (C26), and the lateral geniculate nucleus as a place of its own.',
       },
       {
         title: 'Leg',

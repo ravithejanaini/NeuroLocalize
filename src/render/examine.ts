@@ -4,6 +4,7 @@ import type { Group, Observation, ReverseResult, Slot, Verdict } from '../engine
 import { FAMILY_NAME, levelText as placedText } from '../engine/names.ts';
 import { SITE_NAME, slotKey } from '../engine/reverse.ts';
 import type { RenderKb } from '../kb/types.ts';
+import { fieldChart } from './vision.ts';
 import {
   ARM_MUSCLES,
   CRANIAL_SIGNS,
@@ -12,6 +13,7 @@ import {
   SEGMENTS,
   SIDES,
   type CranialSign,
+  type FieldSector,
   type Muscle,
   type SensoryModality,
   type Side,
@@ -61,6 +63,16 @@ export const CRANIAL_NAME: Record<CranialSign, string> = {
   palate_weakness: 'palate weak (uvula deviates away)',
 };
 
+/** Each sector of one eye's field, as it is asked about. */
+export const SECTOR_NAME: Record<FieldSector, string> = {
+  temporal_superior: 'upper outer quadrant (temporal)',
+  temporal_inferior: 'lower outer quadrant (temporal)',
+  nasal_superior: 'upper inner quadrant (nasal)',
+  nasal_inferior: 'lower inner quadrant (nasal)',
+  central_left: 'centre, to the patient’s left',
+  central_right: 'centre, to the patient’s right',
+};
+
 export const AREA_NAME: Record<SkinArea, string> = {
   shoulder_badge: 'lateral shoulder (regimental badge)',
   lateral_forearm: 'lateral forearm',
@@ -98,6 +110,8 @@ export const CYCLE: Record<Slot['kind'], readonly string[]> = {
   cranial: ['absent', 'present'],
   ataxia: ['absent', 'present'],
   vertigo: ['absent', 'present'],
+  field: ['normal', 'abnormal'],
+  rapd: ['absent', 'present'],
 };
 
 export function nextValue(slot: Slot, current: string | undefined): string | undefined {
@@ -146,6 +160,10 @@ export function slotLabel(render: RenderKb, s: Slot): string {
       return `${SIDE_WORD[s.side]} limb ataxia`;
     case 'vertigo':
       return 'Vertigo and nystagmus';
+    case 'field':
+      return `${SIDE_WORD[s.eye]} eye · ${SECTOR_NAME[s.sector]}`;
+    case 'rapd':
+      return `${SIDE_WORD[s.side]} pupil, afferent defect`;
   }
 }
 
@@ -161,6 +179,7 @@ const VALUE_WORD: Record<string, string> = {
   absent: 'absent',
   overactive: 'overactive',
   retention: 'retention',
+  lost: 'lost',
 };
 export const valueWord = (v: string): string => VALUE_WORD[v] ?? v;
 
@@ -244,6 +263,12 @@ export function examTables(render: RenderKb, findings: Findings): string {
       .join('');
   const arm = muscleRows(ARM_MUSCLES);
   const leg = muscleRows(LEG_MUSCLES);
+  const entered = new Map([...findings].map(([k, o]) => [k, o.value] as const));
+  const eyes = SIDES.map((eye) => `<div class="fchart">${fieldChart(eye, () => 'normal', entered)}</div>`).join('');
+  const pupils = `<tr><th colspan="2">Afferent pupillary defect</th>${SIDES.map((side) => {
+    const s: Slot = { kind: 'rapd', side };
+    return `<td>${cell(slotKey(s), get(s), slotLabel(render, s))}</td>`;
+  }).join('')}</tr>`;
   const headRow = (label: string, slotOf: (side: 'L' | 'R') => Slot): string =>
     `<tr><th colspan="2">${label}</th>${SIDES.map((side) => {
       const s = slotOf(side);
@@ -260,6 +285,8 @@ export function examTables(render: RenderKb, findings: Findings): string {
     <thead><tr><th colspan="2">Strength</th><th>Left</th><th>Right</th></tr></thead><tbody>${strength}</tbody>
     <thead><tr><th colspan="2">Arm, muscle by muscle</th><th>Left</th><th>Right</th></tr></thead><tbody>${arm}</tbody>
     <thead><tr><th colspan="2">Leg, muscle by muscle</th><th>Left</th><th>Right</th></tr></thead><tbody>${leg}</tbody>
+    <thead><tr><th colspan="2">Visual fields</th><th>Left eye</th><th>Right eye</th></tr></thead>
+    <tbody><tr><td colspan="4"><div class="fcharts exam-fields">${eyes}</div></td></tr>${pupils}</tbody>
     <thead><tr><th colspan="2">Reflexes and signs</th><th>Left</th><th>Right</th></tr></thead><tbody>${reflexes}
     ${sided('babinski', 'Babinski')}${sided('horner', 'Horner')}
     ${single({ kind: 'romberg' }, 'Romberg')}${single({ kind: 'bladder' }, 'Bladder')}</tbody></table>`;

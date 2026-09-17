@@ -204,6 +204,33 @@ situation the freeze exists to catch.
   be separated at the bedside (S72, S88), the expectation asks only that the right family
   rank near the top.
 
+## A11 — The visual pathway (P8, 2026-09-17)
+
+- **Changed:** additions only. `vision.ts` holds seven forward cases: the optic nerve, the
+  chiasm, the optic tract, Meyer loop, the parietal radiation, the occipital cortex in the
+  posterior cerebral artery territory, and the whole occipital cortex. `reverse-vision.ts`
+  holds eight examinations, including tract against cortex by the pupil and macular sparing.
+  `types.ts` gains the visual region and its assertions.
+- **Why:** P8 adds the visual pathway (`docs/P8-analysis.md`).
+- **How circularity was avoided:** every value comes from the analysis tables, which quote
+  S91–S97 and were written before these files; both files were run against the P7 engine and
+  failed before any visual code was written.
+
+## A12 — Leg cases the first mutation run showed were missing (2026-09-18)
+
+- **Changed:** additions only. `leg.ts` gains one case for each of the L1, L2, L3, S2 and S3
+  roots examined at the leg, and the L5 case gains the sole and the anterolateral leg.
+  `reverse-leg.ts` gains two examinations that test a dermatome landmark through its nerve
+  territory: the medial malleolus (L4) and the lateral foot (S1).
+- **Why:** the first mutation run over the leg rows killed 93.4% of sourced mutants, below
+  the 94% P7 set itself. 88 leg mutants survived, most of them the ends of root spans that no
+  case observed: which roots serve hip flexion, knee extension, knee flexion, the saphenous
+  and sural territories, the thigh patches and the sole. A row no expectation pins is an
+  untested row (rule 5), exactly as in A2, A5 and A8.
+- **How circularity was avoided:** every new assertion is a root-to-movement or
+  root-to-territory claim quoted from S31, S79, S81, S82, S86, S87 or S88, not read off the
+  engine; the sources were read for P7 before any leg code existed.
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -212,12 +239,14 @@ situation the freeze exists to catch.
 | `boundaries.ts` | A2 |
 | `index.ts` | A2 (exports the boundary cases) |
 | `reverse.ts` | A3 |
-| `types.ts` | A4, A6, A7 |
+| `types.ts` | A4, A6, A7, A11 |
 | `plexus.ts` | A4, A5, A6, A9 |
 | `reverse-plexus.ts` | A4, A5 |
 | `brain.ts` | A7, A8, A9 |
 | `reverse-brain.ts` | A7 |
 | `leg.ts` | A10 |
 | `reverse-leg.ts` | A10 |
+| `vision.ts` | A11 |
+| `reverse-vision.ts` | A11 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

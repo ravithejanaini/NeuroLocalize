@@ -90,6 +90,9 @@ export const LESION_FAMILIES = [
   'brainstem_right',
   'hemisphere_left',
   'hemisphere_right',
+  'visual_left',
+  'visual_right',
+  'visual_chiasm',
 ] as const;
 export type LesionFamily = (typeof LESION_FAMILIES)[number];
 
@@ -314,6 +317,47 @@ export const TERRITORIES = [
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 
+// ---- the visual pathway (P8) ----------------------------------------------
+/**
+ * Sectors of one eye's visual field (docs/P8-analysis.md). Temporal is away from the nose;
+ * the centre is split at fixation into the half to the patient's left and to the right.
+ */
+export const FIELD_SECTORS = [
+  'temporal_superior',
+  'temporal_inferior',
+  'nasal_superior',
+  'nasal_inferior',
+  'central_left',
+  'central_right',
+] as const;
+export type FieldSector = (typeof FIELD_SECTORS)[number];
+export type FieldState = 'normal' | 'lost' | 'indeterminate';
+
+/** Parts of the visual pathway, front to back. The chiasm is midline. */
+export const VISUAL_PARTS = [
+  'optic_nerve',
+  'chiasm',
+  'optic_tract',
+  'meyer_loop',
+  'parietal_radiation',
+  'calcarine_lower',
+  'calcarine_upper',
+  'occipital_pole',
+] as const;
+export type VisualPart = (typeof VISUAL_PARTS)[number];
+
+/** Places a visual-pathway candidate can sit. */
+export const VISION_PLACES = [
+  'optic_nerve',
+  'chiasm',
+  'optic_tract',
+  'meyer_loop',
+  'parietal_radiation',
+  'pca_occipital',
+  'occipital_cortex',
+] as const;
+export type VisionPlace = (typeof VISION_PLACES)[number];
+
 /** Anywhere a named candidate can sit beyond the cord and roots. */
-export const PLACES = [...PLEXUS_SITES, ...TERRITORIES] as const;
+export const PLACES = [...PLEXUS_SITES, ...TERRITORIES, ...VISION_PLACES] as const;
 export type Place = (typeof PLACES)[number];

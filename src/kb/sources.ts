@@ -10,6 +10,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S47', 'S48', 'S49', 'S50', 'S51', 'S52', 'S53', 'S54', 'S55', 'S56', 'S57', 'S58', 'S59', 'S60', 'S61', 'S62', 'S63', 'S64', 'S65', 'S66',
   'S67', 'S68', 'S69', 'S70',
   'S71', 'S72', 'S73', 'S74', 'S75', 'S76', 'S77', 'S78', 'S79', 'S80', 'S81', 'S82', 'S83', 'S84', 'S85', 'S86', 'S87', 'S88', 'S89', 'S90',
+  'S91', 'S92', 'S93', 'S94', 'S95', 'S96', 'S97',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -105,4 +106,11 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S88', title: 'StatPearls — Electrodiagnostic Evaluation of Lumbosacral Radiculopathy', url: 'https://www.ncbi.nlm.nih.gov/books/NBK563224/' },
   { id: 'S89', title: 'StatPearls — Anatomy, Bony Pelvis and Lower Limb: Thigh Femoral Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK556065/' },
   { id: 'S90', title: 'Stamiris et al. — S1 Radiculopathy Initially Presenting With Sole Knee Flexion Weakness (Cureus, 2024)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11070185/' },
+  { id: 'S91', title: 'StatPearls — Neuroanatomy, Visual Pathway', url: 'https://www.ncbi.nlm.nih.gov/books/NBK553189/' },
+  { id: 'S92', title: 'StatPearls — Hemianopsia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK562262/' },
+  { id: 'S93', title: 'StatPearls — Homonymous Superior Quadrantanopia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK558982/' },
+  { id: 'S94', title: 'StatPearls — Posterior Cerebral Artery Stroke', url: 'https://www.ncbi.nlm.nih.gov/books/NBK532296/' },
+  { id: 'S95', title: 'StatPearls — Marcus Gunn Pupil', url: 'https://www.ncbi.nlm.nih.gov/books/NBK557675/' },
+  { id: 'S96', title: 'StatPearls — Neuroanatomy, Bitemporal Hemianopsia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK545213/' },
+  { id: 'S97', title: 'StatPearls — Homonymous Hemianopsia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK558929/' },
 ];
