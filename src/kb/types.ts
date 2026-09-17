@@ -143,6 +143,8 @@ export type Brain = {
   readonly sympathetic: BrainRoute;
   readonly ataxia: BrainRoute;
   readonly vertigo: Row<{ readonly steps: readonly BrainStep[] }>;
+  /** Which parts exist at each level; routes and territories may name no others (D46). */
+  readonly partsAt: Row<{ readonly parts: Readonly<Record<BrainLevel, readonly BrainCompartment[]>> }>;
   /** Parts laid out by body region (D41). */
   readonly somatotopic: Row<{ readonly compartments: readonly BrainCompartment[] }>;
   readonly limbRegions: Row<{ readonly arm: Span; readonly leg: Span }>;

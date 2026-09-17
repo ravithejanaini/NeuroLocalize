@@ -4,6 +4,7 @@
 import type { BrainRoute, BrainStep, Kb, Laterality, Span } from '../kb/types.ts';
 import {
   BODY_REGIONS,
+  BRAIN_LEVELS,
   CRANIAL_SIGNS,
   SEGMENTS,
   SIDES,
@@ -37,7 +38,57 @@ export type BrainMap = {
 const other = (s: Side): Side => (s === 'L' ? 'R' : 'L');
 const worst = (ds: readonly Damage[]): Damage => ds.reduce<Damage>((m, d) => (d > m ? d : m), 0);
 
+const checked = new WeakSet<Kb>();
+
+/**
+ * Refuses a knowledge base whose routes or territories name a part at a level that does not
+ * hold it, or whose body regions overlap or leave a segment out (D46).
+ */
+export function validateBrain(kb: Kb): void {
+  if (checked.has(kb)) return;
+  const b = kb.brain;
+  const holds = (level: BrainLevel, c: BrainCompartment): boolean => b.partsAt.parts[level].includes(c);
+  const routes: (readonly BrainStep[])[] = [
+    b.corticospinal.steps,
+    b.lemniscal.steps,
+    b.spinothalamic.steps,
+    b.faceNucleus.steps,
+    b.faceAscending.steps,
+    b.corticobulbarFace.steps,
+    b.corticobulbarTongue.steps,
+    b.corticobulbarPalate.steps,
+    b.facialNucleus.steps,
+    b.hypoglossal.steps,
+    b.ambiguus.steps,
+    b.oculomotor.steps,
+    b.abduction.steps,
+    b.gaze.steps,
+    b.sympathetic.steps,
+    b.ataxia.steps,
+    b.vertigo.steps,
+  ];
+  for (const steps of routes) {
+    if (steps.length === 0) throw new Error('a brain route has no steps');
+    for (const s of steps) if (!holds(s.level, s.compartment)) throw new Error(`no ${s.compartment} in the ${s.level}`);
+  }
+  for (const [name, t] of Object.entries(b.territories)) {
+    if (t.compartments.length === 0) throw new Error(`territory ${name} takes nothing`);
+    for (const c of t.compartments) if (!holds(t.level, c)) throw new Error(`territory ${name}: no ${c} in the ${t.level}`);
+  }
+  for (const c of b.somatotopic.compartments) {
+    if (!BRAIN_LEVELS.some((l) => holds(l, c))) throw new Error(`somatotopic ${c} exists nowhere`);
+  }
+  // Every segment in exactly one body region.
+  const spans: Span[] = [b.limbRegions.arm, b.limbRegions.leg, b.axialRegions.neck, b.axialRegions.trunk];
+  for (let k = 0; k < SEGMENTS.length; k++) {
+    const n = spans.filter((sp) => within(k, sp)).length;
+    if (n !== 1) throw new Error(`segment ${SEGMENTS[k] ?? k} lies in ${n} body regions`);
+  }
+  checked.add(kb);
+}
+
 export function mapBrain(kb: Kb, regions: readonly BrainRegion[]): BrainMap {
+  validateBrain(kb);
   const cells = new Map<string, Damage>();
   const somatotopic = new Set<BrainCompartment>(kb.brain.somatotopic.compartments);
   for (const r of regions) {

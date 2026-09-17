@@ -2,6 +2,7 @@
 // mutation harness, so both apply exactly the same rules.
 import type { Assertion, BrainAssertion, BrainCase, Case, LimbAssertion, LimbCase, Span } from '../spec/expectations/types.ts';
 import type { ReverseCase } from '../spec/expectations/reverse.ts';
+import { BRAIN_CASES } from '../spec/expectations/brain.ts';
 import type { BrainReverseCase } from '../spec/expectations/reverse-brain.ts';
 import type { LimbReverseCase } from '../spec/expectations/reverse-plexus.ts';
 import { forward, type Findings } from '../src/engine/forward.ts';
@@ -186,6 +187,43 @@ export function reverseFailures(kase: ReverseCase | LimbReverseCase | BrainRever
         if (p0 === p1) fail(`both leaders predict ${p0} for ${slotKey(s.slot)}`);
       }
     }
+  }
+  return out;
+}
+
+// ── territories ──────────────────────────────────────────────────────────
+
+/** Each named territory is the lesion of the frozen case its sources describe. */
+export const TERRITORY_CASE: Readonly<Record<string, string>> = {
+  lateral_medullary: 'lateral-medullary-left',
+  medial_medullary: 'medial-medullary-left',
+  ventral_pons: 'ventral-pons-left',
+  dorsal_pons: 'dorsal-pons-left',
+  midbrain_peduncle: 'midbrain-peduncle-left',
+  internal_capsule: 'internal-capsule-left',
+  thalamus: 'thalamus-left',
+  mca_cortex: 'mca-cortex-left',
+  aca_cortex: 'aca-cortex-left',
+};
+
+export function territoryFailures(kb: Kb): Failure[] {
+  const out: Failure[] = [];
+  const same = (a: readonly string[] | undefined, b: readonly string[] | undefined): boolean =>
+    [...(a ?? [])].sort().join(',') === [...(b ?? [])].sort().join(',');
+  for (const [territory, row] of Object.entries(kb.brain.territories)) {
+    const id = TERRITORY_CASE[territory];
+    const kase = BRAIN_CASES.find((c) => c.id === id);
+    const lesion = kase?.lesion[0];
+    const fail = (message: string): void => {
+      out.push({ caseId: id ?? territory, timepoint: 'chronic', message });
+    };
+    if (!lesion || !('brain' in lesion)) {
+      fail(`territory ${territory} has no frozen case`);
+      continue;
+    }
+    if (lesion.brain !== row.level) fail(`territory ${territory} is in the ${row.level}, its case in the ${lesion.brain}`);
+    if (!same(lesion.compartments, row.compartments)) fail(`territory ${territory} takes ${row.compartments.join(', ')}; its case ${lesion.compartments.join(', ')}`);
+    if (!same(lesion.regions, row.regions)) fail(`territory ${territory} regions differ from its case`);
   }
   return out;
 }

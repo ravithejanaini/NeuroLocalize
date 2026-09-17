@@ -24,7 +24,7 @@ import {
   type Tone,
 } from '../kb/vocab.ts';
 import { idx, mapLesion, opposite, type Damage, type LesionMap, type LesionRegion } from './lesion.ts';
-import { brainBodyDamage, brainFindings, brainHorner, mapBrain, regionOf, type BrainFindings, type BrainMap, type BrainRegion } from './brain.ts';
+import { brainBodyDamage, brainFindings, brainHorner, mapBrain, type BrainFindings, type BrainMap, type BrainRegion } from './brain.ts';
 import { limbFindings, limbReflex, mapPlexus, type LimbFindings, type PlexusRegion } from './limb.ts';
 import { crossingOffsets, damageAlong, motorRoute, sensoryRoute, type Route } from './routes.ts';
 
@@ -212,8 +212,7 @@ export function forward(lesion: readonly AnyRegion[], timepoint: Timepoint, opti
   const map = mapLesion(lesion.filter(isCord), kb);
   const pmap = mapPlexus(lesion.filter(isPlexus));
   const bmap = mapBrain(kb, lesion.filter(isBrain));
-  // A knowledge base whose body regions leave a segment out is refused, even with no brain lesion.
-  SEGMENTS.forEach((_, k) => regionOf(kb, k));
+
 
   const sensory = {} as Record<Side, Record<SensoryModality, Record<Segment, SensoryState>>>;
   const motor = {} as Record<Side, Record<Segment, MotorFinding>>;

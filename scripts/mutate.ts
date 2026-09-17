@@ -11,6 +11,8 @@ import { PLEXUS_CASES } from '../spec/expectations/plexus.ts';
 import { KB } from '../src/kb/kb.ts';
 import type { Kb } from '../src/kb/types.ts';
 import {
+  BRAIN_COMPARTMENTS,
+  BRAIN_LEVELS,
   COMPARTMENTS,
   MUSCLES,
   NERVES,
@@ -27,7 +29,7 @@ import { LIMB_REVERSE_CASES } from '../spec/expectations/reverse-plexus.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { RENDER } from '../src/kb/render.ts';
 import { examSlots } from '../src/render/slots.ts';
-import { reverseFailures, runAll } from '../test/harness.ts';
+import { reverseFailures, runAll, territoryFailures } from '../test/harness.ts';
 import { locateRows } from '../test/rows.ts';
 
 const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...BRAIN_CASES];
@@ -55,6 +57,8 @@ const POOLS: Record<string, readonly string[]> = {
   site: PLEXUS_SITES,
   division: ['anterior', 'posterior'],
   from: ['roots', 'trunk', 'cords'],
+  brainLevel: BRAIN_LEVELS,
+  brainPart: BRAIN_COMPARTMENTS,
 };
 
 const seg = (s: unknown): number => SEGMENTS.indexOf(s as (typeof SEGMENTS)[number]);
@@ -63,7 +67,10 @@ const isSeg = (s: unknown): boolean => typeof s === 'string' && seg(s) >= 0;
 function poolFor(key: string, value: string): readonly string[] | undefined {
   if (key === 'vertebra') return POOLS.vertebra;
   if (key === 'region') return POOLS.region;
-  if (key === 'compartment') return POOLS.compartment;
+  if (key === 'compartment') {
+    return (BRAIN_COMPARTMENTS as readonly string[]).includes(value) ? POOLS.brainPart : POOLS.compartment;
+  }
+  if (key === 'level') return POOLS.brainLevel;
   if (key === 'reflex' || key === 'partialReflex') return POOLS.reflex;
   if (key === 'tone') return POOLS.tone;
   if (key === 'nerve') return POOLS.nerve;
@@ -203,7 +210,7 @@ const results: Result[] = mutants.map((m) => {
   let kb: Kb;
   try {
     kb = apply(KB, m);
-    const failures = runAll(CASES, kb).length;
+    const failures = runAll(CASES, kb).length + territoryFailures(kb).length;
     if (failures > 0) return { ...base, killed: true, failures, threw: false, byReverse: false };
   } catch {
     return { ...base, killed: true, failures: 0, threw: true, byReverse: false };

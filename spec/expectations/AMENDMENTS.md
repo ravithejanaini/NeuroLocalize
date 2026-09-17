@@ -153,6 +153,22 @@ situation the freeze exists to catch.
   the Babinski sign after an MCA cortex lesion, and every cortical sign beyond strength and
   sensation (aphasia, neglect, gaze, fields, abulia).
 
+## A8 — 2026-09-17 — brain boundaries, from mutation testing
+
+- **Changed:** additions only.
+  - `brain.ts` adds seven cases — the medial lemniscus and spinothalamic tract in the pons
+    and in the midbrain, the sympathetic fibres in the pons and in the midbrain, the pontine
+    cerebellar peduncle with the vestibular nuclei, a pure motor lacune of the basis pontis,
+    and the leg fibres of the posterior limb — and adds the palate to the MCA case.
+- **Why:** the first mutation run over the brain rows scored 82.1% on sourced rows. Every
+  route had parts at levels no case lesioned, so dropping them changed nothing: a weak
+  specification again, as in A2 and A5.
+- **How circularity was avoided:** as before. Each value comes from the cited source — S57
+  and S58 for the lemnisci throughout the brainstem, S16 for uncrossed sympathetic fibres
+  through midbrain and pons, S55 for the pontine pure motor lacune, S56 for the capsule's
+  somatotopy — written before these cases were run.
+- **Knowledge-base and engine changes from the same run** are in `DECISIONS.md` (D46).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -164,7 +180,7 @@ situation the freeze exists to catch.
 | `types.ts` | A4, A6, A7 |
 | `plexus.ts` | A4, A5, A6 |
 | `reverse-plexus.ts` | A4, A5 |
-| `brain.ts` | A7 |
+| `brain.ts` | A7, A8 |
 | `reverse-brain.ts` | A7 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

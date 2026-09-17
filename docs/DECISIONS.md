@@ -496,3 +496,18 @@ the capsule and the sensory cortex. Facial pulses follow the trigeminal and cort
 routes. `fate()` meets cord and brain damage in the order the pulse travels, and a test holds
 every drawn pulse to the engine's verdict for all ten A7 lesions. The brain is drawn from the
 front at its own camera station, schematic and not to scale, which the stage says.
+
+**D46 — What the first brain mutation run changed.** It scored 82.1% on sourced rows.
+- *The harness swapped brain parts for cord compartments,* names no brain route can hold,
+  so those mutants measured nothing. Brain steps are now mutated within the brain's own
+  vocabulary and levels.
+- *Nothing enforced where a part lives.* A new row lists the parts at each level (S54, S56–S59,
+  S16, S47, S48); the engine refuses a route or territory naming a part its level does not
+  hold, and body regions that overlap or leave a segment out.
+- *Territories were read only by reverse mode.* Each is now checked against the frozen case
+  its sources describe, in the test suite and the mutation run alike.
+- *VPL is no longer listed as somatotopic.* No source read states its layout, and no lesion
+  in the model takes part of it.
+- *Levels no case had lesioned* — the lemnisci, sympathetic fibres, cerebellar peduncle and
+  vestibular nuclei above the medulla, the basis alone, the capsule by region — are covered
+  by amendment A8.

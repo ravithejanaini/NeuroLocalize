@@ -4,7 +4,8 @@ import { ALL_CASES } from '../spec/expectations/index.ts';
 import { BRAIN_CASES } from '../spec/expectations/brain.ts';
 import { PLEXUS_CASES } from '../spec/expectations/plexus.ts';
 import { forward } from '../src/engine/forward.ts';
-import { check } from './harness.ts';
+import { KB as KB_FOR_TERRITORIES } from '../src/kb/kb.ts';
+import { check, territoryFailures } from './harness.ts';
 
 const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...BRAIN_CASES];
 
@@ -22,4 +23,10 @@ describe('frozen expectations', () => {
       }
     });
   }
+});
+
+describe('named territories match their frozen cases (D46)', () => {
+  it('each territory takes exactly what its case takes', () => {
+    assert.deepEqual(territoryFailures(KB_FOR_TERRITORIES).map((f) => f.message), []);
+  });
 });

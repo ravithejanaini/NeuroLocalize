@@ -271,6 +271,9 @@ export const BRAIN_CASES: readonly BrainCase[] = [
         sign('R', 'tongue_weakness', true, { cite: ['S54', 'S63'], basis: 'composed', note: 'corticobulbar fibres start in the lateral motor cortex' }),
         { kind: 'reflex', side: 'R', reflex: 'biceps', oneOf: ['brisk'], cite: ['S54', 'S12'], basis: 'composed' },
         { kind: 'horner', side: 'both', oneOf: ['absent'], cite: ['S16'], basis: 'composed' },
+        // A8
+        sign('L', 'palate_weakness', 'open', { cite: ['S64', 'S54'], basis: 'composed', note: 'A8: the palate has both hemispheres' }),
+        sign('R', 'palate_weakness', 'open', { cite: ['S64', 'S54'], basis: 'composed' }),
       ],
       unasserted: [
         'aphasia, neglect, gaze deviation and field cuts (S52): not modelled',
@@ -297,6 +300,126 @@ export const BRAIN_CASES: readonly BrainCase[] = [
         sign('R', 'tongue_weakness', false, { cite: ['S54'], basis: 'composed' }),
       ],
       unasserted: ['abulia and the other frontal features (S53): not modelled'],
+    }],
+  },
+
+  // A8 ─────────────────────────────── the levels and parts no case had taken alone
+  {
+    id: 'pons-lemnisci-left',
+    title: 'Left medial lemniscus and spinothalamic tract in the pons',
+    pattern: 'both long sensory tracts above the medulla',
+    lesion: [at('pons', ['medial_lemniscus', 'spinothalamic'])],
+    evaluations: [{
+      timepoint: 'chronic',
+      assertions: [
+        sense('R', 'posterior_column', all, ['lost'], { cite: ['S57'], basis: 'stated', note: 'A8: the lemniscus serves the contralateral body throughout the brainstem' }),
+        sense('R', 'pain_temperature', all, ['lost'], { cite: ['S58'], basis: 'stated', note: 'A8: a brainstem lesion removes contralateral body pain' }),
+        sense('L', 'all', all, ['intact'], { cite: ['S57', 'S58'], basis: 'composed' }),
+        motor('L', all, 'none', { cite: ['S54'], basis: 'composed' }),
+        motor('R', all, 'none', { cite: ['S54'], basis: 'composed' }),
+        face('L', 'none', { cite: ['S51'], basis: 'composed' }),
+        face('R', 'none', { cite: ['S51'], basis: 'composed' }),
+      ],
+      unasserted: ['facial sensation: where the trigeminothalamic fibres run in the pons is not stated (R22)'],
+    }],
+  },
+  {
+    id: 'midbrain-lemnisci-left',
+    title: 'Left medial lemniscus and spinothalamic tract in the midbrain',
+    pattern: 'both long sensory tracts, higher still',
+    lesion: [at('midbrain', ['medial_lemniscus', 'spinothalamic'])],
+    evaluations: [{
+      timepoint: 'chronic',
+      assertions: [
+        sense('R', 'posterior_column', all, ['lost'], { cite: ['S57'], basis: 'stated', note: 'A8' }),
+        sense('R', 'pain_temperature', all, ['lost'], { cite: ['S58'], basis: 'stated', note: 'A8' }),
+        sense('L', 'all', all, ['intact'], { cite: ['S57', 'S58'], basis: 'composed' }),
+        motor('R', all, 'none', { cite: ['S54'], basis: 'composed' }),
+      ],
+      unasserted: [],
+    }],
+  },
+  {
+    id: 'pons-sympathetic-left',
+    title: 'Left descending sympathetic fibres in the pons',
+    pattern: 'a central Horner syndrome above the medulla',
+    lesion: [at('pons', ['sympathetic'])],
+    evaluations: [{
+      timepoint: 'chronic',
+      assertions: [
+        { kind: 'horner', side: 'L', oneOf: ['present'], cite: ['S16'], basis: 'composed', note: 'A8: first-order fibres descend uncrossed through the pons' },
+        { kind: 'horner', side: 'R', oneOf: ['absent'], cite: ['S16'], basis: 'composed' },
+        motor('R', all, 'none', { cite: ['S54'], basis: 'composed' }),
+      ],
+      unasserted: [],
+    }],
+  },
+  {
+    id: 'midbrain-sympathetic-left',
+    title: 'Left descending sympathetic fibres in the midbrain',
+    pattern: 'a central Horner syndrome in the midbrain',
+    lesion: [at('midbrain', ['sympathetic'])],
+    evaluations: [{
+      timepoint: 'chronic',
+      assertions: [
+        { kind: 'horner', side: 'L', oneOf: ['present'], cite: ['S16'], basis: 'composed', note: 'A8: first-order fibres descend uncrossed through the midbrain' },
+        { kind: 'horner', side: 'R', oneOf: ['absent'], cite: ['S16'], basis: 'composed' },
+      ],
+      unasserted: [],
+    }],
+  },
+  {
+    id: 'pons-cerebellar-left',
+    title: 'Left cerebellar peduncle and vestibular nuclei in the pons',
+    pattern: 'ataxia and vertigo without weakness',
+    lesion: [at('pons', ['cerebellar_peduncle', 'vestibular'])],
+    evaluations: [{
+      timepoint: 'chronic',
+      assertions: [
+        { kind: 'ataxia', side: 'L', oneOf: ['present'], cite: ['S65'], basis: 'composed', note: 'A8: ipsilateral limb ataxia in lateral pontine lesions' },
+        { kind: 'ataxia', side: 'R', oneOf: ['absent'], cite: ['S65'], basis: 'composed' },
+        { kind: 'vertigo', oneOf: ['present'], cite: ['S59', 'S47'], basis: 'composed', note: 'A8: vestibular nuclei lie in the inferior pons' },
+        motor('R', all, 'none', { cite: ['S54'], basis: 'composed' }),
+        sense('R', 'all', all, ['intact'], { cite: ['S57', 'S58'], basis: 'composed' }),
+      ],
+      unasserted: [],
+    }],
+  },
+  {
+    id: 'pontine-lacune-left',
+    title: 'Left basis pontis alone',
+    pattern: 'pure motor hemiparesis from the ventral pons',
+    lesion: [at('pons', ['basis'])],
+    evaluations: [{
+      timepoint: 'chronic',
+      assertions: [
+        motor('R', ARM, 'umn', { cite: ['S55'], basis: 'stated', note: 'A8: pure motor hemiparesis can arise in the ventral pons' }),
+        motor('R', LEG, 'umn', { cite: ['S55'], basis: 'stated' }),
+        face('R', 'lower', { cite: ['S55', 'S51'], basis: 'composed', note: 'A8: S55 names the face; the corticobulbar fibres run in the basis (S54)' }),
+        face('L', 'none', { cite: ['S51'], basis: 'composed', note: 'the facial nucleus is spared' }),
+        sign('L', 'palate_weakness', 'open', { cite: ['S64'], basis: 'composed' }),
+        sign('R', 'palate_weakness', 'open', { cite: ['S64'], basis: 'composed' }),
+        sense('R', 'all', all, ['intact'], { cite: ['S55'], basis: 'stated' }),
+        sign('L', 'abduction_weakness', false, { cite: ['S61'], basis: 'composed' }),
+      ],
+      unasserted: ['the tongue: where its supranuclear fibres run is not stated (R25)'],
+    }],
+  },
+  {
+    id: 'capsule-leg-left',
+    title: 'Left posterior limb, the fibres for the leg',
+    pattern: 'the capsule is laid out by body region',
+    lesion: [at('capsule', ['capsule_posterior_motor', 'capsule_posterior_sensory'], ['leg'])],
+    evaluations: [{
+      timepoint: 'chronic',
+      assertions: [
+        motor('R', LEG, 'umn', { cite: ['S56'], basis: 'composed', note: 'A8: the posterior fibres of the limb serve the lower extremity' }),
+        motor('R', ARM, 'none', { cite: ['S56'], basis: 'composed', note: 'the fibres nearest the genu serve the cervical body' }),
+        sense('R', 'all', LEG, ['lost', 'impaired'], { cite: ['S56'], basis: 'composed' }),
+        sense('R', 'all', ARM, ['intact'], { cite: ['S56'], basis: 'composed' }),
+        face('R', 'none', { cite: ['S56'], basis: 'composed', note: 'the genu is spared' }),
+      ],
+      unasserted: [],
     }],
   },
 ];
