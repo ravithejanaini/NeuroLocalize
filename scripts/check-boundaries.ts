@@ -111,6 +111,12 @@ for (const file of [...walk('src'), ...walk('spec')]) {
     if (here.startsWith('src/geometry/') && !['src/kb', 'src/engine', 'src/geometry'].some((d) => inside(target, d))) {
       flag(file, 'geometry-layer', `imports ${rel(target)} — geometry is pure and may not reach the renderer`);
     }
+    if (here.startsWith('src/practice/') && !['src/kb', 'src/engine', 'src/practice'].some((d) => inside(target, d))) {
+      flag(file, 'practice-layer', `imports ${rel(target)} — practice is pure and may not reach the renderer`);
+    }
+    if (here.startsWith('src/practice/') && rel(target) === 'src/kb/mechanisms.ts') {
+      flag(file, 'practice-layer', `${rel(target)} explains; it must not decide a case`);
+    }
     if (here.startsWith('spec/') && !inside(target, 'spec') && rel(target) !== 'src/kb/vocab.ts') {
       flag(file, 'spec-isolation', `imports ${rel(target)} — expectations may see only the vocabulary`);
     }

@@ -242,6 +242,18 @@ function preparedOrThrow(timepoint: Timepoint, kb: Kb): Prepared[] {
   return p;
 }
 
+/** Every candidate's findings, once prepared, by candidate id. */
+const findingsIndex = new WeakMap<Prepared[], ReadonlyMap<string, Findings>>();
+export function preparedFindings(timepoint: Timepoint, kb: Kb = KB): ReadonlyMap<string, Findings> {
+  const ps = preparedOrThrow(timepoint, kb);
+  let index = findingsIndex.get(ps);
+  if (!index) {
+    index = new Map(ps.map((p) => [p.h.id, p.findings]));
+    findingsIndex.set(ps, index);
+  }
+  return index;
+}
+
 /** Synchronous preparation, for tests and scripts. */
 export function prepareSync(timepoint: Timepoint, kb: Kb = KB): void {
   if (cached(timepoint, kb)) return;
@@ -357,7 +369,7 @@ export function reverse(
   observations: readonly Observation[],
   timepoint: Timepoint,
   slots: readonly Slot[],
-  options: { kb?: Kb } = {},
+  options: { kb?: Kb; suggest?: boolean } = {},
 ): ReverseResult {
   const kb = options.kb ?? KB;
   const scored = score(preparedOrThrow(timepoint, kb), observations, kb);
@@ -370,7 +382,7 @@ export function reverse(
   const h0 = entropy(post);
   let best: Suggestion | null = null;
 
-  for (const slot of slots) {
+  for (const slot of options.suggest === false ? [] : slots) {
     if (observed.has(slotKey(slot))) continue;
     const preds = scored.map((s) => predict(s.findings, slot, kb));
     const values = DOMAIN[slot.kind] as readonly Value[];

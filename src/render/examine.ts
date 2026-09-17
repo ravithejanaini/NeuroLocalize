@@ -1,6 +1,7 @@
 // Examination mode, as HTML strings: entering findings, the ranked candidates, the next test
 // and the working. No DOM and no Three.js, so it is tested under Node.
 import type { Group, Observation, ReverseResult, Slot, Verdict } from '../engine/reverse.ts';
+import { FAMILY_NAME, levelText as placedText } from '../engine/names.ts';
 import { SITE_NAME, slotKey } from '../engine/reverse.ts';
 import type { RenderKb } from '../kb/types.ts';
 import {
@@ -9,7 +10,6 @@ import {
   REFLEXES,
   SEGMENTS,
   SIDES,
-  type LesionFamily,
   type CranialSign,
   type Muscle,
   type SensoryModality,
@@ -19,29 +19,7 @@ import {
 
 export type Findings = ReadonlyMap<string, Observation>;
 
-export const FAMILY_NAME: Record<LesionFamily, string> = {
-  complete: 'Complete transection',
-  hemicord_left: 'Left hemicord',
-  hemicord_right: 'Right hemicord',
-  anterior: 'Anterior two-thirds',
-  posterior: 'Posterior columns',
-  central_small: 'Central, commissure only',
-  central_cord: 'Central cord',
-  root_left: 'Left root',
-  root_right: 'Right root',
-  roots_bilateral: 'Cauda equina, both sides',
-  posterolateral: 'Posterior + lateral columns',
-  dorsal_root_column: 'Dorsal roots + columns',
-  motor_neuron: 'Anterior horns + corticospinal',
-  plexus_left: 'Left brachial plexus',
-  plexus_right: 'Right brachial plexus',
-  nerve_left: 'Left peripheral nerve',
-  nerve_right: 'Right peripheral nerve',
-  brainstem_left: 'Left brainstem',
-  brainstem_right: 'Right brainstem',
-  hemisphere_left: 'Left hemisphere',
-  hemisphere_right: 'Right hemisphere',
-};
+export { FAMILY_NAME } from '../engine/names.ts';
 
 const SIDE_WORD: Record<Side, string> = { L: 'Left', R: 'Right' };
 
@@ -263,13 +241,7 @@ export function examTables(render: RenderKb, findings: Findings): string {
 // ── results ──────────────────────────────────────────────────────────────
 
 export function levelText(g: Pick<Group, 'family' | 'rostral' | 'caudal' | 'members' | 'sites'>): string {
-  if (g.sites.length > 3) return `any of ${g.sites.length} places — ${g.sites.slice(0, 2).map((s) => SITE_NAME[s]).join(', ')}, …`;
-  if (g.sites.length > 0) return g.sites.map((s) => SITE_NAME[s]).join(' or ');
-  if (['posterolateral', 'dorsal_root_column', 'motor_neuron'].includes(g.family)) return 'fixed distribution';
-  const [ra, rb] = g.rostral;
-  const [ca, cb] = g.caudal;
-  if (g.members.length === 1) return ra === ca ? `at ${ra}` : `${ra}–${ca}`;
-  return `upper end ${ra === rb ? ra : `${ra}–${rb}`}, lower end ${ca === cb ? ca : `${ca}–${cb}`}`;
+  return placedText({ ...g, size: g.members.length });
 }
 
 export function candidatesHtml(result: ReverseResult, selected: number, tested: number): string {
