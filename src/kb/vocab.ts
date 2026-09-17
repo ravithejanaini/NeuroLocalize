@@ -81,6 +81,10 @@ export const LESION_FAMILIES = [
   'posterolateral',
   'dorsal_root_column',
   'motor_neuron',
+  'plexus_left',
+  'plexus_right',
+  'nerve_left',
+  'nerve_right',
 ] as const;
 export type LesionFamily = (typeof LESION_FAMILIES)[number];
 
@@ -90,3 +94,81 @@ export type StrengthObservation = 'normal' | 'weak';
 export type ReflexObservation = 'normal' | 'reduced' | 'brisk';
 export type SignObservation = 'present' | 'absent';
 export type BladderObservation = 'normal' | 'overactive' | 'retention';
+
+// ---- the upper limb (P4) ---------------------------------------------------
+// Anatomical names for the brachial plexus and the nerves it gives. Order runs proximal
+// to distal wherever there is an order.
+export const TRUNKS = ['upper', 'middle', 'lower'] as const;
+export type Trunk = (typeof TRUNKS)[number];
+
+export const PLEXUS_CORDS = ['lateral', 'posterior', 'medial'] as const;
+export type PlexusCord = (typeof PLEXUS_CORDS)[number];
+
+export const NERVES = [
+  'dorsal_scapular',
+  'long_thoracic',
+  'suprascapular',
+  'axillary',
+  'musculocutaneous',
+  'radial',
+  'median',
+  'ulnar',
+  'medial_antebrachial_cutaneous',
+] as const;
+export type Nerve = (typeof NERVES)[number];
+
+/** Places a lesion can sit beyond the roots. Roots themselves are the root compartments. */
+export const PLEXUS_SITES = [
+  'upper_trunk',
+  'middle_trunk',
+  'lower_trunk',
+  'lateral_cord',
+  'posterior_cord',
+  'medial_cord',
+  'dorsal_scapular',
+  'long_thoracic',
+  'suprascapular',
+  'axillary',
+  'musculocutaneous',
+  'radial_axilla',
+  'radial_spiral_groove',
+  'posterior_interosseous',
+  'median_elbow',
+  'median_wrist',
+  'ulnar_elbow',
+  'ulnar_wrist',
+] as const;
+export type PlexusSite = (typeof PLEXUS_SITES)[number];
+
+/** Muscles examined one at a time, each standing for the movement it is tested by. */
+export const MUSCLES = [
+  'rhomboids',
+  'serratus_anterior',
+  'supraspinatus',
+  'deltoid',
+  'biceps',
+  'triceps',
+  'brachioradialis',
+  'wrist_extensors',
+  'thumb_extensor',
+  'wrist_flexor_ulnar',
+  'finger_flexor_superficial',
+  'finger_flexor_ulnar',
+  'thumb_abductor',
+  'interossei',
+] as const;
+export type Muscle = (typeof MUSCLES)[number];
+
+/** Patches of skin examined, each served by named nerves. */
+export const SKIN_AREAS = [
+  'shoulder_badge',
+  'lateral_forearm',
+  'dorsal_web',
+  'thumb',
+  'middle_finger',
+  'little_finger',
+  'medial_forearm',
+] as const;
+export type SkinArea = (typeof SKIN_AREAS)[number];
+
+export type MuscleState = 'normal' | 'weak' | 'indeterminate';

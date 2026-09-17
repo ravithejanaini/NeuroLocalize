@@ -6,6 +6,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S01', 'S02', 'S03', 'S04', 'S05', 'S06', 'S07', 'S08', 'S09', 'S10', 'S11', 'S12',
   'S13', 'S14', 'S15', 'S16', 'S17', 'S18', 'S19', 'S20', 'S21', 'S22', 'S23',
   'S24', 'S25', 'S26', 'S27', 'S28', 'S29', 'S30', 'S31', 'S32',
+  'S33', 'S34', 'S35', 'S36', 'S37', 'S38', 'S39', 'S40', 'S41', 'S42', 'S43', 'S44', 'S45', 'S46',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -43,4 +44,18 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S30', title: 'Radiopaedia — Spinal cord', url: 'https://radiopaedia.org/articles/spinal-cord' },
   { id: 'S31', title: 'StatPearls — Physiology, Spinal Cord', url: 'https://www.ncbi.nlm.nih.gov/books/NBK544267/' },
   { id: 'S32', title: 'StatPearls — Cervical Injury', url: 'https://www.ncbi.nlm.nih.gov/books/NBK448146/' },
+  { id: 'S33', title: 'StatPearls — Anatomy, Shoulder and Upper Limb, Brachial Plexus', url: 'https://www.ncbi.nlm.nih.gov/books/NBK500016/' },
+  { id: 'S34', title: 'StatPearls — Anatomy, Head and Neck: Brachial Plexus', url: 'https://www.ncbi.nlm.nih.gov/books/NBK531473/' },
+  { id: 'S35', title: 'StatPearls — Erb Palsy', url: 'https://www.ncbi.nlm.nih.gov/books/NBK513260/' },
+  { id: 'S36', title: 'StatPearls — Klumpke Palsy', url: 'https://www.ncbi.nlm.nih.gov/books/NBK531500/' },
+  { id: 'S37', title: 'StatPearls — Electrodiagnostic Evaluation of Brachial Plexopathies', url: 'https://www.ncbi.nlm.nih.gov/books/NBK562197/' },
+  { id: 'S38', title: 'StatPearls — Ulnar Nerve Entrapment', url: 'https://www.ncbi.nlm.nih.gov/books/NBK555929/' },
+  { id: 'S39', title: 'StatPearls — Wrist Drop', url: 'https://www.ncbi.nlm.nih.gov/books/NBK532993/' },
+  { id: 'S40', title: 'StatPearls — Radial Nerve Injury', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537304/' },
+  { id: 'S41', title: 'StatPearls — Anatomy, Shoulder and Upper Limb, Median Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK448084/' },
+  { id: 'S42', title: 'StatPearls — Anatomy, Shoulder and Upper Limb, Axillary Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK493212/' },
+  { id: 'S43', title: 'StatPearls — Anatomy, Shoulder and Upper Limb, Musculocutaneous Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK534199/' },
+  { id: 'S44', title: 'StatPearls — Anatomy, Thorax, Long Thoracic Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK535396/' },
+  { id: 'S45', title: 'StatPearls — Anatomy, Medial Antebrachial Cutaneous Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK551638/' },
+  { id: 'S46', title: 'StatPearls — Anatomy, Shoulder and Upper Limb, Cutaneous Innervation', url: 'https://www.ncbi.nlm.nih.gov/books/NBK545249/' },
 ];

@@ -21,6 +21,10 @@ export const FAMILY_NAME: Record<LesionFamily, string> = {
   posterolateral: 'Posterior + lateral columns',
   dorsal_root_column: 'Dorsal roots + columns',
   motor_neuron: 'Anterior horns + corticospinal',
+  plexus_left: 'Left brachial plexus',
+  plexus_right: 'Right brachial plexus',
+  nerve_left: 'Left peripheral nerve',
+  nerve_right: 'Right peripheral nerve',
 };
 
 const SIDE_WORD: Record<Side, string> = { L: 'Left', R: 'Right' };

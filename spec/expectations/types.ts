@@ -5,6 +5,9 @@ import type {
   Compartment,
   Dysreflexia,
   MotorLesion,
+  Muscle,
+  MuscleState,
+  PlexusSite,
   NeurogenicShock,
   Portion,
   Qualifier,
@@ -16,6 +19,7 @@ import type {
   Severity,
   Side,
   SignState,
+  SkinArea,
   SourceId,
   Timepoint,
   Tone,
@@ -81,4 +85,39 @@ export type Case = {
   readonly pattern: string;
   readonly lesion: readonly LesionRegion[];
   readonly evaluations: readonly Evaluation[];
+};
+
+// ─── The upper limb (amendment A4) ───────────────────────────────────────────
+
+/** A lesion beyond the roots: a trunk, a cord, or a named place on a nerve. */
+export type PlexusRegion = {
+  readonly plexus: PlexusSite;
+  readonly sides: readonly Side[];
+  readonly severity: Severity;
+};
+
+export type LimbAssertion = Evidence &
+  Sided &
+  (
+    | { readonly kind: 'muscle'; readonly muscles: readonly Muscle[]; readonly oneOf: readonly MuscleState[] }
+    | {
+        readonly kind: 'skin';
+        readonly modality: SensoryModality | 'all';
+        readonly areas: readonly SkinArea[];
+        readonly oneOf: readonly SensoryState[];
+      }
+  );
+
+export type LimbEvaluation = {
+  readonly timepoint: Timepoint;
+  readonly assertions: readonly (Assertion | LimbAssertion)[];
+  readonly unasserted: readonly string[];
+};
+
+export type LimbCase = {
+  readonly id: string;
+  readonly title: string;
+  readonly pattern: string;
+  readonly lesion: readonly (LesionRegion | PlexusRegion)[];
+  readonly evaluations: readonly LimbEvaluation[];
 };

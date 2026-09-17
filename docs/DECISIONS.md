@@ -245,3 +245,112 @@ findings already settle the question.
 **D11 — `conflict` forces T3.** The spinothalamic row carries C1 and is now T3. The triceps
 row no longer carries C2: that is a single source against unread common teaching, not a
 disagreement between sources read.
+
+## P4
+
+### Source conflicts
+
+**C10 — Where the long thoracic nerve arises, and whether it carries C7.** S34 gives the
+C5–C7 rami; S37 lists it as "C5 to C6 ± C7" under root-level localisation; S44 says both
+that it arises from the upper superior trunk and that it forms from the C5–C6 and C7 roots.
+**Modelled** as a branch of the roots (two of three sources, and S44's own second
+sentence), with C5–C6 certain and C7 disputed: a lesion reaching it only through C7 leaves
+the serratus `indeterminate`.
+
+**C11 — Musculocutaneous roots.** S33: C5–C6. S43 and S46: C5–C7. The lateral forearm
+territory therefore has C7 as a disputed root. The biceps takes its roots from the myotome
+sources instead (D29), so this conflict changes no muscle.
+
+**C12 — Median roots.** S33 and S41: C5–T1. S34 and S46: C6–T1. Recorded and drawn; it
+changes no finding, because every median-supplied muscle and patch of skin carries its own
+root values.
+
+**C13 — The medial forearm: T1 or C8?** S21 places the T1 landmark on the anteromedial
+forearm and arm; S45 calls the medial forearm part of the C8 dermatome and gives its
+nerve C8 and T1 ganglia. **Modelled** with both roots, which is S45's statement and does
+not contradict S21's.
+
+**C14 — What the posterior interosseous nerve takes from the wrist.** S39: finger and thumb
+extension, no sensory loss. S40: finger extension *and wrist extension*, and it lists the
+radial wrist extensors under the radial nerve proper and only the ulnar wrist extensor
+under the posterior interosseous. Read together, the radial wrist extensors are spared and
+the wrist deviates radially. The model tests wrist extension through the radial extensors,
+so a posterior interosseous lesion spares it.
+
+### Decisions
+
+**D27 — The plexus extends the routes; it is not a second engine.** A root is the existing
+root compartment. Beyond it a fibre runs through the trunk its root forms (S33, S34), the
+division that takes it to its nerve's cord (S34, S37), the cord, and then the named places
+along its nerve in proximal-to-distal order. A muscle or a patch of skin records *after how
+many of those places* its branch leaves, which is exactly what the level-by-level
+descriptions state (S39 for the radial nerve, S41 for the median, S38 for the ulnar). A
+lesion at a place damages everything that branches after it. Divisions are drawn and
+routed through but are not offered as lesion sites: no source read describes an isolated
+division lesion.
+
+**D28 — A disputed root makes a finding indeterminate, never normal or abnormal.** Where
+the sources disagree about a root (C10, C11), a lesion reaching a muscle or patch only
+through that root reports `indeterminate`, as the 1–3 segment crossing offset does in the
+cord (D2).
+
+**D29 — A muscle's roots come from the myotome sources, not from its nerve.** S19, S31 and
+S32 give the roots of the movement a muscle is tested by; nerve root values (S33, S34, S42,
+S43) are wider and describe everything the nerve carries. Taking a muscle's roots from its
+nerve would, for example, make a C6 root lesion weaken the deltoid (the axillary nerve is
+C5–C6) — contradicting S19 and the frozen C6 radiculopathy examination. Nerve roots are
+drawn, and a test checks each muscle's roots lie within its nerve's, but they decide
+nothing. Where only a nerve's roots are known (a single-muscle nerve such as the dorsal
+scapular), those are used.
+
+**D30 — The arm's dermatome landmarks are nerve territories too.** The thumb (C6), middle
+finger (C7), little finger (C8) and anteromedial forearm (T1) are where S21 puts the
+landmarks and also where the median, ulnar and medial antebrachial cutaneous nerves are
+tested. One mark on the body map therefore answers both questions: a finding there is
+predicted from the cord and roots *and* from the nerves that supply it. The thumb has two
+suppliers — median on the palm (S41), radial on its radial side (S46) — so losing one
+leaves it `impaired`. Three patches without a landmark (the regimental badge, the lateral
+forearm and the dorsal web space) are examined separately.
+
+**D31 — A single strength test at C5–T1 is answered by its muscles as well.** Each arm
+row of the myotome table names the muscles that perform its movement: C5 the deltoid; C6
+the biceps and the radial wrist extensors; C7 the triceps; C8 the ulnar wrist flexor and
+the thumb extensor; T1 the interossei. The row is weak when the cord model says so or when
+any of those muscles is weak.
+
+**D32 — Four new candidate families.** Each trunk and cord on either side (plexus) and each
+named nerve place on either side (nerve), complete, 36 candidates, so 1,095 in all. Each
+family keeps the equal prior share of D24, and within a plexus or nerve family every
+place is equally likely.
+
+**D33 — The sympathetic outflow is the T1 root.** S16 says the second-order neurons leave
+the cord at T1 and enter the cervical sympathetic chain; S36 attributes the Horner
+syndrome of lower plexus injury to the T1 root. A lesion of the T1 ventral root therefore
+causes an ipsilateral Horner syndrome; a lesion of the lower trunk, beyond the root, does
+not (R13).
+
+### Reviewer questions
+
+**R12** — S19 and S31 give the interossei to T1 alone. Does a C8 root lesion weaken them?
+The model says no, which is what lets it separate a C8 root lesion from a lower trunk
+lesion.
+
+**R13** — Confirm D33: a lower trunk lesion, distal to where the T1 sympathetic fibres
+leave for the chain, spares the oculosympathetic pathway.
+
+**R14** — The triceps is modelled on C7 alone (S19, S31, S32). Its C6 and C8 contributions
+are not given by any source read.
+
+**R15** — Abductor pollicis brevis is modelled on C8 and T1, each alone sufficient to weaken
+it. The sources say only that C8–T1 injury produces an ape sign (S33) and that the median
+nerve supplies the muscle (S38, S41).
+
+**R16** — Guyon's canal is one lesion site that takes both the deep motor branch and the
+little finger's sensation (S38's zone 1). Zones 2 and 3 are not modelled.
+
+**R17** — The ulnar wrist flexor is modelled as supplied below the elbow site, so a cubital
+tunnel lesion weakens it. It is widely taught that the FCU branch can arise above the
+tunnel and be spared; no source read says so either way.
+
+**R18** — The brachioradialis takes its roots from its reflex (C6 certain, C5 disputed, C3):
+no source read gives the muscle's roots directly.

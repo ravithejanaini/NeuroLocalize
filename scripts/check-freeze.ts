@@ -1,7 +1,8 @@
 // Expectations are written from sources before the engine exists, then frozen. Changing
 // one afterwards is allowed only alongside an amendment that says why.
 import { execFileSync } from 'node:child_process';
-import { resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { basename, resolve } from 'node:path';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const TAG = 'expectations-frozen';
@@ -44,4 +45,13 @@ if (!changed.has(AMENDMENTS)) {
   console.error(`  Fix the knowledge base instead, or record the reason and source in ${AMENDMENTS}.`);
   process.exit(1);
 }
-console.log(`check-freeze: ${substantive.length} amended file(s) since ${TAG}, recorded in ${AMENDMENTS}`);
+// An amendment must name each file it covers: a new entry for one file must not silently
+// license an edit to another.
+const record = readFileSync(resolve(ROOT, AMENDMENTS), 'utf8');
+const unnamed = substantive.filter((f) => !record.includes(`\`${basename(f)}\``));
+if (unnamed.length > 0) {
+  console.error(`✗ expectations changed since ${TAG} but ${AMENDMENTS} does not name them:`);
+  for (const f of unnamed) console.error(`    ${f}`);
+  process.exit(1);
+}
+console.log(`check-freeze: ${substantive.length} amended file(s) since ${TAG}, each named in ${AMENDMENTS}`);

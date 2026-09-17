@@ -66,3 +66,43 @@ situation the freeze exists to catch.
 - **A constraint on the candidate set, stated here so it cannot drift:** bilateral root
   lesions start at L1 or lower, because S09 describes the cauda equina as the roots from
   L1 down. The spinal-shock case depends on it.
+
+## A4 — 2026-09-17 — the upper limb (P4)
+
+- **Changed:** additions only; no existing assertion was altered.
+  - `types.ts` gains `PlexusRegion` (a lesion at a trunk, a cord or a named place on a
+    nerve), `LimbAssertion` (`muscle` and `skin`), `LimbEvaluation` and `LimbCase`. The
+    existing `Case`, `Assertion` and `LesionRegion` are untouched.
+  - `plexus.ts` adds twenty forward cases: both trunks that have named palsies, two root
+    avulsions, three single roots, two cords, nine nerve lesions, and a cervical hemicord
+    examined at the arm.
+  - `reverse-plexus.ts` adds five examinations: a C8 root, a lower trunk, an ulnar nerve
+    at the elbow, a radial nerve at the spiral groove, and an undifferentiated ulnar-type
+    hand in which the tool must name the separating test.
+- **Why:** P4 adds the brachial plexus. Its specification is written and committed before
+  any plexus code exists, as in P0 and P3.
+- **Sources:** S33–S46, read on 2026-09-17, with S12, S16, S19, S21 and S31. Every
+  assertion names its sources and says whether they state it of this lesion or whether it
+  is composed from where they place a root or a branch.
+- **Where the sources disagree, the expectation allows both positions** — the long
+  thoracic nerve's C7 (C10), the musculocutaneous nerve's C7 (C11) — rather than picking one.
+- **Deliberately left open,** each recorded in its case's `unasserted`: the interossei
+  after a C8 root lesion (R12), the triceps reflex after C8 loss, the little finger in
+  Guyon's canal, and the roots of the superficial radial territory.
+- **Two expectations rest on modelling a reviewer must confirm,** and say so in their
+  notes: no Horner syndrome from a lower trunk lesion (R13), and a thumb abductor weakened
+  by a C8 root lesion alone (R15).
+
+### Files amended since the tag, and the entry that covers each
+
+| File | Entry |
+|---|---|
+| `cases.ts` | A1, A2 |
+| `boundaries.ts` | A2 |
+| `index.ts` | A2 (exports the boundary cases) |
+| `reverse.ts` | A3 |
+| `types.ts` | A4 |
+| `plexus.ts` | A4 |
+| `reverse-plexus.ts` | A4 |
+
+`npm run check:freeze` requires every changed file to appear in this file by name.
