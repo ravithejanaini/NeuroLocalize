@@ -3,6 +3,7 @@
 import type {
   BladderState,
   Compartment,
+  Deformity,
   Dysreflexia,
   MotorLesion,
   Muscle,
@@ -100,6 +101,8 @@ export type LimbAssertion = Evidence &
   Sided &
   (
     | { readonly kind: 'muscle'; readonly muscles: readonly Muscle[]; readonly oneOf: readonly MuscleState[] }
+    /** A6: a deformity or posture, judged present, absent or indeterminate. */
+    | { readonly kind: 'deformity'; readonly deformity: Deformity; readonly oneOf: readonly SignState[] }
     | {
         readonly kind: 'skin';
         readonly modality: SensoryModality | 'all';

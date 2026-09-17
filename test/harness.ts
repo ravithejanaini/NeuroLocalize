@@ -81,6 +81,9 @@ export function check(a: Assertion | LimbAssertion, f: Findings): string[] {
       if (got !== want) out.push(`resolved segments: got ${got}, expected ${want}`);
       break;
     }
+    default:
+      // An assertion the harness cannot judge must fail, never pass unexamined.
+      out.push(`no judge for assertion kind '${(a as { kind: string }).kind}'`);
   }
   return out;
 }

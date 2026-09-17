@@ -43,6 +43,10 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'waiters_tip', oneOf: ['present'], cite: ['S35', 'S33'], basis: 'stated', note: 'A6: the classic posture of Erb palsy' },
+        { kind: 'deformity', side: 'L', deformity: 'winged_scapula', oneOf: ['absent'], cite: ['S35'], basis: 'stated', note: 'A6: winging points beyond the upper trunk' },
+        { kind: 'deformity', side: 'L', deformity: 'claw_hand', oneOf: ['absent'], cite: ['S35'], basis: 'composed', note: 'A6: the hand muscles are spared' },
+        { kind: 'deformity', side: 'L', deformity: 'ape_hand', oneOf: ['absent'], cite: ['S35'], basis: 'composed', note: 'A6' },
         weak(['deltoid', 'supraspinatus', 'biceps'], { cite: ['S35', 'S33'], basis: 'stated' }),
         weak(['wrist_extensors'], { cite: ['S35', 'S19'], basis: 'composed', note: 'the waiter’s tip wrist is flexed; wrist extension is C6' }),
         weak(['brachioradialis'], { cite: ['S12', 'S33'], basis: 'composed', note: 'a C5–C6 muscle whose fibres all pass the upper trunk' }),
@@ -72,6 +76,11 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'claw_hand', oneOf: ['present'], cite: ['S33', 'S36'], basis: 'stated', note: 'A6' },
+        { kind: 'deformity', side: 'L', deformity: 'ape_hand', oneOf: ['present'], cite: ['S33'], basis: 'stated', note: 'A6: S33 names the ape sign in Klumpke paralysis' },
+        { kind: 'deformity', side: 'L', deformity: 'wrist_drop', oneOf: ['absent'], cite: ['S19', 'S34'], basis: 'composed', note: 'A6: the radial wrist extensors are C6' },
+        { kind: 'deformity', side: 'L', deformity: 'winged_scapula', oneOf: ['absent'], cite: ['S34'], basis: 'composed', note: 'A6' },
+        { kind: 'deformity', side: 'L', deformity: 'waiters_tip', oneOf: ['absent'], cite: ['S35', 'S34'], basis: 'composed', note: 'A6' },
         weak(HAND, { cite: ['S33', 'S36'], basis: 'stated', note: 'intrinsic hand muscles weak; claw hand and ape sign' }),
         weak(['finger_flexor_superficial', 'wrist_flexor_ulnar'], { cite: ['S19', 'S31', 'S34'], basis: 'composed', note: 'C8 muscles; the lower trunk carries C8' }),
         weak(['thumb_extensor'], { cite: ['S31', 'S34', 'S40'], basis: 'composed',
@@ -99,6 +108,8 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'claw_hand', oneOf: ['present'], cite: ['S33', 'S36'], basis: 'stated', note: 'A6' },
+        { kind: 'deformity', side: 'L', deformity: 'ape_hand', oneOf: ['present'], cite: ['S33'], basis: 'stated', note: 'A6' },
         weak(HAND, { cite: ['S33', 'S36'], basis: 'stated' }),
         weak(['finger_flexor_superficial', 'wrist_flexor_ulnar', 'thumb_extensor'], { cite: ['S19', 'S31'], basis: 'composed' }),
         spared(['triceps', 'deltoid', 'biceps', 'rhomboids'], { cite: ['S19', 'S37'], basis: 'composed' }),
@@ -176,6 +187,8 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'waiters_tip', oneOf: ['present'], cite: ['S35', 'S33'], basis: 'composed', note: 'A6: the same muscles as Erb palsy' },
+        { kind: 'deformity', side: 'L', deformity: 'winged_scapula', oneOf: ['present'], cite: ['S35', 'S44'], basis: 'composed', note: 'A6: the long thoracic nerve takes C5–C6 from the roots' },
         weak(['deltoid', 'supraspinatus', 'biceps', 'wrist_extensors', 'brachioradialis'], { cite: ['S35', 'S19'], basis: 'composed' }),
         weak(['rhomboids', 'serratus_anterior'], { cite: ['S35', 'S37'], basis: 'stated',
           note: 'winging and rhomboid weakness are what separate the roots from the upper trunk' }),
@@ -193,6 +206,8 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'winged_scapula', oneOf: ['present', 'indeterminate'], cite: ['S34', 'S37', 'S44'], basis: 'stated', note: 'A6: as C7 to the long thoracic nerve is disputed (C10)' },
+        { kind: 'deformity', side: 'L', deformity: 'wrist_drop', oneOf: ['absent'], cite: ['S19'], basis: 'composed', note: 'A6' },
         weak(['triceps'], { cite: ['S19', 'S31', 'S32'], basis: 'stated' }),
         spared(['deltoid', 'biceps', 'rhomboids', ...HAND], { cite: ['S19', 'S37'], basis: 'composed' }),
         { kind: 'muscle', side: 'L', muscles: ['serratus_anterior'], oneOf: ['weak', 'indeterminate'], cite: ['S34', 'S37', 'S44'], basis: 'stated',
@@ -246,6 +261,7 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'claw_hand', oneOf: ['present'], cite: ['S19', 'S38'], basis: 'composed', note: 'A6: the interossei are the T1 key muscles' },
         weak(['interossei'], { cite: ['S19', 'S31'], basis: 'stated', note: 'the T1 key muscle' }),
         weak(['thumb_abductor'], { cite: ['S33'], basis: 'composed', note: 'R15' }),
         spared(['finger_flexor_ulnar', 'finger_flexor_superficial'], { cite: ['S19', 'S32'], basis: 'composed', note: 'finger flexion is C8' }),
@@ -274,7 +290,7 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
         spared(except(MUSCLES, 'rhomboids'), { cite: ['S34'], basis: 'composed' }),
         felt(SKIN_AREAS, { cite: ['S34'], basis: 'composed', note: 'S34 gives it muscles only' }),
       ],
-      unasserted: [],
+      unasserted: ['winging from rhomboid weakness: no source read describes it — A6'],
     }],
   },
   {
@@ -285,6 +301,8 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'waiters_tip', oneOf: ['absent'], cite: ['S33'], basis: 'composed', note: 'A6' },
+        { kind: 'deformity', side: 'L', deformity: 'winged_scapula', oneOf: ['absent'], cite: ['S34'], basis: 'composed', note: 'A6' },
         weak(['supraspinatus'], { cite: ['S34', 'S37'], basis: 'composed' }),
         spared(except(MUSCLES, 'supraspinatus'), { cite: ['S34', 'S42'], basis: 'composed' }),
         felt(SKIN_AREAS, { cite: ['S34'], basis: 'composed' }),
@@ -302,6 +320,9 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'wrist_drop', oneOf: ['present'], cite: ['S39', 'S37'], basis: 'composed', note: 'A6: the whole radial nerve' },
+        { kind: 'deformity', side: 'L', deformity: 'claw_hand', oneOf: ['absent'], cite: ['S37'], basis: 'composed', note: 'A6' },
+        { kind: 'deformity', side: 'L', deformity: 'waiters_tip', oneOf: ['absent'], cite: ['S33'], basis: 'composed', note: 'A6: the suprascapular and musculocutaneous nerves are spared' },
         weak(['deltoid'], { cite: ['S42', 'S37'], basis: 'composed', note: 'the axillary nerve leaves the posterior cord' }),
         weak(['triceps', ...RADIAL_BELOW_GROOVE], { cite: ['S37', 'S39', 'S40'], basis: 'composed', note: 'the whole radial nerve' }),
         spared(['biceps', 'supraspinatus', 'rhomboids', 'serratus_anterior', ...HAND, 'finger_flexor_superficial'], { cite: ['S37'], basis: 'composed' }),
@@ -322,6 +343,9 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'claw_hand', oneOf: ['present'], cite: ['S38', 'S37'], basis: 'composed', note: 'A6' },
+        { kind: 'deformity', side: 'L', deformity: 'ape_hand', oneOf: ['present'], cite: ['S41', 'S37'], basis: 'composed', note: 'A6' },
+        { kind: 'deformity', side: 'L', deformity: 'wrist_drop', oneOf: ['absent'], cite: ['S37'], basis: 'composed', note: 'A6' },
         weak([...HAND, 'wrist_flexor_ulnar', 'finger_flexor_superficial'], { cite: ['S37', 'S38', 'S41'], basis: 'composed',
           note: 'ulnar nerve, and the medial-cord contribution to the median nerve' }),
         spared(['thumb_extensor'], { cite: ['S34', 'S40'], basis: 'composed',
@@ -345,6 +369,9 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'claw_hand', oneOf: ['present'], cite: ['S38'], basis: 'stated', note: 'A6' },
+        { kind: 'deformity', side: 'L', deformity: 'ape_hand', oneOf: ['absent'], cite: ['S38'], basis: 'stated', note: 'A6: the median nerve keeps the thenar eminence' },
+        { kind: 'deformity', side: 'L', deformity: 'wrist_drop', oneOf: ['absent'], cite: ['S38'], basis: 'composed', note: 'A6' },
         weak(['finger_flexor_ulnar', 'interossei'], { cite: ['S38'], basis: 'stated' }),
         weak(['wrist_flexor_ulnar'], { cite: ['S38'], basis: 'composed', note: 'modelled as supplied below the elbow site (R17)' }),
         spared(['thumb_abductor'], { cite: ['S38'], basis: 'stated', note: 'the median nerve supplies abductor pollicis' }),
@@ -369,6 +396,8 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'claw_hand', oneOf: ['present'], cite: ['S38'], basis: 'composed', note: 'A6: the intrinsic muscles are supplied beyond the canal' },
+        { kind: 'deformity', side: 'L', deformity: 'ape_hand', oneOf: ['absent'], cite: ['S38'], basis: 'composed', note: 'A6' },
         weak(['interossei'], { cite: ['S38'], basis: 'stated' }),
         spared(['finger_flexor_ulnar', 'wrist_flexor_ulnar'], { cite: ['S38', 'S36'], basis: 'composed', note: 'supplied in the forearm, above the canal' }),
         felt(['medial_forearm'], { cite: ['S38'], basis: 'stated' }),
@@ -384,6 +413,9 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'wrist_drop', oneOf: ['present'], cite: ['S39', 'S40'], basis: 'stated', note: 'A6' },
+        { kind: 'deformity', side: 'L', deformity: 'claw_hand', oneOf: ['absent'], cite: ['S39'], basis: 'composed', note: 'A6' },
+        { kind: 'deformity', side: 'L', deformity: 'winged_scapula', oneOf: ['absent'], cite: ['S39'], basis: 'composed', note: 'A6' },
         weak(RADIAL_BELOW_GROOVE, { cite: ['S39'], basis: 'stated' }),
         spared(['triceps'], { cite: ['S39'], basis: 'stated' }),
         spared(['deltoid', 'biceps', ...HAND], { cite: ['S39', 'S37'], basis: 'composed' }),
@@ -407,6 +439,7 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'wrist_drop', oneOf: ['present'], cite: ['S39', 'S40'], basis: 'stated', note: 'A6' },
         weak(['triceps', ...RADIAL_BELOW_GROOVE], { cite: ['S39'], basis: 'stated' }),
         spared(['deltoid'], { cite: ['S42', 'S37'], basis: 'composed', note: 'the axillary nerve leaves the posterior cord separately' }),
         numb(['dorsal_web'], { cite: ['S39'], basis: 'stated' }),
@@ -429,7 +462,7 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
         felt(['dorsal_web'], { cite: ['S39'], basis: 'stated', note: 'the branch carries no sensory fibres' }),
         felt(['thumb'], { cite: ['S39'], basis: 'stated', note: 'A5: no sensory deficit' }),
       ],
-      unasserted: [],
+      unasserted: ['wrist drop: S39 spares the wrist, S40 describes a partial wrist drop (C14) — A6'],
     }],
   },
   {
@@ -440,6 +473,8 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'ape_hand', oneOf: ['present'], cite: ['S41'], basis: 'stated', note: 'A6: low median lesion' },
+        { kind: 'deformity', side: 'L', deformity: 'claw_hand', oneOf: ['absent'], cite: ['S38'], basis: 'composed', note: 'A6' },
         weak(['thumb_abductor'], { cite: ['S41', 'S38'], basis: 'stated', note: 'low median lesion: ape hand' }),
         spared(['finger_flexor_superficial'], { cite: ['S41'], basis: 'composed', note: 'PIP flexion is weak only in high lesions' }),
         spared(['finger_flexor_ulnar', 'interossei'], { cite: ['S38'], basis: 'composed' }),
@@ -459,6 +494,8 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'ape_hand', oneOf: ['present'], cite: ['S41'], basis: 'composed', note: 'A6' },
+        { kind: 'deformity', side: 'L', deformity: 'claw_hand', oneOf: ['absent'], cite: ['S38'], basis: 'composed', note: 'A6' },
         weak(['finger_flexor_superficial'], { cite: ['S41'], basis: 'stated' }),
         weak(['thumb_abductor'], { cite: ['S41'], basis: 'composed' }),
         spared(['finger_flexor_ulnar', 'interossei', 'wrist_flexor_ulnar'], { cite: ['S38'], basis: 'composed' }),
@@ -476,6 +513,8 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'waiters_tip', oneOf: ['absent'], cite: ['S33'], basis: 'composed', note: 'A6: the posture needs the suprascapular and musculocutaneous nerves too' },
+        { kind: 'deformity', side: 'L', deformity: 'winged_scapula', oneOf: ['absent'], cite: ['S42'], basis: 'composed', note: 'A6' },
         weak(['deltoid'], { cite: ['S42'], basis: 'stated' }),
         spared(except(MUSCLES, 'deltoid'), { cite: ['S42'], basis: 'composed' }),
         numb(['shoulder_badge'], { cite: ['S42'], basis: 'stated' }),
@@ -492,6 +531,7 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'waiters_tip', oneOf: ['absent'], cite: ['S33'], basis: 'composed', note: 'A6' },
         weak(['biceps'], { cite: ['S43'], basis: 'stated' }),
         spared(['brachioradialis', 'deltoid', 'wrist_extensors'], { cite: ['S40', 'S42'], basis: 'composed' }),
         numb(['lateral_forearm'], { cite: ['S43'], basis: 'stated' }),
@@ -509,6 +549,9 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'deformity', side: 'L', deformity: 'winged_scapula', oneOf: ['present'], cite: ['S44'], basis: 'stated', note: 'A6' },
+        { kind: 'deformity', side: 'L', deformity: 'waiters_tip', oneOf: ['absent'], cite: ['S44'], basis: 'composed', note: 'A6' },
+        { kind: 'deformity', side: 'L', deformity: 'wrist_drop', oneOf: ['absent'], cite: ['S44'], basis: 'composed', note: 'A6' },
         weak(['serratus_anterior'], { cite: ['S44', 'S34'], basis: 'stated', note: 'medial winging' }),
         spared(except(MUSCLES, 'serratus_anterior'), { cite: ['S44'], basis: 'composed' }),
         felt(SKIN_AREAS, { cite: ['S44'], basis: 'composed', note: 'a motor nerve' }),
@@ -537,7 +580,8 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
         { kind: 'skin', side: 'R', modality: 'posterior_column', areas: SKIN_AREAS, oneOf: ['intact'], cite: ['S01'], basis: 'stated' },
         { kind: 'reflex', side: 'L', reflex: 'biceps', oneOf: ['brisk'], cite: ['S12'], basis: 'composed' },
       ],
-      unasserted: ['left pain and temperature near the lesion: fibres ascend 1–3 segments before crossing (D2)'],
+      unasserted: [
+        'deformities: no source read describes them after upper-motor-neuron weakness — A6','left pain and temperature near the lesion: fibres ascend 1–3 segments before crossing (D2)'],
     }],
   },
 ];

@@ -113,6 +113,23 @@ situation the freeze exists to catch.
 - **Knowledge-base and engine changes from the same run** are recorded in `DECISIONS.md`
   (D34), not here: they changed no expectation.
 
+## A6 — 2026-09-17 — deformities, before any deformity code
+
+- **Changed:** additions only.
+  - `types.ts` adds a `deformity` assertion to `LimbAssertion`.
+  - `plexus.ts` adds deformity assertions to eighteen cases: winged scapula, waiter's tip,
+    wrist drop, claw hand and ape hand, present or absent as the sources describe them.
+- **Why:** the P4 exit criterion is that these deformities *derive* from where the lesion is
+  placed. The engine gave muscle strength but not the deformity, so the criterion had
+  nothing to test. As with A4, the expectations are committed before the code.
+- **Sources:** S33 (waiter's tip; claw and ape signs in Klumpke paralysis), S35 (Erb
+  posture; winging points beyond the upper trunk), S36 (claw hand), S38 (claw hand in ulnar
+  injury; median thenar sparing), S39 and S40 (wrist drop), S41 (ape hand in low median
+  lesions), S44 (medial winging from serratus weakness).
+- **Deliberately left open,** in each case's `unasserted`: wrist drop after a posterior
+  interosseous lesion (S39 and S40 disagree, C14); any deformity after upper-motor-neuron
+  weakness, which no source read describes; winging from rhomboid weakness.
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -121,8 +138,8 @@ situation the freeze exists to catch.
 | `boundaries.ts` | A2 |
 | `index.ts` | A2 (exports the boundary cases) |
 | `reverse.ts` | A3 |
-| `types.ts` | A4 |
-| `plexus.ts` | A4, A5 |
+| `types.ts` | A4, A6 |
+| `plexus.ts` | A4, A5, A6 |
 | `reverse-plexus.ts` | A4, A5 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.
