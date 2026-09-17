@@ -4,8 +4,20 @@
     {
       "name": "neurolocalize",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["scripts/serve.ts"],
+      "runtimeArgs": [
+        "scripts/serve.ts"
+      ],
       "port": 5178
+    },
+    {
+      "name": "neurolocalize-review",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "scripts/serve.ts",
+        "review",
+        "5179"
+      ],
+      "port": 5179
     }
   ]
 }

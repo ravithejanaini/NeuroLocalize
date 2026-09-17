@@ -1,84 +1,21 @@
-// Generates review/worksheet.md: every claim a clinical reviewer should check, with its
-// sources, ordered by how much of the engine's output rests on it.
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+// Writes the clinical review in two forms from one source (scripts/review-data.ts):
+// review/worksheet.md to read or print, and review/review.html to fill in and save.
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { ALL_CASES as CORD_CASES } from '../spec/expectations/index.ts';
-import { BRAIN_CASES } from '../spec/expectations/brain.ts';
-import { PLEXUS_CASES } from '../spec/expectations/plexus.ts';
-import type { Assertion, BrainAssertion, LimbAssertion } from '../spec/expectations/types.ts';
-import { KB } from '../src/kb/kb.ts';
-import { MECHANISMS } from '../src/kb/mechanisms.ts';
-import { RENDER } from '../src/kb/render.ts';
-import { metaRows } from '../test/rows.ts';
+import { buildWorksheet } from './review-data.ts';
+import type { ReviewItem, Source } from './review-lib.ts';
 
 const ROOT = resolve(import.meta.dirname, '..');
-const read = (p: string): string => readFileSync(resolve(ROOT, p), 'utf8');
+const ws = buildWorksheet();
+const of = (s: ReviewItem['section']): ReviewItem[] => ws.items.filter((i) => i.section === s);
+const cite = (xs: readonly Source[]): string => (xs.length === 0 ? '_none_' : xs.map((s) => `[${s.id}](${s.url})`).join(', '));
+const box = '☐ right ☐ wrong ☐ unsure';
+const claims = of('claim');
+const facts = of('fact');
+const questions = of('question');
+const cases = of('case');
+const composed = cases.reduce((n, c) => n + (c.findings?.length ?? 0), 0);
 
-const titles = new Map(
-  [...read('docs/SOURCES.md').matchAll(/^\| (S\d\d) \| \[([^\]]+)\]\(([^)]+)\)/gm)].map((m) => [m[1], { title: m[2], url: m[3] }]),
-);
-const cite = (ids: readonly string[]): string =>
-  ids.length === 0 ? '_none_' : ids.map((id) => `[${id}](${titles.get(id)?.url ?? '#'})`).join(', ');
-
-const reportPath = resolve(ROOT, '.mutation', 'report.json');
-const weight = new Map<string, number>();
-let scoreLine = '_Mutation report not found — run `npm run mutate` first for load-bearing order._';
-if (existsSync(reportPath)) {
-  const report = JSON.parse(readFileSync(reportPath, 'utf8')) as {
-    rawScore: number;
-    score: number;
-    byRow: Record<string, { failures: number }>;
-  };
-  for (const [id, r] of Object.entries(report.byRow)) weight.set(id, r.failures);
-  scoreLine = `Mutation score ${(report.score * 100).toFixed(1)}% over sourced rows, ${(report.rawScore * 100).toFixed(1)}% over all rows.`;
-}
-
-const rows = metaRows(KB).sort((a, b) => (weight.get(b.id) ?? 0) - (weight.get(a.id) ?? 0));
-const questions = [...read('docs/DECISIONS.md').matchAll(/^\*\*(R\d+)\*\* — ([\s\S]*?)(?=\n\n)/gm)].map(
-  (m) => `- **${m[1]}** — ${(m[2] ?? '').replace(/\n/g, ' ')}`,
-);
-
-const SIDE = { L: 'left', R: 'right', both: 'both sides' } as const;
-const span = (s: readonly [string, string]): string => (s[0] === s[1] ? s[0] : `${s[0]}–${s[1]}`);
-const any = (xs: readonly string[]): string => xs.join(' or ');
-const ALL_CASES = [...CORD_CASES, ...PLEXUS_CASES, ...BRAIN_CASES];
-const words = (xs: readonly string[]): string => xs.map((x) => x.replace(/_/g, ' ')).join(', ');
-
-function describe(a: Assertion | LimbAssertion | BrainAssertion): string {
-  switch (a.kind) {
-    case 'sensory':
-      return `${SIDE[a.side]} · ${a.modality === 'all' ? 'all sensation' : a.modality.replace('_', ' ')} · ${span(a.span)} → ${any(a.oneOf)}`;
-    case 'motor':
-      return `${SIDE[a.side]} · motor · ${span(a.span)} → ${any(a.lesion)}${a.tone ? `, tone ${any(a.tone)}` : ''}`;
-    case 'reflex':
-      return `${SIDE[a.side]} · ${a.reflex} reflex → ${any(a.oneOf)}`;
-    case 'babinski':
-    case 'horner':
-      return `${SIDE[a.side]} · ${a.kind} → ${any(a.oneOf)}`;
-    case 'qualifier':
-      return `${a.qualifier.replace(/_/g, ' ')} → ${a.present ? 'yes' : 'no'}`;
-    case 'resolvedSegments':
-      return `lesion resolves to segments ${span(a.span)}`;
-    case 'muscle':
-      return `${SIDE[a.side]} · ${words(a.muscles)} → ${any(a.oneOf)}`;
-    case 'face_sensation':
-    case 'face_weakness':
-    case 'ataxia':
-      return `${SIDE[a.side]} · ${a.kind.replace('_', ' ')} → ${any(a.oneOf)}`;
-    case 'cranial':
-      return `${SIDE[a.side]} · ${a.sign.replace(/_/g, ' ')} → ${any(a.oneOf)}`;
-    case 'vertigo':
-      return `vertigo → ${any(a.oneOf)}`;
-    case 'deformity':
-      return `${SIDE[a.side]} · ${a.deformity.replace(/_/g, ' ')} → ${any(a.oneOf)}`;
-    case 'skin':
-      return `${SIDE[a.side]} · ${a.modality === 'all' ? 'all sensation' : a.modality.replace('_', ' ')} · ${words(a.areas)} → ${any(a.oneOf)}`;
-    default:
-      return `${a.kind} → ${any(a.oneOf)}`;
-  }
-}
-
-const box = '☐ true ☐ false ☐ unsure';
 const out: string[] = [
   '# Clinical review worksheet',
   '',
@@ -88,28 +25,23 @@ const out: string[] = [
   'claims are what it teaches. Mark each one; where a claim is wrong, a one-line correction',
   'with a source is the most useful thing you can give.',
   '',
-  `${rows.length} knowledge-base claims, ${metaRows(RENDER).length} displayed facts, ${questions.length} open questions. ${scoreLine}`,
+  'The same review can be filled in on screen and saved to a file: `review/review.html`.',
+  `Worksheet version \`${ws.version}\`.`,
+  '',
+  `${claims.length} knowledge-base claims, ${facts.length} displayed facts, ${questions.length} open questions, ${composed} composed findings in ${cases.length} cases. ${ws.score}`,
   'Claims are ordered by load-bearing weight: how many expected findings fail when the claim',
   'is corrupted. The first ten carry most of the engine.',
   '',
   '## 1. Knowledge-base claims',
   '',
 ];
-rows.forEach((m, i) => {
-  out.push(`**${i + 1}. ${m.claim}**`);
-  const tags = [
-    `\`${m.id}\``,
-    `tier ${m.tier}`,
-    `sources ${m.definitional ? '_definitional_' : cite(m.sources)}`,
-    `weight ${weight.get(m.id) ?? 0}`,
-  ];
-  if (m.conflict) tags.push(`conflict ${m.conflict}`);
-  out.push(tags.join(' · '));
-  if (m.pendingSource) out.push(`> ⚠ No source read supports all of this. ${m.pendingSource}`);
-  out.push('', box, 'Book reference (Brazis / Blumenfeld, page): ____', '');
-});
-
-const shown = metaRows(RENDER);
+const row = (m: ReviewItem): void => {
+  out.push(`**${m.n}. ${m.title}**`);
+  out.push([`\`${m.id}\``, ...m.tags, `sources ${m.definitional ? '_definitional_' : cite(m.sources)}`].join(' · '));
+  if (m.warning) out.push(`> ⚠ No source read supports all of this. ${m.warning}`);
+  out.push('', box, 'Correction and source (a book and page is ideal): ____', '');
+};
+claims.forEach(row);
 out.push(
   '## 1b. Facts the tool displays',
   '',
@@ -117,45 +49,40 @@ out.push(
   'vertebra positions, myotomes, dermatome landmarks, fibre speeds and tract arrangement.',
   '',
 );
-shown.forEach((m, i) => {
-  out.push(`**${rows.length + i + 1}. ${m.claim}**`);
-  const tags = [`\`${m.id}\``, `tier ${m.tier}`, `sources ${m.definitional ? '_definitional_' : cite(m.sources)}`];
-  if (m.conflict) tags.push(`conflict ${m.conflict}`);
-  out.push(tags.join(' · '));
-  if (m.pendingSource) out.push(`> ⚠ No source read supports all of this. ${m.pendingSource}`);
-  out.push('', box, 'Book reference (Brazis / Blumenfeld, page): ____', '');
-});
+facts.forEach(row);
 
-out.push('## 2. Open questions', '', ...questions, '');
+out.push('## 2. Open questions', '', ...questions.map((q) => `- **${q.id}** — ${q.title}`), '');
 
 out.push('## 3. Disputed mechanisms', '', 'For context. The engine never uses these; they drive only the teaching layer.', '');
-for (const m of MECHANISMS) {
-  out.push(`**${m.meta.claim}** (${m.meta.tier})`);
+for (const m of ws.mechanisms) {
+  out.push(`**${m.claim}** (${m.tier})`);
   for (const p of m.positions) out.push(`- ${p.account} — ${cite(p.sources)}`);
   out.push('');
 }
 
-const composedCount = ALL_CASES.flatMap((c) => c.evaluations.flatMap((e) => e.assertions)).filter((a) => a.basis === 'composed').length;
 out.push(
   '## 4. Composed expectations',
   '',
-  `${composedCount} expected findings are not stated by any single source; they follow from`,
+  `${composed} expected findings are not stated by any single source; they follow from`,
   'several stated facts. They are the most likely place for a reasoning error. Each line is',
   'what the tool will teach for that lesion.',
   '',
 );
-for (const c of ALL_CASES) {
-  const composed = c.evaluations.flatMap((e) =>
-    e.assertions.filter((a) => a.basis === 'composed').map((a) => ({ t: e.timepoint, a })),
-  );
-  if (composed.length === 0) continue;
-  out.push(`### ${c.title} — _${c.pattern}_`, '');
-  for (const { t, a } of composed) {
-    out.push(`- ☐ ${t} · ${describe(a)} — ${cite(a.cite)}${a.note ? ` — _${a.note}_` : ''}`);
-  }
+for (const c of cases) {
+  out.push(`### ${c.title} — _${c.subtitle ?? ''}_`, '');
+  for (const f of c.findings ?? []) out.push(`- ☐ ${f.text} — ${cite(f.sources)}${f.note ? ` — _${f.note}_` : ''}`);
   out.push('');
 }
 
 mkdirSync(resolve(ROOT, 'review'), { recursive: true });
 writeFileSync(resolve(ROOT, 'review', 'worksheet.md'), `${out.join('\n')}\n`);
-console.log(`review/worksheet.md: ${rows.length} engine claims, ${shown.length} displayed facts, ${questions.length} questions, ${composedCount} composed findings`);
+
+// The page carries its data inline; `</` is escaped so no string can close the script.
+const template = readFileSync(resolve(ROOT, 'review', 'page.template.html'), 'utf8');
+const data = JSON.stringify(ws).replace(/</g, '\\u003c');
+if (!template.includes('"__WORKSHEET__"')) throw new Error('review/page.template.html has no "__WORKSHEET__" slot');
+writeFileSync(resolve(ROOT, 'review', 'review.html'), template.replace('"__WORKSHEET__"', () => data));
+
+console.log(
+  `review/worksheet.md and review/review.html (version ${ws.version}): ${claims.length} engine claims, ${facts.length} displayed facts, ${questions.length} questions, ${composed} composed findings in ${cases.length} cases`,
+);

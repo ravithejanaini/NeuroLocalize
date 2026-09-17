@@ -570,3 +570,23 @@ for teaching from a phone at the bedside: no tabs, no model until the answer is 
 lesion drawn above the case. Keys and taps choose, R reveals without choosing, N moves on,
 Esc leaves. Answers given while presenting are the room's, so they are never recorded. A
 second device driving the first would need shared state on claude.ai, which D49 rules out.
+
+## Clinical review
+
+**D52 — The review is a page to fill in and a file to send back.** Nobody with clinical
+training has checked the knowledge base, and checking it cannot be done by the tool's author.
+`npm run worksheet` now writes the same review two ways from one list
+(`scripts/review-data.ts`): `review/worksheet.md` to read or print, and `review/review.html`,
+where a reviewer marks each claim right, wrong or unsure, flags single lines of a composed
+case, and adds a correction with a source. Answers stay in the reviewer's browser until
+saved to a file; inside claude.ai the host offers the file, and where it cannot, the review is
+shown as text to copy into a message. Nothing is stored on a server, so the page can be shared
+by public link. `npm run review:ingest -- <file>` refuses malformed files, keeps each review in
+`review/responses/`, and rebuilds `review/triage.md`: what was marked wrong, in worksheet order,
+then what was unsure, then answers to items the worksheet no longer asks. Every item has a
+stable id (the row id, the question's R-number, or the case id with the finding's text), and
+each review records the worksheet version it was given on.
+- A correction is not applied because a reviewer gave it. It is a lead: the source is read,
+  and then the knowledge base changes (or a frozen expectation, by amendment), or the reason
+  it does not is recorded here. Rule 1 still holds.
+

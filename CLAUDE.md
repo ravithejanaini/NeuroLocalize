@@ -14,7 +14,8 @@ Deviations, conflicts and open reviewer questions: `docs/DECISIONS.md`.
 npm run verify      # typecheck + boundaries + freeze + tests. Must exit 0.
 npm test            # node --test, zero dependencies
 npm run mutate      # corrupts each knowledge-base row; every mutant must be killed
-npm run worksheet   # regenerates review/worksheet.md for a clinical reviewer
+npm run worksheet   # regenerates review/worksheet.md and review/review.html for a clinical reviewer
+npm run review:ingest -- <file>   # keeps a returned review, rebuilds review/triage.md
 npm run build       # compiles src/ to dist/ for the browser
 npm run serve       # serves dist/ on :5178 (preview config: .claude/launch.json)
 ```

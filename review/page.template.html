@@ -1,0 +1,536 @@
+<title>NeuroLocalize Clinical Review</title>
+<meta name="description" content="Check what NeuroLocalize teaches: mark each claim right, wrong or unsure, add a correction with a source, and save the review to a file.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#EFF0F3; --surface:#FAFAFC; --sunk:#E4E6EC;
+  --ink:#14181F; --ink2:#474E5B; --ink3:#737B89;
+  --rule:#D3D7DF; --rule2:#AEB4C0; --focus:#2F4A9E; --link:#2F4A9E;
+  --right:#27704A; --right-bg:#E3F0E8;
+  --wrong:#B23A22; --wrong-bg:#F6E4DF;
+  --unsure:#8F650C; --unsure-bg:#F4ECD9;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Source Serif 4",Georgia,serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#11151E; --surface:#171C27; --sunk:#0C1018;
+    --ink:#E9EBEF; --ink2:#A9B0BD; --ink3:#747D8C;
+    --rule:#272E3C; --rule2:#404958; --focus:#8FA6EE; --link:#8FA6EE;
+    --right:#6FC495; --right-bg:#15291F;
+    --wrong:#EE8166; --wrong-bg:#301A15;
+    --unsure:#DDB25A; --unsure-bg:#2B2413;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#11151E; --surface:#171C27; --sunk:#0C1018;
+  --ink:#E9EBEF; --ink2:#A9B0BD; --ink3:#747D8C;
+  --rule:#272E3C; --rule2:#404958; --focus:#8FA6EE; --link:#8FA6EE;
+  --right:#6FC495; --right-bg:#15291F;
+  --wrong:#EE8166; --wrong-bg:#301A15;
+  --unsure:#DDB25A; --unsure-bg:#2B2413;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+a{color:var(--link)}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--rule)}
+.top-in{max-width:880px;margin:0 auto;padding:10px 16px;display:grid;grid-template-columns:1fr auto;gap:8px 16px;align-items:center}
+.brand{font-family:var(--f-display);font-weight:700;font-size:17px;letter-spacing:-.01em;margin:0}
+.brand span{font-weight:500;color:var(--ink3)}
+.meter{grid-column:1/-1;display:flex;align-items:center;gap:12px;font-family:var(--f-mono);font-size:11.5px;color:var(--ink2);font-variant-numeric:tabular-nums;flex-wrap:wrap}
+.bar{flex:1;min-width:120px;height:6px;background:var(--sunk);display:flex;overflow:hidden}
+.bar i{display:block;height:100%}
+.bar .b-right{background:var(--right)} .bar .b-wrong{background:var(--wrong)} .bar .b-unsure{background:var(--unsure)}
+.btn{font-family:var(--f-display);font-weight:600;font-size:13.5px;padding:8px 14px;border:1px solid var(--rule2);background:var(--surface);cursor:pointer;min-height:40px}
+.btn:hover{border-color:var(--ink3)}
+.btn-main{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.btn-main:hover{opacity:.9}
+
+main{max-width:880px;margin:0 auto;padding-inline:16px;padding-block:24px 80px}
+.intro{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin-bottom:28px}
+.intro h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,4.4vw,36px);line-height:1.1;letter-spacing:-.02em;margin:0;text-wrap:balance}
+.intro p{margin:0;max-width:65ch;color:var(--ink2)}
+.who{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:10px;max-width:640px}
+.field{display:grid;gap:3px}
+.field span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.field input,.note textarea,.note input{background:var(--surface);border:1px solid var(--rule2);padding:8px 10px;width:100%}
+.field input:focus,.note textarea:focus,.note input:focus{border-color:var(--focus);outline:none}
+.facts{font-family:var(--f-mono);font-size:12px;color:var(--ink3);margin:0}
+
+.nav{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--top-h,96px));z-index:4;background:var(--ground);padding-block:8px;border-bottom:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-bottom:8px}
+.nav a{font-family:var(--f-display);font-weight:600;font-size:13px;color:var(--ink2);text-decoration:none}
+.nav a:hover{color:var(--ink)}
+.nav a b{font-family:var(--f-mono);font-weight:400;font-size:11px;color:var(--ink3);margin-left:3px}
+.filters{margin-left:auto;display:inline-flex;border:1px solid var(--rule2)}
+.filters label{position:relative;font-family:var(--f-mono);font-size:11px;padding:5px 9px;cursor:pointer;color:var(--ink2)}
+.filters input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.filters label:has(input:checked){background:var(--ink);color:var(--ground)}
+.filters label:has(input:focus-visible){outline:2px solid var(--focus);outline-offset:-2px}
+
+section.part{padding-top:28px;scroll-margin-top:150px}
+section.part > h2{font-family:var(--f-display);font-weight:700;font-size:21px;margin:0 0 4px;letter-spacing:-.01em}
+section.part > p{margin:0 0 14px;color:var(--ink2);max-width:65ch;font-size:15px}
+.items{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+
+.item{background:var(--surface);border:1px solid var(--rule);display:grid;grid-template-columns:3.2em 1fr;gap:0 12px;padding:14px 16px 14px 10px;scroll-margin-top:160px}
+.item[data-verdict="right"]{border-left:4px solid var(--right)}
+.item[data-verdict="wrong"]{border-left:4px solid var(--wrong)}
+.item[data-verdict="unsure"]{border-left:4px solid var(--unsure)}
+.num{font-family:var(--f-mono);font-size:12px;color:var(--ink3);text-align:right;padding-top:3px;font-variant-numeric:tabular-nums}
+.body{display:grid;gap:8px;min-width:0}
+.claim{margin:0;font-size:16.5px;line-height:1.5}
+.claim em{font-style:italic;color:var(--ink2)}
+.meta{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;font-family:var(--f-mono);font-size:11px;color:var(--ink3)}
+.meta code{font-family:inherit;color:var(--ink2);overflow-wrap:anywhere}
+.src{display:inline-flex;flex-wrap:wrap;gap:4px}
+.src a{font-family:var(--f-mono);font-size:11px;text-decoration:none;border:1px solid var(--rule2);padding:0 5px;line-height:1.7}
+.src a:hover{border-color:var(--link)}
+.warn{margin:0;font-size:13.5px;color:var(--ink2);background:var(--unsure-bg);border-left:3px solid var(--unsure);padding:5px 10px}
+.warn b{color:var(--unsure);font-family:var(--f-display);font-weight:600}
+
+.verdict{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.verdict label{position:relative;font-family:var(--f-display);font-weight:600;font-size:13px;padding:6px 12px;border:1px solid var(--rule2);cursor:pointer;min-height:36px;display:inline-flex;align-items:center;gap:6px}
+.verdict input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.verdict label:has(input:focus-visible){outline:2px solid var(--focus);outline-offset:2px}
+.verdict label::before{content:"";width:9px;height:9px;border:1.5px solid currentColor;border-radius:50%}
+.verdict .v-right:has(input:checked){background:var(--right-bg);border-color:var(--right);color:var(--right)}
+.verdict .v-wrong:has(input:checked){background:var(--wrong-bg);border-color:var(--wrong);color:var(--wrong)}
+.verdict .v-unsure:has(input:checked){background:var(--unsure-bg);border-color:var(--unsure);color:var(--unsure)}
+.verdict label:has(input:checked)::before{background:currentColor}
+.verdict .clear{font-family:var(--f-mono);font-size:11px;color:var(--ink3);background:none;border:0;cursor:pointer;padding:4px;text-decoration:underline}
+
+.note{display:grid;gap:6px}
+.note summary{font-family:var(--f-mono);font-size:11.5px;color:var(--ink2);cursor:pointer;width:max-content}
+.note textarea{min-height:64px;resize:vertical;font-size:14.5px}
+.note input{font-size:14px}
+.note-in{display:grid;gap:6px;margin-top:6px}
+
+.findings{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.finding{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:6px 0;border-bottom:1px solid var(--rule);align-items:start}
+.finding .ft{font-family:var(--f-mono);font-size:12.5px;line-height:1.5;overflow-wrap:anywhere}
+.finding .fn{grid-column:1;font-size:13px;color:var(--ink2);font-style:italic}
+.finding .src{grid-column:1}
+.flag{grid-column:2;grid-row:1/span 3;font-family:var(--f-mono);font-size:11px;border:1px solid var(--rule2);background:var(--surface);padding:4px 8px;cursor:pointer;min-height:32px;white-space:nowrap}
+.flag[aria-pressed="true"]{background:var(--wrong-bg);border-color:var(--wrong);color:var(--wrong)}
+.finding:has(.flag[aria-pressed="true"]) .ft{color:var(--wrong)}
+.subtitle{margin:0;font-style:italic;color:var(--ink2);font-size:14.5px}
+.case-title{margin:0;font-family:var(--f-display);font-weight:600;font-size:16px}
+
+.mech{margin:18px 0 0;padding:12px 16px;border:1px dashed var(--rule2);display:grid;gap:10px}
+.mech h3{margin:0;font-family:var(--f-display);font-size:14px}
+.mech p{margin:0;font-size:14.5px}
+.mech ul{margin:4px 0 0;padding-left:18px;font-size:14px;color:var(--ink2)}
+
+.empty{padding:14px;color:var(--ink3);font-style:italic}
+dialog{max-width:min(640px,calc(100vw - 32px));border:1px solid var(--rule2);background:var(--surface);color:var(--ink);padding:18px}
+dialog::backdrop{background:rgba(10,12,18,.45)}
+dialog h2{margin:0 0 8px;font-family:var(--f-display);font-size:18px}
+dialog p{margin:0 0 10px;font-size:15px;color:var(--ink2)}
+dialog textarea{width:100%;height:180px;font-family:var(--f-mono);font-size:11px;background:var(--ground);border:1px solid var(--rule2);padding:8px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.status{font-family:var(--f-mono);font-size:12px;color:var(--ink2);min-height:1.4em;margin:0}
+.file{position:relative;overflow:hidden;display:inline-flex;align-items:center}
+.file input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.file:has(input:focus-visible){outline:2px solid var(--focus);outline-offset:2px}
+
+@media (max-width:560px){
+  .item{grid-template-columns:1fr;padding:12px}
+  .num{text-align:left;padding:0 0 2px}
+  .filters{margin-left:0}
+  .finding{grid-template-columns:1fr}
+  .flag{grid-column:1;grid-row:auto;justify-self:start}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+@media print{
+  .top,.nav,.note summary,.verdict .clear,.flag,.row{display:none}
+  body{background:#fff;color:#000}
+  .item{break-inside:avoid;border:1px solid #999}
+  .note[open] .note-in,.note .note-in{display:grid}
+}
+</style>
+
+<header class="top" id="top">
+  <div class="top-in">
+    <p class="brand">NeuroLocalize <span>clinical review</span></p>
+    <button type="button" class="btn btn-main" id="save">Save review to a file</button>
+    <div class="meter" aria-live="polite">
+      <span id="count">0 answered</span>
+      <span class="bar" aria-hidden="true"><i class="b-right" id="b-right"></i><i class="b-wrong" id="b-wrong"></i><i class="b-unsure" id="b-unsure"></i></span>
+      <span id="breakdown"></span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="intro">
+    <h1>Is this what a student should be taught?</h1>
+    <p>NeuroLocalize is a teaching tool for localising lesions, from the cortex to the nerves of the hand. Every finding it shows is computed from the claims below, and each claim cites the open-access sources it was taken from. Nobody with clinical training has checked them yet. That is what this page asks of you.</p>
+    <p>Mark each claim <b>right</b>, <b>wrong</b> or <b>not sure</b>. Where something is wrong, a one-line correction with a source (a textbook and page is ideal) is the most useful thing you can give. Claims are ordered by how much of the tool rests on them, so the first twenty matter most; stopping part-way is fine.</p>
+    <p>Your answers stay in this browser as you go. When you have finished, or want to stop, press <b>Save review to a file</b> and send the file back to whoever sent you this page.</p>
+    <div class="who">
+      <label class="field" for="rev-name"><span>Your name</span><input id="rev-name" autocomplete="name"></label>
+      <label class="field" for="rev-role"><span>Role or speciality</span><input id="rev-role" placeholder="e.g. neurology registrar"></label>
+    </div>
+    <p class="facts" id="facts"></p>
+    <div class="row">
+      <label class="btn file">Continue from a saved file<input type="file" id="load" accept="application/json,.json"></label>
+      <p class="status" id="load-status" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <nav class="nav" id="nav" aria-label="Sections">
+    <a href="#part-claim">Claims<b id="n-claim"></b></a>
+    <a href="#part-fact">Drawn facts<b id="n-fact"></b></a>
+    <a href="#part-question">Questions<b id="n-question"></b></a>
+    <a href="#part-case">Cases<b id="n-case"></b></a>
+    <span class="filters" role="radiogroup" aria-label="Show">
+      <label><input type="radio" name="show" value="all" checked>All</label>
+      <label><input type="radio" name="show" value="open">Unanswered</label>
+      <label><input type="radio" name="show" value="wrong">Wrong</label>
+      <label><input type="radio" name="show" value="unsure">Not sure</label>
+    </span>
+  </nav>
+
+  <section class="part" id="part-claim">
+    <h2>Claims the tool computes from</h2>
+    <p>Each is a row in the knowledge base. “Weight” is how many expected findings fail when the claim is deliberately corrupted, so it measures how much depends on it. A tier of T3 means the sources disagree and both positions are kept.</p>
+    <ol class="items" id="list-claim"></ol>
+  </section>
+  <section class="part" id="part-fact">
+    <h2>Facts the tool draws</h2>
+    <p>These change no computed finding, but they are drawn or printed: positions, myotomes, dermatome landmarks, fibre speeds and tract arrangement.</p>
+    <ol class="items" id="list-fact"></ol>
+  </section>
+  <section class="part" id="part-question">
+    <h2>Open questions</h2>
+    <p>Places where no source read settled the matter and a modelling choice was made. <b>Right</b> means the choice is sound; <b>wrong</b> means it should change, and the note should say how.</p>
+    <ol class="items" id="list-question"></ol>
+    <div class="mech" id="mechanisms"></div>
+  </section>
+  <section class="part" id="part-case">
+    <h2>What the tool teaches for each lesion</h2>
+    <p>These findings are stated by no single source; they follow from several claims together, which makes them the likeliest place for a reasoning error. Flag any line that is wrong, then give the case a verdict.</p>
+    <ol class="items" id="list-case"></ol>
+  </section>
+</main>
+
+<dialog id="fallback" aria-labelledby="fb-title">
+  <h2 id="fb-title">Copy your review instead</h2>
+  <p id="fb-why">This page could not offer a file here. Copy the text below and paste it into an email or message to whoever sent you this page.</p>
+  <textarea id="fb-text" readonly aria-label="Your review as text"></textarea>
+  <div class="row">
+    <button type="button" class="btn btn-main" id="fb-copy">Copy</button>
+    <button type="button" class="btn" id="fb-close">Close</button>
+    <p class="status" id="fb-status" aria-live="polite"></p>
+  </div>
+</dialog>
+
+<script type="application/json" id="worksheet">"__WORKSHEET__"</script>
+<script>
+(() => {
+  'use strict';
+  const WS = JSON.parse(document.getElementById('worksheet').textContent);
+  const KEY = 'neurolocalize.review.draft';
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, attrs, ...kids) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (v === undefined || v === null || v === false) continue;
+      if (k === 'class') n.className = v;
+      else if (k === 'text') n.textContent = v;
+      else n.setAttribute(k, v === true ? '' : v);
+    }
+    for (const kid of kids) if (kid !== null && kid !== undefined) n.append(kid);
+    return n;
+  };
+
+  // ── state ────────────────────────────────────────────────────────────
+  const state = { reviewer: { name: '', role: '' }, answers: {} };
+  let show = 'all';
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (saved && typeof saved === 'object' && saved.answers && typeof saved.answers === 'object') {
+      state.answers = saved.answers;
+      if (saved.reviewer) state.reviewer = { name: String(saved.reviewer.name || ''), role: String(saved.reviewer.role || '') };
+    }
+  } catch { /* A private window keeps nothing; the page still works. */ }
+  let pending = 0;
+  const persist = () => {
+    clearTimeout(pending);
+    pending = setTimeout(() => {
+      try { localStorage.setItem(KEY, JSON.stringify({ worksheet: WS.version, ...state })); } catch { /* not kept */ }
+    }, 250);
+  };
+  const answer = (id) => state.answers[id] || (state.answers[id] = {});
+  const tidy = (id) => {
+    const a = state.answers[id];
+    if (!a) return;
+    if (!a.verdict) delete a.verdict;
+    if (!a.correction) delete a.correction;
+    if (!a.source) delete a.source;
+    if (a.flagged && !a.flagged.length) delete a.flagged;
+    if (!Object.keys(a).length) delete state.answers[id];
+  };
+
+  // ── building the page ─────────────────────────────────────────────────
+  const sources = (list, definitional) => {
+    if (definitional) return el('span', { text: 'definitional' });
+    if (!list.length) return null;
+    return el('span', { class: 'src' }, ...list.map((s) => el('a', { href: s.url, target: '_blank', rel: 'noopener', text: s.id })));
+  };
+  const LABELS = {
+    case: { right: 'All right', wrong: 'Something wrong', unsure: 'Not sure' },
+    question: { right: 'The choice is sound', wrong: 'Should change', unsure: 'Not sure' },
+    other: { right: 'Right', wrong: 'Wrong', unsure: 'Not sure' },
+  };
+  const rows = new Map();
+
+  function verdictControl(item) {
+    const labels = LABELS[item.section] || LABELS.other;
+    const name = `v-${item.id}`;
+    const wrap = el('div', { class: 'verdict', role: 'radiogroup', 'aria-label': `Verdict on ${item.section} ${item.n}` });
+    for (const v of ['right', 'wrong', 'unsure']) {
+      const input = el('input', { type: 'radio', name, value: v, id: `${name}-${v}` });
+      input.checked = state.answers[item.id]?.verdict === v;
+      input.addEventListener('change', () => setVerdict(item, v));
+      wrap.append(el('label', { class: `v-${v}`, for: input.id }, input, labels[v]));
+    }
+    const clear = el('button', { type: 'button', class: 'clear', text: 'clear' });
+    clear.addEventListener('click', () => setVerdict(item, undefined));
+    wrap.append(clear);
+    return wrap;
+  }
+
+  function noteControl(item) {
+    const a = state.answers[item.id] || {};
+    const details = el('details', { class: 'note' });
+    details.open = Boolean(a.correction || a.source || a.verdict === 'wrong');
+    const text = el('textarea', { id: `c-${item.id}`, placeholder: item.section === 'case' ? 'What is wrong, and what should it be?' : 'Correction, or a comment' });
+    text.value = a.correction || '';
+    text.addEventListener('input', () => { answer(item.id).correction = text.value.trim(); tidy(item.id); persist(); });
+    const src = el('input', { id: `s-${item.id}`, placeholder: 'Source: book, edition and page, or a link' });
+    src.value = a.source || '';
+    src.addEventListener('input', () => { answer(item.id).source = src.value.trim(); tidy(item.id); persist(); });
+    details.append(
+      el('summary', { text: 'Correction and source' }),
+      el('div', { class: 'note-in' },
+        el('label', { class: 'field', for: text.id }, el('span', { text: 'Correction or comment' }), text),
+        el('label', { class: 'field', for: src.id }, el('span', { text: 'Source' }), src)),
+    );
+    return details;
+  }
+
+  function findingList(item) {
+    const list = el('ul', { class: 'findings' });
+    for (const f of item.findings) {
+      const on = (state.answers[item.id]?.flagged || []).includes(f.id);
+      const flag = el('button', { type: 'button', class: 'flag', 'aria-pressed': String(on), text: on ? 'Flagged wrong' : 'Flag as wrong' });
+      flag.addEventListener('click', () => toggleFlag(item, f.id, flag));
+      list.append(el('li', { class: 'finding' },
+        el('span', { class: 'ft', text: f.text }),
+        flag,
+        f.note ? el('span', { class: 'fn', text: f.note }) : null,
+        sources(f.sources)));
+    }
+    return list;
+  }
+
+  function render(item) {
+    const head = item.section === 'case'
+      ? [el('p', { class: 'case-title', text: item.title }), el('p', { class: 'subtitle', text: item.subtitle || '' })]
+      : [el('p', { class: 'claim', text: item.title })];
+    const meta = el('div', { class: 'meta' },
+      item.section === 'question' ? null : el('code', { text: item.section === 'case' ? `${item.findings.length} findings` : item.id }),
+      ...item.tags.map((t) => el('span', { text: t })),
+      sources(item.sources, item.definitional));
+    const body = el('div', { class: 'body' }, ...head, meta);
+    if (item.warning) body.append(el('p', { class: 'warn' }, el('b', { text: 'No source read supports all of this. ' }), item.warning));
+    if (item.findings) body.append(findingList(item));
+    body.append(verdictControl(item), noteControl(item));
+    const num = item.section === 'question' ? item.id : String(item.n);
+    const li = el('li', { class: 'item', id: `item-${item.id}` }, el('span', { class: 'num', text: num }), body);
+    rows.set(item.id, li);
+    paint(item.id);
+    return li;
+  }
+
+  for (const s of ['claim', 'fact', 'question', 'case']) {
+    const items = WS.items.filter((i) => i.section === s);
+    $(`list-${s}`).append(...items.map(render));
+    $(`n-${s}`).textContent = String(items.length);
+  }
+  const mech = $('mechanisms');
+  mech.append(el('h3', { text: 'For context: disputed mechanisms' }), el('p', { text: 'The tool never computes from these; they appear only in its explanations. Nothing to mark.' }));
+  for (const m of WS.mechanisms) {
+    mech.append(el('div', {},
+      el('p', { text: `${m.claim} (${m.tier})` }),
+      el('ul', {}, ...m.positions.map((p) => el('li', {}, `${p.account} `, sources(p.sources))))));
+  }
+  const findings = WS.items.reduce((n, i) => n + (i.findings ? i.findings.length : 0), 0);
+  $('facts').textContent = `${WS.items.length} items · ${findings} findings in the cases · worksheet ${WS.version} · ${WS.score}`;
+
+  // ── changes ───────────────────────────────────────────────────────────
+  function setVerdict(item, v) {
+    answer(item.id).verdict = v;
+    if (v === undefined) for (const r of rows.get(item.id).querySelectorAll('.verdict input')) r.checked = false;
+    if (v === 'wrong') rows.get(item.id).querySelector('details.note').open = true;
+    tidy(item.id);
+    paint(item.id);
+    persist();
+  }
+  function toggleFlag(item, fid, button) {
+    const a = answer(item.id);
+    const set = new Set(a.flagged || []);
+    if (set.has(fid)) set.delete(fid); else set.add(fid);
+    a.flagged = [...set];
+    const on = set.has(fid);
+    button.setAttribute('aria-pressed', String(on));
+    button.textContent = on ? 'Flagged wrong' : 'Flag as wrong';
+    if (on && a.verdict !== 'wrong') {
+      const radio = rows.get(item.id).querySelector('input[value="wrong"]');
+      radio.checked = true;
+      setVerdict(item, 'wrong');
+      return;
+    }
+    tidy(item.id);
+    persist();
+  }
+  function paint(id) {
+    const li = rows.get(id);
+    const v = state.answers[id]?.verdict;
+    if (v) li.dataset.verdict = v; else delete li.dataset.verdict;
+    applyFilter(li);
+    meter();
+  }
+
+  function applyFilter(li) {
+    const v = li.dataset.verdict;
+    li.hidden = show === 'all' ? false : show === 'open' ? Boolean(v) : v !== show;
+  }
+  for (const r of document.querySelectorAll('input[name="show"]')) {
+    r.addEventListener('change', () => {
+      show = r.value;
+      rows.forEach(applyFilter);
+      for (const list of document.querySelectorAll('.items')) {
+        const none = [...list.children].every((c) => c.hidden || c.classList.contains('empty'));
+        let note = list.querySelector('.empty');
+        if (none && !note) list.append(note = el('li', { class: 'empty', text: 'Nothing here under this filter.' }));
+        if (note) note.hidden = !none;
+      }
+    });
+  }
+
+  function meter() {
+    const total = WS.items.length;
+    const known = WS.items.map((i) => state.answers[i.id]?.verdict).filter(Boolean);
+    const n = (v) => known.filter((x) => x === v).length;
+    $('count').textContent = `${known.length} of ${total} answered`;
+    $('breakdown').textContent = `${n('right')} right · ${n('wrong')} wrong · ${n('unsure')} not sure`;
+    for (const v of ['right', 'wrong', 'unsure']) $(`b-${v}`).style.width = `${(n(v) / total) * 100}%`;
+  }
+
+  const name = $('rev-name');
+  const role = $('rev-role');
+  name.value = state.reviewer.name;
+  role.value = state.reviewer.role;
+  name.addEventListener('input', () => { state.reviewer.name = name.value.trim(); persist(); });
+  role.addEventListener('input', () => { state.reviewer.role = role.value.trim(); persist(); });
+
+  // Keep the section bar under the header, whatever height the header wraps to.
+  const top = $('top');
+  const fit = () => document.documentElement.style.setProperty('--top-h', `${top.offsetHeight}px`);
+  new ResizeObserver(fit).observe(top);
+  fit();
+
+  // ── saving and loading ────────────────────────────────────────────────
+  const response = () => {
+    const answers = {};
+    for (const [id, a] of Object.entries(state.answers)) if (Object.keys(a).length) answers[id] = a;
+    return { kind: 'neurolocalize-review', format: 1, worksheet: WS.version, reviewer: state.reviewer, savedAt: new Date().toISOString(), answers };
+  };
+  const fileName = () => {
+    const who = (state.reviewer.name || 'reviewer').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'reviewer';
+    return `neurolocalize-review-${who}-${new Date().toISOString().slice(0, 10)}.json`;
+  };
+  const fallback = (why) => {
+    $('fb-why').textContent = why;
+    $('fb-text').value = JSON.stringify(response(), null, 1);
+    $('fb-status').textContent = '';
+    $('fallback').showModal();
+    $('fb-text').select();
+  };
+  $('save').addEventListener('click', async () => {
+    const text = JSON.stringify(response(), null, 1);
+    if (window.claude && typeof window.claude.use === 'function') {
+      let downloads = null;
+      try { downloads = await window.claude.use('downloads'); } catch { downloads = null; }
+      if (!downloads) return fallback('This page cannot offer a file here. Copy the text below and paste it into an email or message to whoever sent you this page.');
+      try {
+        await downloads.save({ filename: fileName(), data: new Blob([text], { type: 'application/json' }) });
+      } catch (err) {
+        if (err && err.code === 'declined') return;
+        if (err && err.code === 'rate_limited') return;
+        fallback('The file could not be saved. Copy the text below and paste it into an email or message to whoever sent you this page.');
+      }
+      return;
+    }
+    // Opened as a local file: an ordinary download works.
+    const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+    const a = el('a', { href: url, download: fileName() });
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+  $('fb-close').addEventListener('click', () => $('fallback').close());
+  $('fb-copy').addEventListener('click', async () => {
+    const t = $('fb-text');
+    t.select();
+    try {
+      await navigator.clipboard.writeText(t.value);
+      $('fb-status').textContent = 'Copied.';
+    } catch {
+      $('fb-status').textContent = 'Select the text and copy it with your keyboard.';
+    }
+  });
+
+  $('load').addEventListener('change', async (e) => {
+    const input = e.target;
+    const file = input.files && input.files[0];
+    input.value = '';
+    if (!file) return;
+    let data = null;
+    try { data = JSON.parse(await file.text()); } catch { data = null; }
+    if (!data || data.kind !== 'neurolocalize-review' || typeof data.answers !== 'object' || data.answers === null) {
+      $('load-status').textContent = 'That file is not a review saved from this page. Nothing changed.';
+      return;
+    }
+    const known = new Set(WS.items.map((i) => i.id));
+    let taken = 0;
+    for (const [id, a] of Object.entries(data.answers)) {
+      if (!known.has(id) || typeof a !== 'object' || a === null) continue;
+      state.answers[id] = {
+        ...(['right', 'wrong', 'unsure'].includes(a.verdict) ? { verdict: a.verdict } : {}),
+        ...(typeof a.correction === 'string' && a.correction ? { correction: a.correction } : {}),
+        ...(typeof a.source === 'string' && a.source ? { source: a.source } : {}),
+        ...(Array.isArray(a.flagged) ? { flagged: a.flagged.filter((x) => typeof x === 'string') } : {}),
+      };
+      tidy(id);
+      taken++;
+    }
+    if (data.reviewer && typeof data.reviewer === 'object') {
+      state.reviewer = { name: String(data.reviewer.name || ''), role: String(data.reviewer.role || '') };
+      name.value = state.reviewer.name;
+      role.value = state.reviewer.role;
+    }
+    // Rebuild every row so the controls show what was loaded.
+    for (const item of WS.items) rows.get(item.id).replaceWith(render(item));
+    persist();
+    $('load-status').textContent = `Loaded ${taken} ${taken === 1 ? 'answer' : 'answers'}.`;
+  });
+})();
+</script>

@@ -35,8 +35,10 @@ teaching from a phone.
   routes, and tests hold the drawing to them.
 - **Mutation testing** corrupts every knowledge-base value and requires a frozen forward
   case or a frozen examination to fail.
-- **A review worksheet** (`review/worksheet.md`) turns clinical review into a list of
-  claims with citations and open questions.
+- **A clinical review** turns every claim into something a clinician can mark: read or
+  print `review/worksheet.md`, or fill in `review/review.html` and save the answers to a file.
+  `npm run review:ingest -- <file>` sorts returned reviews into `review/triage.md`. No review
+  has been returned yet, so nothing here has been checked by a clinician.
 
 ## Run it
 
