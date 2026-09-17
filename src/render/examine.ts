@@ -5,8 +5,9 @@ import { FAMILY_NAME, levelText as placedText } from '../engine/names.ts';
 import { SITE_NAME, slotKey } from '../engine/reverse.ts';
 import type { RenderKb } from '../kb/types.ts';
 import {
+  ARM_MUSCLES,
   CRANIAL_SIGNS,
-  MUSCLES,
+  LEG_MUSCLES,
   REFLEXES,
   SEGMENTS,
   SIDES,
@@ -39,6 +40,17 @@ export const MUSCLE_NAME: Record<Muscle, { readonly movement: string; readonly m
   finger_flexor_ulnar: { movement: 'little finger flexion at the DIP joint', muscle: 'flexor digitorum profundus, ulnar half' },
   thumb_abductor: { movement: 'thumb abduction', muscle: 'abductor pollicis brevis' },
   interossei: { movement: 'finger abduction', muscle: 'first dorsal interosseous' },
+  iliopsoas: { movement: 'hip flexion', muscle: 'iliopsoas' },
+  hip_adductors: { movement: 'hip adduction', muscle: 'adductors (obturator)' },
+  quadriceps: { movement: 'knee extension', muscle: 'quadriceps femoris' },
+  gluteus_medius: { movement: 'hip abduction', muscle: 'gluteus medius' },
+  gluteus_maximus: { movement: 'hip extension', muscle: 'gluteus maximus' },
+  hamstrings: { movement: 'knee flexion', muscle: 'hamstrings' },
+  tibialis_anterior: { movement: 'ankle dorsiflexion', muscle: 'tibialis anterior' },
+  toe_extensor: { movement: 'great toe extension', muscle: 'extensor hallucis longus' },
+  fibularis: { movement: 'ankle eversion', muscle: 'fibularis longus' },
+  tibialis_posterior: { movement: 'ankle inversion', muscle: 'tibialis posterior' },
+  gastrocnemius: { movement: 'ankle plantar flexion', muscle: 'gastrocnemius' },
 };
 
 export const CRANIAL_NAME: Record<CranialSign, string> = {
@@ -57,6 +69,15 @@ export const AREA_NAME: Record<SkinArea, string> = {
   middle_finger: 'middle finger',
   little_finger: 'little finger',
   medial_forearm: 'medial forearm',
+  anterior_thigh: 'anterior thigh',
+  medial_thigh: 'medial thigh',
+  lateral_thigh: 'lateral thigh',
+  medial_leg: 'medial leg, to the medial malleolus',
+  lateral_leg: 'anterolateral leg',
+  dorsum_foot: 'dorsum of the foot',
+  first_web: 'first web space of the foot',
+  lateral_foot: 'lateral foot (sural)',
+  sole: 'sole of the foot',
 };
 const escape = (s: string): string =>
   s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] ?? c);
@@ -210,14 +231,19 @@ export function examTables(render: RenderKb, findings: Findings): string {
     }).join('')}</tr>`;
   const single = (s: Slot, name: string): string =>
     `<tr><th colspan="2">${name}</th><td colspan="2">${cell(slotKey(s), get(s), slotLabel(render, s))}</td></tr>`;
-  const arm = MUSCLES.map((muscle) => {
-    const cells = SIDES.map((side) => {
-      const s: Slot = { kind: 'muscle', side, muscle };
-      return `<td>${cell(slotKey(s), get(s), slotLabel(render, s))}</td>`;
-    }).join('');
-    const n = MUSCLE_NAME[muscle];
-    return `<tr><th class="mus" colspan="2">${n.movement}<span class="mus-name">${n.muscle}</span></th>${cells}</tr>`;
-  }).join('');
+  const muscleRows = (list: readonly Muscle[]): string =>
+    list
+      .map((muscle) => {
+        const cells = SIDES.map((side) => {
+          const s: Slot = { kind: 'muscle', side, muscle };
+          return `<td>${cell(slotKey(s), get(s), slotLabel(render, s))}</td>`;
+        }).join('');
+        const n = MUSCLE_NAME[muscle];
+        return `<tr><th class="mus" colspan="2">${n.movement}<span class="mus-name">${n.muscle}</span></th>${cells}</tr>`;
+      })
+      .join('');
+  const arm = muscleRows(ARM_MUSCLES);
+  const leg = muscleRows(LEG_MUSCLES);
   const headRow = (label: string, slotOf: (side: 'L' | 'R') => Slot): string =>
     `<tr><th colspan="2">${label}</th>${SIDES.map((side) => {
       const s = slotOf(side);
@@ -233,6 +259,7 @@ export function examTables(render: RenderKb, findings: Findings): string {
     ${single({ kind: 'vertigo' }, 'Vertigo, nystagmus')}</tbody>
     <thead><tr><th colspan="2">Strength</th><th>Left</th><th>Right</th></tr></thead><tbody>${strength}</tbody>
     <thead><tr><th colspan="2">Arm, muscle by muscle</th><th>Left</th><th>Right</th></tr></thead><tbody>${arm}</tbody>
+    <thead><tr><th colspan="2">Leg, muscle by muscle</th><th>Left</th><th>Right</th></tr></thead><tbody>${leg}</tbody>
     <thead><tr><th colspan="2">Reflexes and signs</th><th>Left</th><th>Right</th></tr></thead><tbody>${reflexes}
     ${sided('babinski', 'Babinski')}${sided('horner', 'Horner')}
     ${single({ kind: 'romberg' }, 'Romberg')}${single({ kind: 'bladder' }, 'Bladder')}</tbody></table>`;

@@ -5,7 +5,7 @@ import { SOURCES } from '../kb/sources.ts';
 import type { Kb, Meta, RenderKb } from '../kb/types.ts';
 import { RENDER } from '../kb/render.ts';
 import { REFLEXES, SEGMENTS, SIDES, type Segment, type SensoryModality, type SensoryState, type Side } from '../kb/vocab.ts';
-import { armAffected, armMuscleTable, armSkinTable, deformityChips } from './arm.ts';
+import { ARM, deformityChips, LEG, limbAffected, muscleTable, skinTable } from './arm.ts';
 import { headHtml } from './head.ts';
 import { bodyMapSvg, myotomeTable, sensoryLevelText } from './svg.ts';
 
@@ -221,11 +221,28 @@ export class Panel {
           'deformity.claw-hand',
           'deformity.ape-hand',
         ],
-        body: armAffected(f)
-          ? `${deformityChips(f)}<details class="arm-more" open><summary>Muscle by muscle</summary>${armMuscleTable(f)}</details>` +
-            `<details class="arm-more"><summary>Nerve territories</summary>${armSkinTable(f)}</details>`
+        body: limbAffected(f, ARM)
+          ? `${deformityChips(f, ARM)}<details class="arm-more" open><summary>Muscle by muscle</summary>${muscleTable(f, ARM)}</details>` +
+            `<details class="arm-more"><summary>Nerve territories</summary>${skinTable(f, ARM)}</details>`
           : '<p class="quiet">Every arm muscle strong and every territory intact.</p>',
         note: 'Uncertain marks a root the sources disagree about; a deformity is only called after lower-motor-neuron weakness.',
+      },
+      {
+        title: 'Leg',
+        drivers: [
+          'plexus.leg-parts',
+          'nerve.femoral',
+          'nerve.sciatic',
+          'nerve.common-fibular',
+          'nerve.tibial',
+          'deformity.foot-drop',
+          'deformity.trendelenburg',
+        ],
+        body: limbAffected(f, LEG)
+          ? `${deformityChips(f, LEG)}<details class="arm-more" open><summary>Muscle by muscle</summary>${muscleTable(f, LEG)}</details>` +
+            `<details class="arm-more"><summary>Nerve territories</summary>${skinTable(f, LEG)}</details>`
+          : '<p class="quiet">Every leg muscle strong and every territory intact.</p>',
+        note: 'Uncertain marks a root no source settles, or a muscle with a second nerve still intact. Not modelled: the pudendal and posterior femoral cutaneous nerves, the tarsal tunnel, and deep and superficial fibular lesions apart.',
       },
       {
         title: 'Reflexes',

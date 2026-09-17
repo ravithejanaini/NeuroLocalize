@@ -126,6 +126,98 @@ export const RENDER: RenderKb = {
     ],
   },
 
+  leg: {
+    meta: {
+      id: 'render.leg-layout',
+      claim: 'The lumbar plexus lies in front of the sacral plexus; the femoral nerve passes beneath the inguinal ligament to the front of the thigh and the obturator nerve to its medial side; the gluteal nerves leave the pelvis behind; the sciatic nerve runs down the back of the thigh and divides above the knee into the tibial nerve behind the leg and the common fibular nerve, which winds round the fibular neck to the front. Positions are schematic.',
+      sources: ['S71', 'S72', 'S73', 'S75', 'S76', 'S79', 'S80', 'S81', 'S89'],
+      tier: 'T1',
+      bookRef: 'pending',
+    },
+    // Patient's left; x lateral (negative), y rostral, z dorsal. One unit is one vertebra.
+    parts: {
+      lumbar: [[-1.3, -21.5, 0.2], [-1.8, -22.8, 0.1], [-2.2, -24.0, 0.0]],
+      sacral: [[-1.2, -25.2, 0.6], [-1.7, -26.0, 0.7], [-2.1, -26.6, 0.8]],
+    },
+    nerves: {
+      nerve_to_psoas: [{ at: [-1.9, -23.0, -0.1], branches: ['iliopsoas'] }],
+      femoral: [
+        { at: [-2.4, -24.6, -0.3] },
+        { at: [-2.6, -25.6, -0.6], site: 'femoral' },
+        { at: [-2.7, -26.6, -0.9], branches: ['iliopsoas'] },
+        { at: [-2.6, -27.6, -1.1], branches: ['anterior_thigh', 'medial_thigh', 'quadriceps'] },
+        { at: [-2.2, -32.0, -0.9], branches: ['medial_leg'] },
+      ],
+      obturator: [
+        { at: [-1.9, -24.8, -0.1] },
+        { at: [-2.0, -26.2, -0.4], site: 'obturator' },
+        { at: [-2.0, -28.2, -0.6], branches: ['hip_adductors', 'medial_thigh'] },
+      ],
+      lateral_femoral_cutaneous: [
+        { at: [-2.6, -24.4, -0.2] },
+        { at: [-3.0, -25.6, -0.8], site: 'lateral_femoral_cutaneous' },
+        { at: [-3.1, -27.6, -0.9], branches: ['lateral_thigh'] },
+      ],
+      superior_gluteal: [
+        { at: [-2.4, -26.4, 0.9] },
+        { at: [-2.8, -26.6, 1.1], site: 'superior_gluteal' },
+        { at: [-3.0, -26.9, 1.2], branches: ['gluteus_medius'] },
+      ],
+      inferior_gluteal: [
+        { at: [-2.3, -27.0, 0.9] },
+        { at: [-2.6, -27.4, 1.1], site: 'inferior_gluteal' },
+        { at: [-2.8, -27.8, 1.3], branches: ['gluteus_maximus'] },
+      ],
+      sciatic: [
+        { at: [-2.4, -27.0, 0.8] },
+        { at: [-2.6, -28.0, 0.9], site: 'sciatic' },
+        { at: [-2.6, -31.0, 0.9], branches: ['hamstrings'] },
+        { at: [-2.5, -35.5, 0.8] },
+      ],
+      tibial: [
+        { at: [-2.4, -36.4, 0.8], site: 'tibial' },
+        { at: [-2.3, -38.5, 0.8], branches: ['gastrocnemius', 'tibialis_posterior', 'lateral_foot'] },
+        { at: [-2.1, -45.5, 0.3], branches: ['sole'] },
+      ],
+      common_fibular: [
+        { at: [-2.9, -36.4, 0.7] },
+        { at: [-3.3, -37.8, 0.3], site: 'common_fibular' },
+        { at: [-3.3, -38.8, -0.2], branches: ['tibialis_anterior', 'toe_extensor', 'fibularis', 'lateral_leg'] },
+        { at: [-2.8, -45.6, -0.4], branches: ['dorsum_foot', 'first_web', 'lateral_foot'] },
+      ],
+    },
+    targets: {
+      iliopsoas: [-2.0, -27.0, -0.6],
+      hip_adductors: [-1.8, -29.5, -0.6],
+      quadriceps: [-2.6, -31.0, -1.1],
+      gluteus_medius: [-3.2, -26.8, 1.2],
+      gluteus_maximus: [-2.9, -28.3, 1.5],
+      hamstrings: [-2.6, -32.5, 1.1],
+      tibialis_anterior: [-2.9, -40.0, -0.6],
+      toe_extensor: [-2.7, -42.5, -0.6],
+      fibularis: [-3.4, -40.5, 0.1],
+      tibialis_posterior: [-2.3, -40.5, 0.6],
+      gastrocnemius: [-2.5, -39.5, 1.2],
+      anterior_thigh: [-2.7, -30.0, -1.4],
+      medial_thigh: [-1.7, -31.0, -0.9],
+      lateral_thigh: [-3.4, -30.0, -0.6],
+      medial_leg: [-2.0, -44.0, -0.4],
+      lateral_leg: [-3.4, -43.5, -0.2],
+      dorsum_foot: [-2.6, -47.2, -1.0],
+      first_web: [-2.3, -47.6, -1.6],
+      lateral_foot: [-3.2, -47.0, 0.2],
+      sole: [-2.6, -47.8, 0.3],
+    },
+    inguinalLigament: [[-1.0, -26.2, -1.2], [-2.4, -25.8, -1.0], [-3.3, -25.0, -0.7]],
+    bones: [
+      [[-1.0, -24.8, 0.4], [-3.2, -24.6, 0.2], [-3.4, -26.4, 0.2], [-1.2, -27.6, 0.3], [-1.0, -24.8, 0.4]],
+      [[-3.0, -27.0, 0], [-2.4, -36.2, 0]],
+      [[-2.3, -36.8, -0.2], [-2.2, -45.8, -0.2]],
+      [[-3.1, -37.0, 0.2], [-3.0, -45.6, 0.1]],
+      [[-2.4, -46.4, 0.3], [-2.5, -47.4, -1.8]],
+    ],
+  },
+
   brainLayout: {
     meta: {
       id: 'render.brain-layout',
@@ -188,8 +280,8 @@ export const RENDER: RenderKb = {
   nerveRoots: {
     meta: {
       id: 'render.nerve-roots',
-      claim: 'Dorsal scapular C5; long thoracic C5–C6, C7 disputed; suprascapular C5–C6; axillary C5–C6; musculocutaneous C5–C6, C7 disputed; radial C5–T1; median C6–T1, C5 disputed; ulnar and medial antebrachial cutaneous C8–T1.',
-      sources: ['S33', 'S34', 'S37', 'S41', 'S42', 'S43', 'S44', 'S45', 'S46'],
+      claim: 'Dorsal scapular C5; long thoracic C5–C6, C7 disputed; suprascapular C5–C6; axillary C5–C6; musculocutaneous C5–C6, C7 disputed; radial C5–T1; median C6–T1, C5 disputed; ulnar and medial antebrachial cutaneous C8–T1. In the leg: psoas branches L1–L3; femoral and obturator L2–L4; lateral femoral cutaneous L2–L3; superior gluteal L4–S1; inferior gluteal L5–S2; sciatic and tibial L4–S3; common fibular L4–S2.',
+      sources: ['S33', 'S34', 'S37', 'S41', 'S42', 'S43', 'S44', 'S45', 'S46', 'S85', 'S89', 'S71', 'S74', 'S80', 'S81', 'S75', 'S79', 'S76'],
       tier: 'T3',
       bookRef: 'pending',
       conflict: 'C12',
@@ -204,6 +296,15 @@ export const RENDER: RenderKb = {
       median: { roots: ['C6', 'T1'], disputedRoots: ['C5', 'C5'] },
       ulnar: { roots: ['C8', 'T1'] },
       medial_antebrachial_cutaneous: { roots: ['C8', 'T1'] },
+      nerve_to_psoas: { roots: ['L1', 'L3'] },
+      femoral: { roots: ['L2', 'L4'] },
+      obturator: { roots: ['L2', 'L4'] },
+      lateral_femoral_cutaneous: { roots: ['L2', 'L3'] },
+      superior_gluteal: { roots: ['L4', 'S1'] },
+      inferior_gluteal: { roots: ['L5', 'S2'] },
+      sciatic: { roots: ['L4', 'S3'] },
+      tibial: { roots: ['L4', 'S3'] },
+      common_fibular: { roots: ['L4', 'S2'] },
     },
   },
 
@@ -249,8 +350,8 @@ export const RENDER: RenderKb = {
   skinPatches: {
     meta: {
       id: 'render.skin-patches',
-      claim: 'The regimental badge lies over the lower lateral deltoid; the musculocutaneous nerve supplies the lateral forearm; the superficial radial nerve the back of the hand at the first web space. Body positions are schematic; the web space is on the back of the hand, drawn at its edge.',
-      sources: ['S42', 'S43', 'S39'],
+      claim: 'The regimental badge lies over the lower lateral deltoid; the musculocutaneous nerve supplies the lateral forearm; the superficial radial nerve the back of the hand at the first web space. In the leg: the anterior, medial and lateral thigh; the anterolateral leg; the first dorsal web space of the foot; and the sole, drawn at the edge of the foot because the map is a front view. Body positions are schematic.',
+      sources: ['S42', 'S43', 'S39', 'S71', 'S73', 'S74', 'S77', 'S79'],
       tier: 'T2',
       bookRef: 'pending',
     },
@@ -258,6 +359,12 @@ export const RENDER: RenderKb = {
       shoulder_badge: { x: 150, y: 84 },
       lateral_forearm: { x: 156, y: 176 },
       dorsal_web: { x: 159, y: 212 },
+      anterior_thigh: { x: 113, y: 205 },
+      medial_thigh: { x: 105, y: 222 },
+      lateral_thigh: { x: 121, y: 215 },
+      lateral_leg: { x: 119, y: 290 },
+      first_web: { x: 110, y: 346 },
+      sole: { x: 123, y: 347 },
     },
   },
 

@@ -1,16 +1,21 @@
-// The brachial plexus and arm as 3D polylines. Every fibre path is built from the engine's
-// own route (limbRoute), so a pulse travels exactly the trunk, cord and nerve places the
-// engine judges, and stops at the one it says is cut (D18, D27).
-import { CORD_SITE, limbRoute, TRUNK_SITE, type LimbRoute, type PlexusMap } from '../engine/limb.ts';
-import type { Kb, LimbPoint, RenderKb, Supply } from '../kb/types.ts';
+// The brachial and lumbosacral plexuses and the limbs as 3D polylines. Every fibre path is
+// built from the engine's own route (limbRoute), so a pulse travels exactly the trunk, cord,
+// plexus part and nerve places the engine judges, and stops at the one it says is cut
+// (D18, D27, P7).
+import { CORD_SITE, inPart, limbRoute, PART_SITE, TRUNK_SITE, type LimbRoute, type PlexusMap } from '../engine/limb.ts';
+import type { Kb, LimbPoint, RenderKb, Supply, Waypoint } from '../kb/types.ts';
 import {
+  ARM_NERVES,
+  LEG_NERVES,
+  LEG_PLEXUS_PARTS,
   MUSCLES,
-  NERVES,
   PLEXUS_CORDS,
   SEGMENTS,
   SKIN_AREAS,
   TRUNKS,
   VERTEBRAE,
+  type ArmNerve,
+  type LegNerve,
   type Muscle,
   type Nerve,
   type PlexusCord,
@@ -26,6 +31,21 @@ export type Target = Muscle | SkinArea;
 export const TARGETS: readonly Target[] = [...MUSCLES, ...SKIN_AREAS];
 
 const idx = (s: Segment): number => SEGMENTS.indexOf(s);
+const LEG_NERVE_SET: ReadonlySet<string> = new Set<string>(LEG_NERVES);
+export const isLegNerve = (n: Nerve): n is LegNerve => LEG_NERVE_SET.has(n);
+
+/** A nerve's drawn waypoints, from whichever limb it belongs to. */
+export const waypointsOf = (render: RenderKb, n: Nerve): readonly Waypoint[] =>
+  isLegNerve(n) ? render.leg.nerves[n] : render.limb.nerves[n as ArmNerve];
+
+/** Where a muscle or patch of skin is drawn. */
+export function targetPoint(render: RenderKb, t: Target): LimbPoint {
+  const leg = render.leg.targets as Readonly<Partial<Record<Target, LimbPoint>>>;
+  const arm = render.limb.targets as Readonly<Partial<Record<Target, LimbPoint>>>;
+  const p = leg[t] ?? arm[t];
+  if (!p) throw new Error(`no drawn position for ${t}`);
+  return p;
+}
 export const mirror = (p: LimbPoint, side: Side): Vec3 => ({ x: side === 'L' ? p[0] : -p[0], y: p[1], z: p[2] });
 
 // ── where roots leave the column ─────────────────────────────────────────
@@ -63,7 +83,7 @@ export type LimbPath = {
 
 const supplyOf = (kb: Kb, target: Target): readonly Supply[] =>
   (MUSCLES as readonly string[]).includes(target)
-    ? [kb.plexus.muscles[target as Muscle].supply]
+    ? kb.plexus.muscles[target as Muscle].supply
     : kb.plexus.skin[target as SkinArea].supply;
 
 /** Every nerve that serves a target, as the knowledge base lists them. */
@@ -77,7 +97,21 @@ export function limbPath(kb: Kb, render: RenderKb, supply: Supply, root: Segment
   const points: Vec3[] = [rootExit(render, idx(root), side)];
   const sitePoint = new Map<PlexusSite, number>();
 
-  if (!route.fromRoots) {
+  if (route.part) {
+    // P7: through the part of the lumbosacral plexus, then every parent nerve in full.
+    const part = render.leg.parts[route.part];
+    const [p0, p1, p2] = part;
+    if (!p0 || !p1 || !p2) throw new Error(`the ${route.part} plexus needs three points`);
+    points.push(at(p0), at(p1));
+    sitePoint.set(PART_SITE[route.part], points.length - 1);
+    points.push(at(p2));
+    for (const parent of route.parents) {
+      for (const w of waypointsOf(render, parent.nerve)) {
+        points.push(at(w.at));
+        if (w.site) sitePoint.set(w.site, points.length - 1);
+      }
+    }
+  } else if (!route.fromRoots && route.trunk) {
     const trunk = layout.trunks[route.trunk];
     const origin = kb.plexus.nerves[supply.nerve].origin;
     const [t0, t1, t2] = trunk;
@@ -95,12 +129,12 @@ export function limbPath(kb: Kb, render: RenderKb, supply: Supply, root: Segment
     }
   }
 
-  for (const w of layout.nerves[supply.nerve]) {
+  for (const w of waypointsOf(render, supply.nerve)) {
     points.push(at(w.at));
     if (w.site) sitePoint.set(w.site, points.length - 1);
     if (w.branches?.includes(target)) break;
   }
-  points.push(at(layout.targets[target]));
+  points.push(at(targetPoint(render, target)));
   return { points, sitePoint, route, target };
 }
 
@@ -138,6 +172,16 @@ const nerveStart = (kb: Kb, render: RenderKb, nerve: Nerve, side: Side): Vec3[] 
   const layout = render.limb;
   const origin = kb.plexus.nerves[nerve].origin;
   if (origin.from === 'roots') return [];
+  if (origin.from === 'plexus') {
+    const part = render.leg.parts[origin.part];
+    const end = part[part.length - 1];
+    return end ? [mirror(end, side)] : [];
+  }
+  if (origin.from === 'nerve') {
+    const parent = waypointsOf(render, origin.nerve);
+    const end = parent[parent.length - 1];
+    return end ? [mirror(end.at, side)] : [];
+  }
   if (origin.from === 'trunk') {
     const p = layout.trunks[origin.trunk][1];
     return p ? [mirror(p, side)] : [];
@@ -176,7 +220,7 @@ export function plexusStrands(kb: Kb, render: RenderKb, side: Side): Strand[] {
     out.push({ kind: 'cord', name: c, points: layout.cords[c].map(at) });
   }
 
-  for (const n of NERVES) {
+  for (const n of ARM_NERVES) {
     const waypoints = layout.nerves[n];
     const body = waypoints.map((w) => at(w.at));
     const first = body[0];
@@ -184,7 +228,37 @@ export function plexusStrands(kb: Kb, render: RenderKb, side: Side): Strand[] {
     for (const s of starts) if (first) out.push({ kind: 'nerve', name: n, points: [s, first] });
     if (body.length > 1) out.push({ kind: 'nerve', name: n, points: body });
     for (const w of waypoints) {
-      for (const target of w.branches ?? []) out.push({ kind: 'branch', name: target, points: [at(w.at), at(layout.targets[target])] });
+      for (const target of w.branches ?? []) out.push({ kind: 'branch', name: target, points: [at(w.at), at(targetPoint(render, target))] });
+    }
+  }
+  return out;
+}
+
+/** P7: the lumbosacral plexus and the leg nerves on one side, as strands to draw. */
+export function legStrands(kb: Kb, render: RenderKb, side: Side): Strand[] {
+  const layout = render.leg;
+  const out: Strand[] = [];
+  const at = (p: LimbPoint): Vec3 => mirror(p, side);
+  const parts = kb.plexus.legParts.roots;
+  const first = Math.min(...LEG_PLEXUS_PARTS.map((q) => idx(parts[q][0])));
+  const last = Math.max(...LEG_PLEXUS_PARTS.map((q) => idx(parts[q][1])));
+  for (let k = first; k <= last; k++) {
+    const seg = SEGMENTS[k];
+    if (!seg) continue;
+    for (const q of LEG_PLEXUS_PARTS) {
+      const start = layout.parts[q][0];
+      if (start && inPart(kb, q, seg)) out.push({ kind: 'root', name: seg, points: [rootExit(render, k, side), at(start)] });
+    }
+  }
+  for (const q of LEG_PLEXUS_PARTS) out.push({ kind: 'trunk', name: `${q} plexus`, points: layout.parts[q].map(at) });
+  for (const n of LEG_NERVES) {
+    const waypoints = layout.nerves[n];
+    const body = waypoints.map((w) => at(w.at));
+    const head = body[0];
+    for (const s of nerveStart(kb, render, n, side)) if (head) out.push({ kind: 'nerve', name: n, points: [s, head] });
+    if (body.length > 1) out.push({ kind: 'nerve', name: n, points: body });
+    for (const w of waypoints) {
+      for (const target of w.branches ?? []) out.push({ kind: 'branch', name: target, points: [at(w.at), at(targetPoint(render, target))] });
     }
   }
   return out;
@@ -195,7 +269,7 @@ function rootStartsFor(kb: Kb, render: RenderKb, nerve: Nerve, side: Side): Vec3
   const roots = new Set<number>();
   for (const m of MUSCLES) {
     const row = kb.plexus.muscles[m];
-    if (row.supply.nerve !== nerve) continue;
+    if (!row.supply.some((s) => s.nerve === nerve)) continue;
     for (const span of [row.roots, row.disputedRoots]) {
       if (!span) continue;
       for (let k = idx(span[0]); k <= idx(span[1]); k++) roots.add(k);
@@ -211,8 +285,10 @@ export function siteAnchor(render: RenderKb, site: PlexusSite, side: Side): Vec3
   if (trunk) return mirror(layout.trunks[trunk][1] ?? [0, 0, 0], side);
   const cord = PLEXUS_CORDS.find((c: PlexusCord) => site === `${c}_cord`);
   if (cord) return mirror(layout.cords[cord][1] ?? [0, 0, 0], side);
-  for (const n of NERVES) {
-    const w = layout.nerves[n].find((x) => x.site === site);
+  const part = LEG_PLEXUS_PARTS.find((q) => PART_SITE[q] === site);
+  if (part) return mirror(render.leg.parts[part][1] ?? [0, 0, 0], side);
+  for (const n of [...ARM_NERVES, ...LEG_NERVES]) {
+    const w = waypointsOf(render, n).find((x) => x.site === site);
     if (w) return mirror(w.at, side);
   }
   throw new Error(`no drawn position for ${site}`);

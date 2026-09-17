@@ -1,6 +1,7 @@
 // The brachial plexus and the nerves, muscles and skin it serves (P4). Data only.
 // Every muscle's roots are the myotome sources' (D29); every branch position is where a
 // level-by-level lesion description puts it (D27).
+import { LEG_DEFORMITY_ROWS, LEG_MUSCLE_ROWS, LEG_NERVE_ROWS, LEG_PARTS, LEG_SKIN_ROWS } from './leg.ts';
 import type { Plexus } from './types.ts';
 
 const p = 'pending' as const;
@@ -31,6 +32,7 @@ export const PLEXUS: Plexus = {
       medial: ['lower'],
     },
   },
+  legParts: LEG_PARTS,
 
   nerves: {
     dorsal_scapular: {
@@ -133,12 +135,13 @@ export const PLEXUS: Plexus = {
       origin: { from: 'cords', cords: ['medial'] },
       sites: [],
     },
+    ...LEG_NERVE_ROWS,
   },
 
   muscles: {
     rhomboids: {
       meta: { id: 'muscle.rhomboids', claim: 'The rhomboids are supplied by the dorsal scapular nerve, from C5.', sources: ['S34', 'S37'], tier: 'T1', bookRef: p },
-      supply: { nerve: 'dorsal_scapular', after: 1 },
+      supply: [{ nerve: 'dorsal_scapular', after: 1 }],
       roots: ['C5', 'C5'],
     },
     serratus_anterior: {
@@ -150,7 +153,7 @@ export const PLEXUS: Plexus = {
         bookRef: p,
         conflict: 'C10',
       },
-      supply: { nerve: 'long_thoracic', after: 1 },
+      supply: [{ nerve: 'long_thoracic', after: 1 }],
       roots: ['C5', 'C6'],
       disputedRoots: ['C7', 'C7'],
     },
@@ -162,7 +165,7 @@ export const PLEXUS: Plexus = {
         tier: 'T1',
         bookRef: p,
       },
-      supply: { nerve: 'suprascapular', after: 1 },
+      supply: [{ nerve: 'suprascapular', after: 1 }],
       roots: ['C5', 'C6'],
     },
     deltoid: {
@@ -173,7 +176,7 @@ export const PLEXUS: Plexus = {
         tier: 'T1',
         bookRef: p,
       },
-      supply: { nerve: 'axillary', after: 1 },
+      supply: [{ nerve: 'axillary', after: 1 }],
       roots: ['C5', 'C5'],
       myotome: 'C5',
     },
@@ -185,7 +188,7 @@ export const PLEXUS: Plexus = {
         tier: 'T2',
         bookRef: p,
       },
-      supply: { nerve: 'musculocutaneous', after: 1 },
+      supply: [{ nerve: 'musculocutaneous', after: 1 }],
       roots: ['C5', 'C6'],
       myotome: 'C6',
     },
@@ -197,7 +200,7 @@ export const PLEXUS: Plexus = {
         tier: 'T1',
         bookRef: p,
       },
-      supply: { nerve: 'radial', after: 1 },
+      supply: [{ nerve: 'radial', after: 1 }],
       roots: ['C7', 'C7'],
       myotome: 'C7',
     },
@@ -210,7 +213,7 @@ export const PLEXUS: Plexus = {
         bookRef: p,
         conflict: 'C3',
       },
-      supply: { nerve: 'radial', after: 2 },
+      supply: [{ nerve: 'radial', after: 2 }],
       roots: ['C6', 'C6'],
       disputedRoots: ['C5', 'C5'],
     },
@@ -223,7 +226,7 @@ export const PLEXUS: Plexus = {
         bookRef: p,
         conflict: 'C14',
       },
-      supply: { nerve: 'radial', after: 2 },
+      supply: [{ nerve: 'radial', after: 2 }],
       roots: ['C6', 'C6'],
       myotome: 'C6',
     },
@@ -235,7 +238,7 @@ export const PLEXUS: Plexus = {
         tier: 'T2',
         bookRef: p,
       },
-      supply: { nerve: 'radial', after: 3 },
+      supply: [{ nerve: 'radial', after: 3 }],
       roots: ['C8', 'C8'],
       myotome: 'C8',
     },
@@ -248,7 +251,7 @@ export const PLEXUS: Plexus = {
         bookRef: p,
         conflict: 'C9',
       },
-      supply: { nerve: 'ulnar', after: 1 },
+      supply: [{ nerve: 'ulnar', after: 1 }],
       roots: ['C8', 'C8'],
       myotome: 'C8',
     },
@@ -260,7 +263,7 @@ export const PLEXUS: Plexus = {
         tier: 'T1',
         bookRef: p,
       },
-      supply: { nerve: 'median', after: 1 },
+      supply: [{ nerve: 'median', after: 1 }],
       roots: ['C8', 'C8'],
     },
     finger_flexor_ulnar: {
@@ -271,7 +274,7 @@ export const PLEXUS: Plexus = {
         tier: 'T1',
         bookRef: p,
       },
-      supply: { nerve: 'ulnar', after: 1 },
+      supply: [{ nerve: 'ulnar', after: 1 }],
       roots: ['C8', 'C8'],
     },
     thumb_abductor: {
@@ -282,7 +285,7 @@ export const PLEXUS: Plexus = {
         tier: 'T2',
         bookRef: p,
       },
-      supply: { nerve: 'median', after: 2 },
+      supply: [{ nerve: 'median', after: 2 }],
       roots: ['C8', 'T1'],
     },
     interossei: {
@@ -293,11 +296,12 @@ export const PLEXUS: Plexus = {
         tier: 'T1',
         bookRef: p,
       },
-      supply: { nerve: 'ulnar', after: 2 },
+      supply: [{ nerve: 'ulnar', after: 2 }],
       roots: ['T1', 'T1'],
       disputedRoots: ['C8', 'C8'],
       myotome: 'T1',
     },
+    ...LEG_MUSCLE_ROWS,
   },
 
   skin: {
@@ -386,6 +390,7 @@ export const PLEXUS: Plexus = {
       roots: ['C8', 'T1'],
       landmark: 'T1',
     },
+    ...LEG_SKIN_ROWS,
   },
 
   deformities: {
@@ -439,17 +444,18 @@ export const PLEXUS: Plexus = {
       },
       muscles: ['thumb_abductor'],
     },
+    ...LEG_DEFORMITY_ROWS,
   },
 
   reflexMuscles: {
     meta: {
       id: 'plexus.reflex-muscles',
-      claim: 'The biceps, brachioradialis and triceps reflexes are tested through the muscles they are named for, so they share those muscles’ nerves.',
+      claim: 'Each tendon reflex is tested through its muscle, so it shares that muscle’s nerves: biceps, brachioradialis and triceps through their namesakes, the knee jerk through the quadriceps and the ankle jerk through the gastrocnemius.',
       sources: [],
       tier: 'T1',
       bookRef: p,
       definitional: true,
     },
-    muscles: { biceps: 'biceps', brachioradialis: 'brachioradialis', triceps: 'triceps' },
+    muscles: { biceps: 'biceps', brachioradialis: 'brachioradialis', triceps: 'triceps', patellar: 'quadriceps', achilles: 'gastrocnemius' },
   },
 };

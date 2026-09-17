@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { BRAIN_REVERSE_CASES } from '../spec/expectations/reverse-brain.ts';
 import { LIMB_REVERSE_CASES } from '../spec/expectations/reverse-plexus.ts';
+import { LEG_REVERSE_CASES } from '../spec/expectations/reverse-leg.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
 import { hypotheses } from '../src/engine/hypotheses.ts';
@@ -16,7 +17,7 @@ import { examSlots } from '../src/render/slots.ts';
 const SLOTS = examSlots(RENDER);
 
 describe('frozen reverse expectations (A3, A4, A7)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...BRAIN_REVERSE_CASES]) {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });
@@ -27,9 +28,10 @@ describe('reverse engine contract', () => {
   it('offers only examinations the body map and myotome grid can show', () => {
     assert.equal(new Set(SLOTS.map(slotKey)).size, SLOTS.length, 'duplicate slots');
     // 2 sides × 2 modalities × (12 landmarks + saddle) + 2 × 12 myotomes + 2 × 6 reflexes + 4 signs + romberg + bladder,
-    // then per side 14 muscles and the 3 patches that are not landmarks (D30), and per side
-    // facial sensation, facial strength, ataxia and five cranial signs, plus vertigo (P5)
-    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * 14 + 2 * 3 + 2 * 8 + 1);
+    // then per side 14 arm and 11 leg muscles and the 3 arm and 6 leg patches that are not
+    // landmarks (D30, P7), and per side facial sensation, facial strength, ataxia and five
+    // cranial signs, plus vertigo (P5)
+    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 8 + 1);
   });
 
   it('with no findings, prefers nothing in particular and still suggests a test', () => {
@@ -138,6 +140,12 @@ describe('reverse engine contract', () => {
       wrist_flexor_ulnar: 'wrist flexion',
       thumb_extensor: 'thumb extension',
       interossei: 'finger abduction',
+      iliopsoas: 'hip flexion',
+      quadriceps: 'knee extension',
+      tibialis_anterior: 'ankle dorsiflexion',
+      toe_extensor: 'great toe extension',
+      gastrocnemius: 'ankle plantar flexion',
+      hamstrings: 'knee flexion',
     };
     const mapped = MUSCLES.filter((m) => KB.plexus.muscles[m].myotome);
     assert.deepEqual(mapped.sort(), Object.keys(words).sort());
@@ -184,7 +192,7 @@ describe('reverse engine contract', () => {
     assert.ok(nerve);
     assert.deepEqual(nerve.sites, ['long_thoracic'], 'the only nerve place that weakens serratus');
     const places = hypotheses().filter((x) => x.site);
-    assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 36, 'D32: 18 places on each side');
+    assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 56, 'D32, P7: 18 arm and 10 leg places on each side');
     assert.equal(places.filter((x) => x.family.startsWith('brainstem') || x.family.startsWith('hemisphere')).length, 18, 'D44: 9 territories on each side');
   });
 

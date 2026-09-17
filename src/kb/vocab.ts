@@ -109,7 +109,7 @@ export type Trunk = (typeof TRUNKS)[number];
 export const PLEXUS_CORDS = ['lateral', 'posterior', 'medial'] as const;
 export type PlexusCord = (typeof PLEXUS_CORDS)[number];
 
-export const NERVES = [
+export const ARM_NERVES = [
   'dorsal_scapular',
   'long_thoracic',
   'suprascapular',
@@ -120,7 +120,28 @@ export const NERVES = [
   'ulnar',
   'medial_antebrachial_cutaneous',
 ] as const;
+export type ArmNerve = (typeof ARM_NERVES)[number];
+
+/** P7: the nerves of the lumbosacral plexus that the model follows, proximal first. */
+export const LEG_NERVES = [
+  'nerve_to_psoas',
+  'femoral',
+  'obturator',
+  'lateral_femoral_cutaneous',
+  'superior_gluteal',
+  'inferior_gluteal',
+  'sciatic',
+  'tibial',
+  'common_fibular',
+] as const;
+export type LegNerve = (typeof LEG_NERVES)[number];
+
+export const NERVES = [...ARM_NERVES, ...LEG_NERVES] as const;
 export type Nerve = (typeof NERVES)[number];
+
+/** P7: the two parts of the lumbosacral plexus a nerve can leave from. */
+export const LEG_PLEXUS_PARTS = ['lumbar', 'sacral'] as const;
+export type LegPlexusPart = (typeof LEG_PLEXUS_PARTS)[number];
 
 /** Places a lesion can sit beyond the roots. Roots themselves are the root compartments. */
 export const PLEXUS_SITES = [
@@ -142,11 +163,24 @@ export const PLEXUS_SITES = [
   'median_wrist',
   'ulnar_elbow',
   'ulnar_wrist',
+  // P7: the lower limb, proximal first.
+  'lumbar_plexus',
+  'sacral_plexus',
+  'femoral',
+  'obturator',
+  'lateral_femoral_cutaneous',
+  'superior_gluteal',
+  'inferior_gluteal',
+  'sciatic',
+  'tibial',
+  'common_fibular',
 ] as const;
 export type PlexusSite = (typeof PLEXUS_SITES)[number];
+export const ARM_SITES = PLEXUS_SITES.slice(0, PLEXUS_SITES.indexOf('lumbar_plexus'));
+export const LEG_SITES = PLEXUS_SITES.slice(PLEXUS_SITES.indexOf('lumbar_plexus'));
 
 /** Muscles examined one at a time, each standing for the movement it is tested by. */
-export const MUSCLES = [
+export const ARM_MUSCLES = [
   'rhomboids',
   'serratus_anterior',
   'supraspinatus',
@@ -162,10 +196,30 @@ export const MUSCLES = [
   'thumb_abductor',
   'interossei',
 ] as const;
+
+export type ArmMuscle = (typeof ARM_MUSCLES)[number];
+
+/** P7. Each stands for one tested movement (docs/P7-analysis.md). */
+export const LEG_MUSCLES = [
+  'iliopsoas',
+  'hip_adductors',
+  'quadriceps',
+  'gluteus_medius',
+  'gluteus_maximus',
+  'hamstrings',
+  'tibialis_anterior',
+  'toe_extensor',
+  'fibularis',
+  'tibialis_posterior',
+  'gastrocnemius',
+] as const;
+
+export type LegMuscle = (typeof LEG_MUSCLES)[number];
+export const MUSCLES = [...ARM_MUSCLES, ...LEG_MUSCLES] as const;
 export type Muscle = (typeof MUSCLES)[number];
 
 /** Patches of skin examined, each served by named nerves. */
-export const SKIN_AREAS = [
+export const ARM_SKIN = [
   'shoulder_badge',
   'lateral_forearm',
   'dorsal_web',
@@ -174,12 +228,33 @@ export const SKIN_AREAS = [
   'little_finger',
   'medial_forearm',
 ] as const;
+
+export type ArmSkinArea = (typeof ARM_SKIN)[number];
+
+/** P7, proximal first. */
+export const LEG_SKIN = [
+  'anterior_thigh',
+  'medial_thigh',
+  'lateral_thigh',
+  'medial_leg',
+  'lateral_leg',
+  'dorsum_foot',
+  'first_web',
+  'lateral_foot',
+  'sole',
+] as const;
+
+export type LegSkinArea = (typeof LEG_SKIN)[number];
+export const SKIN_AREAS = [...ARM_SKIN, ...LEG_SKIN] as const;
 export type SkinArea = (typeof SKIN_AREAS)[number];
 
 export type MuscleState = 'normal' | 'weak' | 'indeterminate';
 
 /** Deformities and postures that follow from lower-motor-neuron weakness of named muscles. */
-export const DEFORMITIES = ['winged_scapula', 'waiters_tip', 'wrist_drop', 'claw_hand', 'ape_hand'] as const;
+export const ARM_DEFORMITIES = ['winged_scapula', 'waiters_tip', 'wrist_drop', 'claw_hand', 'ape_hand'] as const;
+/** P7: foot drop, and the Trendelenburg gait of a weak gluteus medius. */
+export const LEG_DEFORMITIES = ['foot_drop', 'trendelenburg'] as const;
+export const DEFORMITIES = [...ARM_DEFORMITIES, ...LEG_DEFORMITIES] as const;
 export type Deformity = (typeof DEFORMITIES)[number];
 
 // ---- above the cord (P5) -------------------------------------------------

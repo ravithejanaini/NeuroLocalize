@@ -7,6 +7,7 @@ import { resolve } from 'node:path';
 import { ALL_CASES as CORD_CASES } from '../spec/expectations/index.ts';
 import { BRAIN_CASES } from '../spec/expectations/brain.ts';
 import { PLEXUS_CASES } from '../spec/expectations/plexus.ts';
+import { LEG_CASES } from '../spec/expectations/leg.ts';
 import type { Assertion, BrainAssertion, LimbAssertion } from '../spec/expectations/types.ts';
 import { KB } from '../src/kb/kb.ts';
 import { MECHANISMS } from '../src/kb/mechanisms.ts';
@@ -97,7 +98,7 @@ export function buildWorksheet(): Worksheet {
   }
 
   let k = 0;
-  for (const c of [...CORD_CASES, ...PLEXUS_CASES, ...BRAIN_CASES]) {
+  for (const c of [...CORD_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES]) {
     const findings: Finding[] = c.evaluations.flatMap((e) =>
       e.assertions
         .filter((a) => a.basis === 'composed')

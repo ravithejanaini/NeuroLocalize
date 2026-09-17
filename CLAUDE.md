@@ -1,11 +1,13 @@
 # NeuroLocalize — agent instructions
 
 A lesion-localization engine for teaching neuroanatomy — cortex, capsule, thalamus,
-brainstem, spinal cord, roots, brachial plexus and arm nerves — with a 3D instrument and a
+brainstem, spinal cord, roots, brachial and lumbosacral plexuses, and the nerves of the arm
+and leg — with a 3D instrument and a
 practice mode in front of it.
 **Education only. Not clinical decision support. No patient data, ever.**
 
-Plan: `docs/plan.html` (published revision C). Sources: `docs/SOURCES.md`.
+Plan: `docs/plan.html` (published revision C); later phases are analysed before they are
+built (`docs/P7-analysis.md`). Sources: `docs/SOURCES.md`.
 Deviations, conflicts and open reviewer questions: `docs/DECISIONS.md`.
 
 ## Commands
@@ -52,8 +54,8 @@ claude.ai. Practice progress is per-browser storage and every access is guarded 
    book page nobody has read is `bookRef: 'pending'`. A fact with no read source is
    `pendingSource: '<reason>'` and is printed on every test run.
 2. **Expectations are frozen** — forward cases in `cases.ts`, `boundaries.ts`,
-   `plexus.ts` and `brain.ts`; reverse cases in `reverse.ts`, `reverse-plexus.ts` and
-   `reverse-brain.ts`. A file in
+   `plexus.ts`, `leg.ts` and `brain.ts`; reverse cases in `reverse.ts`, `reverse-plexus.ts`,
+   `reverse-leg.ts` and `reverse-brain.ts`. A file in
    `spec/expectations/` changed after the `expectations-frozen` tag fails the build unless
    `spec/expectations/AMENDMENTS.md` names it and gives the reason and the source. Fix the
    knowledge base, not the expectation.

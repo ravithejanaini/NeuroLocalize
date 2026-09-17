@@ -12,8 +12,8 @@ export type FocalPreset = Common & {
   readonly level: Segment;
   readonly extent: number;
 };
-export type SystemPreset = Common & { readonly kind: 'system'; readonly regions: readonly LesionRegion[] };
-export type LimbPreset = Common & { readonly kind: 'limb'; readonly site: PlexusSite };
+export type SystemPreset = Common & { readonly kind: 'system'; readonly regions: readonly LesionRegion[]; readonly leg?: true };
+export type LimbPreset = Common & { readonly kind: 'limb'; readonly site: PlexusSite; readonly leg?: true };
 export type BrainPreset = Common & { readonly kind: 'brain'; readonly territory: Territory };
 export type Preset = FocalPreset | SystemPreset | LimbPreset | BrainPreset;
 
@@ -55,6 +55,30 @@ export const PRESETS: readonly Preset[] = [
     id: 'roots-c8-t1', kind: 'system', label: 'Left C8 and T1 roots', pattern: 'Klumpke, with Horner',
     regions: [{ at: { segments: ['C8', 'T1'] }, sides: ['L'], compartments: ['dorsal_root', 'ventral_root'], severity: 'complete', portion: 'whole' }],
   },
+  {
+    id: 'root-l4',
+    kind: 'system',
+    leg: true,
+    label: 'L4 root',
+    pattern: 'Weak knee extension, knee jerk down',
+    regions: [{ at: { segments: ['L4', 'L4'] }, sides: ['L'], compartments: ['dorsal_root', 'ventral_root'], severity: 'complete', portion: 'whole' }],
+  },
+  {
+    id: 'root-l5',
+    kind: 'system',
+    leg: true,
+    label: 'L5 root',
+    pattern: 'Foot drop with weak inversion',
+    regions: [{ at: { segments: ['L5', 'L5'] }, sides: ['L'], compartments: ['dorsal_root', 'ventral_root'], severity: 'complete', portion: 'whole' }],
+  },
+  {
+    id: 'root-s1',
+    kind: 'system',
+    leg: true,
+    label: 'S1 root',
+    pattern: 'Weak plantar flexion, ankle jerk lost',
+    regions: [{ at: { segments: ['S1', 'S1'] }, sides: ['L'], compartments: ['dorsal_root', 'ventral_root'], severity: 'complete', portion: 'whole' }],
+  },
   { id: 'upper-trunk', kind: 'limb', label: 'Upper trunk', pattern: 'Erb palsy', site: 'upper_trunk' },
   { id: 'lower-trunk', kind: 'limb', label: 'Lower trunk', pattern: 'Klumpke palsy', site: 'lower_trunk' },
   { id: 'posterior-cord', kind: 'limb', label: 'Posterior cord', pattern: 'Axillary + radial', site: 'posterior_cord' },
@@ -69,6 +93,17 @@ export const PRESETS: readonly Preset[] = [
   { id: 'median-wrist', kind: 'limb', label: 'Median, at the wrist', pattern: 'Carpal tunnel', site: 'median_wrist' },
   { id: 'ulnar-elbow', kind: 'limb', label: 'Ulnar, at the elbow', pattern: 'Claw hand, cubital tunnel', site: 'ulnar_elbow' },
   { id: 'ulnar-wrist', kind: 'limb', label: 'Ulnar, at the wrist', pattern: 'Guyon canal', site: 'ulnar_wrist' },
+  // P7: the leg.
+  { id: 'lumbar-plexus', kind: 'limb', leg: true, label: 'Lumbar plexus', pattern: 'Weak hip flexion, knee extension, adduction', site: 'lumbar_plexus' },
+  { id: 'sacral-plexus', kind: 'limb', leg: true, label: 'Sacral plexus', pattern: 'Sciatic deficits, gluteals weak', site: 'sacral_plexus' },
+  { id: 'femoral', kind: 'limb', leg: true, label: 'Femoral nerve', pattern: 'Weak knee extension, adduction spared', site: 'femoral' },
+  { id: 'obturator', kind: 'limb', leg: true, label: 'Obturator nerve', pattern: 'Weak hip adduction', site: 'obturator' },
+  { id: 'lfcn', kind: 'limb', leg: true, label: 'Lateral femoral cutaneous', pattern: 'Meralgia paresthetica', site: 'lateral_femoral_cutaneous' },
+  { id: 'superior-gluteal', kind: 'limb', leg: true, label: 'Superior gluteal nerve', pattern: 'Trendelenburg gait', site: 'superior_gluteal' },
+  { id: 'inferior-gluteal', kind: 'limb', leg: true, label: 'Inferior gluteal nerve', pattern: 'Weak hip extension', site: 'inferior_gluteal' },
+  { id: 'sciatic', kind: 'limb', leg: true, label: 'Sciatic nerve', pattern: 'Flail foot, gluteals spared', site: 'sciatic' },
+  { id: 'tibial', kind: 'limb', leg: true, label: 'Tibial nerve', pattern: 'Weak plantar flexion, numb sole', site: 'tibial' },
+  { id: 'common-fibular', kind: 'limb', leg: true, label: 'Common fibular, fibular neck', pattern: 'Foot drop, inversion spared', site: 'common_fibular' },
   { id: 'lateral-medulla', kind: 'brain', label: 'Lateral medulla', pattern: 'Wallenberg (PICA)', territory: 'lateral_medullary' },
   { id: 'medial-medulla', kind: 'brain', label: 'Medial medulla', pattern: 'Dejerine', territory: 'medial_medullary' },
   { id: 'ventral-pons', kind: 'brain', label: 'Ventral pons', pattern: 'Millard-Gubler', territory: 'ventral_pons' },

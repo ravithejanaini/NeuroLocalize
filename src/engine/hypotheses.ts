@@ -29,7 +29,7 @@ export type Hypothesis = {
   readonly site?: Place;
 };
 
-/** Trunks and cords; every other place is on a named nerve (D32). */
+/** Trunks, cords and the two parts of the lumbosacral plexus; every other place is on a named nerve (D32). */
 export const PLEXUS_PROPER: readonly PlexusSite[] = [
   'upper_trunk',
   'middle_trunk',
@@ -37,6 +37,8 @@ export const PLEXUS_PROPER: readonly PlexusSite[] = [
   'lateral_cord',
   'posterior_cord',
   'medial_cord',
+  'lumbar_plexus',
+  'sacral_plexus',
 ];
 
 const CORD = COMPARTMENTS.filter((c) => c !== 'dorsal_root' && c !== 'ventral_root');

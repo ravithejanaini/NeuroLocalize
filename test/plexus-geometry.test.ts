@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { mapPlexus, routeSites } from '../src/engine/limb.ts';
 import {
+  legStrands,
   limbFate,
   limbPath,
   mirror,
@@ -10,11 +11,12 @@ import {
   siteAnchor,
   suppliesOf,
   TARGETS,
+  waypointsOf,
 } from '../src/geometry/plexus.ts';
 import { KB } from '../src/kb/kb.ts';
 import { RENDER } from '../src/kb/render.ts';
 import type { LimbPoint } from '../src/kb/types.ts';
-import { MUSCLES, NERVES, PLEXUS_CORDS, PLEXUS_SITES, SEGMENTS, SKIN_AREAS, TRUNKS, type Segment } from '../src/kb/vocab.ts';
+import { ARM_NERVES, LEG_NERVES, MUSCLES, NERVES, PLEXUS_CORDS, PLEXUS_SITES, SEGMENTS, SKIN_AREAS, TRUNKS, type Segment } from '../src/kb/vocab.ts';
 
 const L = RENDER.limb;
 const idx = (s: Segment): number => SEGMENTS.indexOf(s);
@@ -78,14 +80,20 @@ describe('plexus drawing matches the engine (D27)', () => {
         }
       }
     }
-    // 21 muscle paths (one per root, disputed included — C8 to the interossei since A9) and 16 skin paths.
-    assert.equal(paths, 37);
+    // Arm: 21 muscle paths (one per root, disputed included — C8 to the interossei since A9) and
+    // 16 skin paths. Leg (P7), one path per root per nerve that serves the target:
+    // muscles 2×2 iliopsoas + 3 adductors + 3 quadriceps + 1 gluteus medius + 3 gluteus
+    // maximus + 3 hamstrings + 2 tibialis anterior + 1 each for the toe extensor, fibularis,
+    // tibialis posterior and gastrocnemius = 23; skin 3 anterior thigh + 3×2 medial thigh +
+    // 2 lateral thigh + 2 medial leg + 4 lateral leg + 1 dorsum + 1 web + 2×2 lateral foot +
+    // 5 sole = 28.
+    assert.equal(paths, 37 + 23 + 28);
   });
 
   it('draws each branch after exactly as many named places as the knowledge base says', () => {
     for (const target of TARGETS) {
       for (const supply of suppliesOf(KB, target)) {
-        const waypoints = L.nerves[supply.nerve];
+        const waypoints = waypointsOf(RENDER, supply.nerve);
         const at = waypoints.findIndex((w) => w.branches?.includes(target));
         assert.ok(at >= 0, `${target} has no branch on the ${supply.nerve} nerve`);
         const before = waypoints.slice(0, at + 1).filter((w) => w.site).length;
@@ -96,14 +104,16 @@ describe('plexus drawing matches the engine (D27)', () => {
 
   it('draws every named place on its own nerve, once, in the knowledge base order', () => {
     for (const n of NERVES) {
-      const drawn = L.nerves[n].flatMap((w) => (w.site ? [w.site] : []));
+      const drawn = waypointsOf(RENDER, n).flatMap((w) => (w.site ? [w.site] : []));
       assert.deepEqual(drawn, [...KB.plexus.nerves[n].sites], n);
     }
     for (const s of PLEXUS_SITES) assert.ok(siteAnchor(RENDER, s, 'L'), s);
   });
 
   it('stops a pulse at the first place the lesion cuts, and dims it past a partial one', () => {
-    const p = limbPath(KB, RENDER, KB.plexus.muscles.thumb_extensor.supply, 'C8', 'thumb_extensor', 'L');
+    const [extensor] = KB.plexus.muscles.thumb_extensor.supply;
+    assert.ok(extensor);
+    const p = limbPath(KB, RENDER, extensor, 'C8', 'thumb_extensor', 'L');
     assert.ok(p);
     const groove = p.sitePoint.get('radial_spiral_groove');
     const trunk = p.sitePoint.get('lower_trunk');
@@ -133,8 +143,37 @@ describe('plexus drawing matches the engine (D27)', () => {
     assert.equal(count('trunk'), 3);
     assert.equal(count('division'), 6);
     assert.equal(count('cord'), 3);
-    assert.deepEqual([...new Set(strands.filter((s) => s.kind === 'nerve').map((s) => s.name))].sort(), [...NERVES].sort());
+    assert.deepEqual([...new Set(strands.filter((s) => s.kind === 'nerve').map((s) => s.name))].sort(), [...ARM_NERVES].sort());
     assert.equal(strands.filter((s) => s.division === 'posterior').length, 3, 'three posterior divisions (S34)');
+  });
+
+  // ── the leg (P7) ──
+  it('draws the leg with a root into each plexus part that takes it, L4 into both (C19)', () => {
+    const strands = legStrands(KB, RENDER, 'L');
+    const roots = strands.filter((s) => s.kind === 'root').map((s) => s.name);
+    assert.deepEqual(roots.filter((r) => r === 'L4'), ['L4', 'L4']);
+    assert.equal(roots.length, 4 + 6, 'L1–L4 to the lumbar part, L4–S4 to the sacral part');
+    assert.deepEqual([...new Set(strands.filter((s) => s.kind === 'nerve').map((s) => s.name))].sort(), [...LEG_NERVES].sort());
+    const r = legStrands(KB, RENDER, 'R');
+    strands.forEach((s, i) => s.points.forEach((pt, j) => assert.equal(r[i]?.points[j]?.x, -pt.x)));
+  });
+
+  it('draws a tibial or fibular pulse through the sacral plexus and the whole sciatic nerve first', () => {
+    const [supply] = KB.plexus.muscles.tibialis_anterior.supply;
+    assert.ok(supply);
+    const p = limbPath(KB, RENDER, supply, 'L5', 'tibialis_anterior', 'L');
+    assert.ok(p);
+    assert.deepEqual(routeSites(p.route), ['sacral_plexus', 'sciatic', 'common_fibular']);
+    const order = ['sacral_plexus', 'sciatic', 'common_fibular'].map((s) => p.sitePoint.get(s as 'sciatic'));
+    assert.ok(order.every((x, i) => x !== undefined && (i === 0 || x > (order[i - 1] ?? 0))), 'in order');
+    assert.equal(limbPath(KB, RENDER, supply, 'L2', 'tibialis_anterior', 'L'), null, 'L2 does not reach the sacral plexus');
+    const sciatic = mapPlexus([{ plexus: 'sciatic', sides: ['L'], severity: 'complete' }]);
+    assert.equal(limbFate(sciatic, p, 'L').diesAt, p.sitePoint.get('sciatic'));
+  });
+
+  it('keeps every leg target on the patient\u2019s left below the pelvis, and the nerves in the leg', () => {
+    for (const n of LEG_NERVES) for (const w of RENDER.leg.nerves[n]) assert.ok(w.at[0] < 0 && w.at[1] < -20, n);
+    for (const p of Object.values(RENDER.leg.targets)) assert.ok(p[0] < 0 && p[1] <= -26, `${p}`);
   });
 });
 

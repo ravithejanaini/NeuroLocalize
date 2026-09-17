@@ -624,3 +624,83 @@ the clinician (D52):
   C6 root: the deltoid (C5–C6) is asserted strong; the same applies.
 - The S1 landmark is the lateral heel in the international standard (ISNCSCI); the model
   draws the lateral malleolus.
+
+## P7 — the lower limb
+
+The analysis written before any P7 code is `docs/P7-analysis.md`; every row below is a line
+of it, and S71–S90 were read for it.
+
+### Source conflicts
+
+**C19 — Sacral plexus roots.** S72: S1–S4 form the sacral plexus and the lumbosacral trunk
+joins the sciatic nerve; S80 calls L4, L5 and S1 roots of the sacral plexus; S75 and S79
+give the sciatic and tibial nerves L4–S3. Modelled as L4–S4, which satisfies all three, with
+L4 also in the lumbar plexus (L1–L4, S72).
+
+**C20 — Tibialis anterior.** S31 gives ankle dorsiflexion to L4; S82 gives tibialis anterior
+to L5. Both roots are kept, because each source names a root whose loss weakens it. A
+consequence worth a reviewer's eye: an L4 root lesion is modelled with foot drop.
+
+**C21 — Quadriceps.** S31 gives knee extension to L3; S82 gives the quadriceps to L4; S88
+describes a broad L2–L4 overlap. L3–L4 are kept and L2 is open.
+
+**C22 — Medial thigh.** S73 gives it to the obturator nerve; S89 to the femoral nerve's
+medial cutaneous branch. Both supply it, so losing one leaves it uncertain rather than lost.
+
+**C23 — The lateral foot in a fibular palsy.** The sural nerve takes a branch from each of
+the tibial and common fibular nerves (S87), so the model reports the lateral foot reduced
+after either; S77 and S78 do not list it among the losses of a fibular palsy. The frozen
+expectation allows reduced or intact.
+
+**C24 — Where a femoral lesion sits.** S89 puts the nerve to the iliacus above the inguinal
+ligament and says femoral neuropathy weakens hip flexion "to a lesser extent". The lesion
+place is therefore the femoral nerve in the pelvis, above that branch; a lesion at the
+inguinal ligament, which would spare the iliacus, is not modelled.
+
+**C25 — The hamstrings' roots.** S31 gives knee flexion to S2; S82's medial hamstring reflex
+is L5; S90 says S1 contributes and that hamstring weakness is a possible, rare sign of S1
+radiculopathy. S2 is kept; L5 and S1 are open.
+
+### Decisions
+
+**D54 — The leg reuses the arm's engine, with two additions anatomy requires.** A nerve may
+leave a part of the lumbosacral plexus, and parts may share a root (L4, C19); a nerve may
+leave another nerve, so a sciatic lesion cuts the tibial and common fibular nerves below it.
+The brachial rules — trunks that divide their roots exactly, cords formed from trunks — are
+unchanged, and every frozen arm case still passes.
+
+**D55 — A muscle may have several nerves, or no sourced roots.** Hip flexion is the psoas
+(lumbar plexus) and the iliacus (femoral nerve, S85, S89): cutting one leaves hip flexion
+uncertain, which is how the model says "weak to a lesser extent". Hip adduction and hip
+extension have nerves but no myotome source (D29), so, like a patch of skin with no roots
+(D30), they are weak only when every root that could serve them is lost, and uncertain when
+some are.
+
+**D56 — Six leg muscles answer the strength rows.** Hip flexion (L2), knee extension (L3),
+ankle dorsiflexion (L4), great toe extension (L5), plantar flexion (S1) and knee flexion (S2)
+are the movements S31 names, so those rows are now read through the muscles (D31) as the
+arm's are. A root lesion therefore weakens the row of every muscle it serves: an L5 root
+weakens ankle dorsiflexion, which S82 says it does.
+
+**D57 — Where bedside findings cannot separate two lesions, the expectation says so.** S88
+describes the L2–L4 overlap; S72 separates plexus from roots by paraspinal denervation, which
+a bedside examination cannot show. The femoral, meralgia and sacral plexus examinations ask
+only that the right family rank near the top and the excluded family not lead.
+
+**D58 — What the leg leaves out.** A femoral lesion at the inguinal ligament; the pudendal,
+posterior femoral cutaneous, iliohypogastric, ilioinguinal and genitofemoral nerves; deep and
+superficial fibular lesions apart; the tarsal tunnel; piriformis; the short head of biceps
+femoris; pectineus and sartorius; the medial hamstring reflex; the foot's intrinsic muscles.
+The leg panel says so.
+
+### Reviewer questions
+
+**R26** — C20: should an isolated L4 root lesion be taught with foot drop? S31 puts ankle
+dorsiflexion at L4, S82 puts tibialis anterior at L5.
+
+**R27** — C23: is the lateral foot spared in a common fibular palsy at the fibular neck? It
+depends on where the lateral sural cutaneous branch leaves, which no source read gives.
+
+**R28** — The hip adductors are modelled with no sourced roots, so an L3 or L4 root lesion
+leaves adduction uncertain. Which roots should be given, and from which source?
+

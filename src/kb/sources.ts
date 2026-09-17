@@ -9,6 +9,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S33', 'S34', 'S35', 'S36', 'S37', 'S38', 'S39', 'S40', 'S41', 'S42', 'S43', 'S44', 'S45', 'S46',
   'S47', 'S48', 'S49', 'S50', 'S51', 'S52', 'S53', 'S54', 'S55', 'S56', 'S57', 'S58', 'S59', 'S60', 'S61', 'S62', 'S63', 'S64', 'S65', 'S66',
   'S67', 'S68', 'S69', 'S70',
+  'S71', 'S72', 'S73', 'S74', 'S75', 'S76', 'S77', 'S78', 'S79', 'S80', 'S81', 'S82', 'S83', 'S84', 'S85', 'S86', 'S87', 'S88', 'S89', 'S90',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -84,4 +85,24 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S68', title: 'StatPearls — Anatomy, Shoulder and Upper Limb, Hand Interossei Muscles', url: 'https://www.ncbi.nlm.nih.gov/books/NBK534772/' },
   { id: 'S69', title: 'StatPearls — Neuroanatomy, White Rami Communicans', url: 'https://www.ncbi.nlm.nih.gov/books/NBK549910/' },
   { id: 'S70', title: 'Cornblath — Diplopia Due to Ocular Motor Cranial Neuropathies (Continuum, 2014)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/' },
+  { id: 'S71', title: 'StatPearls — Anatomy, Back, Lumbar Plexus', url: 'https://www.ncbi.nlm.nih.gov/books/NBK545137/' },
+  { id: 'S72', title: 'StatPearls — Lumbosacral Plexopathy', url: 'https://www.ncbi.nlm.nih.gov/books/NBK556030/' },
+  { id: 'S73', title: 'StatPearls — Anatomy, Bony Pelvis and Lower Limb: Thigh Nerves', url: 'https://www.ncbi.nlm.nih.gov/books/NBK482225/' },
+  { id: 'S74', title: 'StatPearls — Anatomy, Bony Pelvis and Lower Limb: Lateral Femoral Cutaneous Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK532301/' },
+  { id: 'S75', title: 'StatPearls — Anatomy, Sciatic Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK482431/' },
+  { id: 'S76', title: 'StatPearls — Anatomy, Bony Pelvis and Lower Limb: Calf Common Peroneal Nerve (Common Fibular Nerve)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK532968/' },
+  { id: 'S77', title: 'StatPearls — Peroneal Nerve Injury', url: 'https://www.ncbi.nlm.nih.gov/books/NBK549859/' },
+  { id: 'S78', title: 'StatPearls — Foot Drop', url: 'https://www.ncbi.nlm.nih.gov/books/NBK554393/' },
+  { id: 'S79', title: 'StatPearls — Anatomy, Bony Pelvis and Lower Limb: Tibial Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537028/' },
+  { id: 'S80', title: 'StatPearls — Anatomy, Abdomen and Pelvis: Superior Gluteal Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK535408/' },
+  { id: 'S81', title: 'StatPearls — Anatomy, Abdomen and Pelvis: Inferior Gluteal Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK532884/' },
+  { id: 'S82', title: 'StatPearls — Lumbosacral Radiculopathy', url: 'https://www.ncbi.nlm.nih.gov/books/NBK430837/' },
+  { id: 'S83', title: 'StatPearls — Electrodiagnostic Evaluation of Peroneal Neuropathy', url: 'https://www.ncbi.nlm.nih.gov/books/NBK563251/' },
+  { id: 'S84', title: 'StatPearls — Anatomy, Bony Pelvis and Lower Limb: Tibialis Posterior Muscle', url: 'https://www.ncbi.nlm.nih.gov/books/NBK539913/' },
+  { id: 'S85', title: 'StatPearls — Anatomy, Bony Pelvis and Lower Limb: Iliopsoas Muscle', url: 'https://www.ncbi.nlm.nih.gov/books/NBK531508/' },
+  { id: 'S86', title: 'StatPearls — Anatomy, Bony Pelvis and Lower Limb: Saphenous Nerve, Artery, and Vein', url: 'https://www.ncbi.nlm.nih.gov/books/NBK541045/' },
+  { id: 'S87', title: 'StatPearls — Anatomy, Bony Pelvis and Lower Limb: Sural Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK546638/' },
+  { id: 'S88', title: 'StatPearls — Electrodiagnostic Evaluation of Lumbosacral Radiculopathy', url: 'https://www.ncbi.nlm.nih.gov/books/NBK563224/' },
+  { id: 'S89', title: 'StatPearls — Anatomy, Bony Pelvis and Lower Limb: Thigh Femoral Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK556065/' },
+  { id: 'S90', title: 'Stamiris et al. — S1 Radiculopathy Initially Presenting With Sole Knee Flexion Weakness (Cureus, 2024)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11070185/' },
 ];

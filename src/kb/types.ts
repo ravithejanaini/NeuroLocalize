@@ -6,7 +6,14 @@ import type {
   BrainCompartment,
   BrainLevel,
   Compartment,
+  ArmMuscle,
+  ArmNerve,
+  ArmSkinArea,
   Deformity,
+  LegMuscle,
+  LegNerve,
+  LegPlexusPart,
+  LegSkinArea,
   Muscle,
   Nerve,
   PlexusCord,
@@ -53,11 +60,16 @@ type Row<T> = { readonly meta: Meta } & T;
 
 // ─── The upper limb (P4) ───
 export type Division = 'anterior' | 'posterior';
-/** Where a nerve leaves the plexus: straight from the roots, from a trunk, or from cords. */
+/**
+ * Where a nerve leaves the plexus: straight from the roots, from a trunk, or from cords (the
+ * brachial plexus); from a part of the lumbosacral plexus, or from another nerve (P7).
+ */
 export type NerveOrigin =
   | { readonly from: 'roots' }
   | { readonly from: 'trunk'; readonly trunk: Trunk }
-  | { readonly from: 'cords'; readonly cords: readonly PlexusCord[] };
+  | { readonly from: 'cords'; readonly cords: readonly PlexusCord[] }
+  | { readonly from: 'plexus'; readonly part: LegPlexusPart }
+  | { readonly from: 'nerve'; readonly nerve: Nerve };
 /**
  * A branch of a nerve. `after` counts the nerve's named lesion places that lie proximal to
  * the branch, so a lesion at place i (0-based) damages the branch when i < after (D27).
@@ -71,6 +83,8 @@ export type Plexus = {
     readonly roots: Readonly<Record<Trunk, Span>>;
   }>;
   readonly cords: Row<{ readonly formedBy: Readonly<Record<PlexusCord, readonly Trunk[]>> }>;
+  /** P7: the roots of each part of the lumbosacral plexus. Unlike the trunks, they may share one (C19). */
+  readonly legParts: Row<{ readonly roots: Readonly<Record<LegPlexusPart, Span>> }>;
   /** A nerve's own root values are drawn, not computed with (D29); they live in the render KB. */
   readonly nerves: Readonly<
     Record<
@@ -86,9 +100,10 @@ export type Plexus = {
     Record<
       Muscle,
       Row<{
-        readonly supply: Supply;
-        /** From the myotome sources, not from the nerve (D29). */
-        readonly roots: Span;
+        /** Every nerve that reaches the muscle; cutting some of them leaves it `indeterminate` (P7). */
+        readonly supply: readonly Supply[];
+        /** From the myotome sources, not from the nerve (D29). Null when no source gives them. */
+        readonly roots: Span | null;
         readonly disputedRoots?: Span;
         /** The single-segment strength test this muscle answers (D31). */
         readonly myotome?: Segment;
@@ -264,13 +279,27 @@ export type LimbLayout = {
   /** Cords from where their divisions meet to where their nerves leave. */
   readonly cords: Readonly<Record<PlexusCord, readonly LimbPoint[]>>;
   /** Each nerve from where it leaves its origin to its last branch. */
-  readonly nerves: Readonly<Record<Nerve, readonly Waypoint[]>>;
+  readonly nerves: Readonly<Record<ArmNerve, readonly Waypoint[]>>;
   /** Where each muscle and patch of skin is drawn. */
-  readonly targets: Readonly<Record<Muscle | SkinArea, LimbPoint>>;
+  readonly targets: Readonly<Record<ArmMuscle | ArmSkinArea, LimbPoint>>;
   readonly clavicle: readonly LimbPoint[];
   readonly firstRib: readonly LimbPoint[];
   readonly artery: readonly LimbPoint[];
   readonly scalenes: { readonly anterior: readonly LimbPoint[]; readonly middle: readonly LimbPoint[] };
+  readonly bones: readonly (readonly LimbPoint[])[];
+};
+
+/**
+ * P7: the lumbosacral plexus and the leg, for the patient's left (x negative); the right
+ * mirrors x. Schematic: what is sourced is the order of places and branches, not distances.
+ */
+export type LegLayout = {
+  /** Each part of the plexus, from where its roots meet to where its nerves leave. */
+  readonly parts: Readonly<Record<LegPlexusPart, readonly LimbPoint[]>>;
+  /** Each nerve from where it leaves its origin to its last branch. */
+  readonly nerves: Readonly<Record<LegNerve, readonly Waypoint[]>>;
+  readonly targets: Readonly<Record<LegMuscle | LegSkinArea, LimbPoint>>;
+  readonly inguinalLigament: readonly LimbPoint[];
   readonly bones: readonly (readonly LimbPoint[])[];
 };
 
@@ -310,6 +339,7 @@ export type RenderKb = {
    * cords named around the axillary artery — are the sourced part, and tests check them.
    */
   readonly limb: Row<LimbLayout>;
+  readonly leg: Row<LegLayout>;
   readonly brainLayout: Row<BrainLayout>;
   /** Root values of each nerve, as drawn. Muscles and skin carry their own (D29). */
   readonly nerveRoots: Row<{

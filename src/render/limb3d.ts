@@ -1,9 +1,9 @@
-// The brachial plexus and the arms in the scene: strands from the geometry layer, the
-// landmarks they are drawn against, and a mark on every muscle and patch of skin that
-// takes the colour of its finding. Nothing here decides a finding.
+// The brachial and lumbosacral plexuses and the limbs in the scene: strands from the geometry
+// layer, the landmarks they are drawn against, and a mark on every muscle and patch of skin
+// that takes the colour of its finding. Nothing here decides a finding.
 import * as THREE from 'three';
 import type { Findings } from '../engine/forward.ts';
-import { mirror, plexusStrands, siteAnchor, type Strand, type Target } from '../geometry/plexus.ts';
+import { legStrands, mirror, plexusStrands, siteAnchor, targetPoint, type Strand, type Target } from '../geometry/plexus.ts';
 import type { Kb, LimbPoint, RenderKb } from '../kb/types.ts';
 import { MUSCLES, SIDES, SKIN_AREAS, type PlexusSite, type SensoryState, type Side } from '../kb/vocab.ts';
 import type { Label, Palette } from './scene.ts';
@@ -62,6 +62,13 @@ export function buildLimb(kb: Kb, render: RenderKb, palette: Palette, layer: HTM
     root.add(tube(layout.artery.map((p) => v3(mirror(p, side))), 0.06, palette.artery, 0.4));
     for (const scalene of [layout.scalenes.anterior, layout.scalenes.middle]) root.add(line(scalene, side, palette.rule, 0.35));
     for (const bone of layout.bones) root.add(line(bone, side, palette.rule, 0.5));
+    // P7: the leg.
+    for (const s of legStrands(kb, render, side)) {
+      const style = STRAND_STYLE[s.kind];
+      root.add(tube(s.points.map(v3), style.radius, s.kind === 'root' ? palette.grey : palette.nerve, style.opacity));
+    }
+    root.add(line(render.leg.inguinalLigament, side, palette.rule, 0.7));
+    for (const bone of render.leg.bones) root.add(line(bone, side, palette.rule, 0.5));
   }
 
   // Names on the patient's left only, so the right arm stays clean.
@@ -83,6 +90,16 @@ export function buildLimb(kb: Kb, render: RenderKb, palette: Palette, layer: HTM
   label('musculocutaneous', L(layout.nerves.musculocutaneous[1]?.at, -0.3));
   label('axillary', L(layout.nerves.axillary[1]?.at, -0.3, 0.2));
   label('long thoracic', L(layout.nerves.long_thoracic[2]?.at, 0.2));
+  const leg = render.leg;
+  label('lumbar plexus', L(leg.parts.lumbar[0], -0.2, 0.25));
+  label('sacral plexus', L(leg.parts.sacral[1], 0.2, -0.1));
+  label('inguinal ligament', L(leg.inguinalLigament[1], 0, 0.25), 'lbl lbl-limb lbl-land');
+  label('femoral', L(leg.nerves.femoral[3]?.at, -0.3));
+  label('obturator', L(leg.nerves.obturator[2]?.at, 0.3, -0.9));
+  label('sciatic', L(leg.nerves.sciatic[2]?.at, 0.3));
+  label('tibial', L(leg.nerves.tibial[1]?.at, 0.5, -0.9));
+  label('common fibular', L(leg.nerves.common_fibular[1]?.at, -0.3));
+  label('fibular neck', L(leg.nerves.common_fibular[1]?.at, -0.3, 0.55), 'lbl lbl-limb lbl-land');
 
   // A mark on every muscle and patch; its colour is its finding.
   const marks = new Map<string, THREE.Mesh>();
@@ -92,7 +109,7 @@ export function buildLimb(kb: Kb, render: RenderKb, palette: Palette, layer: HTM
     for (const t of [...MUSCLES, ...SKIN_AREAS] as Target[]) {
       const isMuscle = (MUSCLES as readonly string[]).includes(t);
       const mesh = new THREE.Mesh(isMuscle ? muscleGeo : skinGeo, basic(palette.grey, 0.35));
-      mesh.position.copy(v3(mirror(layout.targets[t], side)));
+      mesh.position.copy(v3(mirror(targetPoint(render, t), side)));
       root.add(mesh);
       marks.set(`${side}|${t}`, mesh);
     }

@@ -33,7 +33,7 @@ import { mapBrain, regionOf, type BrainMap } from './brain.ts';
 import { forward, isBrain, isCord, isPlexus, isSacral, type Findings } from './forward.ts';
 import { hypotheses, type Hypothesis } from './hypotheses.ts';
 import { mapLesion, type LesionMap } from './lesion.ts';
-import { limbRoute, mapPlexus, routeSites, type PlexusMap } from './limb.ts';
+import { limbRoute, mapPlexus, routeDamage, routeSites, routesTo, type PlexusMap } from './limb.ts';
 import { crossingOffsets, damageAlong, motorRoute, sensoryRoute, type Element } from './routes.ts';
 
 export type Span = readonly [Segment, Segment];
@@ -476,6 +476,16 @@ export const SITE_NAME: Record<Place, string> = {
   median_wrist: 'median nerve at the wrist',
   ulnar_elbow: 'ulnar nerve at the elbow',
   ulnar_wrist: 'ulnar nerve at the wrist',
+  lumbar_plexus: 'lumbar plexus',
+  sacral_plexus: 'sacral plexus',
+  femoral: 'femoral nerve in the pelvis',
+  obturator: 'obturator nerve',
+  lateral_femoral_cutaneous: 'lateral femoral cutaneous nerve',
+  superior_gluteal: 'superior gluteal nerve',
+  inferior_gluteal: 'inferior gluteal nerve',
+  sciatic: 'sciatic nerve',
+  tibial: 'tibial nerve',
+  common_fibular: 'common fibular nerve at the fibular neck',
 };
 const where = (e: Element): string => `${SIDE[e.side]} ${PLACE[e.compartment] ?? e.compartment} at ${segName(e.segment)}`;
 
@@ -553,9 +563,16 @@ function muscleReason(map: LesionMap, kb: Kb, pmap: PlexusMap, side: Side, muscl
     const cut = firstCut(map, kb, motorRoute(kb, side, idx(r)).elements, false);
     if (cut) causes.add(`the motor route to ${r} is cut at the ${where(cut)}`);
   }
-  for (const c of limbCuts(kb, pmap, side, [row.supply], roots)) causes.add(c);
+  const cuts = limbCuts(kb, pmap, side, row.supply, roots);
+  for (const c of cuts) causes.add(c);
+  // P7: a muscle with more than one nerve keeps some strength when only one is cut.
+  if (cuts.length && roots.some((r) => routesTo(kb, row.supply, r, null).some((route) => routeDamage(pmap, route, side) === 0))) {
+    causes.add('another of its nerves is intact, so the weakness is partial');
+  }
   const disputed = rootsOf(row.disputedRoots);
-  if (causes.size && disputed.length && !rootsOf(row.roots).some((r) => [...causes].some((c) => c.includes(r)))) {
+  if (causes.size && disputed.length && row.roots === null) {
+    causes.add(`no source read gives its roots; any of ${disputed[0]}–${disputed[disputed.length - 1]} may serve it`);
+  } else if (causes.size && disputed.length && !rootsOf(row.roots).some((r) => [...causes].some((c) => c.includes(r)))) {
     causes.add(`the sources disagree whether ${disputed.join('–')} serves it`);
   }
   return [...causes];
@@ -660,7 +677,7 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
         return `spinal shock below a complete lesion at ${segName(map.transectionAt)}`;
       }
       const muscle = kb.plexus.reflexMuscles.muscles[o.reflex];
-      const peripheral = muscle ? limbCuts(kb, pmap, o.side, [kb.plexus.muscles[muscle].supply], segsOf([from, to])) : [];
+      const peripheral = muscle ? limbCuts(kb, pmap, o.side, kb.plexus.muscles[muscle].supply, segsOf([from, to])) : [];
       if ((r === 'absent' || r === 'reduced') && peripheral.length) return `its arc runs through the cut: ${peripheral.join('; ')}`;
       if (r === 'absent' || r === 'reduced') return `the ${arc} is damaged`;
       const above = bodyCut('motor', o.side, idx(from));

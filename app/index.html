@@ -382,9 +382,10 @@ body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-
       <button type="button" data-station="axial" aria-pressed="false">Axial</button>
       <button type="button" data-station="side" aria-pressed="false">Side</button>
       <button type="button" data-station="arm" aria-pressed="false">Arm</button>
+      <button type="button" data-station="leg" aria-pressed="false">Leg</button>
       <button type="button" data-station="brain" aria-pressed="false">Brain</button>
     </div>
-    <p class="hud hint">Drag to turn · scroll or pinch to zoom · shift-drag to move along the cord · keys 1–6</p>
+    <p class="hud hint">Drag to turn · scroll or pinch to zoom · shift-drag to move along the cord · keys 1–7</p>
     <ul class="hud legend">
       <li><i style="background:var(--dc-glow)"></i>Posterior columns</li>
       <li><i style="background:var(--stt-glow)"></i>Spinothalamic</li>
@@ -399,7 +400,7 @@ body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-
         <span>Time slowed <b class="dilation">333×</b></span>
         <span>Speeds inside the cord illustrative</span>
         <span>Ruler interpolated</span>
-        <span>Arm shortened, plexus schematic</span>
+        <span>Limbs shortened, plexuses schematic</span>
         <span>Brain schematic, not to scale</span>
       </div>
     </div>
@@ -537,7 +538,7 @@ body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-
 
     <section class="sec" data-sec="model">
       <h2 class="sec-t">Keys</h2>
-      <p class="keys">Practice: <kbd>1</kbd>&ndash;<kbd>4</kbd> answer &middot; <kbd>N</kbd> next &middot; <kbd>M</kbd> show on the model &middot; presenting: <kbd>R</kbd> reveal, <kbd>Esc</kbd> leave<br><kbd>1</kbd>&ndash;<kbd>6</kbd> camera &middot; <kbd>[</kbd> <kbd>]</kbd> move the lesion &middot; <kbd>,</kbd> <kbd>.</kbd> move the slice &middot; drag to turn, pinch or scroll to zoom</p>
+      <p class="keys">Practice: <kbd>1</kbd>&ndash;<kbd>4</kbd> answer &middot; <kbd>N</kbd> next &middot; <kbd>M</kbd> show on the model &middot; presenting: <kbd>R</kbd> reveal, <kbd>Esc</kbd> leave<br><kbd>1</kbd>&ndash;<kbd>7</kbd> camera &middot; <kbd>[</kbd> <kbd>]</kbd> move the lesion &middot; <kbd>,</kbd> <kbd>.</kbd> move the slice &middot; drag to turn, pinch or scroll to zoom</p>
     </section>
 
     <section class="sec" data-sec="model">
@@ -549,6 +550,7 @@ body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-
         <li>The segment-to-vertebra ruler is interpolated between sourced anchors, with every vertebra drawn the same height.</li>
         <li>The brain is schematic and not to scale. What is sourced is the order of levels, which parts lie medially or laterally, which side each tract serves, and the homunculus from leg to face.</li>
         <li>Practice cases are generated: a real candidate lesion, some of the findings the model derives for it, and options the findings shown rule out. Every case is chronic. A case is kept only if the model itself, given just those findings, puts the true lesion first with nothing against it.</li>
+        <li>The leg is drawn shortened and the lumbosacral plexus is schematic. What is sourced is the order of things: the lumbar plexus from L1–L4 and the sacral plexus from L4–S4, the femoral nerve to the front of the thigh and the obturator to its medial side, the gluteal nerves behind, and the sciatic nerve dividing above the knee into the tibial nerve and the common fibular nerve, which winds round the fibular neck.</li>
         <li>The arm is drawn shortened and the plexus is schematic. What is sourced is the order of things: trunks between the scalenes and over the first rib, divisions behind the clavicle, cords named around the axillary artery, and where each branch leaves its nerve.</li>
       </ul>
     </section>

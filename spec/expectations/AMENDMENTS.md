@@ -190,6 +190,20 @@ situation the freeze exists to catch.
   was changed, and every new assertion failed against the unchanged engine (recorded in the
   commit). S67 and S68 were read for this amendment.
 
+## A10 — The lower limb (P7, 2026-09-17)
+
+- **Changed:** additions only. `leg.ts` holds thirteen forward cases: the common fibular,
+  tibial, sciatic, femoral, obturator, lateral femoral cutaneous, superior and inferior
+  gluteal nerves, both plexuses, and the L4, L5 and S1 roots examined at the leg.
+  `reverse-leg.ts` holds seven examinations, including the foot-drop and weak-knee
+  differentials.
+- **Why:** P7 adds the lower limb (`docs/P7-analysis.md`).
+- **How circularity was avoided:** every value comes from the analysis tables, which quote
+  S71–S90 and were written before these files; both files were run against the P6 engine
+  and failed before any lower-limb code was written. Where a source says two lesions cannot
+  be separated at the bedside (S72, S88), the expectation asks only that the right family
+  rank near the top.
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -203,5 +217,7 @@ situation the freeze exists to catch.
 | `reverse-plexus.ts` | A4, A5 |
 | `brain.ts` | A7, A8, A9 |
 | `reverse-brain.ts` | A7 |
+| `leg.ts` | A10 |
+| `reverse-leg.ts` | A10 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.
