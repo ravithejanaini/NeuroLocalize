@@ -6,11 +6,15 @@ import {
   PLEXUS_SITES,
   SEGMENTS,
   SIDES,
+  TERRITORIES,
   type Compartment,
   type LesionFamily,
+  type Place,
   type PlexusSite,
   type Segment,
 } from '../kb/vocab.ts';
+import { KB } from '../kb/kb.ts';
+import type { Kb } from '../kb/types.ts';
 import type { AnyRegion } from './forward.ts';
 import type { LesionRegion } from './lesion.ts';
 
@@ -22,7 +26,7 @@ export type Hypothesis = {
   readonly caudal: number;
   readonly regions: readonly AnyRegion[];
   /** Where a plexus or nerve candidate sits. Its rostral and caudal ends are then nominal. */
-  readonly site?: PlexusSite;
+  readonly site?: Place;
 };
 
 /** Trunks and cords; every other place is on a named nerve (D32). */
@@ -148,6 +152,38 @@ export function hypotheses(): readonly Hypothesis[] {
       });
     }
   }
+  // Above the cord (D44): each named territory on either side.
+  for (const territory of TERRITORIES) {
+    const row = KB.brain.territories[territory];
+    const hemisphere = ['cortex', 'capsule', 'thalamus'].includes(row.level);
+    for (const side of SIDES) {
+      const family: LesionFamily = hemisphere
+        ? side === 'L' ? 'hemisphere_left' : 'hemisphere_right'
+        : side === 'L' ? 'brainstem_left' : 'brainstem_right';
+      out.push({
+        id: `${family}:${territory}`,
+        family,
+        rostral: nominal,
+        caudal: nominal,
+        regions: territoryRegions(KB, territory, side),
+        site: territory,
+      });
+    }
+  }
   cache = out;
   return out;
+}
+
+/** A territory as a lesion, read from the knowledge base passed in. */
+export function territoryRegions(kb: Kb, territory: (typeof TERRITORIES)[number], side: 'L' | 'R'): AnyRegion[] {
+  const row = kb.brain.territories[territory];
+  return [
+    {
+      brain: row.level,
+      sides: [side],
+      compartments: row.compartments,
+      severity: 'complete',
+      ...(row.regions ? { regions: row.regions } : {}),
+    },
+  ];
 }

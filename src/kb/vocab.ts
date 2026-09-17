@@ -237,3 +237,7 @@ export const TERRITORIES = [
   'aca_cortex',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
+
+/** Anywhere a named candidate can sit beyond the cord and roots. */
+export const PLACES = [...PLEXUS_SITES, ...TERRITORIES] as const;
+export type Place = (typeof PLACES)[number];

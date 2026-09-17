@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
+import { BRAIN_REVERSE_CASES } from '../spec/expectations/reverse-brain.ts';
 import { LIMB_REVERSE_CASES } from '../spec/expectations/reverse-plexus.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
@@ -14,8 +15,8 @@ import { examSlots } from '../src/render/slots.ts';
 
 const SLOTS = examSlots(RENDER);
 
-describe('frozen reverse expectations (A3, A4)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES]) {
+describe('frozen reverse expectations (A3, A4, A7)', () => {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...BRAIN_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });
@@ -26,8 +27,9 @@ describe('reverse engine contract', () => {
   it('offers only examinations the body map and myotome grid can show', () => {
     assert.equal(new Set(SLOTS.map(slotKey)).size, SLOTS.length, 'duplicate slots');
     // 2 sides × 2 modalities × (12 landmarks + saddle) + 2 × 12 myotomes + 2 × 6 reflexes + 4 signs + romberg + bladder,
-    // then per side 14 muscles and the 3 patches that are not landmarks (D30)
-    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * 14 + 2 * 3);
+    // then per side 14 muscles and the 3 patches that are not landmarks (D30), and per side
+    // facial sensation, facial strength, ataxia and five cranial signs, plus vertigo (P5)
+    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * 14 + 2 * 3 + 2 * 8 + 1);
   });
 
   it('with no findings, prefers nothing in particular and still suggests a test', () => {
@@ -181,6 +183,44 @@ describe('reverse engine contract', () => {
     const nerve = r.groups.find((g) => g.family === 'nerve_left' && g.sites.includes('long_thoracic'));
     assert.ok(nerve);
     assert.deepEqual(nerve.sites, ['long_thoracic'], 'the only nerve place that weakens serratus');
-    assert.ok(hypotheses().filter((x) => x.site).length === 36, 'D32: 18 places on each side');
+    const places = hypotheses().filter((x) => x.site);
+    assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 36, 'D32: 18 places on each side');
+    assert.equal(places.filter((x) => x.family.startsWith('brainstem') || x.family.startsWith('hemisphere')).length, 18, 'D44: 9 territories on each side');
+  });
+
+  // ── above the cord (D42–D44) ──
+  it('reads the face as sensation, and strength as lower or whole', () => {
+    const lms = at('brainstem_left:lateral_medullary');
+    assert.equal(predict(lms, { kind: 'face_sensation', side: 'L' }), 'abnormal');
+    assert.equal(predict(lms, { kind: 'face_sensation', side: 'R' }), 'normal');
+    const capsule = at('hemisphere_left:internal_capsule');
+    assert.equal(predict(capsule, { kind: 'face_weakness', side: 'R' }), 'lower');
+    assert.equal(predict(capsule, { kind: 'face_weakness', side: 'L' }), 'normal');
+    assert.equal(predict(at('brainstem_left:ventral_pons'), { kind: 'face_weakness', side: 'L' }), 'whole');
+    assert.equal(predict(capsule, { kind: 'cranial', side: 'R', sign: 'palate_weakness' }), 'unknown', 'bilateral supply (S64)');
+    assert.equal(predict(capsule, { kind: 'cranial', side: 'R', sign: 'tongue_weakness' }), 'present');
+    assert.equal(predict(lms, { kind: 'vertigo' }), 'present');
+    assert.equal(predict(lms, { kind: 'ataxia', side: 'R' }), 'absent');
+  });
+
+  it('explains a crossed brainstem finding by the part and level it cuts', () => {
+    const h = hypotheses().find((x) => x.id === 'brainstem_left:lateral_medullary');
+    assert.ok(h);
+    const [face, body, horner] = explain(
+      h,
+      [
+        { kind: 'face_sensation', side: 'L', value: 'abnormal' },
+        { kind: 'sensory', side: 'R', modality: 'pain_temperature', span: ['L4', 'L4'], value: 'abnormal' },
+        { kind: 'horner', side: 'L', value: 'present' },
+      ],
+      'chronic',
+    );
+    assert.match(face?.because ?? '', /left spinal trigeminal nucleus in the medulla is damaged/);
+    assert.match(body?.because ?? '', /left spinothalamic tract in the medulla is damaged, above the crossing/);
+    assert.match(horner?.because ?? '', /left descending sympathetic fibres in the medulla/);
+    const weber = hypotheses().find((x) => x.id === 'brainstem_left:midbrain_peduncle');
+    assert.ok(weber);
+    const [weak] = explain(weber, [{ kind: 'strength', side: 'R', span: ['L3', 'L3'], value: 'weak' }], 'chronic');
+    assert.match(weak?.because ?? '', /left cerebral peduncle in the midbrain is damaged, above the decussation/);
   });
 });

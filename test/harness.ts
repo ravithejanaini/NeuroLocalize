@@ -2,6 +2,7 @@
 // mutation harness, so both apply exactly the same rules.
 import type { Assertion, BrainAssertion, BrainCase, Case, LimbAssertion, LimbCase, Span } from '../spec/expectations/types.ts';
 import type { ReverseCase } from '../spec/expectations/reverse.ts';
+import type { BrainReverseCase } from '../spec/expectations/reverse-brain.ts';
 import type { LimbReverseCase } from '../spec/expectations/reverse-plexus.ts';
 import { forward, type Findings } from '../src/engine/forward.ts';
 import { predict, prepareSync, reverse, slotKey, type Observation, type Slot } from '../src/engine/reverse.ts';
@@ -127,7 +128,7 @@ export const runAll = (cases: readonly (Case | LimbCase | BrainCase)[], kb?: Kb)
 // ── reverse ──────────────────────────────────────────────────────────────
 
 /** Every way a ranking breaks a frozen reverse expectation, one message each. */
-export function reverseFailures(kase: ReverseCase | LimbReverseCase, slots: readonly Slot[], kb?: Kb): Failure[] {
+export function reverseFailures(kase: ReverseCase | LimbReverseCase | BrainReverseCase, slots: readonly Slot[], kb?: Kb): Failure[] {
   const out: Failure[] = [];
   const idx = (s: Segment): number => SEGMENTS.indexOf(s);
   const observations: readonly Observation[] = kase.observations;
@@ -154,10 +155,11 @@ export function reverseFailures(kase: ReverseCase | LimbReverseCase, slots: read
         if (h.rostral < idx(a) || h.rostral > idx(b)) fail(`${h.id} starts outside ${a}–${b}: ${summary}`);
       }
     }
-    if ('topSites' in ex && ex.topSites) {
-      const allowed = ex.topSites;
+    const places: readonly string[] | undefined =
+      'topSites' in ex ? ex.topSites : 'topPlaces' in ex ? ex.topPlaces : undefined;
+    if (places) {
       for (const h of top.members) {
-        if (!h.site || !allowed.includes(h.site)) fail(`${h.id} is not at ${allowed.join('/')}: ${summary}`);
+        if (!h.site || !places.includes(h.site)) fail(`${h.id} is not at ${places.join('/')}: ${summary}`);
       }
     }
     if (ex.unexplained !== undefined && r.unexplained !== ex.unexplained) fail(`unexplained is ${r.unexplained}: ${summary}`);

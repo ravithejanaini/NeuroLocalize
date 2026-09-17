@@ -5,13 +5,19 @@ import { KB } from '../kb/kb.ts';
 import type { Kb, Supply } from '../kb/types.ts';
 import {
   MUSCLES,
+  PLACES,
   PLEXUS_SITES,
   SEGMENTS,
   SKIN_AREAS,
   type BladderObservation,
+  type BodyRegion,
+  type BrainCompartment,
+  type BrainLevel,
+  type CranialSign,
+  type FaceWeaknessObservation,
   type LesionFamily,
   type Muscle,
-  type PlexusSite,
+  type Place,
   type Reflex,
   type ReflexObservation,
   type Segment,
@@ -23,7 +29,8 @@ import {
   type StrengthObservation,
   type Timepoint,
 } from '../kb/vocab.ts';
-import { forward, isCord, isPlexus, isSacral, type Findings } from './forward.ts';
+import { mapBrain, regionOf, type BrainMap } from './brain.ts';
+import { forward, isBrain, isCord, isPlexus, isSacral, type Findings } from './forward.ts';
 import { hypotheses, type Hypothesis } from './hypotheses.ts';
 import { mapLesion, type LesionMap } from './lesion.ts';
 import { limbRoute, mapPlexus, routeSites, type PlexusMap } from './limb.ts';
@@ -40,7 +47,12 @@ export type Observation =
   | { readonly kind: 'bladder'; readonly value: BladderObservation }
   | { readonly kind: 'muscle'; readonly side: Side; readonly muscle: Muscle; readonly value: StrengthObservation }
   /** Any modality at a patch without a dermatome landmark (D30). */
-  | { readonly kind: 'skin'; readonly side: Side; readonly area: SkinArea; readonly value: SensoryObservation };
+  | { readonly kind: 'skin'; readonly side: Side; readonly area: SkinArea; readonly value: SensoryObservation }
+  | { readonly kind: 'face_sensation'; readonly side: Side; readonly value: SensoryObservation }
+  | { readonly kind: 'face_weakness'; readonly side: Side; readonly value: FaceWeaknessObservation }
+  | { readonly kind: 'cranial'; readonly side: Side; readonly sign: CranialSign; readonly value: SignObservation }
+  | { readonly kind: 'ataxia'; readonly side: Side; readonly value: SignObservation }
+  | { readonly kind: 'vertigo'; readonly value: SignObservation };
 
 /** An observation not yet made: everything but its value. */
 export type Slot = Observation extends infer O ? (O extends Observation ? Omit<O, 'value'> : never) : never;
@@ -63,6 +75,11 @@ const DOMAIN: Record<Observation['kind'], readonly string[]> = {
   bladder: ['normal', 'overactive', 'retention'],
   muscle: ['normal', 'weak'],
   skin: ['normal', 'abnormal'],
+  face_sensation: ['normal', 'abnormal'],
+  face_weakness: ['normal', 'lower', 'whole'],
+  cranial: ['present', 'absent'],
+  ataxia: ['present', 'absent'],
+  vertigo: ['present', 'absent'],
 };
 
 const idx = (s: Segment): number => SEGMENTS.indexOf(s);
@@ -83,6 +100,12 @@ export const slotKey = (s: Slot): string => {
       return `muscle|${s.side}|${s.muscle}`;
     case 'skin':
       return `skin|${s.side}|${s.area}`;
+    case 'face_sensation':
+    case 'face_weakness':
+    case 'ataxia':
+      return `${s.kind}|${s.side}`;
+    case 'cranial':
+      return `cranial|${s.side}|${s.sign}`;
     default:
       return s.kind;
   }
@@ -119,6 +142,22 @@ export function predict(f: Findings, s: Slot, kb: Kb = KB): Value | 'unknown' {
       return strengthOf([f.muscles[s.side][s.muscle]]);
     case 'skin':
       return sensed([f.skin[s.side].pain_temperature[s.area], f.skin[s.side].posterior_column[s.area]]);
+    case 'face_sensation':
+      return sensed([f.faceSensation[s.side]]);
+    case 'face_weakness': {
+      const w = f.faceWeakness[s.side];
+      return w === 'indeterminate' ? 'unknown' : w === 'none' ? 'normal' : w;
+    }
+    case 'cranial': {
+      const v = f.cranial[s.side][s.sign];
+      return v === 'indeterminate' ? 'unknown' : v;
+    }
+    case 'ataxia': {
+      const v = f.ataxia[s.side];
+      return v === 'indeterminate' ? 'unknown' : v;
+    }
+    case 'vertigo':
+      return f.vertigo === 'indeterminate' ? 'unknown' : f.vertigo;
     case 'reflex': {
       const r = f.reflexes[s.side][s.reflex];
       return r === 'indeterminate' ? 'unknown' : r === 'absent' ? 'reduced' : r;
@@ -216,7 +255,7 @@ export function prepareSync(timepoint: Timepoint, kb: Kb = KB): void {
 export type Group = {
   readonly family: LesionFamily;
   /** For plexus and nerve groups, the places its members sit, in anatomical order. */
-  readonly sites: readonly PlexusSite[];
+  readonly sites: readonly Place[];
   readonly rostral: readonly [Segment, Segment];
   readonly caudal: readonly [Segment, Segment];
   readonly members: readonly Hypothesis[];
@@ -230,7 +269,7 @@ export type Outcome = {
   readonly value: Value;
   readonly probability: number;
   /** The single most likely candidate if this result were seen. */
-  readonly leader: { readonly family: LesionFamily; readonly rostral: Segment; readonly site?: PlexusSite } | null;
+  readonly leader: { readonly family: LesionFamily; readonly rostral: Segment; readonly site?: Place } | null;
 };
 
 export type Suggestion = {
@@ -294,7 +333,7 @@ function groupsOf(scored: readonly Scored[], post: readonly number[]): Group[] {
       const sites = new Set(items.map((s) => s.h.site).filter((x) => x !== undefined));
       return {
         family: first.h.family,
-        sites: PLEXUS_SITES.filter((x) => sites.has(x)),
+        sites: PLACES.filter((x) => sites.has(x)),
         rostral: [segName(Math.min(...rs)), segName(Math.max(...rs))],
         caudal: [segName(Math.min(...cs)), segName(Math.max(...cs))],
         members: items.map((s) => s.h),
@@ -394,9 +433,19 @@ const PLACE: Partial<Record<string, string>> = {
   intermediolateral: 'lateral horn',
 };
 const SIDE: Record<Side, string> = { L: 'left', R: 'right' };
+const PLEXUS_SITE_SET: ReadonlySet<string> = new Set<string>(PLEXUS_SITES);
 
-/** Plain names for the places beyond the roots, as the working speaks of them. */
-export const SITE_NAME: Record<PlexusSite, string> = {
+/** Plain names for the places beyond the cord and roots, as the working speaks of them. */
+export const SITE_NAME: Record<Place, string> = {
+  lateral_medullary: 'lateral medulla',
+  medial_medullary: 'medial medulla',
+  ventral_pons: 'ventral pons',
+  dorsal_pons: 'dorsal pons',
+  midbrain_peduncle: 'cerebral peduncle',
+  internal_capsule: 'internal capsule',
+  thalamus: 'lateral thalamus',
+  mca_cortex: 'lateral cortex (MCA)',
+  aca_cortex: 'medial cortex (ACA)',
   upper_trunk: 'upper trunk',
   middle_trunk: 'middle trunk',
   lower_trunk: 'lower trunk',
@@ -437,6 +486,49 @@ function limbCuts(kb: Kb, pmap: PlexusMap, side: Side, supplies: readonly Supply
 
 const rootsOf = (span: Span | null | undefined): Segment[] => (span ? segsOf(span) : []);
 
+const PART_NAME: Record<BrainCompartment, string> = {
+  motor_cortex: 'motor cortex',
+  sensory_cortex: 'sensory cortex',
+  capsule_genu: 'genu of the internal capsule',
+  capsule_posterior_motor: 'posterior limb of the internal capsule',
+  capsule_posterior_sensory: 'sensory fibres of the posterior limb',
+  vpl: 'VPL nucleus of the thalamus',
+  vpm: 'VPM nucleus of the thalamus',
+  peduncle: 'cerebral peduncle',
+  oculomotor: 'oculomotor fascicles',
+  basis: 'basis pontis',
+  facial: 'facial nucleus and fascicle',
+  abducens_nucleus: 'abducens nucleus',
+  abducens_fascicle: 'abducens fascicle',
+  pyramid: 'pyramid',
+  hypoglossal: 'hypoglossal nucleus',
+  medial_lemniscus: 'medial lemniscus',
+  spinothalamic: 'spinothalamic tract',
+  spinal_trigeminal: 'spinal trigeminal nucleus',
+  sympathetic: 'descending sympathetic fibres',
+  ambiguus: 'nucleus ambiguus',
+  cerebellar_peduncle: 'cerebellar peduncle',
+  vestibular: 'vestibular nuclei',
+};
+const LEVEL_NAME: Record<BrainLevel, string> = {
+  cortex: 'cortex',
+  capsule: 'capsule',
+  thalamus: 'thalamus',
+  midbrain: 'midbrain',
+  pons: 'pons',
+  medulla: 'medulla',
+};
+
+/** The first damaged part along a brain route, in words. */
+function brainCut(bmap: BrainMap, steps: readonly { level: BrainLevel; compartment: BrainCompartment }[], side: Side, region: BodyRegion): string | null {
+  const s = steps.find((x) => bmap.damage(x.level, x.compartment, side, region) > 0);
+  if (!s) return null;
+  const at = ['cortex', 'capsule', 'thalamus'].includes(s.level) ? '' : ` in the ${LEVEL_NAME[s.level]}`;
+  return `the ${SIDE[side]} ${PART_NAME[s.compartment]}${at}`;
+}
+const opp = (s: Side): Side => (s === 'L' ? 'R' : 'L');
+const partSideOf = (x: Side, serves: 'ipsilateral' | 'contralateral'): Side => (serves === 'ipsilateral' ? x : opp(x));
+
 function muscleReason(map: LesionMap, kb: Kb, pmap: PlexusMap, side: Side, muscle: Muscle): string[] {
   const row = kb.plexus.muscles[muscle];
   const roots = [...rootsOf(row.roots), ...rootsOf(row.disputedRoots)];
@@ -453,8 +545,53 @@ function muscleReason(map: LesionMap, kb: Kb, pmap: PlexusMap, side: Side, muscl
   return [...causes];
 }
 
-function reason(map: LesionMap, pmap: PlexusMap, kb: Kb, h: Hypothesis, o: Observation, f: Findings): string {
+function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypothesis, o: Observation, f: Findings): string {
+  const b = kb.brain;
+  const bodyCut = (kind: 'motor' | 'posterior_column' | 'pain_temperature', x: Side, k: number): string | null => {
+    if (bmap.empty) return null;
+    const route = kind === 'motor' ? b.corticospinal : kind === 'posterior_column' ? b.lemniscal : b.spinothalamic;
+    const cut = brainCut(bmap, route.steps, partSideOf(x, route.serves), regionOf(kb, k));
+    return cut ? `${cut} is damaged, above the ${kind === 'motor' ? 'decussation' : 'crossing'}` : null;
+  };
+  const faceCuts = (routes: readonly { steps: readonly { level: BrainLevel; compartment: BrainCompartment }[]; serves: 'ipsilateral' | 'contralateral' }[], x: Side): string[] =>
+    routes.flatMap((r) => {
+      const c = brainCut(bmap, r.steps, partSideOf(x, r.serves), 'face');
+      return c ? [`${c} is damaged`] : [];
+    });
   switch (o.kind) {
+    case 'face_sensation': {
+      const c = faceCuts([b.faceNucleus, b.faceAscending], o.side);
+      return c.length ? c.join('; ') : 'the trigeminal routes are intact';
+    }
+    case 'face_weakness': {
+      const w = f.faceWeakness[o.side];
+      if (w === 'whole' && faceCuts([b.facialNucleus], o.side).length) return `${faceCuts([b.facialNucleus], o.side).join('; ')}: the whole face on that side`;
+      const c = faceCuts([b.corticobulbarFace], o.side);
+      if (w === 'lower') return `${c.join('; ')}; the forehead keeps its supply from the other hemisphere`;
+      if (w === 'whole') return 'corticobulbar fibres to both facial nuclei are cut';
+      return 'the facial nucleus and its supranuclear supply are intact';
+    }
+    case 'cranial': {
+      const routes =
+        o.sign === 'oculomotor_palsy' ? [b.oculomotor]
+        : o.sign === 'abduction_weakness' ? [b.abduction]
+        : o.sign === 'gaze_palsy' ? [b.gaze]
+        : o.sign === 'tongue_weakness' ? [b.hypoglossal, b.corticobulbarTongue]
+        : [b.ambiguus];
+      const c = faceCuts(routes, o.side);
+      if (o.sign === 'palate_weakness' && !c.length && f.cranial[o.side].palate_weakness === 'indeterminate') {
+        return 'one hemisphere\'s supply is cut, and the palate has both: at most a milder weakness';
+      }
+      return c.length ? c.join('; ') : 'its nucleus, fascicle and supranuclear supply are intact';
+    }
+    case 'ataxia': {
+      const c = faceCuts([b.ataxia], o.side);
+      return c.length ? c.join('; ') : 'the cerebellar peduncles on that side are intact';
+    }
+    case 'vertigo': {
+      const c = (['L', 'R'] as const).map((s) => brainCut(bmap, b.vertigo.steps, s, 'face')).filter((x): x is string => x !== null);
+      return c.length ? `${c.join('; ')} ${c.length > 1 ? 'are' : 'is'} damaged` : 'the vestibular nuclei are intact';
+    }
     case 'muscle': {
       const causes = muscleReason(map, kb, pmap, o.side, o.muscle);
       return causes.length ? causes.join('; ') : 'every route from its roots to the muscle is intact';
@@ -466,6 +603,10 @@ function reason(map: LesionMap, pmap: PlexusMap, kb: Kb, h: Hypothesis, o: Obser
     }
     case 'sensory': {
       const causes = new Set<string>();
+      for (const k of segsOf(o.span).map(idx)) {
+        const c = bodyCut(o.modality, o.side, k);
+        if (c) causes.add(c);
+      }
       const [only] = segsOf(o.span);
       const area = segsOf(o.span).length === 1 && only ? landmarkArea(kb, only) : undefined;
       if (area) {
@@ -486,6 +627,8 @@ function reason(map: LesionMap, pmap: PlexusMap, kb: Kb, h: Hypothesis, o: Obser
       for (const k of segsOf(o.span).map(idx)) {
         const cut = firstCut(map, kb, motorRoute(kb, o.side, k).elements, false);
         if (cut) causes.add(`the motor route is cut at the ${where(cut)}`);
+        const above = bodyCut('motor', o.side, k);
+        if (above) causes.add(above);
       }
       const [only] = segsOf(o.span);
       for (const m of segsOf(o.span).length === 1 && only ? myotomeMuscles(kb, only) : []) {
@@ -504,13 +647,14 @@ function reason(map: LesionMap, pmap: PlexusMap, kb: Kb, h: Hypothesis, o: Obser
       const peripheral = muscle ? limbCuts(kb, pmap, o.side, [kb.plexus.muscles[muscle].supply], segsOf([from, to])) : [];
       if ((r === 'absent' || r === 'reduced') && peripheral.length) return `its arc runs through the cut: ${peripheral.join('; ')}`;
       if (r === 'absent' || r === 'reduced') return `the ${arc} is damaged`;
-      if (r === 'brisk') return `the corticospinal tract above the ${arc} is cut, so the reflex is released`;
+      const above = bodyCut('motor', o.side, idx(from));
+      if (r === 'brisk') return `${above ? `${above}` : `the corticospinal tract above the ${arc} is cut`}, so the reflex is released`;
       if (r === 'indeterminate') return `not settled at this time after injury`;
       return `the ${arc} and the tract above it are intact`;
     }
     case 'babinski':
       return f.babinski[o.side] === 'present'
-        ? 'corticospinal fibres to the lumbosacral cord are cut'
+        ? (bodyCut('motor', o.side, idx(kb.observations.babinski.corticospinalRostralTo)) ?? 'corticospinal fibres to the lumbosacral cord are cut')
         : f.babinski[o.side] === 'indeterminate'
           ? 'may or may not have appeared yet'
           : map.transectionAt >= 0
@@ -520,8 +664,8 @@ function reason(map: LesionMap, pmap: PlexusMap, kb: Kb, h: Hypothesis, o: Obser
       return f.horner[o.side] === 'present'
         ? map.damage(kb.autonomic.sympatheticRootCompartment.compartment, o.side, idx(kb.autonomic.sympatheticOutflow.root)) > 0
           ? `the ${kb.autonomic.sympatheticOutflow.root} root, which carries the sympathetic outflow to the eye, is damaged`
-          : 'the oculosympathetic pathway is interrupted at or above the ciliospinal centre'
-        : h.site
+          : (faceCuts([b.sympathetic], o.side)[0] ?? 'the oculosympathetic pathway is interrupted at or above the ciliospinal centre')
+        : h.site && PLEXUS_SITE_SET.has(h.site)
           ? 'the sympathetic fibres leave with the T1 root, before this point'
           : 'the oculosympathetic pathway is intact';
     case 'romberg':
@@ -544,6 +688,7 @@ function reason(map: LesionMap, pmap: PlexusMap, kb: Kb, h: Hypothesis, o: Obser
 export function explain(h: Hypothesis, observations: readonly Observation[], timepoint: Timepoint, kb: Kb = KB): Verdict[] {
   const map = mapLesion(h.regions.filter(isCord), kb);
   const pmap = mapPlexus(h.regions.filter(isPlexus));
+  const bmap = mapBrain(kb, h.regions.filter(isBrain));
   const f = forward(h.regions, timepoint, { kb });
   return observations.map((o) => {
     const predicted = predict(f, o, kb);
@@ -551,7 +696,7 @@ export function explain(h: Hypothesis, observations: readonly Observation[], tim
       observation: o,
       predicted,
       verdict: predicted === 'unknown' ? 'open' : predicted === o.value ? 'fits' : 'conflicts',
-      because: reason(map, pmap, kb, h, o, f),
+      because: reason(map, pmap, bmap, kb, h, o, f),
     };
   });
 }

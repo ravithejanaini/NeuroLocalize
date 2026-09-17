@@ -22,6 +22,7 @@ import {
   TRUNKS,
   VERTEBRAE,
 } from '../src/kb/vocab.ts';
+import { BRAIN_REVERSE_CASES } from '../spec/expectations/reverse-brain.ts';
 import { LIMB_REVERSE_CASES } from '../spec/expectations/reverse-plexus.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { RENDER } from '../src/kb/render.ts';
@@ -195,7 +196,7 @@ const mutants: Mutant[] = [];
 collect(KB, [], mutants);
 
 type Result = { row: string; describe: string; killed: boolean; failures: number; threw: boolean; byReverse: boolean };
-const REVERSE = [...REVERSE_CASES, ...LIMB_REVERSE_CASES];
+const REVERSE = [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...BRAIN_REVERSE_CASES];
 const SLOTS = examSlots(RENDER);
 const results: Result[] = mutants.map((m) => {
   const base = { row: rowOf(m.path), describe: m.describe };

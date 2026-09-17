@@ -3,7 +3,7 @@
 import type { Slot } from '../engine/reverse.ts';
 import { KB } from '../kb/kb.ts';
 import type { RenderKb } from '../kb/types.ts';
-import { MUSCLES, REFLEXES, SENSORY_MODALITIES, SIDES, SKIN_AREAS } from '../kb/vocab.ts';
+import { CRANIAL_SIGNS, MUSCLES, REFLEXES, SENSORY_MODALITIES, SIDES, SKIN_AREAS } from '../kb/vocab.ts';
 
 /** Patches examined on their own: those that are not already a dermatome landmark (D30). */
 export const OWN_AREAS = SKIN_AREAS.filter((a) => KB.plexus.skin[a].landmark === undefined);
@@ -22,7 +22,9 @@ export function examSlots(render: RenderKb): Slot[] {
     out.push({ kind: 'babinski', side }, { kind: 'horner', side });
     for (const muscle of MUSCLES) out.push({ kind: 'muscle', side, muscle });
     for (const area of OWN_AREAS) out.push({ kind: 'skin', side, area });
+    out.push({ kind: 'face_sensation', side }, { kind: 'face_weakness', side }, { kind: 'ataxia', side });
+    for (const sign of CRANIAL_SIGNS) out.push({ kind: 'cranial', side, sign });
   }
-  out.push({ kind: 'romberg' }, { kind: 'bladder' });
+  out.push({ kind: 'romberg' }, { kind: 'bladder' }, { kind: 'vertigo' });
   return out;
 }

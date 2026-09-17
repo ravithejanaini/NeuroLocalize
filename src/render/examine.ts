@@ -4,11 +4,13 @@ import type { Group, Observation, ReverseResult, Slot, Verdict } from '../engine
 import { SITE_NAME, slotKey } from '../engine/reverse.ts';
 import type { RenderKb } from '../kb/types.ts';
 import {
+  CRANIAL_SIGNS,
   MUSCLES,
   REFLEXES,
   SEGMENTS,
   SIDES,
   type LesionFamily,
+  type CranialSign,
   type Muscle,
   type SensoryModality,
   type Side,
@@ -61,6 +63,14 @@ export const MUSCLE_NAME: Record<Muscle, { readonly movement: string; readonly m
   interossei: { movement: 'finger abduction', muscle: 'first dorsal interosseous' },
 };
 
+export const CRANIAL_NAME: Record<CranialSign, string> = {
+  oculomotor_palsy: 'third nerve palsy (ptosis, eye down and out)',
+  abduction_weakness: 'eye does not abduct',
+  gaze_palsy: 'gaze palsy toward this side',
+  tongue_weakness: 'tongue weak (deviates to this side)',
+  palate_weakness: 'palate weak (uvula deviates away)',
+};
+
 export const AREA_NAME: Record<SkinArea, string> = {
   shoulder_badge: 'lateral shoulder (regimental badge)',
   lateral_forearm: 'lateral forearm',
@@ -84,6 +94,11 @@ export const CYCLE: Record<Slot['kind'], readonly string[]> = {
   bladder: ['normal', 'overactive', 'retention'],
   muscle: ['normal', 'weak'],
   skin: ['normal', 'abnormal'],
+  face_sensation: ['normal', 'abnormal'],
+  face_weakness: ['normal', 'lower', 'whole'],
+  cranial: ['absent', 'present'],
+  ataxia: ['absent', 'present'],
+  vertigo: ['absent', 'present'],
 };
 
 export function nextValue(slot: Slot, current: string | undefined): string | undefined {
@@ -122,6 +137,16 @@ export function slotLabel(render: RenderKb, s: Slot): string {
       return `${SIDE_WORD[s.side]} ${MUSCLE_NAME[s.muscle].movement} (${MUSCLE_NAME[s.muscle].muscle})`;
     case 'skin':
       return `${SIDE_WORD[s.side]} ${AREA_NAME[s.area]}`;
+    case 'face_sensation':
+      return `${SIDE_WORD[s.side]} face, sensation`;
+    case 'face_weakness':
+      return `${SIDE_WORD[s.side]} face, strength`;
+    case 'cranial':
+      return `${SIDE_WORD[s.side]} ${CRANIAL_NAME[s.sign]}`;
+    case 'ataxia':
+      return `${SIDE_WORD[s.side]} limb ataxia`;
+    case 'vertigo':
+      return 'Vertigo and nystagmus';
   }
 }
 
@@ -130,6 +155,8 @@ const VALUE_WORD: Record<string, string> = {
   abnormal: 'abnormal',
   weak: 'weak',
   reduced: 'reduced or absent',
+  lower: 'lower face weak',
+  whole: 'whole face weak',
   brisk: 'brisk',
   present: 'present',
   absent: 'absent',
@@ -213,7 +240,20 @@ export function examTables(render: RenderKb, findings: Findings): string {
     const n = MUSCLE_NAME[muscle];
     return `<tr><th class="mus" colspan="2">${n.movement}<span class="mus-name">${n.muscle}</span></th>${cells}</tr>`;
   }).join('');
-  return `<table class="extable"><thead><tr><th colspan="2">Strength</th><th>Left</th><th>Right</th></tr></thead><tbody>${strength}</tbody>
+  const headRow = (label: string, slotOf: (side: 'L' | 'R') => Slot): string =>
+    `<tr><th colspan="2">${label}</th>${SIDES.map((side) => {
+      const s = slotOf(side);
+      return `<td>${cell(slotKey(s), get(s), slotLabel(render, s))}</td>`;
+    }).join('')}</tr>`;
+  const head = [
+    headRow('Face, sensation', (side) => ({ kind: 'face_sensation', side })),
+    headRow('Face, strength', (side) => ({ kind: 'face_weakness', side })),
+    ...CRANIAL_SIGNS.map((sign) => headRow(CRANIAL_NAME[sign], (side) => ({ kind: 'cranial', side, sign }))),
+    headRow('Limb ataxia', (side) => ({ kind: 'ataxia', side })),
+  ].join('');
+  return `<table class="extable"><thead><tr><th colspan="2">Head and eyes</th><th>Left</th><th>Right</th></tr></thead><tbody>${head}
+    ${single({ kind: 'vertigo' }, 'Vertigo, nystagmus')}</tbody>
+    <thead><tr><th colspan="2">Strength</th><th>Left</th><th>Right</th></tr></thead><tbody>${strength}</tbody>
     <thead><tr><th colspan="2">Arm, muscle by muscle</th><th>Left</th><th>Right</th></tr></thead><tbody>${arm}</tbody>
     <thead><tr><th colspan="2">Reflexes and signs</th><th>Left</th><th>Right</th></tr></thead><tbody>${reflexes}
     ${sided('babinski', 'Babinski')}${sided('horner', 'Horner')}
