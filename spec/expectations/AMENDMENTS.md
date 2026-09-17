@@ -130,6 +130,29 @@ situation the freeze exists to catch.
   interosseous lesion (S39 and S40 disagree, C14); any deformity after upper-motor-neuron
   weakness, which no source read describes; winging from rhomboid weakness.
 
+## A7 — 2026-09-17 — above the cord (P5), before any brain code
+
+- **Changed:** additions only.
+  - `types.ts` adds `BrainRegion` (a level, a side, the parts a lesion takes and, for cortex,
+    capsule and thalamus, the body regions they serve), `BrainAssertion` (facial sensation,
+    facial weakness, five cranial signs, limb ataxia, vertigo), `BrainEvaluation` and
+    `BrainCase`.
+  - `brain.ts` adds ten cases: lateral and medial medulla, ventral and dorsal pons, the
+    cerebral peduncle, the internal capsule (motor and sensory parts), the thalamus, and the
+    lateral and medial cortex.
+  - `reverse-brain.ts` adds six examinations that full-neuraxis ranking must place: the
+    lateral medulla, the internal capsule, the MCA cortex, the peduncle, the medial medulla
+    and the thalamus.
+- **Why:** P5 carries the long tracts above C1. The exit criterion is that a lateral
+  medullary syndrome derives correctly, crossed findings and all, from the P0 engine.
+- **Sources:** S47–S66, read on 2026-09-17, with S12 and S16. Each lesion is the set of
+  structures its source names.
+- **Deliberately left open,** each in its case's `unasserted`: the far-side face and tongue
+  in pontine and medullary lesions, the palate after a pyramid lesion, sensation in Weber
+  syndrome, the face after a capsular sensory lesion, neck and trunk after cortical strokes,
+  the Babinski sign after an MCA cortex lesion, and every cortical sign beyond strength and
+  sensation (aphasia, neglect, gaze, fields, abulia).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -138,8 +161,10 @@ situation the freeze exists to catch.
 | `boundaries.ts` | A2 |
 | `index.ts` | A2 (exports the boundary cases) |
 | `reverse.ts` | A3 |
-| `types.ts` | A4, A6 |
+| `types.ts` | A4, A6, A7 |
 | `plexus.ts` | A4, A5, A6 |
 | `reverse-plexus.ts` | A4, A5 |
+| `brain.ts` | A7 |
+| `reverse-brain.ts` | A7 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

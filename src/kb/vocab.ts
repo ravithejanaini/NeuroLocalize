@@ -85,6 +85,10 @@ export const LESION_FAMILIES = [
   'plexus_right',
   'nerve_left',
   'nerve_right',
+  'brainstem_left',
+  'brainstem_right',
+  'hemisphere_left',
+  'hemisphere_right',
 ] as const;
 export type LesionFamily = (typeof LESION_FAMILIES)[number];
 
@@ -176,3 +180,60 @@ export type MuscleState = 'normal' | 'weak' | 'indeterminate';
 /** Deformities and postures that follow from lower-motor-neuron weakness of named muscles. */
 export const DEFORMITIES = ['winged_scapula', 'waiters_tip', 'wrist_drop', 'claw_hand', 'ape_hand'] as const;
 export type Deformity = (typeof DEFORMITIES)[number];
+
+// ---- above the cord (P5) -------------------------------------------------
+/** Rostral to caudal. The cord begins below the medulla. */
+export const BRAIN_LEVELS = ['cortex', 'capsule', 'thalamus', 'midbrain', 'pons', 'medulla'] as const;
+export type BrainLevel = (typeof BRAIN_LEVELS)[number];
+
+/** Named parts of the brain a lesion can take. Each belongs to one or more levels. */
+export const BRAIN_COMPARTMENTS = [
+  'motor_cortex',
+  'sensory_cortex',
+  'capsule_genu',
+  'capsule_posterior_motor',
+  'capsule_posterior_sensory',
+  'vpl',
+  'vpm',
+  'peduncle',
+  'oculomotor',
+  'basis',
+  'facial',
+  'abducens_nucleus',
+  'abducens_fascicle',
+  'pyramid',
+  'hypoglossal',
+  'medial_lemniscus',
+  'spinothalamic',
+  'spinal_trigeminal',
+  'sympathetic',
+  'ambiguus',
+  'cerebellar_peduncle',
+  'vestibular',
+] as const;
+export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
+
+/** Parts of the body as the cortex and its projections map them. */
+export const BODY_REGIONS = ['face', 'neck', 'arm', 'trunk', 'leg'] as const;
+export type BodyRegion = (typeof BODY_REGIONS)[number];
+
+export const CRANIAL_SIGNS = ['oculomotor_palsy', 'abduction_weakness', 'gaze_palsy', 'tongue_weakness', 'palate_weakness'] as const;
+export type CranialSign = (typeof CRANIAL_SIGNS)[number];
+
+/** 'lower': the forehead spared, as after an upper-motor-neuron lesion. 'whole': the forehead too. */
+export type FaceWeakness = 'none' | 'lower' | 'whole' | 'indeterminate';
+export type FaceWeaknessObservation = 'normal' | 'lower' | 'whole';
+
+/** Named vascular or anatomical territories, the places a brain candidate can sit. */
+export const TERRITORIES = [
+  'lateral_medullary',
+  'medial_medullary',
+  'ventral_pons',
+  'dorsal_pons',
+  'midbrain_peduncle',
+  'internal_capsule',
+  'thalamus',
+  'mca_cortex',
+  'aca_cortex',
+] as const;
+export type Territory = (typeof TERRITORIES)[number];

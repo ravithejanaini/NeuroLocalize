@@ -413,3 +413,74 @@ recorded as partly pinned rather than tested with an invented expectation.
 patient, as the body map is drawn, so the patient's left arm is on the viewer's right; the
 cord views keep their original dorsal angle. Arm labels appear only when the camera is near
 the arm, and the arm is drawn shortened, which the stage says.
+
+## P5
+
+### Source conflicts
+
+**C15 — The crossing offset, a third account.** S58 has spinothalamic fibres crossing "two
+segments above" entry. That lies inside the 1–3 of S01 and S11 (C1), so the range stands.
+
+**C16 — Does facial pain reach the thalamus crossed?** S60 says the spinal trigeminal nucleus
+projects to VPM on both sides. S55 describes a thalamic stroke numbing the *contralateral*
+face. **Modelled** crossed above the medulla, which is what the only lesion evidence read
+supports; the ipsilateral projection is recorded, not drawn.
+
+**C17 — The abducens in Millard-Gubler syndrome.** S49 says an abducens palsy "may be
+present" and was absent from the original cases. The frozen case puts the fascicle inside
+the lesion and asserts the palsy from S61, noting S49.
+
+**C18 — The face in Weber syndrome.** S50 never mentions it; S65 says contralateral
+hemiplegia. The face is composed from S54 (corticobulbar fibres run in the peduncle) and S51
+(an upper-motor-neuron lesion weakens the contralateral lower face).
+
+### Decisions
+
+**D39 — The brain is levels and parts, like the cord is segments and compartments.** A brain
+lesion names a level (cortex, capsule, thalamus, midbrain, pons, medulla), a side and the
+parts it takes. The long tracts continue above C1 as ordered lists of parts in the knowledge
+base; the engine judges a finding by the worst damage along the cord route *and* its
+continuation, so nothing about the cord's own model changed.
+
+**D40 — Above the pyramidal decussation every long tract serves the other side of the body.**
+The corticospinal tract crosses at the medullary–spinal junction (S54), the medial lemniscus
+in the caudal medulla (S57), and the spinothalamic tract in the cord (S58). A brain lesion on
+one side therefore weakens and numbs the other side of the body.
+
+**D41 — Cortex, capsule and thalamus are somatotopic by body region.** Face, neck, arm, trunk
+and leg. Arm is C5–T1 and leg L2–Co1, the genitals and perineum going with the leg (S66);
+neck (C1–C4) and trunk (T2–L1) are conventions (R20). A lesion that names no regions takes
+them all, as a lacune does (S55).
+
+**D42 — The face has its own findings.** Facial sensation is the spinal trigeminal nucleus
+below and VPM above (S60, C16). Facial weakness is *lower* when the corticobulbar route to
+the facial nucleus is cut on one side — the forehead is served by both hemispheres (S51) —
+and *whole* when the nucleus or nerve is (S51) or both routes are.
+
+**D43 — Five cranial signs, each with its laterality.** Oculomotor palsy (ipsilateral, S62),
+abduction weakness (nucleus or fascicle, ipsilateral, S61), gaze palsy (nucleus only, S61),
+tongue weakness (ipsilateral from the nucleus, contralateral from above because control is
+mostly crossed, S63), palate weakness (ipsilateral from the nucleus; after a one-sided
+supranuclear lesion only milder, so reported indeterminate on both sides, S64).
+
+**D44 — Nine territories, eighteen candidates.** The lateral and medial medulla, the ventral
+and dorsal pons, the peduncle, the capsule (genu and motor posterior limb), the thalamus, and
+the MCA and ACA cortex, each on either side, grouped as brainstem or hemisphere families.
+Each keeps the equal family prior of D24.
+
+### Reviewer questions
+
+**R20** — Neck (C1–C4) and trunk (T2–L1) are placed between arm and leg on the homunculus
+(S54, S66) but assigned to neither artery. Is that right, or does the MCA take the neck?
+
+**R21** — Facial touch is not modelled separately from facial pain; S60 has the spinal
+nucleus relaying both. Should the principal sensory nucleus be added?
+
+**R22** — The trigeminothalamic fibres are not placed in the pons or midbrain, so a lesion
+there does not change facial sensation in this model. Where do they run?
+
+**R23** — Limb ataxia is taken only from the cerebellar peduncles; ataxic hemiparesis (S55)
+is not modelled.
+
+**R24** — A unilateral supranuclear lesion is modelled as leaving *both* sides of the palate
+indeterminate (S64 says "milder" without a side).

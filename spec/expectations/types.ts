@@ -2,6 +2,11 @@
 // compute them. The engine defines its own output type and a test checks the two agree.
 import type {
   BladderState,
+  BodyRegion,
+  BrainCompartment,
+  BrainLevel,
+  CranialSign,
+  FaceWeakness,
   Compartment,
   Deformity,
   Dysreflexia,
@@ -123,4 +128,39 @@ export type LimbCase = {
   readonly pattern: string;
   readonly lesion: readonly (LesionRegion | PlexusRegion)[];
   readonly evaluations: readonly LimbEvaluation[];
+};
+
+// ─── Above the cord (amendment A7) ───────────────────────────────────────────
+
+/** A lesion in the brain: a level, a side, the parts it takes, and for somatotopic parts the regions. */
+export type BrainRegion = {
+  readonly brain: BrainLevel;
+  readonly sides: readonly Side[];
+  readonly compartments: readonly BrainCompartment[];
+  /** For cortex, capsule and thalamus: which body regions the damaged part serves. All when absent. */
+  readonly regions?: readonly BodyRegion[];
+  readonly severity: Severity;
+};
+
+export type BrainAssertion = Evidence &
+  (
+    | (Sided & { readonly kind: 'face_sensation'; readonly oneOf: readonly SensoryState[] })
+    | (Sided & { readonly kind: 'face_weakness'; readonly oneOf: readonly FaceWeakness[] })
+    | (Sided & { readonly kind: 'cranial'; readonly sign: CranialSign; readonly oneOf: readonly SignState[] })
+    | (Sided & { readonly kind: 'ataxia'; readonly oneOf: readonly SignState[] })
+    | { readonly kind: 'vertigo'; readonly oneOf: readonly SignState[] }
+  );
+
+export type BrainEvaluation = {
+  readonly timepoint: Timepoint;
+  readonly assertions: readonly (Assertion | LimbAssertion | BrainAssertion)[];
+  readonly unasserted: readonly string[];
+};
+
+export type BrainCase = {
+  readonly id: string;
+  readonly title: string;
+  readonly pattern: string;
+  readonly lesion: readonly (LesionRegion | PlexusRegion | BrainRegion)[];
+  readonly evaluations: readonly BrainEvaluation[];
 };

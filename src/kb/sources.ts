@@ -7,6 +7,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S13', 'S14', 'S15', 'S16', 'S17', 'S18', 'S19', 'S20', 'S21', 'S22', 'S23',
   'S24', 'S25', 'S26', 'S27', 'S28', 'S29', 'S30', 'S31', 'S32',
   'S33', 'S34', 'S35', 'S36', 'S37', 'S38', 'S39', 'S40', 'S41', 'S42', 'S43', 'S44', 'S45', 'S46',
+  'S47', 'S48', 'S49', 'S50', 'S51', 'S52', 'S53', 'S54', 'S55', 'S56', 'S57', 'S58', 'S59', 'S60', 'S61', 'S62', 'S63', 'S64', 'S65', 'S66',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -58,4 +59,24 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S44', title: 'StatPearls — Anatomy, Thorax, Long Thoracic Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK535396/' },
   { id: 'S45', title: 'StatPearls — Anatomy, Medial Antebrachial Cutaneous Nerve', url: 'https://www.ncbi.nlm.nih.gov/books/NBK551638/' },
   { id: 'S46', title: 'StatPearls — Anatomy, Shoulder and Upper Limb, Cutaneous Innervation', url: 'https://www.ncbi.nlm.nih.gov/books/NBK545249/' },
+  { id: 'S47', title: 'StatPearls — Lateral Medullary Syndrome (Wallenberg Syndrome)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK551670/' },
+  { id: 'S48', title: 'StatPearls — Medial Medullary Syndrome', url: 'https://www.ncbi.nlm.nih.gov/books/NBK560590/' },
+  { id: 'S49', title: 'StatPearls — Millard-Gubler Syndrome', url: 'https://www.ncbi.nlm.nih.gov/books/NBK532907/' },
+  { id: 'S50', title: 'StatPearls — Weber Syndrome', url: 'https://www.ncbi.nlm.nih.gov/books/NBK559158/' },
+  { id: 'S51', title: 'StatPearls — Neuroanatomy, Cranial Nerve 7 (Facial)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK526119/' },
+  { id: 'S52', title: 'StatPearls — Middle Cerebral Artery Stroke', url: 'https://www.ncbi.nlm.nih.gov/books/NBK556132/' },
+  { id: 'S53', title: 'StatPearls — Anterior Cerebral Artery Stroke', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537333/' },
+  { id: 'S54', title: 'StatPearls — Neuroanatomy, Precentral Gyrus', url: 'https://www.ncbi.nlm.nih.gov/books/NBK544218/' },
+  { id: 'S55', title: 'StatPearls — Lacunar Stroke', url: 'https://www.ncbi.nlm.nih.gov/books/NBK563216/' },
+  { id: 'S56', title: 'StatPearls — Neuroanatomy, Internal Capsule', url: 'https://www.ncbi.nlm.nih.gov/books/NBK542181/' },
+  { id: 'S57', title: 'StatPearls — Neuroanatomy, Medial Lemniscus', url: 'https://www.ncbi.nlm.nih.gov/books/NBK526040/' },
+  { id: 'S58', title: 'StatPearls — Neuroanatomy, Spinothalamic Tract', url: 'https://www.ncbi.nlm.nih.gov/books/NBK507824/' },
+  { id: 'S59', title: 'StatPearls — Neuroanatomy, Brainstem', url: 'https://www.ncbi.nlm.nih.gov/books/NBK544297/' },
+  { id: 'S60', title: 'StatPearls — Neuroanatomy, Spinal Trigeminal Nucleus', url: 'https://www.ncbi.nlm.nih.gov/books/NBK539729/' },
+  { id: 'S61', title: 'StatPearls — Neuroanatomy, Abducens Nucleus', url: 'https://www.ncbi.nlm.nih.gov/books/NBK544265/' },
+  { id: 'S62', title: 'StatPearls — Cranial Nerve III Palsy (Oculomotor Palsy)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK526112/' },
+  { id: 'S63', title: 'StatPearls — Neuroanatomy, Cranial Nerve 12 (Hypoglossal)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK532869/' },
+  { id: 'S64', title: 'StatPearls — Neuroanatomy, Nucleus Ambiguus', url: 'https://www.ncbi.nlm.nih.gov/books/NBK547744/' },
+  { id: 'S65', title: 'StatPearls — Brainstem Stroke', url: 'https://www.ncbi.nlm.nih.gov/books/NBK560896/' },
+  { id: 'S66', title: 'StatPearls — Neurosurgery, Sensory Homunculus', url: 'https://www.ncbi.nlm.nih.gov/books/NBK549841/' },
 ];

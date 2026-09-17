@@ -35,6 +35,10 @@ export const FAMILY_NAME: Record<LesionFamily, string> = {
   plexus_right: 'Right brachial plexus',
   nerve_left: 'Left peripheral nerve',
   nerve_right: 'Right peripheral nerve',
+  brainstem_left: 'Left brainstem',
+  brainstem_right: 'Right brainstem',
+  hemisphere_left: 'Left hemisphere',
+  hemisphere_right: 'Right hemisphere',
 };
 
 const SIDE_WORD: Record<Side, string> = { L: 'Left', R: 'Right' };
