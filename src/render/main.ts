@@ -1,7 +1,7 @@
 // Entry point: state, controls, camera and the render loop, in two modes — placing a lesion
 // and seeing its findings, or entering findings and seeing where the lesion could be.
 import * as THREE from 'three';
-import { forward, isPlexus, mapLesion, type AnyRegion, type LesionRegion, type PlexusRegion } from '../engine/forward.ts';
+import { forward, isCord, isPlexus, mapLesion, type AnyRegion, type PlexusRegion } from '../engine/forward.ts';
 import { mapPlexus } from '../engine/limb.ts';
 import { hypotheses, type Hypothesis } from '../engine/hypotheses.ts';
 import {
@@ -240,7 +240,7 @@ canvas.addEventListener(
 type Shown = { regions: readonly AnyRegion[]; shape: Shape | null; top: number; bottom: number };
 
 function showLesion(lesion: Shown): void {
-  const cord = lesion.regions.filter((r): r is LesionRegion => !isPlexus(r));
+  const cord = lesion.regions.filter(isCord);
   const plexus = lesion.regions.filter((r): r is PlexusRegion => isPlexus(r));
   const map = mapLesion(cord, KB);
   limb.setLesions(plexus.flatMap((r) => r.sides.map((side) => ({ site: r.plexus, side }))));

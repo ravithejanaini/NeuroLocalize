@@ -1,0 +1,358 @@
+// The long tracts above C1, the cranial nerve nuclei and the named territories (P5). Data only.
+// Steps run in the direction the signal travels: descending routes from the cortex down,
+// ascending routes from the medulla up.
+import type { Brain } from './types.ts';
+
+const p = 'pending' as const;
+
+export const BRAIN: Brain = {
+  corticospinal: {
+    meta: {
+      id: 'brain.corticospinal',
+      claim: 'The corticospinal tract runs from the motor cortex through the posterior limb of the internal capsule, the cerebral peduncle, the basis pontis and the pyramid, and crosses at the medullary–spinal junction, so a lesion above serves the other side of the body.',
+      sources: ['S54', 'S48'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'cortex', compartment: 'motor_cortex' }, { level: 'capsule', compartment: 'capsule_posterior_motor' }, { level: 'midbrain', compartment: 'peduncle' }, { level: 'pons', compartment: 'basis' }, { level: 'medulla', compartment: 'pyramid' }],
+    serves: 'contralateral',
+  },
+  lemniscal: {
+    meta: {
+      id: 'brain.lemniscal',
+      claim: 'After crossing in the caudal medulla the medial lemniscus ascends contralaterally to VPL, which projects through the posterior limb to the somatosensory cortex.',
+      sources: ['S57', 'S56'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [
+      { level: 'medulla', compartment: 'medial_lemniscus' },
+      { level: 'pons', compartment: 'medial_lemniscus' },
+      { level: 'midbrain', compartment: 'medial_lemniscus' },
+      { level: 'thalamus', compartment: 'vpl' },
+      { level: 'capsule', compartment: 'capsule_posterior_sensory' },
+      { level: 'cortex', compartment: 'sensory_cortex' },
+    ],
+    serves: 'contralateral',
+  },
+  spinothalamic: {
+    meta: {
+      id: 'brain.spinothalamic',
+      claim: 'The spinothalamic tract, already crossed in the cord, runs laterally in the medulla and dorsolaterally in the pons and midbrain to VPL, and on to the cortex.',
+      sources: ['S58', 'S56'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [
+      { level: 'medulla', compartment: 'spinothalamic' },
+      { level: 'pons', compartment: 'spinothalamic' },
+      { level: 'midbrain', compartment: 'spinothalamic' },
+      { level: 'thalamus', compartment: 'vpl' },
+      { level: 'capsule', compartment: 'capsule_posterior_sensory' },
+      { level: 'cortex', compartment: 'sensory_cortex' },
+    ],
+    serves: 'contralateral',
+  },
+  faceNucleus: {
+    meta: {
+      id: 'brain.face-nucleus',
+      claim: 'The spinal trigeminal nucleus and tract in the lateral medulla carry sensation from the ipsilateral face.',
+      sources: ['S60', 'S47', 'S58'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'medulla', compartment: 'spinal_trigeminal' }],
+    serves: 'ipsilateral',
+  },
+  faceAscending: {
+    meta: {
+      id: 'brain.face-ascending',
+      claim: 'Above the medulla facial sensation reaches VPM and the face area of the cortex on the opposite side; S60 also describes an ipsilateral projection.',
+      sources: ['S55', 'S60', 'S66'],
+      tier: 'T3',
+      bookRef: p,
+      conflict: 'C16',
+    },
+    steps: [{ level: 'thalamus', compartment: 'vpm' }, { level: 'capsule', compartment: 'capsule_posterior_sensory' }, { level: 'cortex', compartment: 'sensory_cortex' }],
+    serves: 'contralateral',
+  },
+  corticobulbarFace: {
+    meta: {
+      id: 'brain.corticobulbar-face',
+      claim: 'Corticobulbar fibres from the lateral motor cortex run through the genu, the peduncle and the basis pontis to the facial nucleus of the opposite side, for the lower face.',
+      sources: ['S51', 'S54', 'S56'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'cortex', compartment: 'motor_cortex' }, { level: 'capsule', compartment: 'capsule_genu' }, { level: 'midbrain', compartment: 'peduncle' }, { level: 'pons', compartment: 'basis' }],
+    serves: 'contralateral',
+  },
+  upperFaceBilateral: {
+    meta: {
+      id: 'brain.upper-face-bilateral',
+      claim: 'The upper-face part of the facial nucleus receives both hemispheres, so a one-sided supranuclear lesion spares the forehead.',
+      sources: ['S51'],
+      tier: 'T2',
+      bookRef: p,
+    },
+    bilateral: true,
+  },
+  corticobulbarTongue: {
+    meta: {
+      id: 'brain.corticobulbar-tongue',
+      claim: 'Supranuclear control of the hypoglossal nucleus is predominantly crossed, so a supranuclear lesion weakens the opposite half of the tongue.',
+      sources: ['S63', 'S54'],
+      tier: 'T2',
+      bookRef: p,
+      pendingSource: 'R25: no source read says the tongue fibres run in the pyramid to the medulla; they are drawn with the corticobulbar tract',
+    },
+    steps: [{ level: 'cortex', compartment: 'motor_cortex' }, { level: 'capsule', compartment: 'capsule_genu' }, { level: 'midbrain', compartment: 'peduncle' }, { level: 'pons', compartment: 'basis' }, { level: 'medulla', compartment: 'pyramid' }],
+    serves: 'contralateral',
+  },
+  corticobulbarPalate: {
+    meta: {
+      id: 'brain.corticobulbar-palate',
+      claim: 'The nucleus ambiguus has predominantly bilateral supranuclear control; a one-sided supranuclear lesion gives at most a milder weakness.',
+      sources: ['S64', 'S54'],
+      tier: 'T2',
+      bookRef: p,
+    },
+    steps: [{ level: 'cortex', compartment: 'motor_cortex' }, { level: 'capsule', compartment: 'capsule_genu' }, { level: 'midbrain', compartment: 'peduncle' }, { level: 'pons', compartment: 'basis' }],
+    bilateral: true,
+  },
+  facialNucleus: {
+    meta: {
+      id: 'brain.facial-nucleus',
+      claim: 'A lesion of the facial nucleus or its fascicle in the pons paralyses the whole face on the same side.',
+      sources: ['S51', 'S49', 'S59'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'pons', compartment: 'facial' }],
+    serves: 'ipsilateral',
+  },
+  hypoglossal: {
+    meta: {
+      id: 'brain.hypoglossal',
+      claim: 'A lesion of the hypoglossal nucleus or fascicles in the medulla weakens the same side of the tongue.',
+      sources: ['S63', 'S48'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'medulla', compartment: 'hypoglossal' }],
+    serves: 'ipsilateral',
+  },
+  ambiguus: {
+    meta: {
+      id: 'brain.ambiguus',
+      claim: 'A lesion of the nucleus ambiguus weakens the palate, pharynx and larynx on the same side.',
+      sources: ['S64', 'S47'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'medulla', compartment: 'ambiguus' }],
+    serves: 'ipsilateral',
+  },
+  oculomotor: {
+    meta: {
+      id: 'brain.oculomotor',
+      claim: 'A lesion of the oculomotor nucleus or fascicles in the midbrain gives a third nerve palsy on the same side.',
+      sources: ['S62', 'S50'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'midbrain', compartment: 'oculomotor' }],
+    serves: 'ipsilateral',
+  },
+  abduction: {
+    meta: {
+      id: 'brain.abduction',
+      claim: 'A lesion of the abducens nucleus or fascicle weakens abduction of the eye on the same side.',
+      sources: ['S61', 'S49'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'pons', compartment: 'abducens_nucleus' }, { level: 'pons', compartment: 'abducens_fascicle' }],
+    serves: 'ipsilateral',
+  },
+  gaze: {
+    meta: {
+      id: 'brain.gaze',
+      claim: 'A lesion of the abducens nucleus gives a horizontal gaze palsy toward its own side; a fascicle lesion does not.',
+      sources: ['S61'],
+      tier: 'T2',
+      bookRef: p,
+    },
+    steps: [{ level: 'pons', compartment: 'abducens_nucleus' }],
+    serves: 'ipsilateral',
+  },
+  sympathetic: {
+    meta: {
+      id: 'brain.sympathetic',
+      claim: 'First-order sympathetic fibres descend uncrossed through the midbrain, pons and lateral medulla; a lesion there gives an ipsilateral Horner syndrome.',
+      sources: ['S16', 'S47'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'midbrain', compartment: 'sympathetic' }, { level: 'pons', compartment: 'sympathetic' }, { level: 'medulla', compartment: 'sympathetic' }],
+    serves: 'ipsilateral',
+  },
+  ataxia: {
+    meta: {
+      id: 'brain.ataxia',
+      claim: 'A lesion of the inferior cerebellar peduncle gives ipsilateral limb ataxia; the pontine peduncle is drawn with it.',
+      sources: ['S47', 'S65'],
+      tier: 'T2',
+      bookRef: p,
+    },
+    steps: [{ level: 'pons', compartment: 'cerebellar_peduncle' }, { level: 'medulla', compartment: 'cerebellar_peduncle' }],
+    serves: 'ipsilateral',
+  },
+  vertigo: {
+    meta: {
+      id: 'brain.vertigo',
+      claim: 'A lesion of the vestibular nuclei, in the medulla and inferior pons, gives vertigo and nystagmus.',
+      sources: ['S47', 'S59'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'pons', compartment: 'vestibular' }, { level: 'medulla', compartment: 'vestibular' }],
+  },
+  somatotopic: {
+    meta: {
+      id: 'brain.somatotopic',
+      claim: 'The motor and sensory cortex, the posterior limb of the capsule and VPL are laid out by body region.',
+      sources: ['S54', 'S66', 'S56'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    compartments: ['motor_cortex', 'sensory_cortex', 'capsule_posterior_motor', 'capsule_posterior_sensory', 'vpl'],
+  },
+  limbRegions: {
+    meta: {
+      id: 'brain.limb-regions',
+      claim: 'The arm is C5–T1 and the leg L2 downward, the genitals and perineum represented with the leg.',
+      sources: ['S66', 'S31'],
+      tier: 'T2',
+      bookRef: p,
+    },
+    arm: ['C5', 'T1'],
+    leg: ['L2', 'Co1'],
+  },
+  axialRegions: {
+    meta: {
+      id: 'brain.axial-regions',
+      claim: 'The neck is C1–C4 and the trunk T2–L1, represented between arm and leg.',
+      sources: ['S66'],
+      tier: 'T2',
+      bookRef: p,
+      pendingSource: 'R20: the segment boundaries of neck and trunk are a convention',
+    },
+    neck: ['C1', 'C4'],
+    trunk: ['T2', 'L1'],
+  },
+  territories: {
+    lateral_medullary: {
+      meta: {
+        id: 'territory.lateral-medullary',
+        claim: 'The lateral medulla (PICA or vertebral artery) holds the spinothalamic tract, the spinal trigeminal nucleus, the descending sympathetic fibres, the nucleus ambiguus, the inferior cerebellar peduncle and the vestibular nuclei.',
+        sources: ['S47', 'S65', 'S64'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'medulla',
+      compartments: ['spinothalamic', 'spinal_trigeminal', 'sympathetic', 'ambiguus', 'cerebellar_peduncle', 'vestibular'],
+    },
+    medial_medullary: {
+      meta: {
+        id: 'territory.medial-medullary',
+        claim: 'The medial medulla holds the pyramid, the medial lemniscus and the hypoglossal nucleus and fascicles.',
+        sources: ['S48', 'S65'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'medulla',
+      compartments: ['pyramid', 'medial_lemniscus', 'hypoglossal'],
+    },
+    ventral_pons: {
+      meta: {
+        id: 'territory.ventral-pons',
+        claim: 'The ventral pons holds the basis pontis and the facial and abducens fascicles.',
+        sources: ['S49', 'S61'],
+        tier: 'T3',
+        bookRef: p,
+        conflict: 'C17',
+      },
+      level: 'pons',
+      compartments: ['basis', 'facial', 'abducens_fascicle'],
+    },
+    dorsal_pons: {
+      meta: {
+        id: 'territory.dorsal-pons',
+        claim: 'The dorsal pons holds the abducens nucleus wrapped by the facial genu.',
+        sources: ['S61', 'S59'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'pons',
+      compartments: ['abducens_nucleus', 'facial'],
+    },
+    midbrain_peduncle: {
+      meta: {
+        id: 'territory.midbrain-peduncle',
+        claim: 'Weber syndrome takes the cerebral peduncle and the oculomotor fascicles.',
+        sources: ['S50', 'S62', 'S65'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'midbrain',
+      compartments: ['peduncle', 'oculomotor'],
+    },
+    internal_capsule: {
+      meta: {
+        id: 'territory.internal-capsule',
+        claim: 'A pure motor lacune takes the corticobulbar and corticospinal fibres of the genu and posterior limb.',
+        sources: ['S55', 'S56'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'capsule',
+      compartments: ['capsule_genu', 'capsule_posterior_motor'],
+    },
+    thalamus: {
+      meta: {
+        id: 'territory.thalamus',
+        claim: 'A pure sensory lacune takes the lateral thalamus, VPL and VPM.',
+        sources: ['S55', 'S57', 'S60'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'thalamus',
+      compartments: ['vpl', 'vpm'],
+    },
+    mca_cortex: {
+      meta: {
+        id: 'territory.mca-cortex',
+        claim: 'The superior MCA division supplies the lateral motor and sensory cortex: face and arm.',
+        sources: ['S54', 'S66'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'cortex',
+      compartments: ['motor_cortex', 'sensory_cortex'],
+      regions: ['face', 'arm'],
+    },
+    aca_cortex: {
+      meta: {
+        id: 'territory.aca-cortex',
+        claim: 'The ACA supplies the medial motor and sensory cortex: the leg.',
+        sources: ['S54', 'S66', 'S53'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'cortex',
+      compartments: ['motor_cortex', 'sensory_cortex'],
+      regions: ['leg'],
+    },
+  },
+};

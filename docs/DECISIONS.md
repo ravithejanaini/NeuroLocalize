@@ -484,3 +484,6 @@ is not modelled.
 
 **R24** — A unilateral supranuclear lesion is modelled as leaving *both* sides of the palate
 indeterminate (S64 says "milder" without a side).
+
+**R25** — The corticobulbar fibres to the hypoglossal nucleus are drawn running with the
+pyramid to the medulla. No source read says where they leave the corticospinal tract.

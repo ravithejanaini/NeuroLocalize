@@ -3,8 +3,9 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { ALL_CASES as CORD_CASES } from '../spec/expectations/index.ts';
+import { BRAIN_CASES } from '../spec/expectations/brain.ts';
 import { PLEXUS_CASES } from '../spec/expectations/plexus.ts';
-import type { Assertion, LimbAssertion } from '../spec/expectations/types.ts';
+import type { Assertion, BrainAssertion, LimbAssertion } from '../spec/expectations/types.ts';
 import { KB } from '../src/kb/kb.ts';
 import { MECHANISMS } from '../src/kb/mechanisms.ts';
 import { RENDER } from '../src/kb/render.ts';
@@ -40,10 +41,10 @@ const questions = [...read('docs/DECISIONS.md').matchAll(/^\*\*(R\d+)\*\* — ([
 const SIDE = { L: 'left', R: 'right', both: 'both sides' } as const;
 const span = (s: readonly [string, string]): string => (s[0] === s[1] ? s[0] : `${s[0]}–${s[1]}`);
 const any = (xs: readonly string[]): string => xs.join(' or ');
-const ALL_CASES = [...CORD_CASES, ...PLEXUS_CASES];
+const ALL_CASES = [...CORD_CASES, ...PLEXUS_CASES, ...BRAIN_CASES];
 const words = (xs: readonly string[]): string => xs.map((x) => x.replace(/_/g, ' ')).join(', ');
 
-function describe(a: Assertion | LimbAssertion): string {
+function describe(a: Assertion | LimbAssertion | BrainAssertion): string {
   switch (a.kind) {
     case 'sensory':
       return `${SIDE[a.side]} · ${a.modality === 'all' ? 'all sensation' : a.modality.replace('_', ' ')} · ${span(a.span)} → ${any(a.oneOf)}`;
@@ -60,6 +61,14 @@ function describe(a: Assertion | LimbAssertion): string {
       return `lesion resolves to segments ${span(a.span)}`;
     case 'muscle':
       return `${SIDE[a.side]} · ${words(a.muscles)} → ${any(a.oneOf)}`;
+    case 'face_sensation':
+    case 'face_weakness':
+    case 'ataxia':
+      return `${SIDE[a.side]} · ${a.kind.replace('_', ' ')} → ${any(a.oneOf)}`;
+    case 'cranial':
+      return `${SIDE[a.side]} · ${a.sign.replace(/_/g, ' ')} → ${any(a.oneOf)}`;
+    case 'vertigo':
+      return `vertigo → ${any(a.oneOf)}`;
     case 'deformity':
       return `${SIDE[a.side]} · ${a.deformity.replace(/_/g, ' ')} → ${any(a.oneOf)}`;
     case 'skin':

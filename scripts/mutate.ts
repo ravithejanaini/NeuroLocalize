@@ -6,6 +6,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { ALL_CASES } from '../spec/expectations/index.ts';
+import { BRAIN_CASES } from '../spec/expectations/brain.ts';
 import { PLEXUS_CASES } from '../spec/expectations/plexus.ts';
 import { KB } from '../src/kb/kb.ts';
 import type { Kb } from '../src/kb/types.ts';
@@ -28,7 +29,7 @@ import { examSlots } from '../src/render/slots.ts';
 import { reverseFailures, runAll } from '../test/harness.ts';
 import { locateRows } from '../test/rows.ts';
 
-const CASES = [...ALL_CASES, ...PLEXUS_CASES];
+const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...BRAIN_CASES];
 const THRESHOLD = 0.9;
 const ROOT = resolve(import.meta.dirname, '..');
 

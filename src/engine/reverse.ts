@@ -23,9 +23,9 @@ import {
   type StrengthObservation,
   type Timepoint,
 } from '../kb/vocab.ts';
-import { forward, isPlexus, isSacral, type Findings } from './forward.ts';
+import { forward, isCord, isPlexus, isSacral, type Findings } from './forward.ts';
 import { hypotheses, type Hypothesis } from './hypotheses.ts';
-import { mapLesion, type LesionMap, type LesionRegion } from './lesion.ts';
+import { mapLesion, type LesionMap } from './lesion.ts';
 import { limbRoute, mapPlexus, routeSites, type PlexusMap } from './limb.ts';
 import { crossingOffsets, damageAlong, motorRoute, sensoryRoute, type Element } from './routes.ts';
 
@@ -542,7 +542,7 @@ function reason(map: LesionMap, pmap: PlexusMap, kb: Kb, h: Hypothesis, o: Obser
 }
 
 export function explain(h: Hypothesis, observations: readonly Observation[], timepoint: Timepoint, kb: Kb = KB): Verdict[] {
-  const map = mapLesion(h.regions.filter((r): r is LesionRegion => !isPlexus(r)), kb);
+  const map = mapLesion(h.regions.filter(isCord), kb);
   const pmap = mapPlexus(h.regions.filter(isPlexus));
   const f = forward(h.regions, timepoint, { kb });
   return observations.map((o) => {

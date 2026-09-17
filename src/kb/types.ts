@@ -2,6 +2,9 @@
 // which is what lets the mutation harness hand it a corrupted copy.
 import type {
   BladderState,
+  BodyRegion,
+  BrainCompartment,
+  BrainLevel,
   Compartment,
   Deformity,
   Muscle,
@@ -16,6 +19,7 @@ import type {
   SourceId,
   Timepoint,
   Tone,
+  Territory,
   Trunk,
   Vertebra,
 } from './vocab.ts';
@@ -109,6 +113,52 @@ export type Plexus = {
   readonly deformities: Readonly<Record<Deformity, Row<{ readonly muscles: readonly Muscle[] }>>>;
 };
 
+// ─── Above the cord (P5) ───
+export type BrainStep = { readonly level: BrainLevel; readonly compartment: BrainCompartment };
+/**
+ * A route through the brain. `serves` says which side of the body or head a damaged part on
+ * one side affects: 'contralateral' for tracts that have crossed below (D40).
+ */
+export type BrainRoute = Row<{ readonly steps: readonly BrainStep[]; readonly serves: Laterality }>;
+
+export type Brain = {
+  readonly corticospinal: BrainRoute;
+  readonly lemniscal: BrainRoute;
+  readonly spinothalamic: BrainRoute;
+  /** Facial sensation: the ipsilateral nucleus, then a crossed route to the cortex (C16). */
+  readonly faceNucleus: BrainRoute;
+  readonly faceAscending: BrainRoute;
+  /** Corticobulbar routes: to the lower face (crossed), the tongue (mostly crossed), the palate (bilateral). */
+  readonly corticobulbarFace: BrainRoute;
+  readonly upperFaceBilateral: Row<{ readonly bilateral: boolean }>;
+  readonly corticobulbarTongue: BrainRoute;
+  readonly corticobulbarPalate: Row<{ readonly steps: readonly BrainStep[]; readonly bilateral: boolean }>;
+  /** Cranial nerve nuclei and fascicles, each acting on its own side. */
+  readonly facialNucleus: BrainRoute;
+  readonly hypoglossal: BrainRoute;
+  readonly ambiguus: BrainRoute;
+  readonly oculomotor: BrainRoute;
+  readonly abduction: BrainRoute;
+  readonly gaze: BrainRoute;
+  readonly sympathetic: BrainRoute;
+  readonly ataxia: BrainRoute;
+  readonly vertigo: Row<{ readonly steps: readonly BrainStep[] }>;
+  /** Parts laid out by body region (D41). */
+  readonly somatotopic: Row<{ readonly compartments: readonly BrainCompartment[] }>;
+  readonly limbRegions: Row<{ readonly arm: Span; readonly leg: Span }>;
+  readonly axialRegions: Row<{ readonly neck: Span; readonly trunk: Span }>;
+  readonly territories: Readonly<
+    Record<
+      Territory,
+      Row<{
+        readonly level: BrainLevel;
+        readonly compartments: readonly BrainCompartment[];
+        readonly regions?: readonly BodyRegion[];
+      }>
+    >
+  >;
+};
+
 export type Kb = {
   readonly pathways: {
     readonly posteriorColumn: Row<{ readonly ascendsOn: Laterality }>;
@@ -140,6 +190,7 @@ export type Kb = {
     readonly sacral: Row<{ readonly span: Span }>;
   };
   readonly plexus: Plexus;
+  readonly brain: Brain;
   readonly observations: {
     readonly spinalShock: Row<{
       readonly reflexesAbsent: readonly Timepoint[];

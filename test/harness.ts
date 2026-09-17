@@ -1,6 +1,6 @@
 // Judges engine output against frozen expectations. Shared by the test suite and the
 // mutation harness, so both apply exactly the same rules.
-import type { Assertion, Case, LimbAssertion, LimbCase, Span } from '../spec/expectations/types.ts';
+import type { Assertion, BrainAssertion, BrainCase, Case, LimbAssertion, LimbCase, Span } from '../spec/expectations/types.ts';
 import type { ReverseCase } from '../spec/expectations/reverse.ts';
 import type { LimbReverseCase } from '../spec/expectations/reverse-plexus.ts';
 import { forward, type Findings } from '../src/engine/forward.ts';
@@ -15,7 +15,7 @@ const sidesOf = (s: Side | 'both'): Side[] => (s === 'both' ? ['L', 'R'] : [s]);
 const miss = <T>(got: T, allowed: readonly T[]): boolean => !allowed.includes(got);
 const show = (xs: readonly unknown[]): string => `[${xs.join(', ')}]`;
 
-export function check(a: Assertion | LimbAssertion, f: Findings): string[] {
+export function check(a: Assertion | LimbAssertion | BrainAssertion, f: Findings): string[] {
   const out: string[] = [];
   switch (a.kind) {
     case 'sensory':
@@ -67,6 +67,23 @@ export function check(a: Assertion | LimbAssertion, f: Findings): string[] {
           if (miss(got, a.oneOf)) out.push(`muscle ${x} ${m}: got ${got}, expected ${show(a.oneOf)}`);
         }
       break;
+    case 'face_sensation':
+    case 'face_weakness':
+    case 'ataxia':
+      for (const x of sidesOf(a.side)) {
+        const got = a.kind === 'face_sensation' ? f.faceSensation[x] : a.kind === 'face_weakness' ? f.faceWeakness[x] : f.ataxia[x];
+        if (!(a.oneOf as readonly string[]).includes(got)) out.push(`${a.kind} ${x}: got ${got}, expected ${show(a.oneOf)}`);
+      }
+      break;
+    case 'cranial':
+      for (const x of sidesOf(a.side)) {
+        const got = f.cranial[x][a.sign];
+        if (miss(got, a.oneOf)) out.push(`${a.sign} ${x}: got ${got}, expected ${show(a.oneOf)}`);
+      }
+      break;
+    case 'vertigo':
+      if (miss(f.vertigo, a.oneOf)) out.push(`vertigo: got ${f.vertigo}, expected ${show(a.oneOf)}`);
+      break;
     case 'deformity':
       for (const x of sidesOf(a.side)) {
         const got = f.deformities[x][a.deformity];
@@ -94,7 +111,7 @@ export function check(a: Assertion | LimbAssertion, f: Findings): string[] {
   return out;
 }
 
-export function runCase(kase: Case | LimbCase, kb?: Kb): Failure[] {
+export function runCase(kase: Case | LimbCase | BrainCase, kb?: Kb): Failure[] {
   const failures: Failure[] = [];
   for (const ev of kase.evaluations) {
     const findings = forward(kase.lesion, ev.timepoint, kb ? { kb } : {});
@@ -105,7 +122,7 @@ export function runCase(kase: Case | LimbCase, kb?: Kb): Failure[] {
   return failures;
 }
 
-export const runAll = (cases: readonly (Case | LimbCase)[], kb?: Kb): Failure[] => cases.flatMap((c) => runCase(c, kb));
+export const runAll = (cases: readonly (Case | LimbCase | BrainCase)[], kb?: Kb): Failure[] => cases.flatMap((c) => runCase(c, kb));
 
 // ── reverse ──────────────────────────────────────────────────────────────
 

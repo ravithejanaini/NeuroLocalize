@@ -1,5 +1,6 @@
 // The knowledge base. Data only — scripts/check-boundaries.ts rejects any function here.
 // Each row's `claim` is what a clinical reviewer is asked to confirm.
+import { BRAIN } from './brain.ts';
 import { PLEXUS } from './plexus.ts';
 import type { Kb } from './types.ts';
 
@@ -213,6 +214,7 @@ export const KB: Kb = {
   },
 
   plexus: PLEXUS,
+  brain: BRAIN,
 
   observations: {
     spinalShock: {
