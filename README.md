@@ -2,7 +2,9 @@
 
 Place a lesion anywhere from the cortex to a nerve in the hand, and see the deficits it
 produces and why. Or enter an examination, and see where the lesion could be, which test
-would tell the candidates apart, and the reasoning behind every ranking.
+would tell the candidates apart, and the reasoning behind every ranking. Or practise:
+generated cases, scheduled by the pathways you get wrong, and a presentation mode for
+teaching from a phone.
 
 > **Educational use only.** This is not a clinical decision-support tool and must not be
 > used to assess a real patient.
@@ -17,8 +19,7 @@ would tell the candidates apart, and the reasoning behind every ranking.
 | P3 | Examination mode: ranked candidates, the next test worth doing, and the working |
 | P4 | The brachial plexus: roots, trunks, divisions, cords and nine nerves in 3D; fourteen muscles, seven nerve territories and five deformities (winged scapula, waiter's tip, wrist drop, claw hand, ape hand); examination mode separates root from plexus from nerve |
 | P5 | Above the cord: medulla, pons, midbrain, thalamus, internal capsule and the motor and sensory homunculus; facial sensation and strength (forehead sparing), five cranial nerve signs, ataxia and vertigo; nine named territories from the lateral medulla to the ACA cortex; examination mode ranks candidates from cortex to muscle |
-
-P6 (practice and offline use) is planned in `docs/plan.html`.
+| P6 | Practice: cases generated from the model and checked by it, answers explained by the engine's own working, review scheduled by the pathways answered wrongly; progress kept in the browser with save and load to a file; presentation mode; offline use from the standalone build |
 
 ## How accuracy is enforced
 
@@ -50,3 +51,10 @@ npm run serve
 
 Then open http://localhost:5178. Three.js loads from a pinned CDN URL; everything else is
 in this repository.
+
+### Offline
+
+`dist/` is a complete static site. Served over HTTPS (or from `localhost`), it registers a
+service worker that keeps the app and Three.js for use with no network; open it once online,
+then use the browser's *Install* or *Add to Home screen*. Any static host will do, GitHub
+Pages included. Practice progress lives in that browser; *Save progress to a file* moves it.

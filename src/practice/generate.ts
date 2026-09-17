@@ -15,7 +15,7 @@ import {
   type Slot,
 } from '../engine/reverse.ts';
 import type { LesionFamily, Place, Segment, Timepoint } from '../kb/vocab.ts';
-import { pathwaysOf, type Pathway } from './pathways.ts';
+import { pathwaysOf, pathwaysShown, type Pathway } from './pathways.ts';
 import { rng, shuffle } from './rng.ts';
 
 export type Choice = {
@@ -134,6 +134,9 @@ export function generateCase(seed: number, target: Pathway, slots: readonly Slot
     if (!made) continue;
     const mine = made.groups[0];
     if (!mine) continue;
+    // The case must show the pathway it was built for, not merely come from a lesion that has it.
+    const pathways = pathwaysShown(made.observations, f, h);
+    if (!pathways.includes(target)) continue;
     const answer = choiceOf(mine);
     const labels = new Set([choiceLabel(answer)]);
     const distractors: Choice[] = [];
@@ -156,7 +159,7 @@ export function generateCase(seed: number, target: Pathway, slots: readonly Slot
       observations,
       answer,
       options: shuffle([answer, ...distractors], random),
-      pathways: pathwaysOf(f, h),
+      pathways,
     };
   }
   throw new Error(`no solvable case for ${target} from seed ${seed}`);

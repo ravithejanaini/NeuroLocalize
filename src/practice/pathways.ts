@@ -3,7 +3,9 @@
 // it again whether it comes from the cord, the medulla or the thalamus.
 import type { Findings } from '../engine/forward.ts';
 import type { Hypothesis } from '../engine/hypotheses.ts';
-import { MUSCLES, SEGMENTS, SIDES } from '../kb/vocab.ts';
+import type { Observation } from '../engine/reverse.ts';
+import { KB } from '../kb/kb.ts';
+import { MUSCLES, SEGMENTS, SIDES, type Segment, type Side } from '../kb/vocab.ts';
 
 export const PATHWAYS = [
   'spinothalamic',
@@ -32,13 +34,13 @@ export const PATHWAY_NAME: Record<Pathway, { readonly name: string; readonly wha
   cerebellar_vestibular: { name: 'Ataxia and vertigo', what: 'the cerebellar peduncles and vestibular nuclei' },
 };
 
+const hurt = (s: string): boolean => s === 'lost' || s === 'impaired';
 const PERIPHERAL = new Set(['plexus_left', 'plexus_right', 'nerve_left', 'nerve_right']);
 
 export function pathwaysOf(f: Findings, h: Hypothesis): Pathway[] {
   const out = new Set<Pathway>();
   const any = (test: (side: 'L' | 'R', seg: (typeof SEGMENTS)[number]) => boolean): boolean =>
     SIDES.some((x) => SEGMENTS.some((s) => test(x, s)));
-  const hurt = (s: string): boolean => s === 'lost' || s === 'impaired';
 
   if (any((x, s) => hurt(f.sensory[x].pain_temperature[s]))) out.add('spinothalamic');
   if (any((x, s) => hurt(f.sensory[x].posterior_column[s]))) out.add('dorsal_column');
@@ -73,4 +75,81 @@ export function pathwaysOf(f: Findings, h: Hypothesis): Pathway[] {
   }
   if (f.vertigo === 'present') out.add('cerebellar_vestibular');
   return PATHWAYS.filter((p) => out.has(p));
+}
+
+/** Weakness is upper or lower motor neuron by what the lesion does at those segments. */
+function weakness(f: Findings, side: Side, segs: readonly Segment[], peripheral: boolean): Pathway[] {
+  const kinds = new Set(segs.map((k) => f.motor[side][k].lesion));
+  const out: Pathway[] = [];
+  if (kinds.has('umn') || kinds.has('umn_lmn')) out.push('corticospinal');
+  if (peripheral || kinds.has('lmn') || kinds.has('umn_lmn') || out.length === 0) out.push('lower_motor_neuron');
+  return out;
+}
+
+/**
+ * The pathways a case actually shows: those of its lesion that at least one abnormal
+ * finding on the page depends on. A miss is scheduled against these and nothing else,
+ * so a pathway the student never saw is never marked wrong.
+ */
+export function pathwaysShown(observations: readonly Observation[], f: Findings, h: Hypothesis): Pathway[] {
+  const peripheral = PERIPHERAL.has(h.family);
+  const out = new Set<Pathway>();
+  if (peripheral) out.add('peripheral_nerve');
+  const span = (a: Segment, b: Segment): Segment[] => SEGMENTS.slice(SEGMENTS.indexOf(a), SEGMENTS.indexOf(b) + 1);
+  for (const o of observations) {
+    switch (o.kind) {
+      case 'sensory':
+        if (o.value === 'abnormal') out.add(o.modality === 'pain_temperature' ? 'spinothalamic' : 'dorsal_column');
+        break;
+      case 'skin':
+        // A patch without a dermatome landmark: read by which modality the lesion takes there.
+        if (o.value === 'abnormal') {
+          if (hurt(f.skin[o.side].pain_temperature[o.area])) out.add('spinothalamic');
+          if (hurt(f.skin[o.side].posterior_column[o.area])) out.add('dorsal_column');
+        }
+        break;
+      case 'strength':
+        if (o.value === 'weak') for (const p of weakness(f, o.side, span(o.span[0], o.span[1]), peripheral)) out.add(p);
+        break;
+      case 'muscle': {
+        const at = KB.plexus.muscles[o.muscle].myotome;
+        if (o.value === 'weak') for (const p of weakness(f, o.side, at ? [at] : [], true)) out.add(p);
+        break;
+      }
+      case 'reflex':
+        if (o.value === 'brisk') out.add('corticospinal');
+        if (o.value === 'reduced') out.add('lower_motor_neuron');
+        break;
+      case 'babinski':
+        if (o.value === 'present') out.add('corticospinal');
+        break;
+      case 'romberg':
+        if (o.value === 'present') out.add('dorsal_column');
+        break;
+      case 'horner':
+        if (o.value === 'present') out.add('autonomic');
+        break;
+      case 'bladder':
+        if (o.value !== 'normal') out.add('autonomic');
+        break;
+      case 'face_sensation':
+        if (o.value === 'abnormal') out.add('trigeminal');
+        break;
+      case 'face_weakness':
+        if (o.value === 'lower') out.add('corticobulbar');
+        if (o.value === 'whole') out.add('cranial_nuclei');
+        break;
+      case 'cranial':
+        if (o.value === 'present') {
+          out.add(o.sign === 'tongue_weakness' && f.faceWeakness[o.side] === 'lower' ? 'corticobulbar' : 'cranial_nuclei');
+        }
+        break;
+      case 'ataxia':
+      case 'vertigo':
+        if (o.value === 'present') out.add('cerebellar_vestibular');
+        break;
+    }
+  }
+  const possible = new Set(pathwaysOf(f, h));
+  return PATHWAYS.filter((p) => out.has(p) && possible.has(p));
 }

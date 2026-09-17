@@ -1,5 +1,9 @@
 <title>NeuroLocalize</title>
-<meta name="description" content="Place a lesion anywhere from the cortex to the nerves of the hand and watch which signals fail to arrive; or enter an examination and see where the lesion could be.">
+<meta name="description" content="Place a lesion anywhere from the cortex to the nerves of the hand and watch which signals fail to arrive; enter an examination and see where the lesion could be; or practise on generated cases.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E1118">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <script type="importmap">
 { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js" } }
@@ -254,6 +258,72 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
 .foot{padding:14px 18px 22px;font-size:12px;color:var(--ink3)}
 .foot a{color:var(--ink2)}
 
+.pq{font-family:var(--f-display);font-weight:600;font-size:15px;margin:0 0 10px}
+.pfs{display:grid;gap:8px}
+.pf-group h4{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:0 0 3px;font-weight:500}
+.pf-group ul{list-style:none;margin:0;padding:0;display:grid;gap:1px}
+.pf{display:grid;grid-template-columns:1fr auto;gap:10px;font-size:13px;padding:2px 0;border-bottom:1px dotted var(--rule)}
+.pf-value{font-family:var(--f-mono);font-size:11.5px;font-weight:600;color:var(--ink)}
+.pf-quiet .pf-value{font-weight:400;color:var(--ink3)}
+.pos{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:6px}
+.po{width:100%;text-align:left;display:grid;grid-template-columns:28px 1fr;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--rule2);background:var(--surface);cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:13px;min-height:44px}
+.po:hover:not(:disabled){border-color:var(--ink)}
+.po:disabled{cursor:default}
+.po-key{font-family:var(--f-mono);font-size:11px;font-weight:500;border:1px solid var(--rule2);text-align:center;line-height:22px}
+.po.is-right{border-color:var(--ink);background:var(--ink);color:var(--ground)}
+.po.is-right .po-key{border-color:var(--ground)}
+.po.is-wrong{border-color:var(--cst);box-shadow:inset 3px 0 0 var(--cst)}
+.po.is-other{color:var(--ink3)}
+.pv{font-size:14px;margin:12px 0 0}
+.pv-right{font-family:var(--f-display);font-weight:700}
+.pv-wrong{border-left:3px solid var(--cst);padding-left:8px}
+.pwork h4{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:14px 0 0;font-weight:500}
+.pw{font-size:12px;color:var(--ink2);margin:12px 0 0;display:flex;flex-wrap:wrap;gap:4px;align-items:baseline}
+.pchip{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);padding:0 5px;color:var(--ink2)}
+.pchip.is-target{border-color:var(--ink);color:var(--ink)}
+.btn-strong{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.btn-strong:hover{color:var(--ground);opacity:.9}
+.pstat{font-family:var(--f-mono);font-size:11px;color:var(--ink2);margin:0 0 8px}
+.pstat b{color:var(--ink)}
+.pps{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.pp{display:grid;grid-template-columns:1fr 80px;gap:1px 10px;align-items:center}
+.pp-name{font-size:13px}
+.pp-bar{height:4px;background:var(--sunk);display:block}
+.pp-bar i{display:block;height:100%;background:var(--ink)}
+.pp-stat{grid-column:1/-1;font-family:var(--f-mono);font-size:10px;color:var(--ink3)}
+.pp-new .pp-name{color:var(--ink2)}
+.file{position:relative;overflow:hidden;display:inline-flex;align-items:center}
+.file input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.file:has(input:focus-visible){outline:2px solid var(--focus);outline-offset:2px}
+#practice-io,#offline-note{font-size:12px;color:var(--ink2);margin:8px 0 0}
+#present-exit{margin-left:auto}
+
+/* Presentation (D51): the phone is the presenter's; one case, large, nothing else. */
+body[data-present="true"] .mode,
+body[data-present="true"] #status,
+body[data-present="true"] .edu,
+body[data-present="true"] .tabs,
+body[data-present="true"] .panel > :not(#practice-card){display:none!important}
+body[data-present="true"] .app{grid-template-columns:1fr;grid-template-rows:auto}
+body[data-present="true"] .stage{display:none}
+body[data-present="true"][data-revealed="true"] .app{grid-template-rows:minmax(0,38fr) minmax(0,62fr)}
+body[data-present="true"][data-revealed="true"] .stage{display:block}
+body[data-present="true"] .panel{border:0;display:block}
+body[data-present="true"] #practice-card{display:block!important;max-width:980px;margin:0 auto;padding:20px 20px 40px;font-size:19px}
+body[data-present="true"] #practice-card .sec-t{display:none}
+body[data-present="true"] .pq{font-size:clamp(22px,4vw,34px);line-height:1.2}
+body[data-present="true"] .pfs{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px 28px}
+body[data-present="true"] .pf{font-size:clamp(17px,2.4vw,23px);padding:5px 0}
+body[data-present="true"] .pf-value{font-size:clamp(15px,2.1vw,20px)}
+body[data-present="true"] .pf-group h4{font-size:12px}
+body[data-present="true"] .po{font-size:clamp(17px,2.5vw,24px);min-height:60px;grid-template-columns:40px 1fr}
+body[data-present="true"] .po-key{font-size:15px;line-height:32px}
+body[data-present="true"] .pv{font-size:clamp(18px,2.6vw,26px)}
+body[data-present="true"] .w{font-size:16px;grid-template-columns:90px 1fr}
+body[data-present="true"] .w-why{font-size:14.5px}
+body[data-present="true"] .btn{font-size:15px;min-height:52px;padding:10px 18px}
+body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-present="true"] .caveats{display:none}
+
 @media (max-width:860px){
   /* D22: the stage keeps the top; the instrument is a sheet with a thumb-height tab bar. */
   html,body{overflow:hidden}
@@ -278,6 +348,7 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
   .panel[data-tab="slice"] > [data-sec="slice"],
   .panel[data-tab="findings"] > [data-sec="findings"],
   .panel[data-tab="model"] > [data-sec="model"]{display:block}
+  .panel > [data-sec][hidden]{display:none!important}
   .tabs{display:grid;grid-template-columns:repeat(4,1fr);position:sticky;bottom:0;margin-top:auto;z-index:2;border-top:1px solid var(--rule);background:var(--surface);padding-bottom:env(safe-area-inset-bottom)}
   .tabs button{border:0;background:transparent;min-height:52px;font-family:var(--f-display);font-weight:600;font-size:13px;color:var(--ink3);border-top:2px solid transparent;cursor:pointer}
   .tabs button[aria-selected="true"]{color:var(--ink);border-top-color:var(--ink)}
@@ -295,9 +366,11 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
   <span class="seg mode" role="radiogroup" aria-label="Mode">
     <label><input type="radio" name="mode" value="place" checked>Place a lesion</label>
     <label><input type="radio" name="mode" value="examine">Examine a patient</label>
+    <label><input type="radio" name="mode" value="practise">Practise</label>
   </span>
   <span id="status" aria-live="polite">Loading…</span>
   <span class="edu">Teaching tool · not for patient care</span>
+  <button type="button" class="btn" id="present-exit" hidden>Leave presentation</button>
 </header>
 
 <main class="app">
@@ -379,6 +452,29 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
       </div>
     </section>
 
+    <section class="sec" data-sec="lesion" data-mode="practise" id="practice-card" hidden>
+      <h2 class="sec-t">Case</h2>
+      <div id="practice-case" aria-live="polite"></div>
+    </section>
+
+    <section class="sec" data-sec="findings" data-mode="practise" hidden>
+      <h2 class="sec-t">Where you are weakest</h2>
+      <div id="practice-progress"></div>
+      <p class="banner" id="practice-kept" hidden>This browser is not keeping progress (a private window, or storage is blocked). Save it to a file before you leave.</p>
+    </section>
+
+    <section class="sec" data-sec="findings" data-mode="practise" hidden>
+      <h2 class="sec-t">Teach and keep</h2>
+      <p class="exam-intro">Present shows one case at a time in large type, for teaching from a phone at the bedside. Answers given while presenting are not added to your progress.</p>
+      <div class="row"><button type="button" class="btn btn-strong" id="practice-present">Present</button></div>
+      <p class="exam-intro" style="margin-top:14px">Progress is kept in this browser only. Save it to a file to move it to another device or keep a copy.</p>
+      <div class="row">
+        <button type="button" class="btn" id="practice-export">Save progress to a file</button>
+        <label class="btn file">Load from a file<input type="file" id="practice-import" accept="application/json,.json"></label>
+      </div>
+      <p id="practice-io" aria-live="polite"></p>
+    </section>
+
     <section class="sec" data-sec="findings" data-mode="examine" hidden>
       <h2 class="sec-t">Where the lesion could be</h2>
       <div id="cands" aria-live="polite"></div>
@@ -409,7 +505,7 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
       <label class="check"><input type="checkbox" id="slice-follow" checked aria-label="Keep the slice on the lesion"> Keep the slice on the lesion</label>
     </section>
 
-    <section class="sec" data-sec="lesion">
+    <section class="sec" data-sec="lesion" data-mode="place examine">
       <h2 class="sec-t">Time since injury</h2>
       <div class="ticks" id="time" role="radiogroup" aria-label="Time since injury"></div>
     </section>
@@ -436,11 +532,12 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
         </span>
       </div>
       <label class="check"><input type="checkbox" id="still" aria-label="Hold the signals still"> Hold the signals still</label>
+      <p id="offline-note"></p>
     </section>
 
     <section class="sec" data-sec="model">
       <h2 class="sec-t">Keys</h2>
-      <p class="keys"><kbd>1</kbd>&ndash;<kbd>6</kbd> camera &middot; <kbd>[</kbd> <kbd>]</kbd> move the lesion &middot; <kbd>,</kbd> <kbd>.</kbd> move the slice &middot; drag to turn, pinch or scroll to zoom</p>
+      <p class="keys">Practice: <kbd>1</kbd>&ndash;<kbd>4</kbd> answer &middot; <kbd>N</kbd> next &middot; <kbd>M</kbd> show on the model &middot; presenting: <kbd>R</kbd> reveal, <kbd>Esc</kbd> leave<br><kbd>1</kbd>&ndash;<kbd>6</kbd> camera &middot; <kbd>[</kbd> <kbd>]</kbd> move the lesion &middot; <kbd>,</kbd> <kbd>.</kbd> move the slice &middot; drag to turn, pinch or scroll to zoom</p>
     </section>
 
     <section class="sec" data-sec="model">
@@ -451,6 +548,7 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
         <li>Peripheral and corticospinal speeds are sourced. Speeds of the posterior-column and spinothalamic axons inside the cord are not, and are drawn at one illustrative rate.</li>
         <li>The segment-to-vertebra ruler is interpolated between sourced anchors, with every vertebra drawn the same height.</li>
         <li>The brain is schematic and not to scale. What is sourced is the order of levels, which parts lie medially or laterally, which side each tract serves, and the homunculus from leg to face.</li>
+        <li>Practice cases are generated: a real candidate lesion, some of the findings the model derives for it, and options the findings shown rule out. Every case is chronic. A case is kept only if the model itself, given just those findings, puts the true lesion first with nothing against it.</li>
         <li>The arm is drawn shortened and the plexus is schematic. What is sourced is the order of things: trunks between the scalenes and over the first rib, divisions behind the clavicle, cords named around the axillary artery, and where each branch leaves its nerve.</li>
       </ul>
     </section>
@@ -460,9 +558,9 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
       Source and tests: <a href="https://github.com/ravithejanaini/NeuroLocalize" target="_blank" rel="noopener">github.com/ravithejanaini/NeuroLocalize</a>.
     </footer>
     <nav class="tabs" role="tablist" aria-label="Instrument sections">
-      <button type="button" role="tab" data-tab-btn="lesion" data-place-label="Lesion" data-exam-label="Exam">Lesion</button>
+      <button type="button" role="tab" data-tab-btn="lesion" data-place-label="Lesion" data-exam-label="Exam" data-practise-label="Case">Lesion</button>
       <button type="button" role="tab" data-tab-btn="slice">Slice</button>
-      <button type="button" role="tab" data-tab-btn="findings" data-place-label="Findings" data-exam-label="Candidates">Findings</button>
+      <button type="button" role="tab" data-tab-btn="findings" data-place-label="Findings" data-exam-label="Candidates" data-practise-label="Progress">Findings</button>
       <button type="button" role="tab" data-tab-btn="model">Model</button>
     </nav>
   </aside>

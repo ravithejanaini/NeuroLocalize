@@ -8,7 +8,7 @@ import { hypotheses } from '../src/engine/hypotheses.ts';
 import { explain, prepareSync, reverse, slotKey } from '../src/engine/reverse.ts';
 import { RENDER } from '../src/kb/render.ts';
 import { choiceLabel, generateCase, isCorrect, sameChoice } from '../src/practice/generate.ts';
-import { PATHWAYS, pathwaysOf, type Pathway } from '../src/practice/pathways.ts';
+import { PATHWAYS, pathwaysOf, pathwaysShown, type Pathway } from '../src/practice/pathways.ts';
 import {
   dueCount,
   emptyProgress,
@@ -42,6 +42,29 @@ describe('pathways a lesion exercises', () => {
     for (const want of ['corticospinal', 'dorsal_column', 'spinothalamic'] as Pathway[]) assert.ok(pathwaysOf(hemi.f, hemi.h).includes(want));
     const capsule = at('hemisphere_left:internal_capsule');
     assert.ok(pathwaysOf(capsule.f, capsule.h).includes('corticobulbar'));
+  });
+});
+
+describe('pathways a case shows', () => {
+  it('counts only what an abnormal finding on the page depends on', () => {
+    const hemi = at('hemicord_left:T8-T8');
+    assert.deepEqual(pathwaysShown([{ kind: 'reflex', side: 'L', reflex: 'achilles', value: 'brisk' }], hemi.f, hemi.h), ['corticospinal']);
+    assert.deepEqual(pathwaysShown([{ kind: 'bladder', value: 'normal' }, { kind: 'babinski', side: 'R', value: 'absent' }], hemi.f, hemi.h), []);
+    assert.deepEqual(
+      pathwaysShown([{ kind: 'sensory', side: 'R', modality: 'pain_temperature', span: ['L4', 'L4'], value: 'abnormal' }], hemi.f, hemi.h),
+      ['spinothalamic'],
+    );
+    const ulnar = at('nerve_left:ulnar_elbow');
+    assert.deepEqual(pathwaysShown([], ulnar.f, ulnar.h), ['peripheral_nerve']);
+    assert.deepEqual(pathwaysShown([{ kind: 'muscle', side: 'L', muscle: 'interossei', value: 'weak' }], ulnar.f, ulnar.h), [
+      'lower_motor_neuron',
+      'peripheral_nerve',
+    ]);
+  });
+
+  it('never claims a pathway the lesion does not have', () => {
+    const ulnar = at('nerve_left:ulnar_elbow');
+    assert.deepEqual(pathwaysShown([{ kind: 'reflex', side: 'L', reflex: 'achilles', value: 'brisk' }], ulnar.f, ulnar.h), ['peripheral_nerve']);
   });
 });
 

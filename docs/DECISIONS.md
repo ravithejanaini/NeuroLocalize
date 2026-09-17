@@ -519,3 +519,54 @@ sourced lesion takes together: the six parts of the lateral medulla, the motor a
 cortex, the genu and the posterior limb. Telling them apart would need lesions of one part
 alone that no source read describes, so the swaps stay recorded rather than tested with
 invented expectations.
+
+## P6
+
+P6 adds no knowledge-base rows and no expectations. Everything a practice case says comes
+from the engine that the frozen cases already test.
+
+### Decisions
+
+**D48 — Practice cases are generated from the model, and review is scheduled by pathway.**
+A case is a real candidate lesion, some of the chronic findings the engine derives for it,
+and up to four options. It starts from six abnormal and three normal findings chosen at
+random, then adds the finding that best separates the true lesion from its strongest rival,
+up to eighteen. It is kept only if reverse mode, given just those findings, ranks the true
+lesion first with nothing against it and no other candidate unrefuted; every wrong option
+must be contradicted by at least one finding shown. The explanation after answering is the
+engine's own working: why each abnormal finding fits, and which findings contradict the
+option chosen.
+- *Pathways, not places.* A case is filed under the pathways its **shown** abnormal findings
+  depend on (ten: pain and temperature, vibration and position, upper and lower motor
+  neuron, autonomic, plexus and nerves, facial sensation, face from above, cranial nerve
+  nuclei, ataxia and vertigo). A student who misreads crossed pain loss sees it again whether
+  it comes from the cord, the medulla or the thalamus. A pathway the lesion has but the case
+  does not show is never marked wrong; the first browser check found exactly that (a case
+  filed under "autonomic" with no bladder finding shown), and `pathwaysShown` replaced it.
+- *The schedule* is a Leitner box: a miss returns a pathway to box 0 (due at once); each
+  right answer moves it up one box, due after 1, 3, 7, 14, then 30 days. The next case is
+  built for the weakest pathway that is due, then an untried one, then the soonest due.
+- *Generated, not written.* No case is authored by hand, so no case can say something the
+  engine does not. The cost is that a case is only as good as the model; what the model
+  leaves out (R-entries above) cannot be practised.
+- Every case is chronic, so reflex and tone findings are settled rather than in shock.
+
+**D49 — Progress stays in the browser, with a file to carry it.** Decided with the user:
+the claude.ai page must stay shareable by public link, which rules out server-side storage.
+Progress is kept in the viewer's browser under one key, every read and write guarded, and
+the page works when storage is refused (a private window), saying so. "Save progress to a
+file" and "Load from a file" move it between devices; a file this page did not write is
+refused and changes nothing.
+
+**D50 — Offline use comes from the standalone build.** `npm run build` writes a service
+worker whose version is a hash of every built file, and a web manifest. The worker caches the
+app and the pinned Three.js build, answers from the cache first, and drops old caches when a
+new version activates; the page says a newer version is saved and opens next time. It is
+registered only outside claude.ai, where the host serves the page. Verified in the browser:
+a rebuilt page installs a new cache, deletes the old one and shows the notice.
+
+**D51 — Presentation is phone-first.** "Present" strips the page to one case in large type
+for teaching from a phone at the bedside: no tabs, no model until the answer is out, then the
+lesion drawn above the case. Keys and taps choose, R reveals without choosing, N moves on,
+Esc leaves. Answers given while presenting are the room's, so they are never recorded. A
+second device driving the first would need shared state on claude.ai, which D49 rules out.

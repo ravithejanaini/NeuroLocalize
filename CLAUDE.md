@@ -1,8 +1,8 @@
 # NeuroLocalize — agent instructions
 
 A lesion-localization engine for teaching neuroanatomy — cortex, capsule, thalamus,
-brainstem, spinal cord, roots, brachial plexus and arm nerves — with a 3D instrument in
-front of it.
+brainstem, spinal cord, roots, brachial plexus and arm nerves — with a 3D instrument and a
+practice mode in front of it.
 **Education only. Not clinical decision support. No patient data, ever.**
 
 Plan: `docs/plan.html` (published revision C). Sources: `docs/SOURCES.md`.
@@ -32,6 +32,7 @@ dependencies, both dev-only and type-only. Do not add another without asking.
 | `src/kb/` | declarative data — no functions, no classes | `src/kb/` only |
 | `src/engine/` | pure functions over the knowledge base; never `kb/render.ts` or `kb/mechanisms.ts` | `src/kb/`, `src/engine/` |
 | `src/geometry/` | pure geometry, testable under Node | `src/kb/`, `src/engine/`, `src/geometry/` |
+| `src/practice/` | case generation and the review schedule; pure, never `kb/mechanisms.ts` | `src/kb/`, `src/engine/`, `src/practice/` |
 | `src/render/` | Three.js scene and panel; decides nothing | anything in `src/`, plus `three` |
 | `spec/expectations/` | frozen expected outputs, written before the engine | `src/kb/vocab.ts` only |
 | `test/`, `scripts/` | anything | anything |
@@ -39,6 +40,10 @@ dependencies, both dev-only and type-only. Do not add another without asking.
 `scripts/check-boundaries.ts` enforces this by parsing imports, not by grepping text,
 so prose in comments cannot trip or satisfy it. Everything under `src/` must stay
 browser-portable: no `node:` imports.
+
+`app/` holds the page shell, the web manifest, the icon and the service-worker template;
+`npm run build` fills the worker's file list and version. The worker registers only outside
+claude.ai. Practice progress is per-browser storage and every access is guarded (D49).
 
 ## Rules
 

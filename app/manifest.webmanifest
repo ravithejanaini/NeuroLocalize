@@ -1,0 +1,13 @@
+{
+  "name": "NeuroLocalize",
+  "short_name": "NeuroLocalize",
+  "description": "Lesion localisation from cortex to hand: place a lesion, examine a patient, practise by pathway. A teaching tool, not for patient care.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0E1118",
+  "theme_color": "#0E1118",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

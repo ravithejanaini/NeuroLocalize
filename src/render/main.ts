@@ -1,5 +1,6 @@
-// Entry point: state, controls, camera and the render loop, in two modes — placing a lesion
-// and seeing its findings, or entering findings and seeing where the lesion could be.
+// Entry point: state, controls, camera and the render loop, in three modes — placing a lesion
+// and seeing its findings, entering findings and seeing where the lesion could be, or
+// practising on generated cases scheduled by the pathways answered wrongly.
 import * as THREE from 'three';
 import { forward, isBrain, isCord, isPlexus, mapLesion, type AnyRegion, type PlexusRegion } from '../engine/forward.ts';
 import { mapBrain } from '../engine/brain.ts';
@@ -44,6 +45,13 @@ import { DILATION, PulseField } from './pulses.ts';
 import { buildAnatomy, lesionMidY, type Palette } from './scene.ts';
 import { buildBrain } from './brain3d.ts';
 import { buildLimb } from './limb3d.ts';
+import { registerOffline, saveFile } from './offline.ts';
+import { caseHtml, progressHtml, targetText } from './practice-view.ts';
+import { exportText, importText, loadProgress, saveProgress } from './progress-store.ts';
+import { generateCase, hasPathway, isCorrect, type PracticeCase } from '../practice/generate.ts';
+import { PATHWAYS } from '../practice/pathways.ts';
+import { rng } from '../practice/rng.ts';
+import { nextPathway, record } from '../practice/schedule.ts';
 import { examSlots } from './slots.ts';
 import { bodySilhouetteSvg, sliceSvg } from './svg.ts';
 
@@ -70,7 +78,7 @@ const palette: Palette = {
   artery: css('--artery', '#b8565a'),
 };
 
-type Mode = 'place' | 'examine';
+type Mode = 'place' | 'examine' | 'practise';
 
 type State = {
   mode: Mode;
@@ -109,6 +117,15 @@ const state: State = {
   examModality: 'pain_temperature',
   candidate: 0,
   limbSide: 'L',
+};
+
+const practice = {
+  progress: loadProgress(),
+  kept: true,
+  current: null as PracticeCase | null,
+  chosen: null as number | null,
+  revealed: false,
+  present: false,
 };
 
 const SLOTS = examSlots(RENDER);
@@ -433,24 +450,168 @@ function exampleExam(): Map<string, Observation> {
   return out;
 }
 
+// ── practise mode ────────────────────────────────────────────────────────
+const PRACTICE_TIME: Timepoint = 'chronic';
+const random = rng((Date.now() ^ Math.floor(Math.random() * 0x7fffffff)) >>> 0);
+const hypothesisById = (id: string | undefined): Hypothesis | undefined =>
+  id === undefined ? undefined : hypotheses().find((h) => h.id === id);
+
+function newCase(): void {
+  const due = nextPathway(practice.progress, Date.now(), random);
+  // The scheduled pathway first; any other if no case can be built for it.
+  practice.current = null;
+  for (const target of [due, ...PATHWAYS.filter((p) => p !== due)]) {
+    if (!hasPathway(target)) continue;
+    try {
+      practice.current = generateCase(Math.floor(random() * 2 ** 31), target, SLOTS);
+      break;
+    } catch {
+      // No solvable case from that seed; try the next pathway.
+    }
+  }
+  practice.chosen = null;
+  practice.revealed = false;
+}
+
+function answer(index: number): void {
+  const c = practice.current;
+  if (!c || practice.revealed || index < 0 || index >= c.options.length) return;
+  practice.chosen = index;
+  practice.revealed = true;
+  // A presenter answers for the room, so presenting never touches the schedule.
+  if (!practice.present) {
+    practice.progress = record(practice.progress, c.pathways, isCorrect(c, index), Date.now(), c.seed);
+    practice.kept = saveProgress(practice.progress);
+  }
+  apply();
+  showVerdict();
+}
+
+function reveal(): void {
+  if (!practice.current || practice.revealed) return;
+  practice.revealed = true;
+  apply();
+  showVerdict();
+}
+
+function showVerdict(): void {
+  document.querySelector('#practice-case .pv')?.scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' });
+}
+
+const EMPTY: Shown = { regions: [], shape: null, top: 0, bottom: 0 };
+
+function applyPractise(): void {
+  $('#practice-progress').innerHTML = progressHtml(practice.progress, Date.now());
+  $('#practice-kept').hidden = practice.kept;
+  if (!isPrepared(PRACTICE_TIME)) {
+    $('#practice-case').innerHTML = '<p class="quiet" id="prep-p">Working through the candidate lesions…</p>';
+    $('#status').textContent = 'Practice · preparing';
+    preparing ??= prepare(PRACTICE_TIME, {
+      onProgress: (done, total) => {
+        const p = document.querySelector('#prep-p') ?? document.querySelector('#prep');
+        if (p) p.textContent = `Working through the candidate lesions… ${done} of ${total}`;
+      },
+    }).then(() => {
+      preparing = null;
+      if (state.mode !== 'place') apply();
+    });
+    showLesion(EMPTY);
+    return;
+  }
+  if (!practice.current) newCase();
+  const c = practice.current;
+  if (!c) {
+    $('#practice-case').innerHTML = '<p class="banner">No case could be built this time.</p><div class="row"><button type="button" class="btn btn-strong" id="practice-next">Try again</button></div>';
+    return;
+  }
+  const truth = hypothesisById(c.hypothesisId);
+  const chosenRep = practice.chosen === null ? undefined : hypothesisById(c.options[practice.chosen]?.memberIds[0]);
+  $('#practice-case').innerHTML = caseHtml(
+    RENDER,
+    c,
+    { chosen: practice.chosen, revealed: practice.revealed, present: practice.present },
+    truth,
+    chosenRep,
+  );
+  // The model stays empty until the answer is out, so it cannot give the answer away.
+  if (practice.revealed && truth) {
+    state.followSlice = true;
+    showLesion(hypothesisLesion(truth));
+    limb.setFindings(forward(truth.regions, PRACTICE_TIME));
+    const at = truth.regions.find(isPlexus);
+    if (at?.sides[0]) armSide = at.sides[0];
+  } else {
+    showLesion(EMPTY);
+    limb.setFindings(null);
+  }
+  document.body.dataset.revealed = String(practice.revealed);
+  $('#status').textContent = `Practice · ${targetText(c.target)} · ${c.observations.length} findings${
+    practice.present ? ' · presenting' : ''
+  }`;
+}
+
+function showTruth(): void {
+  const truth = hypothesisById(practice.current?.hypothesisId);
+  if (!truth || !practice.revealed) return;
+  go(truth.regions.some(isBrain) ? 'brain' : truth.regions.some(isPlexus) ? 'arm' : 'lesion');
+}
+
+function nextCase(): void {
+  newCase();
+  apply();
+  go('whole');
+  document.querySelector<HTMLElement>('#practice-case .po')?.focus();
+}
+
+function setPresent(on: boolean): void {
+  practice.present = on;
+  document.body.dataset.present = String(on);
+  $('#present-exit').hidden = !on;
+  if (on) {
+    showTab('lesion');
+    document.documentElement.requestFullscreen?.().catch(() => undefined);
+  } else if (document.fullscreenElement) {
+    document.exitFullscreen().catch(() => undefined);
+  }
+  apply();
+  resize();
+}
+
+/** True when the key belonged to the practice card. */
+function practiceKey(e: KeyboardEvent): boolean {
+  const c = practice.current;
+  if (state.mode !== 'practise' || !c) return false;
+  const k = e.key.toLowerCase();
+  const n = Number(e.key);
+  if (!practice.revealed && Number.isInteger(n) && n >= 1 && n <= c.options.length) answer(n - 1);
+  else if (practice.revealed && (k === 'n' || k === 'arrowright')) nextCase();
+  else if (!practice.revealed && k === 'r' && practice.present) reveal();
+  else if (practice.revealed && k === 'm') showTruth();
+  else if (k === 'escape' && practice.present) setPresent(false);
+  else return false;
+  return true;
+}
+
 function apply(): void {
   if (state.mode === 'place') applyPlace();
-  else applyExamine();
+  else if (state.mode === 'examine') applyExamine();
+  else applyPractise();
 }
 
 function setMode(mode: Mode): void {
   state.mode = mode;
   document.body.dataset.mode = mode;
   document.querySelectorAll<HTMLElement>('[data-mode]').forEach((el) => {
-    if (el !== document.body) el.hidden = el.dataset.mode !== mode;
+    if (el !== document.body) el.hidden = !(el.dataset.mode ?? '').split(' ').includes(mode);
   });
   document.querySelectorAll<HTMLButtonElement>('[data-tab-btn]').forEach((b) => {
-    const label = mode === 'examine' ? b.dataset.examLabel : b.dataset.placeLabel;
+    const label = mode === 'examine' ? b.dataset.examLabel : mode === 'practise' ? b.dataset.practiseLabel : b.dataset.placeLabel;
     if (label) b.textContent = label;
   });
   state.followSlice = true;
+  if (mode !== 'practise' && practice.present) setPresent(false);
   apply();
-  go(mode === 'examine' && state.exam.size === 0 ? 'whole' : 'lesion');
+  go(mode === 'practise' || (mode === 'examine' && state.exam.size === 0) ? 'whole' : 'lesion');
 }
 
 // ── controls: place ──────────────────────────────────────────────────────
@@ -637,6 +798,41 @@ $('#next').addEventListener('click', (e) => {
   }
 });
 
+// ── controls: practise ───────────────────────────────────────────────────
+$('#practice-case').addEventListener('click', (e) => {
+  const el = e.target as Element;
+  const choice = el.closest<HTMLButtonElement>('[data-choice]');
+  if (choice) answer(Number(choice.dataset.choice));
+  else if (el.closest('#practice-next')) nextCase();
+  else if (el.closest('#practice-show')) showTruth();
+  else if (el.closest('#practice-reveal')) reveal();
+});
+$('#practice-present').addEventListener('click', () => setPresent(true));
+$('#present-exit').addEventListener('click', () => setPresent(false));
+$('#practice-export').addEventListener('click', () => {
+  const day = new Date().toISOString().slice(0, 10);
+  void saveFile(`neurolocalize-progress-${day}.json`, exportText(practice.progress)).then((ok) => {
+    $('#practice-io').textContent = ok ? 'Offered as a file to save.' : 'This page could not offer a file here.';
+  });
+});
+$<HTMLInputElement>('#practice-import').addEventListener('change', (e) => {
+  const input = e.target as HTMLInputElement;
+  const file = input.files?.[0];
+  input.value = '';
+  if (!file) return;
+  void file.text().then((text) => {
+    const p = importText(text);
+    if (!p) {
+      $('#practice-io').textContent = 'That file is not progress saved by this page; nothing changed.';
+      return;
+    }
+    practice.progress = p;
+    practice.kept = saveProgress(p);
+    $('#practice-io').textContent = `Loaded ${p.history.length} ${p.history.length === 1 ? 'answer' : 'answers'}.`;
+    apply();
+  });
+});
+
 document.querySelectorAll<HTMLButtonElement>('[data-station]').forEach((b) => {
   b.addEventListener('click', () => go(b.dataset.station ?? 'whole'));
 });
@@ -661,6 +857,10 @@ const STATIONS = ['whole', 'lesion', 'axial', 'side', 'arm', 'brain'];
 window.addEventListener('keydown', (e) => {
   const typing = e.target instanceof Element && e.target.closest('input, textarea, select') !== null;
   if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (practiceKey(e)) {
+    e.preventDefault();
+    return;
+  }
   const station = STATIONS[Number(e.key) - 1];
   if (station) go(station);
   else if (e.key === '[' && state.mode === 'place' && state.preset.kind === 'focal') setLevel(state.level - 1);
@@ -745,3 +945,6 @@ setMode('place');
 choose(first);
 resize();
 requestAnimationFrame(frame);
+registerOffline(() => {
+  $('#offline-note').textContent = 'A newer version has been saved for offline use; it opens next time.';
+});
