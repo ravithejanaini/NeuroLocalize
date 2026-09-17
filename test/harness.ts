@@ -3,6 +3,7 @@
 import type { Assertion, BrainAssertion, BrainCase, Case, LimbAssertion, LimbCase, Span, VisionAssertion, VisionCase } from '../spec/expectations/types.ts';
 import type { ReverseCase } from '../spec/expectations/reverse.ts';
 import { BRAIN_CASES } from '../spec/expectations/brain.ts';
+import { VISION_CASES } from '../spec/expectations/vision.ts';
 import type { BrainReverseCase } from '../spec/expectations/reverse-brain.ts';
 import type { LimbReverseCase } from '../spec/expectations/reverse-plexus.ts';
 import type { VisionReverseCase } from '../spec/expectations/reverse-vision.ts';
@@ -219,6 +220,40 @@ export const TERRITORY_CASE: Readonly<Record<string, string>> = {
   mca_cortex: 'mca-cortex-left',
   aca_cortex: 'aca-cortex-left',
 };
+
+/** P8: the frozen case that describes each place of the visual pathway. */
+export const VISION_PLACE_CASE: Readonly<Record<string, string>> = {
+  optic_nerve: 'optic-nerve-left',
+  chiasm: 'chiasm',
+  optic_tract: 'optic-tract-left',
+  meyer_loop: 'meyer-loop-left',
+  parietal_radiation: 'parietal-radiation-left',
+  pca_occipital: 'pca-occipital-left',
+  occipital_cortex: 'occipital-cortex-left',
+};
+
+/** Every visual place must take exactly the parts its frozen case lesions (D46, for P8). */
+export function visionPlaceFailures(kb: Kb): Failure[] {
+  const out: Failure[] = [];
+  for (const [place, row] of Object.entries(kb.vision.places)) {
+    const id = VISION_PLACE_CASE[place];
+    const kase = VISION_CASES.find((c) => c.id === id);
+    const fail = (message: string): void => {
+      out.push({ caseId: id ?? place, timepoint: 'chronic', message });
+    };
+    if (!kase) {
+      fail(`visual place ${place} has no frozen case`);
+      continue;
+    }
+    const lesioned = kase.lesion.flatMap((l) => ('vision' in l ? [l.vision] : []));
+    const same = [...lesioned].sort().join(',') === [...row.parts].sort().join(',');
+    if (!same) fail(`visual place ${place} takes ${row.parts.join(', ')}; its case ${lesioned.join(', ')}`);
+    // The chiasm is the one midline place: its case lesions it from both sides at once.
+    const midline = kase.lesion.every((l) => 'vision' in l && l.sides.length === 2);
+    if ((row.midline === true) !== midline) fail(`visual place ${place} is ${row.midline ? '' : 'not '}midline, its case ${midline ? '' : 'not '}so`);
+  }
+  return out;
+}
 
 export function territoryFailures(kb: Kb): Failure[] {
   const out: Failure[] = [];

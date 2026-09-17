@@ -756,3 +756,21 @@ teaching than "unsettled"?
 the occipital place be offered as a whole-territory lesion, with the thalamic and midbrain
 findings the brain model already has?
 
+**D62 — What the P7 and P8 mutation runs left standing.** The run after A12 kills 94.2% of
+sourced mutants (2,663 of 2,828), above the 94% P7 set itself; the first P7 run reached 93.4%
+with 88 leg survivors, which A12 cut to 57. What still survives, and why:
+- *The ends of the plexus spans* (6): the lumbar plexus is L1–L4 and the sacral L4–S4 (S72,
+  S80), but no modelled nerve carries L1 or S3–S4, so moving those ends changes nothing a
+  case can see. Naming a nerve that uses them would be inventing one.
+- *Muscles and patches whose roots no source gives* (about 30): the adductors, gluteus
+  maximus, the thigh patches, the sole and the anterolateral leg. Their open spans can be
+  widened without changing a verdict, because every root in them already leaves the finding
+  uncertain. R28 asks a reviewer for the roots.
+- *The sural nerve's two contributors* (5): C23 leaves the lateral foot open in a fibular
+  palsy, so a mutant that moves that branch survives by design.
+- *The relative pupillary defect when both sides are equal* (1): D61's convention, marked
+  pending and put to a reviewer as R30.
+- *Places of the visual pathway* were checked only by reverse mode, as brain territories once
+  were (D46); each is now held to the frozen case that describes it, in the test suite and in
+  the mutation run alike.
+

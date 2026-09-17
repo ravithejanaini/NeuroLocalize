@@ -7,7 +7,7 @@ import { LEG_CASES } from '../spec/expectations/leg.ts';
 import { VISION_CASES } from '../spec/expectations/vision.ts';
 import { forward } from '../src/engine/forward.ts';
 import { KB as KB_FOR_TERRITORIES } from '../src/kb/kb.ts';
-import { check, territoryFailures } from './harness.ts';
+import { check, territoryFailures, visionPlaceFailures } from './harness.ts';
 
 const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES];
 
@@ -25,6 +25,12 @@ describe('frozen expectations', () => {
       }
     });
   }
+});
+
+describe('places of the visual pathway match their frozen cases (P8)', () => {
+  it('each place takes exactly what its case takes', () => {
+    assert.deepEqual(visionPlaceFailures(KB_FOR_TERRITORIES).map((f) => f.message), []);
+  });
 });
 
 describe('named territories match their frozen cases (D46)', () => {

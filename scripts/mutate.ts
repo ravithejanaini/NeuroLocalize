@@ -33,7 +33,7 @@ import { VISION_REVERSE_CASES } from '../spec/expectations/reverse-vision.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { RENDER } from '../src/kb/render.ts';
 import { examSlots } from '../src/render/slots.ts';
-import { reverseFailures, runAll, territoryFailures } from '../test/harness.ts';
+import { reverseFailures, runAll, territoryFailures, visionPlaceFailures } from '../test/harness.ts';
 import { locateRows } from '../test/rows.ts';
 
 const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES];
@@ -214,7 +214,7 @@ const results: Result[] = mutants.map((m) => {
   let kb: Kb;
   try {
     kb = apply(KB, m);
-    const failures = runAll(CASES, kb).length + territoryFailures(kb).length;
+    const failures = runAll(CASES, kb).length + territoryFailures(kb).length + visionPlaceFailures(kb).length;
     if (failures > 0) return { ...base, killed: true, failures, threw: false, byReverse: false };
   } catch {
     return { ...base, killed: true, failures: 0, threw: true, byReverse: false };
