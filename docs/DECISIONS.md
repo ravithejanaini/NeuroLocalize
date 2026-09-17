@@ -217,6 +217,31 @@ of a thumb. On wide screens every section shows at once and the tabs are hidden.
 the cord and draws, under the chosen lamination model, where fibres from the arm, trunk,
 leg and sacrum sit at that level. It follows the lesion until moved.
 
+## P3
+
+**D24 — Reverse inference has two modelling constants, and neither is a clinical fact.**
+An examination is taken to misreport with probability 0.05, and each extra segment of
+lesion length costs a factor of e^−0.15 in the prior. Each family of candidate starts with
+equal prior weight, so the 141 placements of a focal family do not drown the single
+motor-neuron pattern. These constants order the candidates; they never change a computed
+finding, and the frozen reverse expectations assert only orderings that follow from the
+sources, never a probability.
+
+**D25 — Candidates are the forward cases, moved and stretched.** Every focal family uses
+the compartments of a frozen forward case, placed at every level with lengths of 1, 2, 3, 5
+and 8 segments; roots are single segments on either side, or a bilateral cauda equina from
+L1 or below (S09); the three system degenerations keep their fixed distributions. 1,059
+candidates in all. Candidates whose predictions agree on every finding entered are shown as
+one group with a level range, because the examination cannot tell them apart.
+
+**D26 — The next test is chosen for what it would teach.** Among tests not yet done, the
+tool prefers one on which the two leading groups disagree, and among those the one with the
+greatest expected information gain over all candidates. It shows what each result would
+make most likely. A test expected to teach less than 0.05 bits is never suggested: the
+first version proposed a 0.00-bit test for a radiculopathy already ranked at 99.9%, which
+is advice that cannot change anything. When nothing clears the bar, the tool says the
+findings already settle the question.
+
 **D11 — `conflict` forces T3.** The spinothalamic row carries C1 and is now T3. The triceps
 row no longer carries C2: that is a single source against unread common teaching, not a
 disagreement between sources read.
