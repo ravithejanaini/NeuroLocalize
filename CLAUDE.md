@@ -43,7 +43,8 @@ browser-portable: no `node:` imports.
 1. **Never invent a citation.** A source id is cited only if that source was read. A
    book page nobody has read is `bookRef: 'pending'`. A fact with no read source is
    `pendingSource: '<reason>'` and is printed on every test run.
-2. **Expectations are frozen.** `spec/expectations/` changed after the
+2. **Expectations are frozen** — forward cases in `cases.ts` and `boundaries.ts`, reverse
+   cases in `reverse.ts`. `spec/expectations/` changed after the
    `expectations-frozen` tag fails the build unless `spec/expectations/AMENDMENTS.md`
    changes in the same diff with the reason and the source. Fix the knowledge base,
    not the expectation.

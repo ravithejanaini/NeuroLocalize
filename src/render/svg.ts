@@ -113,6 +113,16 @@ export function bodyDots(render: RenderKb, f: Findings, modality: SensoryModalit
   return out;
 }
 
+/** The figure alone, labelled, with no dots. */
+export function bodySilhouetteSvg(label: string): string {
+  return `<svg viewBox="0 0 200 364" role="img" aria-label="${label}">
+    <g class="body"><circle cx="100" cy="26" r="17"/><rect x="93" y="41" width="14" height="13"/>${HALF}
+      <g transform="translate(200 0) scale(-1 1)">${HALF}</g></g>
+    <text class="side-lbl" x="4" y="12">patient’s right</text>
+    <text class="side-lbl" x="196" y="12" text-anchor="end">patient’s left</text>
+  </svg>`;
+}
+
 export function bodyMapSvg(render: RenderKb, f: Findings, modality: SensoryModality): string {
   const dots = bodyDots(render, f, modality)
     .map((d) => {

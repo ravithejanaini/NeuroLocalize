@@ -1,16 +1,44 @@
-// Entry point: state, controls, camera and the render loop.
+// Entry point: state, controls, camera and the render loop, in two modes — placing a lesion
+// and seeing its findings, or entering findings and seeing where the lesion could be.
 import * as THREE from 'three';
 import { forward, mapLesion, type LesionRegion } from '../engine/forward.ts';
-import { spanOf, toRegions, type Shape } from '../geometry/lesion3d.ts';
+import { hypotheses, type Hypothesis } from '../engine/hypotheses.ts';
+import {
+  explain,
+  isPrepared,
+  predict,
+  prepare,
+  reverse,
+  slotKey,
+  type Observation,
+} from '../engine/reverse.ts';
+import { spanOf, SHAPES, toRegions, type Shape } from '../geometry/lesion3d.ts';
 import { segmentMid, segmentsBetween } from '../geometry/ruler.ts';
 import { KB } from '../kb/kb.ts';
 import { RENDER } from '../kb/render.ts';
-import { SEGMENTS, TIMEPOINTS, VERTEBRAE, type SensoryModality, type Timepoint } from '../kb/vocab.ts';
+import {
+  SEGMENTS,
+  TIMEPOINTS,
+  VERTEBRAE,
+  type LesionFamily,
+  type SensoryModality,
+  type Timepoint,
+} from '../kb/vocab.ts';
+import {
+  candidatesHtml,
+  examBodySvg,
+  FAMILY_NAME,
+  examTables,
+  nextValue,
+  suggestionHtml,
+  workingHtml,
+} from './examine.ts';
 import { Panel } from './panel.ts';
 import { PRESETS, type Preset } from './presets.ts';
 import { DILATION, PulseField } from './pulses.ts';
 import { buildAnatomy, lesionMidY, type Palette } from './scene.ts';
-import { sliceSvg } from './svg.ts';
+import { examSlots } from './slots.ts';
+import { bodySilhouetteSvg, sliceSvg } from './svg.ts';
 
 const $ = <T extends HTMLElement>(sel: string): T => {
   const el = document.querySelector<T>(sel);
@@ -32,7 +60,10 @@ const palette: Palette = {
   lesion: css('--lesion', '#e8674b'),
 };
 
+type Mode = 'place' | 'examine';
+
 type State = {
+  mode: Mode;
   preset: Preset;
   level: number;
   extent: number;
@@ -43,11 +74,15 @@ type State = {
   bodyModality: SensoryModality;
   slice: number;
   followSlice: boolean;
+  exam: Map<string, Observation>;
+  examModality: SensoryModality;
+  candidate: number;
 };
 
 const first = PRESETS[0];
 if (!first) throw new Error('No lesion presets.');
 const state: State = {
+  mode: 'place',
   preset: first,
   level: first.kind === 'focal' ? SEGMENTS.indexOf(first.level) : 0,
   extent: first.kind === 'focal' ? first.extent : 1,
@@ -58,7 +93,13 @@ const state: State = {
   bodyModality: 'pain_temperature',
   slice: 0,
   followSlice: true,
+  exam: new Map(),
+  examModality: 'pain_temperature',
+  candidate: 0,
 };
+
+const SLOTS = examSlots(RENDER);
+const SLOT_BY_KEY = new Map(SLOTS.map((s) => [slotKey(s), s]));
 
 // ── scene ────────────────────────────────────────────────────────────────
 const viewport = $<HTMLDivElement>('#viewport');
@@ -176,10 +217,32 @@ canvas.addEventListener(
   { passive: false },
 );
 
-// ── state → everything ───────────────────────────────────────────────────
-function lesionNow(): { regions: LesionRegion[]; shape: Shape | null; top: number; bottom: number } {
+// ── drawing a lesion, whichever mode chose it ────────────────────────────
+type Shown = { regions: readonly LesionRegion[]; shape: Shape | null; top: number; bottom: number };
+
+function showLesion(lesion: Shown): void {
+  const map = mapLesion(lesion.regions, KB);
+  currentSegments = lesion.shape ? segmentsBetween(RENDER, lesion.top, lesion.bottom) : [...map.segments];
+  const k = sliceLevel();
+  state.slice = k;
+  const inside = lesion.shape !== null && currentSegments.includes(k);
+  anatomy.setLesion(lesion.shape, lesion.top, lesion.bottom, lesion.shape ? currentSegments : []);
+  anatomy.setSlice(k, inside);
+  pulses.setLesion(map);
+
+  $('#slice').innerHTML = sliceSvg(RENDER, k, state.model, inside ? lesion.shape : null);
+  $('#slice-cap').textContent = `${SEGMENTS[k] ?? ''} — ${
+    lesion.shape ? (inside ? 'inside the lesion' : 'outside the lesion') : 'this lesion selects tracts or roots, not a place in the cord'
+  }`;
+  $<HTMLInputElement>('#slice-level').value = String(k);
+  $<HTMLInputElement>('#slice-follow').checked = state.followSlice;
+  if (currentStation === 'axial') go('axial');
+}
+
+// ── place mode ───────────────────────────────────────────────────────────
+function placedLesion(): Shown {
   const p = state.preset;
-  if (p.kind === 'system') return { regions: [...p.regions], shape: null, top: 0, bottom: 0 };
+  if (p.kind === 'system') return { regions: p.regions, shape: null, top: 0, bottom: 0 };
   let top: number;
   let bottom: number;
   if (state.byVertebra) {
@@ -207,27 +270,11 @@ function levelReadout(): string {
   return `${seg} segment${state.extent > 1 ? ` + ${state.extent - 1}` : ''} — lies at the ${vert} vertebra`;
 }
 
-function apply(): void {
-  const lesion = lesionNow();
-  const map = mapLesion(lesion.regions, KB);
-  currentSegments = lesion.shape ? segmentsBetween(RENDER, lesion.top, lesion.bottom) : [...map.segments];
+function applyPlace(): void {
+  const lesion = placedLesion();
+  showLesion(lesion);
   const findings = forward(lesion.regions, state.timepoint, { laminationModel: state.model });
-
-  const k = sliceLevel();
-  state.slice = k;
-  const inside = lesion.shape !== null && currentSegments.includes(k);
-  anatomy.setLesion(lesion.shape, lesion.top, lesion.bottom, lesion.shape ? currentSegments : []);
-  anatomy.setSlice(k, inside);
-  pulses.setLesion(map);
   panel.update(findings, state.bodyModality);
-
-  $('#slice').innerHTML = sliceSvg(RENDER, k, state.model, inside ? lesion.shape : null);
-  $('#slice-cap').textContent = `${SEGMENTS[k] ?? ''} — ${
-    lesion.shape ? (inside ? 'inside the lesion' : 'outside the lesion') : 'this pattern selects tracts, not a place'
-  }`;
-  const sliceInput = $<HTMLInputElement>('#slice-level');
-  sliceInput.value = String(k);
-  $<HTMLInputElement>('#slice-follow').checked = state.followSlice;
   $('#level-readout').textContent = levelReadout();
   $('#status').textContent = `${state.preset.label} · ${state.preset.pattern} · ${state.timepoint}`;
 
@@ -238,10 +285,121 @@ function apply(): void {
   level.value = String(state.level);
   $<HTMLInputElement>('#extent').value = String(state.extent);
   $('#extent-out').textContent = `${state.extent} ${state.byVertebra ? 'vertebra' : 'segment'}${state.extent > 1 ? 's' : ''}`;
-  if (currentStation === 'axial') go('axial');
 }
 
-// ── controls ─────────────────────────────────────────────────────────────
+// ── examine mode ─────────────────────────────────────────────────────────
+const FAMILY_SHAPE: Partial<Record<LesionFamily, Shape>> = {
+  complete: SHAPES.complete,
+  hemicord_left: SHAPES.hemisectionLeft,
+  hemicord_right: SHAPES.hemisectionRight,
+  anterior: SHAPES.anterior,
+  posterior: SHAPES.posterior,
+  central_small: SHAPES.syrinx,
+  central_cord: SHAPES.centralCord,
+};
+
+function hypothesisLesion(h: Hypothesis): Shown {
+  const shape = FAMILY_SHAPE[h.family] ?? null;
+  const from = SEGMENTS[h.rostral] ?? 'C1';
+  const to = SEGMENTS[h.caudal] ?? from;
+  const { top, bottom } = spanOf(RENDER, from, to);
+  return { regions: h.regions, shape, top: shape ? top : 0, bottom: shape ? bottom : 0 };
+}
+
+let preparing: Promise<void> | null = null;
+
+function applyExamine(): void {
+  const t = state.timepoint;
+  const observations = [...state.exam.values()];
+  $('#exam-body').innerHTML = examBodySvg(
+    RENDER,
+    state.exam,
+    state.examModality,
+    bodySilhouetteSvg('Examination body map — select a landmark to record a finding'),
+  );
+  $('#exam-tables').innerHTML = examTables(RENDER, state.exam);
+  $('#exam-count').textContent = `${observations.length} finding${observations.length === 1 ? '' : 's'} recorded`;
+
+  if (!isPrepared(t)) {
+    $('#cands').innerHTML = '<p class="quiet" id="prep">Working through the candidate lesions…</p>';
+    $('#next').innerHTML = '';
+    $('#working').innerHTML = '';
+    $('#status').textContent = `Examination · ${t} · preparing`;
+    preparing ??= prepare(t, {
+      onProgress: (done, total) => {
+        const p = document.querySelector('#prep');
+        if (p) p.textContent = `Working through the candidate lesions… ${done} of ${total}`;
+      },
+    }).then(() => {
+      preparing = null;
+      if (state.mode === 'examine') applyExamine();
+    });
+    return;
+  }
+
+  const result = reverse(observations, t, SLOTS);
+  const groups = result.groups;
+  if (state.candidate >= Math.min(6, groups.length)) state.candidate = 0;
+  const group = observations.length ? groups[state.candidate] : undefined;
+  const rep = group?.members[0];
+
+  $('#cands').innerHTML = candidatesHtml(result, state.candidate, observations.length);
+  $('#next').innerHTML = suggestionHtml(RENDER, result, observations.length);
+  $('#working').innerHTML = rep && group ? workingHtml(RENDER, explain(rep, observations, t), group) : '';
+
+  if (rep) {
+    state.followSlice = true;
+    showLesion(hypothesisLesion(rep));
+  } else {
+    showLesion({ regions: [], shape: null, top: 0, bottom: 0 });
+  }
+  $('#status').textContent = `Examination · ${observations.length} findings · ${t}${
+    group ? ` · leading: ${FAMILY_NAME[group.family].toLowerCase()}` : ''
+  }`;
+}
+
+function exampleExam(): Map<string, Observation> {
+  // An examination consistent with a left hemicord lesion, derived from the engine itself.
+  const h = hypotheses().find((x) => x.id === 'hemicord_left:T8-T8');
+  const out = new Map<string, Observation>();
+  if (!h) return out;
+  const f = forward(h.regions, 'chronic');
+  const wanted = [
+    'sensory|L|posterior_column|T6-T6', 'sensory|L|posterior_column|T10-T10', 'sensory|L|posterior_column|L4-L4',
+    'sensory|R|posterior_column|L4-L4', 'sensory|R|pain_temperature|T4-T4', 'sensory|R|pain_temperature|L4-L4',
+    'sensory|L|pain_temperature|L4-L4', 'strength|L|L3-L3', 'strength|R|L3-L3', 'strength|L|C6-C6',
+    'reflex|L|achilles', 'reflex|R|achilles', 'babinski|L', 'babinski|R', 'bladder',
+  ];
+  for (const key of wanted) {
+    const slot = SLOT_BY_KEY.get(key);
+    if (!slot) continue;
+    const v = predict(f, slot);
+    if (v !== 'unknown') out.set(key, { ...slot, value: v } as Observation);
+  }
+  return out;
+}
+
+function apply(): void {
+  if (state.mode === 'place') applyPlace();
+  else applyExamine();
+}
+
+function setMode(mode: Mode): void {
+  state.mode = mode;
+  document.body.dataset.mode = mode;
+  document.querySelectorAll<HTMLElement>('[data-mode]').forEach((el) => {
+    if (el !== document.body) el.hidden = el.dataset.mode !== mode;
+  });
+  document.querySelectorAll<HTMLButtonElement>('[data-tab-btn]').forEach((b) => {
+    const label = mode === 'examine' ? b.dataset.examLabel : b.dataset.placeLabel;
+    if (label) b.textContent = label;
+  });
+  state.followSlice = true;
+  apply();
+  go(mode === 'examine' && state.exam.size === 0 ? 'whole' : 'lesion');
+}
+
+// ── controls: place ──────────────────────────────────────────────────────
 const presetList = $('#presets');
 presetList.innerHTML = PRESETS.map((p, i) => {
   const heading =
@@ -287,7 +445,6 @@ $<HTMLInputElement>('#extent').addEventListener('input', (e) => {
 });
 $<HTMLInputElement>('#by-vertebra').addEventListener('change', (e) => {
   const on = (e.target as HTMLInputElement).checked;
-  // Keep the lesion where it was: convert the level between the two rulers.
   state.level = on
     ? Math.floor(segmentMid(RENDER, state.level))
     : (segmentsBetween(RENDER, state.level, state.level + 1)[0] ?? state.level);
@@ -295,6 +452,7 @@ $<HTMLInputElement>('#by-vertebra').addEventListener('change', (e) => {
   apply();
 });
 
+// ── controls: shared ─────────────────────────────────────────────────────
 function setSlice(value: number): void {
   state.slice = Math.max(0, Math.min(SEGMENTS.length - 1, value));
   state.followSlice = false;
@@ -316,7 +474,6 @@ timeInputs.addEventListener('change', (e) => {
   apply();
 });
 
-// The body-map toggle is re-rendered with the findings, so listen on the container.
 $('#findings').addEventListener('change', (e) => {
   const input = e.target as HTMLInputElement;
   if (input.name !== 'bodymap') return;
@@ -341,6 +498,78 @@ bindToggle('fibre', (v) => {
   state.painFibre = v as State['painFibre'];
   pulses.setOptions({ model: state.model, painFibre: state.painFibre });
   apply();
+});
+bindToggle('mode', (v) => setMode(v as Mode));
+bindToggle('exam-modality', (v) => {
+  state.examModality = v as SensoryModality;
+  apply();
+});
+
+// ── controls: examine ────────────────────────────────────────────────────
+function cycleSlot(key: string): void {
+  const slot = SLOT_BY_KEY.get(key);
+  if (!slot) return;
+  const next = nextValue(slot, state.exam.get(key)?.value);
+  if (next === undefined) state.exam.delete(key);
+  else state.exam.set(key, { ...slot, value: next } as Observation);
+  state.candidate = 0;
+  apply();
+  const again = document.querySelector<HTMLElement>(`[data-slot="${CSS.escape(key)}"]`);
+  again?.focus();
+}
+
+const examPanel = $('#exam-panel');
+examPanel.addEventListener('click', (e) => {
+  const el = (e.target as Element).closest<HTMLElement>('[data-slot]');
+  if (el?.dataset.slot) cycleSlot(el.dataset.slot);
+});
+examPanel.addEventListener('keydown', (e) => {
+  const el = (e.target as Element).closest<HTMLElement>('g[data-slot]');
+  if (el?.dataset.slot && (e.key === 'Enter' || e.key === ' ')) {
+    e.preventDefault();
+    cycleSlot(el.dataset.slot);
+  }
+});
+$('#exam-example').addEventListener('click', () => {
+  state.exam = exampleExam();
+  state.candidate = 0;
+  apply();
+  go('lesion');
+});
+$('#exam-clear').addEventListener('click', () => {
+  state.exam = new Map();
+  state.candidate = 0;
+  apply();
+  go('whole');
+});
+
+$('#cands').addEventListener('click', (e) => {
+  const btn = (e.target as Element).closest<HTMLButtonElement>('[data-cand]');
+  if (!btn) return;
+  state.candidate = Number(btn.dataset.cand);
+  state.followSlice = true;
+  apply();
+  go('lesion');
+});
+$('#next').addEventListener('click', (e) => {
+  const btn = (e.target as Element).closest<HTMLButtonElement>('[data-goto]');
+  const key = btn?.dataset.goto;
+  if (!key) return;
+  const slot = SLOT_BY_KEY.get(key);
+  if (slot?.kind === 'sensory' && slot.modality !== state.examModality) {
+    state.examModality = slot.modality;
+    const radio = document.querySelector<HTMLInputElement>(`input[name="exam-modality"][value="${slot.modality}"]`);
+    if (radio) radio.checked = true;
+    apply();
+  }
+  showTab('lesion');
+  const target = document.querySelector<HTMLElement>(`[data-slot="${CSS.escape(key)}"]`);
+  if (target) {
+    target.scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' });
+    target.classList.add('is-asked');
+    target.focus();
+    window.setTimeout(() => target.classList.remove('is-asked'), 2400);
+  }
 });
 
 document.querySelectorAll<HTMLButtonElement>('[data-station]').forEach((b) => {
@@ -369,8 +598,8 @@ window.addEventListener('keydown', (e) => {
   if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
   const station = STATIONS[Number(e.key) - 1];
   if (station) go(station);
-  else if (e.key === '[' && state.preset.kind === 'focal') setLevel(state.level - 1);
-  else if (e.key === ']' && state.preset.kind === 'focal') setLevel(state.level + 1);
+  else if (e.key === '[' && state.mode === 'place' && state.preset.kind === 'focal') setLevel(state.level - 1);
+  else if (e.key === ']' && state.mode === 'place' && state.preset.kind === 'focal') setLevel(state.level + 1);
   else if (e.key === ',') setSlice(state.slice - 1);
   else if (e.key === '.') setSlice(state.slice + 1);
   else return;
@@ -435,8 +664,11 @@ function frame(now: number): void {
   requestAnimationFrame(frame);
 }
 
+// Examination opens with a worked example rather than an empty form.
+state.exam = exampleExam();
 pulses.setOptions({ model: state.model, painFibre: state.painFibre });
 if (reduced) pulses.setFrozen(true);
+setMode('place');
 choose(first);
 resize();
 requestAnimationFrame(frame);

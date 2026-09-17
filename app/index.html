@@ -104,7 +104,9 @@ input[type=range]{flex:1;accent-color:var(--ink)}
 .ticks{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--rule)}
 .tick{display:flex;flex-direction:column;padding:6px 8px;cursor:pointer;border-right:1px solid var(--rule)}
 .tick:last-child{border-right:0}
-.tick input{position:absolute;opacity:0;pointer-events:none}
+.tick{position:relative}
+.tick input,.seg input{position:absolute;inset:0;margin:0;opacity:0;pointer-events:none}
+.seg label{position:relative}
 .tick-name{font-family:var(--f-display);font-weight:600;font-size:12px}
 .tick-when{font-family:var(--f-mono);font-size:9.5px;color:var(--ink3)}
 .tick:has(input:checked){background:var(--ink);color:var(--ground)}
@@ -136,7 +138,6 @@ input[type=range]{flex:1;accent-color:var(--ink)}
 
 .seg{display:inline-flex;border:1px solid var(--rule2)}
 .seg label{padding:4px 10px;cursor:pointer;font-family:var(--f-mono);font-size:11px;color:var(--ink2)}
-.seg input{position:absolute;opacity:0;pointer-events:none}
 .seg label:has(input:checked){background:var(--ink);color:var(--ground)}
 .seg label:has(input:focus-visible){outline:2px solid var(--focus);outline-offset:-2px}
 .opt{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:var(--ink2)}
@@ -166,6 +167,59 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
 .myotomes .other{display:block;font-family:var(--f-mono);font-size:9.5px;color:var(--ink3)}
 .myotomes tr.contested th::after{content:" *";color:var(--ink3)}
 .myotomes .st-none{color:var(--ink3)}
+[hidden]{display:none!important}
+.mode{order:0}
+.mode label{padding:4px 10px;font-size:11px}
+.btn{font-family:var(--f-mono);font-size:11px;padding:7px 12px;background:transparent;border:1px solid var(--rule2);color:var(--ink2);cursor:pointer}
+.btn:hover{color:var(--ink);border-color:var(--ink3)}
+.exam-intro{font-size:12.5px;color:var(--ink2);margin:0 0 10px}
+.exam-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.exam-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.exam-body svg{width:170px;height:auto;display:block;margin:0 auto}
+.exam-body .body{fill:var(--sunk);stroke:var(--rule2);stroke-width:1}
+.exam-body .side-lbl{font-family:var(--f-mono);font-size:8.5px;fill:var(--ink3)}
+.exdot{cursor:pointer}
+.exdot > *{stroke-width:1.4}
+.exdot.ex-untested > *{fill:var(--surface);stroke:var(--ink3);stroke-dasharray:2 2}
+.exdot.ex-normal > *{fill:var(--surface);stroke:var(--ink)}
+.exdot.ex-abnormal > *{fill:var(--ink);stroke:var(--ink)}
+.exdot:focus-visible{outline:none}
+.exdot:focus-visible > *{stroke:var(--focus);stroke-width:3}
+.exdot.is-asked > *{stroke:var(--cst);stroke-width:3}
+.extable{border-collapse:collapse;width:100%;font-family:var(--f-mono);font-size:10.5px}
+.extable th{text-align:left;font-weight:400;color:var(--ink3);padding:2px 6px 2px 0;vertical-align:middle}
+.extable thead th{padding-top:8px;color:var(--ink2);letter-spacing:.06em;text-transform:uppercase;font-size:9.5px}
+.extable td{padding:1px 4px 1px 0}
+.extable .mv{font-family:var(--f-body);font-size:11.5px;color:var(--ink2)}
+.ex{font-family:var(--f-mono);font-size:10px;min-width:58px;min-height:26px;padding:2px 6px;border:1px solid var(--rule2);background:var(--surface);color:var(--ink3);cursor:pointer;display:inline-block;text-align:center}
+.ex-normal{color:var(--ink);border-color:var(--ink3)}
+.ex-abnormal,.ex-weak,.ex-reduced,.ex-brisk,.ex-present,.ex-overactive,.ex-retention{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.ex-absent{color:var(--ink);border-color:var(--ink3)}
+.ex.is-asked{outline:2px solid var(--cst);outline-offset:1px}
+.exam-legend{font-size:11px;color:var(--ink3);margin:10px 0 0}
+.exam-legend .ex{min-width:0;cursor:default}
+.banner{border-left:3px solid var(--cst);padding:6px 10px;background:var(--sunk);font-size:13px;margin:0 0 10px}
+.cands{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.cand{width:100%;text-align:left;display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:8px 10px;border:1px solid var(--rule);background:var(--surface);cursor:pointer}
+.cand:hover{border-color:var(--ink3)}
+.cand[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 3px 0 0 var(--ink)}
+.cand-name{font-family:var(--f-display);font-weight:600;font-size:13px}
+.cand-level{font-family:var(--f-mono);font-size:10.5px;color:var(--ink2);grid-column:1/-1}
+.cand-bar{grid-column:1/-1;height:3px;background:var(--sunk)}
+.cand-bar i{display:block;height:100%;background:var(--ink)}
+.cand-stats{grid-column:1/-1;font-family:var(--f-mono);font-size:10px;color:var(--ink3)}
+.cand-stats b{color:var(--ink)}
+.cand-stats em{font-style:normal;color:var(--cst)}
+.next{margin:0 0 6px}
+.next-go{font-family:var(--f-display);font-weight:600;font-size:14px;text-align:left;padding:8px 12px;border:1px solid var(--ink);background:var(--ink);color:var(--ground);cursor:pointer}
+.outcomes{margin:6px 0 0;padding:0 0 0 16px;font-size:12.5px;color:var(--ink2);display:grid;gap:3px}
+.working{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
+.w{display:grid;grid-template-columns:70px 1fr;gap:0 8px;font-size:12px}
+.w-tag{font-family:var(--f-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);padding-top:2px}
+.w-conflicts .w-tag{color:var(--cst);font-weight:600}
+.w-fits .w-tag{color:var(--ink)}
+.w-what{color:var(--ink)}
+.w-why{grid-column:2;color:var(--ink2);font-size:11.5px}
 .foot{padding:14px 18px 22px;font-size:12px;color:var(--ink3)}
 .foot a{color:var(--ink2)}
 
@@ -175,6 +229,13 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
   .bar{gap:2px 12px;padding:6px 12px}
   .brand{font-size:16px}
   .edu{display:none}
+  .mode{width:100%}
+  .mode label{flex:1;text-align:center;padding:8px 6px;min-height:40px}
+  .exam-grid{grid-template-columns:1fr}
+  .exam-body svg{width:min(240px,70vw);margin:0 auto}
+  .ex{min-height:40px;min-width:72px}
+  .cand{min-height:52px}
+  .btn{min-height:44px}
   .app{grid-template-columns:1fr;grid-template-rows:minmax(0,46fr) minmax(0,54fr)}
   .legend,.hint,.caveats{display:none}
   .stations{top:8px;left:8px;right:8px}
@@ -200,6 +261,10 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
 
 <header class="bar">
   <span class="brand">NeuroLocalize</span>
+  <span class="seg mode" role="radiogroup" aria-label="Mode">
+    <label><input type="radio" name="mode" value="place" checked>Place a lesion</label>
+    <label><input type="radio" name="mode" value="examine">Examine a patient</label>
+  </span>
   <span id="status" aria-live="polite">Loading…</span>
   <span class="edu">Teaching tool · not for patient care</span>
 </header>
@@ -232,12 +297,12 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
   </div>
 
   <aside class="panel" id="panel" aria-label="Instrument" data-tab="lesion">
-    <section class="sec" data-sec="lesion">
+    <section class="sec" data-sec="lesion" data-mode="place">
       <h2 class="sec-t">Lesion</h2>
       <div class="presets" id="presets"></div>
     </section>
 
-    <section class="sec" data-sec="lesion">
+    <section class="sec" data-sec="lesion" data-mode="place">
       <h2 class="sec-t">Level</h2>
       <div class="row">
         <input type="range" id="level" min="0" max="30" step="1" aria-label="Lesion level">
@@ -248,6 +313,42 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
         <span class="out" id="extent-out"></span>
       </div>
       <label class="check"><input type="checkbox" id="by-vertebra" aria-label="Place the lesion by vertebra"> Place by vertebra, and see which segments it reaches</label>
+    </section>
+
+    <section class="sec" data-sec="lesion" data-mode="examine" id="exam-panel" hidden>
+      <h2 class="sec-t">Examination</h2>
+      <p class="exam-intro">Press a landmark or a cell to record a finding; press again to change it, and once more to clear it. Anything not tested counts for nothing.</p>
+      <div class="exam-bar">
+        <span class="seg" role="radiogroup" aria-label="Sensation being recorded">
+          <label><input type="radio" name="exam-modality" value="pain_temperature" checked>Pain</label>
+          <label><input type="radio" name="exam-modality" value="posterior_column">Vibration</label>
+        </span>
+        <span class="out" id="exam-count"></span>
+      </div>
+      <div class="exam-grid">
+        <div id="exam-body" class="exam-body"></div>
+        <div id="exam-tables"></div>
+      </div>
+      <p class="exam-legend"><span class="ex ex-normal">normal</span> <span class="ex ex-abnormal">abnormal</span> <span class="ex ex-untested">·</span> not tested</p>
+      <div class="row">
+        <button type="button" class="btn" id="exam-example">Load the worked example</button>
+        <button type="button" class="btn" id="exam-clear">Clear findings</button>
+      </div>
+    </section>
+
+    <section class="sec" data-sec="findings" data-mode="examine" hidden>
+      <h2 class="sec-t">Where the lesion could be</h2>
+      <div id="cands" aria-live="polite"></div>
+    </section>
+
+    <section class="sec" data-sec="findings" data-mode="examine" hidden>
+      <h2 class="sec-t">Test next</h2>
+      <div id="next"></div>
+    </section>
+
+    <section class="sec" data-sec="findings" data-mode="examine" hidden>
+      <h2 class="sec-t">The working</h2>
+      <div id="working"></div>
     </section>
 
     <section class="sec" data-sec="slice">
@@ -270,7 +371,7 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
       <div class="ticks" id="time" role="radiogroup" aria-label="Time since injury"></div>
     </section>
 
-    <section class="sec" data-sec="findings">
+    <section class="sec" data-sec="findings" data-mode="place">
       <h2 class="sec-t">Findings</h2>
       <div id="findings" aria-live="polite"></div>
     </section>
@@ -314,9 +415,9 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
       Source and tests: <a href="https://github.com/ravithejanaini/NeuroLocalize" target="_blank" rel="noopener">github.com/ravithejanaini/NeuroLocalize</a>.
     </footer>
     <nav class="tabs" role="tablist" aria-label="Instrument sections">
-      <button type="button" role="tab" data-tab-btn="lesion">Lesion</button>
+      <button type="button" role="tab" data-tab-btn="lesion" data-place-label="Lesion" data-exam-label="Exam">Lesion</button>
       <button type="button" role="tab" data-tab-btn="slice">Slice</button>
-      <button type="button" role="tab" data-tab-btn="findings">Findings</button>
+      <button type="button" role="tab" data-tab-btn="findings" data-place-label="Findings" data-exam-label="Candidates">Findings</button>
       <button type="button" role="tab" data-tab-btn="model">Model</button>
     </nav>
   </aside>

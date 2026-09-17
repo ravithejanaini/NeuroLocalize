@@ -1,0 +1,222 @@
+// Examination mode, as HTML strings: entering findings, the ranked candidates, the next test
+// and the working. No DOM and no Three.js, so it is tested under Node.
+import type { Group, Observation, ReverseResult, Slot, Verdict } from '../engine/reverse.ts';
+import { slotKey } from '../engine/reverse.ts';
+import type { RenderKb } from '../kb/types.ts';
+import { REFLEXES, SEGMENTS, SIDES, type LesionFamily, type SensoryModality, type Side } from '../kb/vocab.ts';
+
+export type Findings = ReadonlyMap<string, Observation>;
+
+export const FAMILY_NAME: Record<LesionFamily, string> = {
+  complete: 'Complete transection',
+  hemicord_left: 'Left hemicord',
+  hemicord_right: 'Right hemicord',
+  anterior: 'Anterior two-thirds',
+  posterior: 'Posterior columns',
+  central_small: 'Central, commissure only',
+  central_cord: 'Central cord',
+  root_left: 'Left root',
+  root_right: 'Right root',
+  roots_bilateral: 'Cauda equina, both sides',
+  posterolateral: 'Posterior + lateral columns',
+  dorsal_root_column: 'Dorsal roots + columns',
+  motor_neuron: 'Anterior horns + corticospinal',
+};
+
+const SIDE_WORD: Record<Side, string> = { L: 'Left', R: 'Right' };
+const escape = (s: string): string =>
+  s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] ?? c);
+
+/** The cycle a control steps through on each press; undefined means not tested. */
+export const CYCLE: Record<Slot['kind'], readonly string[]> = {
+  sensory: ['normal', 'abnormal'],
+  strength: ['normal', 'weak'],
+  reflex: ['normal', 'reduced', 'brisk'],
+  babinski: ['absent', 'present'],
+  horner: ['absent', 'present'],
+  romberg: ['absent', 'present'],
+  bladder: ['normal', 'overactive', 'retention'],
+};
+
+export function nextValue(slot: Slot, current: string | undefined): string | undefined {
+  const cycle = CYCLE[slot.kind];
+  if (current === undefined) return cycle[0];
+  const i = cycle.indexOf(current);
+  return i < 0 || i === cycle.length - 1 ? undefined : cycle[i + 1];
+}
+
+export function slotLabel(render: RenderKb, s: Slot): string {
+  switch (s.kind) {
+    case 'sensory': {
+      const [a, b] = s.span;
+      const at = a === b ? a : `${a}–${b}`;
+      const mark =
+        render.dermatomeLandmarks.landmarks.find((l) => l.segment === a && a === b)?.place ??
+        (a === render.saddle.span[0] ? render.saddle.place : '');
+      return `${SIDE_WORD[s.side]} ${s.modality === 'pain_temperature' ? 'pain' : 'vibration'} · ${mark ? `${mark} ` : ''}(${at})`;
+    }
+    case 'strength': {
+      const row = render.myotomes.rows.find((r) => r.span[0] === s.span[0] && r.span[1] === s.span[1]);
+      const at = s.span[0] === s.span[1] ? s.span[0] : `${s.span[0]}–${s.span[1]}`;
+      return `${SIDE_WORD[s.side]} ${row?.movement ?? 'strength'} (${at})`;
+    }
+    case 'reflex':
+      return `${SIDE_WORD[s.side]} ${s.reflex} reflex`;
+    case 'babinski':
+      return `${SIDE_WORD[s.side]} Babinski sign`;
+    case 'horner':
+      return `${SIDE_WORD[s.side]} Horner syndrome`;
+    case 'romberg':
+      return 'Romberg test';
+    case 'bladder':
+      return 'Bladder';
+  }
+}
+
+const VALUE_WORD: Record<string, string> = {
+  normal: 'normal',
+  abnormal: 'abnormal',
+  weak: 'weak',
+  reduced: 'reduced or absent',
+  brisk: 'brisk',
+  present: 'present',
+  absent: 'absent',
+  overactive: 'overactive',
+  retention: 'retention',
+};
+export const valueWord = (v: string): string => VALUE_WORD[v] ?? v;
+
+const cell = (key: string, value: string | undefined, label: string): string =>
+  `<button type="button" class="ex ex-${value ?? 'untested'}" data-slot="${escape(key)}" aria-label="${escape(label)}: ${value ? valueWord(value) : 'not tested'}">${value ? valueWord(value) : '·'}</button>`;
+
+// ── entry ────────────────────────────────────────────────────────────────
+
+/** The body map as an input: each landmark dot is a button that cycles its finding. */
+export function examBodySvg(render: RenderKb, findings: Findings, modality: SensoryModality, body: string): string {
+  const dots: string[] = [];
+  for (const side of SIDES) {
+    const x = (v: number): number => (side === 'L' ? v : 200 - v);
+    const marks = [
+      ...render.dermatomeLandmarks.landmarks.map((l) => ({ span: [l.segment, l.segment] as const, points: l.at, diamond: false })),
+      { span: render.saddle.span, points: [render.saddle.at], diamond: true },
+    ];
+    for (const m of marks) {
+      const slot: Slot = { kind: 'sensory', side, modality, span: m.span };
+      const key = slotKey(slot);
+      const v = findings.get(key)?.value;
+      const label = `${slotLabel(render, slot)}: ${v ? valueWord(v) : 'not tested'}`;
+      for (const p of m.points) {
+        const shape = m.diamond
+          ? `<rect x="${x(p.x) - 5}" y="${p.y - 5}" width="10" height="10" transform="rotate(45 ${x(p.x)} ${p.y})"/>`
+          : `<circle cx="${x(p.x)}" cy="${p.y}" r="6"/>`;
+        dots.push(
+          `<g class="exdot ex-${v ?? 'untested'}" role="button" tabindex="0" data-slot="${escape(key)}" aria-label="${escape(label)}"><title>${escape(label)}</title>${shape}</g>`,
+        );
+      }
+    }
+  }
+  return body.replace('</svg>', `${dots.join('')}</svg>`);
+}
+
+export function examTables(render: RenderKb, findings: Findings): string {
+  const get = (s: Slot): string | undefined => findings.get(slotKey(s))?.value;
+  const strength = render.myotomes.rows
+    .map((r) => {
+      const name = r.span[0] === r.span[1] ? r.span[0] : `${r.span[0]}–${r.span[1]}`;
+      const cells = SIDES.map((side) => {
+        const s: Slot = { kind: 'strength', side, span: r.span };
+        return `<td>${cell(slotKey(s), get(s), slotLabel(render, s))}</td>`;
+      }).join('');
+      return `<tr><th>${name}</th><td class="mv">${r.movement}</td>${cells}</tr>`;
+    })
+    .join('');
+  const reflexes = REFLEXES.map((reflex) => {
+    const cells = SIDES.map((side) => {
+      const s: Slot = { kind: 'reflex', side, reflex };
+      return `<td>${cell(slotKey(s), get(s), slotLabel(render, s))}</td>`;
+    }).join('');
+    return `<tr><th colspan="2">${reflex}</th>${cells}</tr>`;
+  }).join('');
+  const sided = (kind: 'babinski' | 'horner', name: string): string =>
+    `<tr><th colspan="2">${name}</th>${SIDES.map((side) => {
+      const s: Slot = { kind, side };
+      return `<td>${cell(slotKey(s), get(s), slotLabel(render, s))}</td>`;
+    }).join('')}</tr>`;
+  const single = (s: Slot, name: string): string =>
+    `<tr><th colspan="2">${name}</th><td colspan="2">${cell(slotKey(s), get(s), slotLabel(render, s))}</td></tr>`;
+  return `<table class="extable"><thead><tr><th colspan="2">Strength</th><th>Left</th><th>Right</th></tr></thead><tbody>${strength}</tbody>
+    <thead><tr><th colspan="2">Reflexes and signs</th><th>Left</th><th>Right</th></tr></thead><tbody>${reflexes}
+    ${sided('babinski', 'Babinski')}${sided('horner', 'Horner')}
+    ${single({ kind: 'romberg' }, 'Romberg')}${single({ kind: 'bladder' }, 'Bladder')}</tbody></table>`;
+}
+
+// ── results ──────────────────────────────────────────────────────────────
+
+export function levelText(g: Pick<Group, 'family' | 'rostral' | 'caudal' | 'members'>): string {
+  if (['posterolateral', 'dorsal_root_column', 'motor_neuron'].includes(g.family)) return 'fixed distribution';
+  const [ra, rb] = g.rostral;
+  const [ca, cb] = g.caudal;
+  if (g.members.length === 1) return ra === ca ? `at ${ra}` : `${ra}–${ca}`;
+  return `upper end ${ra === rb ? ra : `${ra}–${rb}`}, lower end ${ca === cb ? ca : `${ca}–${cb}`}`;
+}
+
+export function candidatesHtml(result: ReverseResult, selected: number, tested: number): string {
+  if (tested === 0) {
+    return '<p class="quiet">Record findings on the body map and in the tables. Anything left untested counts for nothing.</p>';
+  }
+  const banner = result.unexplained
+    ? '<p class="banner">No single lesion in this model explains every finding. Consider two lesions, a peripheral cause, or a finding worth re-examining.</p>'
+    : '';
+  const rows = result.groups
+    .slice(0, 6)
+    .map((g, i) => {
+      const pct = g.posterior * 100;
+      const share = pct >= 99.95 ? '>99.9' : pct < 0.05 ? '<0.1' : pct.toFixed(1);
+      return `<li><button type="button" class="cand" data-cand="${i}" aria-pressed="${i === selected}">
+        <span class="cand-name">${FAMILY_NAME[g.family]}</span>
+        <span class="cand-level">${levelText(g)}</span>
+        <span class="cand-bar" aria-hidden="true"><i style="width:${Math.max(1, Math.min(100, pct)).toFixed(1)}%"></i></span>
+        <span class="cand-stats"><b>${share}%</b> · fits ${g.fits}${g.mismatches ? ` · <em>conflicts ${g.mismatches}</em>` : ''}${g.open ? ` · open ${g.open}` : ''}</span>
+      </button></li>`;
+    })
+    .join('');
+  return `${banner}<ol class="cands">${rows}</ol>
+    <p class="grp-note">Shares are relative to the other candidates in this model, not probabilities of disease. Candidates the examination cannot tell apart are shown as one, with a level range.</p>`;
+}
+
+export function suggestionHtml(render: RenderKb, result: ReverseResult, tested: number): string {
+  if (tested === 0) return '';
+  const s = result.suggestion;
+  if (!s) return '<p class="quiet">No remaining test on the map would change the ranking much — the findings already settle it.</p>';
+  const outcomes = s.outcomes
+    .map((o) => {
+      const lead = o.leader ? `${FAMILY_NAME[o.leader.family]}, upper end ${o.leader.rostral}` : 'no clear leader';
+      return `<li><b>${valueWord(o.value)}</b> <span class="quiet">(${(o.probability * 100).toFixed(0)}%)</span> → ${escape(lead)}</li>`;
+    })
+    .join('');
+  return `<p class="next"><button type="button" class="next-go" data-goto="${escape(slotKey(s.slot))}">${escape(slotLabel(render, s.slot))}</button></p>
+    <p class="grp-note">${s.separatesTopTwo ? 'The two leading candidates predict different results here.' : 'The most informative test left.'} Expected to teach ${s.informationBits.toFixed(2)} bits.</p>
+    <ul class="outcomes">${outcomes}</ul>`;
+}
+
+export function workingHtml(render: RenderKb, verdicts: readonly Verdict[], group: Group | undefined): string {
+  if (!group || verdicts.length === 0) return '';
+  const order = { conflicts: 0, fits: 1, open: 2 } as const;
+  const rows = [...verdicts]
+    .sort((a, b) => order[a.verdict] - order[b.verdict])
+    .map(
+      (v) => `<li class="w w-${v.verdict}"><span class="w-tag">${v.verdict}</span>
+        <span class="w-what">${escape(slotLabel(render, v.observation))}: ${valueWord(v.observation.value)}${
+          v.verdict === 'conflicts' ? ` <span class="quiet">(predicted ${valueWord(v.predicted)})</span>` : ''
+        }</span>
+        <span class="w-why">${escape(v.because)}</span></li>`,
+    )
+    .join('');
+  const rep = group.members[0];
+  const at = rep
+    ? rep.rostral === rep.caudal
+      ? `at ${SEGMENTS[rep.rostral] ?? ''}`
+      : `${SEGMENTS[rep.rostral] ?? ''}–${SEGMENTS[rep.caudal] ?? ''}`
+    : '';
+  return `<p class="grp-note">Worked through for one member of the group: ${FAMILY_NAME[group.family].toLowerCase()}, ${at}.</p><ul class="working">${rows}</ul>`;
+}

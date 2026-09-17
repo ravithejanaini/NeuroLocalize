@@ -185,7 +185,12 @@ export type Group = {
   readonly open: number;
 };
 
-export type Outcome = { readonly value: Value; readonly probability: number; readonly leader: string };
+export type Outcome = {
+  readonly value: Value;
+  readonly probability: number;
+  /** The single most likely candidate if this result were seen. */
+  readonly leader: { readonly family: LesionFamily; readonly rostral: Segment } | null;
+};
 
 export type Suggestion = {
   readonly slot: Slot;
@@ -303,7 +308,7 @@ export function reverse(
       outcomes.push({
         value: v,
         probability: pv,
-        leader: leader ? describeGroup({ family: leader.h.family, rostral: [segName(leader.h.rostral), segName(leader.h.rostral)] }) : '',
+        leader: leader ? { family: leader.h.family, rostral: segName(leader.h.rostral) } : null,
       });
     }
     const gain = h0 - expected;
