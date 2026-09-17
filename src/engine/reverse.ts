@@ -2,11 +2,16 @@
 // separates the leaders, and the working behind every ranking. The constants below are
 // modelling choices, not clinical facts (D24); no finding depends on them, only the order.
 import { KB } from '../kb/kb.ts';
-import type { Kb } from '../kb/types.ts';
+import type { Kb, Supply } from '../kb/types.ts';
 import {
+  MUSCLES,
+  PLEXUS_SITES,
   SEGMENTS,
+  SKIN_AREAS,
   type BladderObservation,
   type LesionFamily,
+  type Muscle,
+  type PlexusSite,
   type Reflex,
   type ReflexObservation,
   type Segment,
@@ -14,12 +19,14 @@ import {
   type SensoryObservation,
   type Side,
   type SignObservation,
+  type SkinArea,
   type StrengthObservation,
   type Timepoint,
 } from '../kb/vocab.ts';
-import { forward, isSacral, type Findings } from './forward.ts';
+import { forward, isPlexus, isSacral, type Findings } from './forward.ts';
 import { hypotheses, type Hypothesis } from './hypotheses.ts';
-import { mapLesion, type LesionMap } from './lesion.ts';
+import { mapLesion, type LesionMap, type LesionRegion } from './lesion.ts';
+import { limbRoute, mapPlexus, routeSites, type PlexusMap } from './limb.ts';
 import { crossingOffsets, damageAlong, motorRoute, sensoryRoute, type Element } from './routes.ts';
 
 export type Span = readonly [Segment, Segment];
@@ -30,7 +37,10 @@ export type Observation =
   | { readonly kind: 'reflex'; readonly side: Side; readonly reflex: Reflex; readonly value: ReflexObservation }
   | { readonly kind: 'babinski' | 'horner'; readonly side: Side; readonly value: SignObservation }
   | { readonly kind: 'romberg'; readonly value: SignObservation }
-  | { readonly kind: 'bladder'; readonly value: BladderObservation };
+  | { readonly kind: 'bladder'; readonly value: BladderObservation }
+  | { readonly kind: 'muscle'; readonly side: Side; readonly muscle: Muscle; readonly value: StrengthObservation }
+  /** Any modality at a patch without a dermatome landmark (D30). */
+  | { readonly kind: 'skin'; readonly side: Side; readonly area: SkinArea; readonly value: SensoryObservation };
 
 /** An observation not yet made: everything but its value. */
 export type Slot = Observation extends infer O ? (O extends Observation ? Omit<O, 'value'> : never) : never;
@@ -51,6 +61,8 @@ const DOMAIN: Record<Observation['kind'], readonly string[]> = {
   horner: ['present', 'absent'],
   romberg: ['present', 'absent'],
   bladder: ['normal', 'overactive', 'retention'],
+  muscle: ['normal', 'weak'],
+  skin: ['normal', 'abnormal'],
 };
 
 const idx = (s: Segment): number => SEGMENTS.indexOf(s);
@@ -67,22 +79,46 @@ export const slotKey = (s: Slot): string => {
     case 'babinski':
     case 'horner':
       return `${s.kind}|${s.side}`;
+    case 'muscle':
+      return `muscle|${s.side}|${s.muscle}`;
+    case 'skin':
+      return `skin|${s.side}|${s.area}`;
     default:
       return s.kind;
   }
 };
 
+/** The patch of skin a dermatome landmark also tests (D30). */
+export const landmarkArea = (kb: Kb, s: Segment): SkinArea | undefined =>
+  SKIN_AREAS.find((a) => kb.plexus.skin[a].landmark === s);
+/** The muscles a single-segment strength test also asks about (D31). */
+export const myotomeMuscles = (kb: Kb, s: Segment): Muscle[] => MUSCLES.filter((m) => kb.plexus.muscles[m].myotome === s);
+
+const sensed = (states: readonly string[]): Value | 'unknown' =>
+  states.some((x) => x === 'lost' || x === 'impaired') ? 'abnormal' : states.includes('indeterminate') ? 'unknown' : 'normal';
+const strengthOf = (states: readonly string[]): Value | 'unknown' =>
+  states.includes('weak') ? 'weak' : states.includes('indeterminate') ? 'unknown' : 'normal';
+
 /** What a candidate predicts for a slot; 'unknown' where the engine leaves it open. */
-export function predict(f: Findings, s: Slot): Value | 'unknown' {
+export function predict(f: Findings, s: Slot, kb: Kb = KB): Value | 'unknown' {
   switch (s.kind) {
     case 'sensory': {
-      const states = segsOf(s.span).map((k) => f.sensory[s.side][s.modality][k]);
-      if (states.some((x) => x === 'lost' || x === 'impaired')) return 'abnormal';
-      if (states.some((x) => x === 'indeterminate')) return 'unknown';
-      return 'normal';
+      const segs = segsOf(s.span);
+      const [only] = segs;
+      const area = segs.length === 1 && only ? landmarkArea(kb, only) : undefined;
+      return sensed(area ? [f.skin[s.side][s.modality][area]] : segs.map((k) => f.sensory[s.side][s.modality][k]));
     }
-    case 'strength':
-      return segsOf(s.span).some((k) => f.motor[s.side][k].lesion !== 'none') ? 'weak' : 'normal';
+    case 'strength': {
+      const segs = segsOf(s.span);
+      if (segs.some((k) => f.motor[s.side][k].lesion !== 'none')) return 'weak';
+      const [only] = segs;
+      const muscles = segs.length === 1 && only ? myotomeMuscles(kb, only) : [];
+      return strengthOf(muscles.map((m) => f.muscles[s.side][m]));
+    }
+    case 'muscle':
+      return strengthOf([f.muscles[s.side][s.muscle]]);
+    case 'skin':
+      return sensed([f.skin[s.side].pain_temperature[s.area], f.skin[s.side].posterior_column[s.area]]);
     case 'reflex': {
       const r = f.reflexes[s.side][s.reflex];
       return r === 'indeterminate' ? 'unknown' : r === 'absent' ? 'reduced' : r;
@@ -114,7 +150,14 @@ function likelihood(kind: Observation['kind'], predicted: Value | 'unknown', val
 // ── preparation: run the engine once per candidate, cached per timepoint ──
 
 type Prepared = { readonly h: Hypothesis; readonly findings: Findings; readonly prior: number };
-const prepared = new Map<string, Prepared[]>();
+// Keyed by the knowledge base itself, so a corrupted copy never reuses another's results.
+const prepared = new WeakMap<Kb, Map<Timepoint, Prepared[]>>();
+const cached = (t: Timepoint, kb: Kb): Prepared[] | undefined => prepared.get(kb)?.get(t);
+function store(t: Timepoint, kb: Kb, ps: Prepared[]): void {
+  const byTime = prepared.get(kb) ?? new Map<Timepoint, Prepared[]>();
+  byTime.set(t, ps);
+  prepared.set(kb, byTime);
+}
 
 function priorsFor(hs: readonly Hypothesis[]): Map<string, number> {
   const families = new Map<LesionFamily, Hypothesis[]>();
@@ -128,16 +171,13 @@ function priorsFor(hs: readonly Hypothesis[]): Map<string, number> {
   return raw;
 }
 
-const cacheKey = (t: Timepoint, kb: Kb): string => `${t}|${kb === KB ? 'kb' : 'custom'}`;
-
 /** Runs the engine for every candidate. Yields to the caller between batches if asked. */
 export async function prepare(
   timepoint: Timepoint,
   options: { kb?: Kb; onProgress?: (done: number, total: number) => void; batch?: number } = {},
 ): Promise<void> {
   const kb = options.kb ?? KB;
-  const key = cacheKey(timepoint, kb);
-  if (prepared.has(key)) return;
+  if (cached(timepoint, kb)) return;
   const hs = hypotheses();
   const priors = priorsFor(hs);
   const out: Prepared[] = [];
@@ -151,31 +191,32 @@ export async function prepare(
       await new Promise((r) => setTimeout(r, 0));
     }
   }
-  prepared.set(key, out);
+  store(timepoint, kb, out);
   options.onProgress?.(hs.length, hs.length);
 }
 
-export const isPrepared = (timepoint: Timepoint, kb: Kb = KB): boolean => prepared.has(cacheKey(timepoint, kb));
+export const isPrepared = (timepoint: Timepoint, kb: Kb = KB): boolean => cached(timepoint, kb) !== undefined;
 
 function preparedOrThrow(timepoint: Timepoint, kb: Kb): Prepared[] {
-  const p = prepared.get(cacheKey(timepoint, kb));
+  const p = cached(timepoint, kb);
   if (!p) throw new Error(`Call prepare('${timepoint}') before reverse().`);
   return p;
 }
 
 /** Synchronous preparation, for tests and scripts. */
 export function prepareSync(timepoint: Timepoint, kb: Kb = KB): void {
-  const key = cacheKey(timepoint, kb);
-  if (prepared.has(key)) return;
+  if (cached(timepoint, kb)) return;
   const hs = hypotheses();
   const priors = priorsFor(hs);
-  prepared.set(key, hs.map((h) => ({ h, findings: forward(h.regions, timepoint, { kb }), prior: priors.get(h.id) ?? 0 })));
+  store(timepoint, kb, hs.map((h) => ({ h, findings: forward(h.regions, timepoint, { kb }), prior: priors.get(h.id) ?? 0 })));
 }
 
 // ── ranking ──────────────────────────────────────────────────────────────
 
 export type Group = {
   readonly family: LesionFamily;
+  /** For plexus and nerve groups, the places its members sit, in anatomical order. */
+  readonly sites: readonly PlexusSite[];
   readonly rostral: readonly [Segment, Segment];
   readonly caudal: readonly [Segment, Segment];
   readonly members: readonly Hypothesis[];
@@ -208,7 +249,7 @@ export type ReverseResult = {
 
 type Scored = Prepared & { logPost: number; mismatches: number; fits: number; open: number; signature: string };
 
-function score(ps: readonly Prepared[], observations: readonly Observation[]): Scored[] {
+function score(ps: readonly Prepared[], observations: readonly Observation[], kb: Kb): Scored[] {
   return ps.map((p) => {
     let log = Math.log(p.prior || Number.MIN_VALUE);
     let mismatches = 0;
@@ -216,7 +257,7 @@ function score(ps: readonly Prepared[], observations: readonly Observation[]): S
     let open = 0;
     const sig: string[] = [];
     for (const o of observations) {
-      const pr = predict(p.findings, o);
+      const pr = predict(p.findings, o, kb);
       sig.push(pr);
       log += Math.log(likelihood(o.kind, pr, o.value));
       if (pr === 'unknown') open++;
@@ -250,8 +291,10 @@ function groupsOf(scored: readonly Scored[], post: readonly number[]): Group[] {
       if (!first) throw new Error('empty group');
       const rs = items.map((s) => s.h.rostral);
       const cs = items.map((s) => s.h.caudal);
+      const sites = new Set(items.map((s) => s.h.site).filter((x) => x !== undefined));
       return {
         family: first.h.family,
+        sites: PLEXUS_SITES.filter((x) => sites.has(x)),
         rostral: [segName(Math.min(...rs)), segName(Math.max(...rs))],
         caudal: [segName(Math.min(...cs)), segName(Math.max(...cs))],
         members: items.map((s) => s.h),
@@ -278,7 +321,7 @@ export function reverse(
   options: { kb?: Kb } = {},
 ): ReverseResult {
   const kb = options.kb ?? KB;
-  const scored = score(preparedOrThrow(timepoint, kb), observations);
+  const scored = score(preparedOrThrow(timepoint, kb), observations, kb);
   const post = normalise(scored);
   const groups = groupsOf(scored, post);
   const unexplained = Math.min(...scored.map((s) => s.mismatches)) > 0;
@@ -290,7 +333,7 @@ export function reverse(
 
   for (const slot of slots) {
     if (observed.has(slotKey(slot))) continue;
-    const preds = scored.map((s) => predict(s.findings, slot));
+    const preds = scored.map((s) => predict(s.findings, slot, kb));
     const values = DOMAIN[slot.kind] as readonly Value[];
     let expected = 0;
     const outcomes: Outcome[] = [];
@@ -314,8 +357,8 @@ export function reverse(
     const gain = h0 - expected;
     if (gain < MIN_BITS) continue;
     const [a, b] = top;
-    const pa = a ? predict(a.findings, slot) : 'unknown';
-    const pb = b ? predict(b.findings, slot) : 'unknown';
+    const pa = a ? predict(a.findings, slot, kb) : 'unknown';
+    const pb = b ? predict(b.findings, slot, kb) : 'unknown';
     const separates = pa !== 'unknown' && pb !== 'unknown' && pa !== pb;
     const better =
       !best ||
@@ -349,16 +392,84 @@ const PLACE: Partial<Record<string, string>> = {
   intermediolateral: 'lateral horn',
 };
 const SIDE: Record<Side, string> = { L: 'left', R: 'right' };
+
+/** Plain names for the places beyond the roots, as the working speaks of them. */
+export const SITE_NAME: Record<PlexusSite, string> = {
+  upper_trunk: 'upper trunk',
+  middle_trunk: 'middle trunk',
+  lower_trunk: 'lower trunk',
+  lateral_cord: 'lateral cord',
+  posterior_cord: 'posterior cord',
+  medial_cord: 'medial cord',
+  dorsal_scapular: 'dorsal scapular nerve',
+  long_thoracic: 'long thoracic nerve',
+  suprascapular: 'suprascapular nerve',
+  axillary: 'axillary nerve',
+  musculocutaneous: 'musculocutaneous nerve',
+  radial_axilla: 'radial nerve in the axilla',
+  radial_spiral_groove: 'radial nerve at the spiral groove',
+  posterior_interosseous: 'posterior interosseous nerve',
+  median_elbow: 'median nerve at the elbow',
+  median_wrist: 'median nerve at the wrist',
+  ulnar_elbow: 'ulnar nerve at the elbow',
+  ulnar_wrist: 'ulnar nerve at the wrist',
+};
 const where = (e: Element): string => `${SIDE[e.side]} ${PLACE[e.compartment] ?? e.compartment} at ${segName(e.segment)}`;
 
 function firstCut(map: LesionMap, kb: Kb, elements: readonly Element[], sacral: boolean): Element | null {
   return elements.find((e) => damageAlong(map, kb, e, sacral) > 0) ?? null;
 }
 
-function reason(map: LesionMap, kb: Kb, h: Hypothesis, o: Observation, f: Findings): string {
+/** The first cut place beyond the roots on any route from these roots to these branches. */
+function limbCuts(kb: Kb, pmap: PlexusMap, side: Side, supplies: readonly Supply[], roots: readonly Segment[]): string[] {
+  const out = new Set<string>();
+  for (const supply of supplies) {
+    for (const r of roots) {
+      const route = limbRoute(kb, supply, r);
+      const cut = route ? routeSites(route).find((site) => pmap.damage(site, side) > 0) : undefined;
+      if (cut) out.add(`the ${SIDE[side]} ${SITE_NAME[cut]} is cut`);
+    }
+  }
+  return [...out];
+}
+
+const rootsOf = (span: Span | null | undefined): Segment[] => (span ? segsOf(span) : []);
+
+function muscleReason(map: LesionMap, kb: Kb, pmap: PlexusMap, side: Side, muscle: Muscle): string[] {
+  const row = kb.plexus.muscles[muscle];
+  const roots = [...rootsOf(row.roots), ...rootsOf(row.disputedRoots)];
+  const causes = new Set<string>();
+  for (const r of roots) {
+    const cut = firstCut(map, kb, motorRoute(kb, side, idx(r)).elements, false);
+    if (cut) causes.add(`the motor route to ${r} is cut at the ${where(cut)}`);
+  }
+  for (const c of limbCuts(kb, pmap, side, [row.supply], roots)) causes.add(c);
+  const disputed = rootsOf(row.disputedRoots);
+  if (causes.size && disputed.length && !rootsOf(row.roots).some((r) => [...causes].some((c) => c.includes(r)))) {
+    causes.add(`the sources disagree whether ${disputed.join('–')} serves it`);
+  }
+  return [...causes];
+}
+
+function reason(map: LesionMap, pmap: PlexusMap, kb: Kb, h: Hypothesis, o: Observation, f: Findings): string {
   switch (o.kind) {
+    case 'muscle': {
+      const causes = muscleReason(map, kb, pmap, o.side, o.muscle);
+      return causes.length ? causes.join('; ') : 'every route from its roots to the muscle is intact';
+    }
+    case 'skin': {
+      const row = kb.plexus.skin[o.area];
+      const causes = limbCuts(kb, pmap, o.side, row.supply, [...rootsOf(row.roots), ...rootsOf(row.disputedRoots)]);
+      return causes.length ? causes.join('; ') : 'the nerves to this patch are intact beyond the roots';
+    }
     case 'sensory': {
       const causes = new Set<string>();
+      const [only] = segsOf(o.span);
+      const area = segsOf(o.span).length === 1 && only ? landmarkArea(kb, only) : undefined;
+      if (area) {
+        const row = kb.plexus.skin[area];
+        for (const c of limbCuts(kb, pmap, o.side, row.supply, rootsOf(row.roots))) causes.add(c);
+      }
       for (const k of segsOf(o.span).map(idx)) {
         const offsets = o.modality === 'posterior_column' ? [0] : crossingOffsets(kb);
         const cuts = offsets.map((off) => firstCut(map, kb, sensoryRoute(kb, o.side, o.modality, k, off).elements, isSacral(kb, k)));
@@ -374,6 +485,10 @@ function reason(map: LesionMap, kb: Kb, h: Hypothesis, o: Observation, f: Findin
         const cut = firstCut(map, kb, motorRoute(kb, o.side, k).elements, false);
         if (cut) causes.add(`the motor route is cut at the ${where(cut)}`);
       }
+      const [only] = segsOf(o.span);
+      for (const m of segsOf(o.span).length === 1 && only ? myotomeMuscles(kb, only) : []) {
+        for (const c of muscleReason(map, kb, pmap, o.side, m)) causes.add(c);
+      }
       return causes.size ? [...causes].join('; ') : 'the motor route is intact';
     }
     case 'reflex': {
@@ -383,6 +498,9 @@ function reason(map: LesionMap, kb: Kb, h: Hypothesis, o: Observation, f: Findin
       if (r === 'absent' && map.transectionAt >= 0 && map.transectionAt < idx(from)) {
         return `spinal shock below a complete lesion at ${segName(map.transectionAt)}`;
       }
+      const muscle = kb.plexus.reflexMuscles.muscles[o.reflex];
+      const peripheral = muscle ? limbCuts(kb, pmap, o.side, [kb.plexus.muscles[muscle].supply], segsOf([from, to])) : [];
+      if ((r === 'absent' || r === 'reduced') && peripheral.length) return `its arc runs through the cut: ${peripheral.join('; ')}`;
       if (r === 'absent' || r === 'reduced') return `the ${arc} is damaged`;
       if (r === 'brisk') return `the corticospinal tract above the ${arc} is cut, so the reflex is released`;
       if (r === 'indeterminate') return `not settled at this time after injury`;
@@ -398,8 +516,12 @@ function reason(map: LesionMap, kb: Kb, h: Hypothesis, o: Observation, f: Findin
             : 'no corticospinal interruption above the lumbosacral cord';
     case 'horner':
       return f.horner[o.side] === 'present'
-        ? 'the oculosympathetic pathway is interrupted at or above the ciliospinal centre'
-        : 'the oculosympathetic pathway is intact';
+        ? map.damage(kb.autonomic.sympatheticRootCompartment.compartment, o.side, idx(kb.autonomic.sympatheticOutflow.root)) > 0
+          ? `the ${kb.autonomic.sympatheticOutflow.root} root, which carries the sympathetic outflow to the eye, is damaged`
+          : 'the oculosympathetic pathway is interrupted at or above the ciliospinal centre'
+        : h.site
+          ? 'the sympathetic fibres leave with the T1 root, before this point'
+          : 'the oculosympathetic pathway is intact';
     case 'romberg':
       return f.romberg === 'present'
         ? 'proprioception from the legs is lost'
@@ -418,15 +540,16 @@ function reason(map: LesionMap, kb: Kb, h: Hypothesis, o: Observation, f: Findin
 }
 
 export function explain(h: Hypothesis, observations: readonly Observation[], timepoint: Timepoint, kb: Kb = KB): Verdict[] {
-  const map = mapLesion(h.regions, kb);
+  const map = mapLesion(h.regions.filter((r): r is LesionRegion => !isPlexus(r)), kb);
+  const pmap = mapPlexus(h.regions.filter(isPlexus));
   const f = forward(h.regions, timepoint, { kb });
   return observations.map((o) => {
-    const predicted = predict(f, o);
+    const predicted = predict(f, o, kb);
     return {
       observation: o,
       predicted,
       verdict: predicted === 'unknown' ? 'open' : predicted === o.value ? 'fits' : 'conflicts',
-      because: reason(map, kb, h, o, f),
+      because: reason(map, pmap, kb, h, o, f),
     };
   });
 }

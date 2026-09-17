@@ -1,5 +1,6 @@
 // The knowledge base. Data only — scripts/check-boundaries.ts rejects any function here.
 // Each row's `claim` is what a clinical reviewer is asked to confirm.
+import { PLEXUS } from './plexus.ts';
 import type { Kb } from './types.ts';
 
 export const KB: Kb = {
@@ -105,6 +106,27 @@ export const KB: Kb = {
       },
       requiresBilateralLesion: true,
     },
+    sympatheticOutflow: {
+      meta: {
+        id: 'autonomic.sympathetic-outflow',
+        claim: 'Second-order oculosympathetic neurons leave the cord at T1, so a lesion of the T1 root causes an ipsilateral Horner syndrome.',
+        sources: ['S16', 'S36'],
+        tier: 'T1',
+        bookRef: 'pending',
+      },
+      root: 'T1',
+    },
+    sympatheticRootCompartment: {
+      meta: {
+        id: 'autonomic.sympathetic-root-compartment',
+        claim: 'The preganglionic sympathetic fibres leave in the ventral root, so a dorsal root lesion alone spares them.',
+        sources: [],
+        tier: 'T2',
+        bookRef: 'pending',
+        pendingSource: 'R19: S16 says the fibres leave the cord at T1 without naming the root',
+      },
+      compartment: 'ventral_root',
+    },
   },
 
   reflexes: {
@@ -189,6 +211,8 @@ export const KB: Kb = {
       span: ['S1', 'S5'],
     },
   },
+
+  plexus: PLEXUS,
 
   observations: {
     spinalShock: {

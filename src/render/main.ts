@@ -1,7 +1,7 @@
 // Entry point: state, controls, camera and the render loop, in two modes — placing a lesion
 // and seeing its findings, or entering findings and seeing where the lesion could be.
 import * as THREE from 'three';
-import { forward, mapLesion, type LesionRegion } from '../engine/forward.ts';
+import { forward, isPlexus, mapLesion, type LesionRegion } from '../engine/forward.ts';
 import { hypotheses, type Hypothesis } from '../engine/hypotheses.ts';
 import {
   explain,
@@ -303,7 +303,8 @@ function hypothesisLesion(h: Hypothesis): Shown {
   const from = SEGMENTS[h.rostral] ?? 'C1';
   const to = SEGMENTS[h.caudal] ?? from;
   const { top, bottom } = spanOf(RENDER, from, to);
-  return { regions: h.regions, shape, top: shape ? top : 0, bottom: shape ? bottom : 0 };
+  const regions = h.regions.filter((r): r is LesionRegion => !isPlexus(r));
+  return { regions, shape, top: shape ? top : 0, bottom: shape ? bottom : 0 };
 }
 
 let preparing: Promise<void> | null = null;

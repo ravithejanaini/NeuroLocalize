@@ -1,8 +1,11 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { ALL_CASES as CASES } from '../spec/expectations/index.ts';
+import { ALL_CASES } from '../spec/expectations/index.ts';
+import { PLEXUS_CASES } from '../spec/expectations/plexus.ts';
 import { forward } from '../src/engine/forward.ts';
 import { check } from './harness.ts';
+
+const CASES = [...ALL_CASES, ...PLEXUS_CASES];
 
 describe('frozen expectations', () => {
   for (const kase of CASES) {

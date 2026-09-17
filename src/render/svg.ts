@@ -1,6 +1,7 @@
 // Flat diagrams as SVG strings: the axial slice, the body map and the myotome grid.
 // No DOM and no Three.js here, so every builder is tested under Node.
 import type { Findings } from '../engine/forward.ts';
+import { KB } from '../kb/kb.ts';
 import type { Shape } from '../geometry/lesion3d.ts';
 import { outline } from '../geometry/outline.ts';
 import { CORD_COMPARTMENTS, discAt, fibrePoint } from '../geometry/section.ts';
@@ -13,6 +14,7 @@ import {
   type SensoryModality,
   type SensoryState,
   type Side,
+  type SkinArea,
 } from '../kb/vocab.ts';
 
 const idx = (s: Segment): number => SEGMENTS.indexOf(s);
@@ -87,7 +89,21 @@ const HALF = `
   <path d="M103 252 L122 250 L120 330 L108 330 Z"/>
   <ellipse cx="116" cy="342" rx="11" ry="6"/>`;
 
-export type BodyDot = { side: Side; segment: string; place: string; state: SensoryState; x: number; y: number; convention: boolean };
+export type BodyDot = {
+  side: Side;
+  segment: string;
+  place: string;
+  state: SensoryState;
+  x: number;
+  y: number;
+  convention: boolean;
+  /** A nerve territory with no dermatome landmark (D30). */
+  patch?: SkinArea;
+};
+
+/** The nerve territory a dermatome landmark also is (D30), from the engine's own table. */
+export const landmarkPatch = (segment: Segment): SkinArea | undefined =>
+  (Object.keys(KB.plexus.skin) as SkinArea[]).find((a) => KB.plexus.skin[a].landmark === segment);
 
 export function bodyDots(render: RenderKb, f: Findings, modality: SensoryModality): BodyDot[] {
   const out: BodyDot[] = [];
@@ -95,9 +111,14 @@ export function bodyDots(render: RenderKb, f: Findings, modality: SensoryModalit
     // The patient's left is drawn on the viewer's right.
     const x = (v: number): number => (side === 'L' ? v : mirror(v));
     for (const l of render.dermatomeLandmarks.landmarks) {
+      const area = landmarkPatch(l.segment);
+      const state = area ? f.skin[side][modality][area] : f.sensory[side][modality][l.segment];
       for (const p of l.at) {
-        out.push({ side, segment: l.segment, place: l.place, state: f.sensory[side][modality][l.segment], x: x(p.x), y: p.y, convention: false });
+        out.push({ side, segment: l.segment, place: l.place, state, x: x(p.x), y: p.y, convention: false });
       }
+    }
+    for (const [area, p] of Object.entries(render.skinPatches.at) as [SkinArea, { x: number; y: number }][]) {
+      out.push({ side, segment: 'nerve', place: area.replace(/_/g, ' '), state: f.skin[side][modality][area], x: x(p.x), y: p.y, convention: false, patch: area });
     }
     const s = render.saddle;
     out.push({
@@ -127,6 +148,9 @@ export function bodyMapSvg(render: RenderKb, f: Findings, modality: SensoryModal
   const dots = bodyDots(render, f, modality)
     .map((d) => {
       const title = `${d.side === 'L' ? 'Left' : 'Right'} ${d.segment} — ${d.place}: ${d.state}${d.convention ? ' (segment assignment is a convention)' : ''}`;
+      if (d.patch) {
+        return `<rect class="dot patch st-${d.state}" x="${d.x - 3.5}" y="${d.y - 3.5}" width="7" height="7" rx="1.5"><title>${d.side === 'L' ? 'Left' : 'Right'} ${d.place} (a nerve territory): ${d.state}</title></rect>`;
+      }
       return d.convention
         ? `<rect class="dot st-${d.state}" x="${d.x - 4}" y="${d.y - 4}" width="8" height="8" transform="rotate(45 ${d.x} ${d.y})"><title>${title}</title></rect>`
         : `<circle class="dot st-${d.state}" cx="${d.x}" cy="${d.y}" r="4.5"><title>${title}</title></circle>`;

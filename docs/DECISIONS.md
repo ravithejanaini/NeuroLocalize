@@ -354,3 +354,41 @@ tunnel and be spared; no source read says so either way.
 
 **R18** — The brachioradialis takes its roots from its reflex (C6 certain, C5 disputed, C3):
 no source read gives the muscle's roots directly.
+
+**D34 — What the first plexus mutation run changed, besides the expectations (A5).**
+It scored 73.9% on sourced rows. Beyond the untested roots and branches that A5 covers:
+- *Fields the engine never read.* Nerve root values and cord divisions decided nothing
+  (D29), so every corruption of them survived. They moved to the render knowledge base as
+  `render.nerve-roots` and `render.plexus-divisions`, where they are drawn; a row the engine
+  reads now holds only what the engine reads.
+- *Structural invariants nothing enforced.* A branch placed after a nerve's last named place,
+  or trunks that did not divide C5–T1 exactly between them, silently gave the same answers.
+  The engine now refuses both.
+- *A fact no source states.* That the sympathetic fibres leave in the *ventral* root is
+  anatomy no source read names. It is now its own row, `pendingSource` (R19), instead of
+  hiding inside a cited one.
+- *Facts only reverse mode reads.* The landmark and myotome mappings (D30, D31) change no
+  forward finding. Mutants that survive the forward cases are now also run against every
+  frozen reverse examination.
+- *A defect found while wiring that in, before it ran.* Reverse preparation was cached under
+  the key `custom` for any knowledge base other than the real one, so every corrupted copy
+  after the first would have reused the first one's results and been reported as killed or
+  survived on another mutant's evidence. The cache is now keyed by the knowledge-base object.
+
+**R19** — Do the second-order sympathetic fibres leave in the T1 ventral root? S16 says only
+that they leave the cord at T1.
+
+**D35 — The second plexus mutation run: 94.1% on sourced rows, and what survives.**
+With A5 and the reverse pass the sourced score is 94.1% (554 of 589; 13 mutants were killed
+only by a reverse examination). The 13 survivors from P0 are unchanged. The 22 new ones are:
+- *Allowed by the expectations on purpose:* the long thoracic C7, the brachioradialis C5 and
+  the lateral forearm C7. Each mutant moves a finding between two values the sources leave
+  open (C3, C10, C11), and the expectations allow both.
+- *Equivalent:* the medial forearm's nerve changed to the ulnar or median. With no named
+  place before the branch, all three run the same medial-cord path.
+- *Intended:* the little finger's branch moved above Guyon's canal (R16).
+- *Pinned outside the harness:* the myotome and landmark mappings (D30, D31). No frozen
+  examination is sharp enough to separate a moved mapping from the true one, so unit tests
+  hold them: each mapped muscle must perform the movement its sourced myotome row names, and
+  named landmarks must read through named nerves.
+- *Open:* the superficial flexor's roots extended to C7 — no C7 case asserts it.

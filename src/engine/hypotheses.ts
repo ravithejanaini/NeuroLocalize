@@ -3,11 +3,15 @@
 // a lesion the engine has not been checked against.
 import {
   COMPARTMENTS,
+  PLEXUS_SITES,
   SEGMENTS,
+  SIDES,
   type Compartment,
   type LesionFamily,
+  type PlexusSite,
   type Segment,
 } from '../kb/vocab.ts';
+import type { AnyRegion } from './forward.ts';
 import type { LesionRegion } from './lesion.ts';
 
 export type Hypothesis = {
@@ -16,8 +20,20 @@ export type Hypothesis = {
   /** Segment indices of the lesion's rostral and caudal ends. */
   readonly rostral: number;
   readonly caudal: number;
-  readonly regions: readonly LesionRegion[];
+  readonly regions: readonly AnyRegion[];
+  /** Where a plexus or nerve candidate sits. Its rostral and caudal ends are then nominal. */
+  readonly site?: PlexusSite;
 };
+
+/** Trunks and cords; every other place is on a named nerve (D32). */
+export const PLEXUS_PROPER: readonly PlexusSite[] = [
+  'upper_trunk',
+  'middle_trunk',
+  'lower_trunk',
+  'lateral_cord',
+  'posterior_cord',
+  'medial_cord',
+];
 
 const CORD = COMPARTMENTS.filter((c) => c !== 'dorsal_root' && c !== 'ventral_root');
 const seg = (k: number): Segment => SEGMENTS[k] ?? 'C1';
@@ -115,6 +131,23 @@ export function hypotheses(): readonly Hypothesis[] {
       { ...whole(0, idx('S5'), ['L', 'R'], ['lateral_cst']), severity: 'partial' },
     ],
   });
+  // Beyond the roots (D32): every trunk, cord and named nerve place, complete, either side.
+  // All share one nominal level so that the length prior treats them alike.
+  const nominal = idx('C5');
+  for (const site of PLEXUS_SITES) {
+    for (const side of SIDES) {
+      const proper = PLEXUS_PROPER.includes(site);
+      const family: LesionFamily = proper ? (side === 'L' ? 'plexus_left' : 'plexus_right') : side === 'L' ? 'nerve_left' : 'nerve_right';
+      out.push({
+        id: `${family}:${site}`,
+        family,
+        rostral: nominal,
+        caudal: nominal,
+        regions: [{ plexus: site, sides: [side], severity: 'complete' }],
+        site,
+      });
+    }
+  }
   cache = out;
   return out;
 }

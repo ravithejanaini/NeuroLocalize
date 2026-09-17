@@ -2,8 +2,9 @@
 // sources, ordered by how much of the engine's output rests on it.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { ALL_CASES } from '../spec/expectations/index.ts';
-import type { Assertion } from '../spec/expectations/types.ts';
+import { ALL_CASES as CORD_CASES } from '../spec/expectations/index.ts';
+import { PLEXUS_CASES } from '../spec/expectations/plexus.ts';
+import type { Assertion, LimbAssertion } from '../spec/expectations/types.ts';
 import { KB } from '../src/kb/kb.ts';
 import { MECHANISMS } from '../src/kb/mechanisms.ts';
 import { RENDER } from '../src/kb/render.ts';
@@ -39,7 +40,10 @@ const questions = [...read('docs/DECISIONS.md').matchAll(/^\*\*(R\d+)\*\* — ([
 const SIDE = { L: 'left', R: 'right', both: 'both sides' } as const;
 const span = (s: readonly [string, string]): string => (s[0] === s[1] ? s[0] : `${s[0]}–${s[1]}`);
 const any = (xs: readonly string[]): string => xs.join(' or ');
-function describe(a: Assertion): string {
+const ALL_CASES = [...CORD_CASES, ...PLEXUS_CASES];
+const words = (xs: readonly string[]): string => xs.map((x) => x.replace(/_/g, ' ')).join(', ');
+
+function describe(a: Assertion | LimbAssertion): string {
   switch (a.kind) {
     case 'sensory':
       return `${SIDE[a.side]} · ${a.modality === 'all' ? 'all sensation' : a.modality.replace('_', ' ')} · ${span(a.span)} → ${any(a.oneOf)}`;
@@ -54,6 +58,10 @@ function describe(a: Assertion): string {
       return `${a.qualifier.replace(/_/g, ' ')} → ${a.present ? 'yes' : 'no'}`;
     case 'resolvedSegments':
       return `lesion resolves to segments ${span(a.span)}`;
+    case 'muscle':
+      return `${SIDE[a.side]} · ${words(a.muscles)} → ${any(a.oneOf)}`;
+    case 'skin':
+      return `${SIDE[a.side]} · ${a.modality === 'all' ? 'all sensation' : a.modality.replace('_', ' ')} · ${words(a.areas)} → ${any(a.oneOf)}`;
     default:
       return `${a.kind} → ${any(a.oneOf)}`;
   }

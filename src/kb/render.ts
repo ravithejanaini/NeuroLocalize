@@ -3,6 +3,151 @@
 import type { RenderKb } from './types.ts';
 
 export const RENDER: RenderKb = {
+  divisions: {
+    meta: {
+      id: 'render.plexus-divisions',
+      claim: 'Each trunk divides beneath the clavicle; the three posterior divisions form the posterior cord and the anterior divisions form the lateral and medial cords.',
+      sources: ['S34', 'S37'],
+      tier: 'T1',
+      bookRef: 'pending',
+    },
+    ofCord: { lateral: 'anterior', posterior: 'posterior', medial: 'anterior' },
+  },
+
+  limb: {
+    meta: {
+      id: 'render.limb-layout',
+      claim: 'The roots pass between the anterior and middle scalenes; the trunks cross the first rib; the divisions pass beneath and behind the clavicle; the cords are named by where they lie around the axillary artery. Positions are schematic and the arm is drawn shortened.',
+      sources: ['S34', 'S37', 'S33'],
+      tier: 'T1',
+      bookRef: 'pending',
+    },
+    // Patient's left; x lateral (negative), y rostral, z dorsal. One unit is one vertebra.
+    trunks: {
+      upper: [[-2.0, -5.0, 0], [-2.5, -6.1, -0.05], [-3.0, -7.3, -0.1]],
+      middle: [[-2.05, -6.25, 0], [-2.55, -7.0, -0.05], [-3.05, -7.75, -0.1]],
+      lower: [[-2.1, -7.6, 0], [-2.6, -7.95, -0.05], [-3.1, -8.2, -0.1]],
+    },
+    cords: {
+      lateral: [[-4.0, -8.75, -0.3], [-4.5, -9.4, -0.28], [-4.95, -9.9, -0.28]],
+      posterior: [[-3.8, -8.95, 0.05], [-4.3, -9.6, 0.05], [-4.75, -10.15, 0.05]],
+      medial: [[-3.6, -9.1, -0.3], [-4.05, -9.7, -0.28], [-4.45, -10.25, -0.28]],
+    },
+    nerves: {
+      dorsal_scapular: [
+        { at: [-1.7, -4.9, 0.5] },
+        { at: [-1.8, -6.6, 0.95], site: 'dorsal_scapular' },
+        { at: [-1.85, -8.8, 1.3], branches: ['rhomboids'] },
+      ],
+      long_thoracic: [
+        { at: [-1.75, -6.3, 0.35] },
+        { at: [-2.4, -8.9, 0.4], site: 'long_thoracic' },
+        { at: [-3.2, -10.4, 0.1] },
+        { at: [-3.45, -11.6, -0.1], branches: ['serratus_anterior'] },
+      ],
+      suprascapular: [
+        { at: [-2.9, -6.4, 0.35] },
+        { at: [-3.4, -7.0, 0.7], site: 'suprascapular' },
+        { at: [-3.75, -7.5, 0.9], branches: ['supraspinatus'] },
+      ],
+      axillary: [
+        { at: [-5.0, -10.45, 0.35], site: 'axillary' },
+        { at: [-5.45, -10.5, 0.3], branches: ['deltoid', 'shoulder_badge'] },
+      ],
+      musculocutaneous: [
+        { at: [-5.1, -10.7, -0.45], site: 'musculocutaneous' },
+        { at: [-5.25, -12.6, -0.6], branches: ['biceps'] },
+        { at: [-5.6, -15.3, -0.55], branches: ['lateral_forearm'] },
+      ],
+      radial: [
+        { at: [-4.95, -10.7, 0.2], site: 'radial_axilla' },
+        { at: [-5.05, -11.4, 0.45], branches: ['triceps'] },
+        { at: [-5.4, -12.8, 0.6], site: 'radial_spiral_groove' },
+        { at: [-5.85, -15.3, 0], branches: ['brachioradialis', 'wrist_extensors', 'dorsal_web', 'thumb'] },
+        { at: [-5.8, -16.3, 0.3], site: 'posterior_interosseous' },
+        { at: [-5.75, -18.2, 0.35], branches: ['thumb_extensor'] },
+      ],
+      median: [
+        { at: [-4.9, -10.6, -0.35] },
+        { at: [-5.2, -13.2, -0.5] },
+        { at: [-5.3, -15.4, -0.55], site: 'median_elbow' },
+        { at: [-5.4, -16.4, -0.55], branches: ['finger_flexor_superficial'] },
+        { at: [-5.55, -20.6, -0.45], site: 'median_wrist' },
+        { at: [-5.65, -21.3, -0.45], branches: ['thumb_abductor', 'thumb', 'middle_finger'] },
+      ],
+      ulnar: [
+        { at: [-4.7, -10.7, -0.15] },
+        { at: [-4.95, -13.4, 0.05] },
+        { at: [-5.0, -15.5, 0.25], site: 'ulnar_elbow' },
+        { at: [-5.05, -16.4, 0], branches: ['wrist_flexor_ulnar', 'finger_flexor_ulnar'] },
+        { at: [-5.2, -20.6, -0.3], site: 'ulnar_wrist' },
+        { at: [-5.35, -21.3, -0.25], branches: ['interossei', 'little_finger'] },
+      ],
+      medial_antebrachial_cutaneous: [{ at: [-4.6, -10.8, -0.1], branches: ['medial_forearm'] }],
+    },
+    targets: {
+      rhomboids: [-1.9, -9.6, 1.4],
+      serratus_anterior: [-3.5, -12.4, -0.2],
+      supraspinatus: [-3.9, -7.8, 1.0],
+      deltoid: [-5.75, -10.2, -0.05],
+      biceps: [-5.3, -13.0, -0.75],
+      triceps: [-5.2, -12.2, 0.7],
+      brachioradialis: [-5.95, -16.6, -0.2],
+      wrist_extensors: [-5.95, -17.4, 0.15],
+      thumb_extensor: [-5.85, -19.2, 0.35],
+      wrist_flexor_ulnar: [-5.05, -17.5, -0.1],
+      finger_flexor_superficial: [-5.4, -17.6, -0.5],
+      finger_flexor_ulnar: [-5.15, -17.9, -0.2],
+      thumb_abductor: [-5.95, -21.4, -0.5],
+      interossei: [-5.55, -22.1, -0.1],
+      shoulder_badge: [-5.9, -11.2, 0],
+      lateral_forearm: [-5.95, -17.6, -0.45],
+      dorsal_web: [-5.95, -21.6, 0.25],
+      thumb: [-6.3, -22.6, -0.35],
+      middle_finger: [-5.6, -24.3, -0.35],
+      little_finger: [-5.15, -23.6, -0.3],
+      medial_forearm: [-5.0, -17.9, -0.35],
+    },
+    clavicle: [[-1.4, -8.0, -1.6], [-2.6, -7.95, -1.0], [-3.6, -8.05, -0.75], [-4.6, -8.1, -0.6], [-5.2, -8.4, -0.4]],
+    firstRib: [[-1.1, -8.3, 0.5], [-2.0, -8.45, 0.3], [-2.8, -8.55, -0.3], [-3.2, -8.7, -1.0], [-3.0, -9.0, -1.8]],
+    artery: [[-1.2, -7.4, -0.6], [-2.3, -7.9, -0.45], [-3.3, -8.5, -0.35], [-3.8, -8.95, -0.3], [-4.7, -10.05, -0.3], [-5.2, -12.5, -0.4], [-5.45, -15.4, -0.5]],
+    scalenes: {
+      anterior: [[-1.7, -3.6, -0.45], [-2.5, -8.4, -0.5]],
+      middle: [[-1.7, -3.6, 0.4], [-2.6, -8.4, 0.45]],
+    },
+    bones: [
+      [[-5.2, -9.8, 0], [-5.4, -15.6, 0]],
+      [[-5.75, -15.8, -0.05], [-5.8, -20.9, -0.1]],
+      [[-5.1, -15.7, 0.05], [-5.25, -20.9, 0]],
+      [[-2.2, -8.2, 1.2], [-4.2, -8.0, 1.1], [-2.3, -12.2, 1.2], [-2.2, -8.2, 1.2]],
+      [[-5.8, -21.0, -0.1], [-6.3, -22.9, -0.3]],
+      [[-5.5, -21.0, -0.1], [-5.6, -24.6, -0.3]],
+      [[-5.25, -21.0, -0.1], [-5.1, -23.8, -0.25]],
+    ],
+  },
+
+  nerveRoots: {
+    meta: {
+      id: 'render.nerve-roots',
+      claim: 'Dorsal scapular C5; long thoracic C5–C6, C7 disputed; suprascapular C5–C6; axillary C5–C6; musculocutaneous C5–C6, C7 disputed; radial C5–T1; median C6–T1, C5 disputed; ulnar and medial antebrachial cutaneous C8–T1.',
+      sources: ['S33', 'S34', 'S37', 'S41', 'S42', 'S43', 'S44', 'S45', 'S46'],
+      tier: 'T3',
+      bookRef: 'pending',
+      conflict: 'C12',
+    },
+    nerves: {
+      dorsal_scapular: { roots: ['C5', 'C5'] },
+      long_thoracic: { roots: ['C5', 'C6'], disputedRoots: ['C7', 'C7'] },
+      suprascapular: { roots: ['C5', 'C6'] },
+      axillary: { roots: ['C5', 'C6'] },
+      musculocutaneous: { roots: ['C5', 'C6'], disputedRoots: ['C7', 'C7'] },
+      radial: { roots: ['C5', 'T1'] },
+      median: { roots: ['C6', 'T1'], disputedRoots: ['C5', 'C5'] },
+      ulnar: { roots: ['C8', 'T1'] },
+      medial_antebrachial_cutaneous: { roots: ['C8', 'T1'] },
+    },
+  },
+
   dermatomeLandmarks: {
     meta: {
       id: 'render.dermatome-landmarks',
@@ -40,6 +185,21 @@ export const RENDER: RenderKb = {
     span: ['S3', 'S5'],
     place: 'perianal',
     at: { x: 104, y: 186 },
+  },
+
+  skinPatches: {
+    meta: {
+      id: 'render.skin-patches',
+      claim: 'The regimental badge lies over the lower lateral deltoid; the musculocutaneous nerve supplies the lateral forearm; the superficial radial nerve the back of the hand at the first web space. Body positions are schematic; the web space is on the back of the hand, drawn at its edge.',
+      sources: ['S42', 'S43', 'S39'],
+      tier: 'T2',
+      bookRef: 'pending',
+    },
+    at: {
+      shoulder_badge: { x: 150, y: 84 },
+      lateral_forearm: { x: 156, y: 176 },
+      dorsal_web: { x: 159, y: 212 },
+    },
   },
 
   myotomes: {

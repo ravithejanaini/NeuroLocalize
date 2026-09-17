@@ -3,7 +3,17 @@
 import type { Group, Observation, ReverseResult, Slot, Verdict } from '../engine/reverse.ts';
 import { slotKey } from '../engine/reverse.ts';
 import type { RenderKb } from '../kb/types.ts';
-import { REFLEXES, SEGMENTS, SIDES, type LesionFamily, type SensoryModality, type Side } from '../kb/vocab.ts';
+import {
+  MUSCLES,
+  REFLEXES,
+  SEGMENTS,
+  SIDES,
+  type LesionFamily,
+  type Muscle,
+  type SensoryModality,
+  type Side,
+  type SkinArea,
+} from '../kb/vocab.ts';
 
 export type Findings = ReadonlyMap<string, Observation>;
 
@@ -28,6 +38,34 @@ export const FAMILY_NAME: Record<LesionFamily, string> = {
 };
 
 const SIDE_WORD: Record<Side, string> = { L: 'Left', R: 'Right' };
+
+/** Each muscle by the movement it is tested with, then its name. */
+export const MUSCLE_NAME: Record<Muscle, { readonly movement: string; readonly muscle: string }> = {
+  rhomboids: { movement: 'scapular retraction', muscle: 'rhomboids' },
+  serratus_anterior: { movement: 'scapula held to the chest wall', muscle: 'serratus anterior' },
+  supraspinatus: { movement: 'shoulder abduction, first degrees', muscle: 'supraspinatus' },
+  deltoid: { movement: 'shoulder abduction', muscle: 'deltoid' },
+  biceps: { movement: 'elbow flexion, supinated', muscle: 'biceps' },
+  triceps: { movement: 'elbow extension', muscle: 'triceps' },
+  brachioradialis: { movement: 'elbow flexion, mid-prone', muscle: 'brachioradialis' },
+  wrist_extensors: { movement: 'wrist extension', muscle: 'extensor carpi radialis' },
+  thumb_extensor: { movement: 'thumb extension', muscle: 'extensor pollicis longus' },
+  wrist_flexor_ulnar: { movement: 'wrist flexion to the ulnar side', muscle: 'flexor carpi ulnaris' },
+  finger_flexor_superficial: { movement: 'finger flexion at the PIP joint', muscle: 'flexor digitorum superficialis' },
+  finger_flexor_ulnar: { movement: 'little finger flexion at the DIP joint', muscle: 'flexor digitorum profundus, ulnar half' },
+  thumb_abductor: { movement: 'thumb abduction', muscle: 'abductor pollicis brevis' },
+  interossei: { movement: 'finger abduction', muscle: 'first dorsal interosseous' },
+};
+
+export const AREA_NAME: Record<SkinArea, string> = {
+  shoulder_badge: 'lateral shoulder (regimental badge)',
+  lateral_forearm: 'lateral forearm',
+  dorsal_web: 'back of the first web space',
+  thumb: 'thumb',
+  middle_finger: 'middle finger',
+  little_finger: 'little finger',
+  medial_forearm: 'medial forearm',
+};
 const escape = (s: string): string =>
   s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] ?? c);
 
@@ -40,6 +78,8 @@ export const CYCLE: Record<Slot['kind'], readonly string[]> = {
   horner: ['absent', 'present'],
   romberg: ['absent', 'present'],
   bladder: ['normal', 'overactive', 'retention'],
+  muscle: ['normal', 'weak'],
+  skin: ['normal', 'abnormal'],
 };
 
 export function nextValue(slot: Slot, current: string | undefined): string | undefined {
@@ -74,6 +114,10 @@ export function slotLabel(render: RenderKb, s: Slot): string {
       return 'Romberg test';
     case 'bladder':
       return 'Bladder';
+    case 'muscle':
+      return `${SIDE_WORD[s.side]} ${MUSCLE_NAME[s.muscle].movement} (${MUSCLE_NAME[s.muscle].muscle})`;
+    case 'skin':
+      return `${SIDE_WORD[s.side]} ${AREA_NAME[s.area]}`;
   }
 }
 
@@ -104,6 +148,15 @@ export function examBodySvg(render: RenderKb, findings: Findings, modality: Sens
       ...render.dermatomeLandmarks.landmarks.map((l) => ({ span: [l.segment, l.segment] as const, points: l.at, diamond: false })),
       { span: render.saddle.span, points: [render.saddle.at], diamond: true },
     ];
+    for (const [area, p] of Object.entries(render.skinPatches.at) as [SkinArea, { x: number; y: number }][]) {
+      const slot: Slot = { kind: 'skin', side, area };
+      const key = slotKey(slot);
+      const v = findings.get(key)?.value;
+      const label = `${slotLabel(render, slot)}, any sensation: ${v ? valueWord(v) : 'not tested'}`;
+      dots.push(
+        `<g class="exdot patch ex-${v ?? 'untested'}" role="button" tabindex="0" data-slot="${escape(key)}" aria-label="${escape(label)}"><title>${escape(label)}</title><rect x="${x(p.x) - 5}" y="${p.y - 5}" width="10" height="10" rx="2"/></g>`,
+      );
+    }
     for (const m of marks) {
       const slot: Slot = { kind: 'sensory', side, modality, span: m.span };
       const key = slotKey(slot);
@@ -148,7 +201,16 @@ export function examTables(render: RenderKb, findings: Findings): string {
     }).join('')}</tr>`;
   const single = (s: Slot, name: string): string =>
     `<tr><th colspan="2">${name}</th><td colspan="2">${cell(slotKey(s), get(s), slotLabel(render, s))}</td></tr>`;
+  const arm = MUSCLES.map((muscle) => {
+    const cells = SIDES.map((side) => {
+      const s: Slot = { kind: 'muscle', side, muscle };
+      return `<td>${cell(slotKey(s), get(s), slotLabel(render, s))}</td>`;
+    }).join('');
+    const n = MUSCLE_NAME[muscle];
+    return `<tr><th class="mus" colspan="2">${n.movement}<span class="mus-name">${n.muscle}</span></th>${cells}</tr>`;
+  }).join('');
   return `<table class="extable"><thead><tr><th colspan="2">Strength</th><th>Left</th><th>Right</th></tr></thead><tbody>${strength}</tbody>
+    <thead><tr><th colspan="2">Arm, muscle by muscle</th><th>Left</th><th>Right</th></tr></thead><tbody>${arm}</tbody>
     <thead><tr><th colspan="2">Reflexes and signs</th><th>Left</th><th>Right</th></tr></thead><tbody>${reflexes}
     ${sided('babinski', 'Babinski')}${sided('horner', 'Horner')}
     ${single({ kind: 'romberg' }, 'Romberg')}${single({ kind: 'bladder' }, 'Bladder')}</tbody></table>`;

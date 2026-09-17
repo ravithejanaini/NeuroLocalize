@@ -139,6 +139,24 @@ export const LIMB_REVERSE_CASES: readonly LimbReverseCase[] = [
     basis: 'stated',
     note: 'S39 separates the three radial levels by the triceps and by sensation; the strong deltoid excludes the posterior cord.',
   },
+  // A5
+  {
+    id: 'reverse-little-finger-numb',
+    title: 'Numb little finger with the medial forearm spared, nothing else abnormal',
+    observations: [
+      pain('C8', 'abnormal'),
+      { kind: 'sensory', side: 'L', modality: 'posterior_column', span: ['C8', 'C8'], value: 'abnormal' },
+      pain('T1', 'normal'),
+      pain('C7', 'normal'),
+      pain('C6', 'normal'),
+      pain('C8', 'normal', 'R'),
+      ...noLongTract,
+    ],
+    expectations: [{ timepoint: 'chronic', topFamily: 'nerve_left', topSites: ['ulnar_elbow', 'ulnar_wrist'] }],
+    cite: ['S38', 'S45', 'S21'],
+    basis: 'stated',
+    note: 'The little finger is ulnar and the medial forearm is not (S38, S45); a C8 root would take both (S45).',
+  },
   {
     id: 'reverse-hand-weakness-open',
     title: 'Weak ulnar finger flexion and interossei, nothing else yet examined at the arm',

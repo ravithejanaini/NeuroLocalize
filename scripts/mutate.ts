@@ -1,21 +1,34 @@
 // Corrupts one knowledge-base leaf at a time and requires the frozen expectations to fail.
-// A mutant that survives is a fact nothing checks. Writes .mutation/report.json for the
+// Forward cases run first; a mutant they miss is then tried against every frozen reverse
+// examination, which is slower but is the only place some facts are read (D30, D31).
+// A mutant that survives both is a fact nothing checks. Writes .mutation/report.json for the
 // review worksheet, and exits 1 below the P0 threshold.
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { ALL_CASES as CASES } from '../spec/expectations/index.ts';
+import { ALL_CASES } from '../spec/expectations/index.ts';
+import { PLEXUS_CASES } from '../spec/expectations/plexus.ts';
 import { KB } from '../src/kb/kb.ts';
 import type { Kb } from '../src/kb/types.ts';
 import {
   COMPARTMENTS,
+  MUSCLES,
+  NERVES,
+  PLEXUS_CORDS,
+  PLEXUS_SITES,
   SEGMENTS,
   SENSORY_MODALITIES,
   TIMEPOINTS,
+  TRUNKS,
   VERTEBRAE,
 } from '../src/kb/vocab.ts';
-import { runAll } from '../test/harness.ts';
+import { LIMB_REVERSE_CASES } from '../spec/expectations/reverse-plexus.ts';
+import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
+import { RENDER } from '../src/kb/render.ts';
+import { examSlots } from '../src/render/slots.ts';
+import { reverseFailures, runAll } from '../test/harness.ts';
 import { locateRows } from '../test/rows.ts';
 
+const CASES = [...ALL_CASES, ...PLEXUS_CASES];
 const THRESHOLD = 0.9;
 const ROOT = resolve(import.meta.dirname, '..');
 
@@ -33,6 +46,13 @@ const POOLS: Record<string, readonly string[]> = {
   vertebra: VERTEBRAE,
   modality: SENSORY_MODALITIES,
   timepoint: TIMEPOINTS,
+  trunk: TRUNKS,
+  cord: PLEXUS_CORDS,
+  nerve: NERVES,
+  muscle: MUSCLES,
+  site: PLEXUS_SITES,
+  division: ['anterior', 'posterior'],
+  from: ['roots', 'trunk', 'cords'],
 };
 
 const seg = (s: unknown): number => SEGMENTS.indexOf(s as (typeof SEGMENTS)[number]);
@@ -44,6 +64,10 @@ function poolFor(key: string, value: string): readonly string[] | undefined {
   if (key === 'compartment') return POOLS.compartment;
   if (key === 'reflex' || key === 'partialReflex') return POOLS.reflex;
   if (key === 'tone') return POOLS.tone;
+  if (key === 'nerve') return POOLS.nerve;
+  if (key === 'trunk') return POOLS.trunk;
+  if (key === 'division') return POOLS.division;
+  if (key === 'from') return POOLS.from;
   return Object.values(POOLS).find((p) => p.includes(value));
 }
 
@@ -52,6 +76,13 @@ function mutantsOf(value: unknown, path: Path): Mutant[] {
   const at = path.join('.');
 
   if (typeof value === 'boolean') return [{ path, value: !value, describe: `${at}: ${value} → ${!value}` }];
+
+  // A count along a nerve (D27): the branch leaves one place earlier or later.
+  if (typeof value === 'number' && key === 'after') {
+    return [value - 1, value + 1]
+      .filter((v) => v >= 0)
+      .map((v) => ({ path, value: v, describe: `${at}: ${value} → ${v}` }));
+  }
 
   if (typeof value === 'string') {
     if (isSeg(value) && key !== 'vertebra') {
@@ -99,7 +130,7 @@ function mutantsOf(value: unknown, path: Path): Mutant[] {
         value: value.filter((_, j) => j !== i),
         describe: `${at}: drop ${v}`,
       }));
-      const added = value.every((v) => POOLS.timepoint?.includes(v))
+      const added = value.length > 0 && value.every((v) => POOLS.timepoint?.includes(v))
         ? TIMEPOINTS.filter((t) => !value.includes(t)).map((t) => ({
             path,
             value: [...value, t],
@@ -162,13 +193,24 @@ if (baseline.length > 0) {
 const mutants: Mutant[] = [];
 collect(KB, [], mutants);
 
-type Result = { row: string; describe: string; killed: boolean; failures: number; threw: boolean };
+type Result = { row: string; describe: string; killed: boolean; failures: number; threw: boolean; byReverse: boolean };
+const REVERSE = [...REVERSE_CASES, ...LIMB_REVERSE_CASES];
+const SLOTS = examSlots(RENDER);
 const results: Result[] = mutants.map((m) => {
+  const base = { row: rowOf(m.path), describe: m.describe };
+  let kb: Kb;
   try {
-    const failures = runAll(CASES, apply(KB, m)).length;
-    return { row: rowOf(m.path), describe: m.describe, killed: failures > 0, failures, threw: false };
+    kb = apply(KB, m);
+    const failures = runAll(CASES, kb).length;
+    if (failures > 0) return { ...base, killed: true, failures, threw: false, byReverse: false };
   } catch {
-    return { row: rowOf(m.path), describe: m.describe, killed: true, failures: 0, threw: true };
+    return { ...base, killed: true, failures: 0, threw: true, byReverse: false };
+  }
+  try {
+    const failures = REVERSE.reduce((n, c) => n + reverseFailures(c, SLOTS, kb).length, 0);
+    return { ...base, killed: failures > 0, failures, threw: false, byReverse: failures > 0 };
+  } catch {
+    return { ...base, killed: true, failures: 0, threw: true, byReverse: true };
   }
 });
 
@@ -200,7 +242,7 @@ writeFileSync(
 const pct = (x: number): string => `${(x * 100).toFixed(1)}%`;
 console.log(`all rows      mutants ${results.length}  killed ${killed}  survived ${survivors.length}  raw score ${pct(rawScore)}`);
 console.log(`sourced rows  mutants ${scored.length}  killed ${scored.filter((r) => r.killed).length}  score ${pct(score)}  (threshold applies here)`);
-console.log(`(${results.filter((r) => r.threw).length} killed by the engine refusing the corrupted input)`);
+console.log(`(${results.filter((r) => r.threw).length} killed by the engine refusing the corrupted input; ${results.filter((r) => r.byReverse).length} only by a reverse examination)`);
 
 const sourcedSurvivors = survivors.filter((s) => !unsourced.has(s.row));
 if (sourcedSurvivors.length > 0) {

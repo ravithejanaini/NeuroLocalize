@@ -6,6 +6,7 @@ import { segmentBounds, segmentMid, segmentTop } from '../geometry/ruler.ts';
 import { CORD_COMPARTMENTS, discAt } from '../geometry/section.ts';
 import type { Shape } from '../geometry/lesion3d.ts';
 import { outline } from '../geometry/outline.ts';
+import { rootExit } from '../geometry/plexus.ts';
 import type { RenderKb } from '../kb/types.ts';
 import { SEGMENTS, SIDES, VERTEBRAE, type Compartment, type Side } from '../kb/vocab.ts';
 
@@ -112,19 +113,11 @@ export function buildAnatomy(render: RenderKb, palette: Palette, layer: HTMLElem
     labels.push({ el, at: new THREE.Vector3(-(maxRadius + 0.7), y, z) });
   });
 
-  // Roots run from their segment to their exit: C1–C7 above the same-numbered vertebra,
-  // C8 below C7 (S26), and caudally below the same-numbered vertebra. Schematic below L5.
-  const exitAt = (k: number): number => {
-    const seg = SEGMENTS[k] ?? '';
-    if (seg.startsWith('C')) return Math.min(k, 6) + (k === 7 ? 1 : 0);
-    const v = VERTEBRAE.indexOf(seg as (typeof VERTEBRAE)[number]);
-    return v >= 0 ? v + 1 : VERTEBRAE.length + 0.5 + (k - SEGMENTS.indexOf('S1')) * 0.45;
-  };
+  // Roots run from their segment to their exit (geometry/plexus.ts).
   for (const side of SIDES) {
-    const sx = side === 'L' ? -1 : 1;
     for (let k = 0; k < SEGMENTS.length; k++) {
-      const from = new THREE.Vector3(sx * r(k), -segmentMid(render, k), 0);
-      const to = new THREE.Vector3(sx * (maxRadius + 0.35), -exitAt(k), -0.1);
+      const from = new THREE.Vector3((side === 'L' ? -1 : 1) * r(k), -segmentMid(render, k), 0);
+      const to = v3(rootExit(render, k, side));
       root.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([from, to]), lineMat(palette.grey, 0.28)));
     }
   }

@@ -93,6 +93,26 @@ situation the freeze exists to catch.
   notes: no Horner syndrome from a lower trunk lesion (R13), and a thumb abductor weakened
   by a C8 root lesion alone (R15).
 
+## A5 — 2026-09-17 — plexus boundaries, from mutation testing
+
+- **Changed:** additions only; no assertion was altered or removed.
+  - `plexus.ts` adds four cases — the C6 and T1 roots alone, the dorsal scapular nerve and
+    the suprascapular nerve — adds assertions to the C5, C7 and C8 root cases, and adds
+    the thumb to what a posterior interosseous lesion leaves intact (S39).
+  - `reverse-plexus.ts` adds one examination: a numb little finger with the medial forearm
+    spared, which only the landmark-as-territory rule (D30) can place.
+- **Why:** the first mutation run over the plexus rows scored 73.9% on sourced rows. Among
+  the survivors were roots and branches no case examined alone: the C6 and T1 roots, the
+  two nerves that leave above the cords, and muscles whose roots were never probed from
+  the neighbouring segment. The same situation as A2: a weak specification, not a missing
+  fact.
+- **How circularity was avoided:** as in A2. Each value was written from the cited source
+  before the new cases were run. Where the sources do not settle a value — the roots of the
+  dorsal web space, the brachioradialis at C5 (C3) — the expectation allows every position
+  the sources leave open rather than the one the engine happens to give.
+- **Knowledge-base and engine changes from the same run** are recorded in `DECISIONS.md`
+  (D34), not here: they changed no expectation.
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -102,7 +122,7 @@ situation the freeze exists to catch.
 | `index.ts` | A2 (exports the boundary cases) |
 | `reverse.ts` | A3 |
 | `types.ts` | A4 |
-| `plexus.ts` | A4 |
-| `reverse-plexus.ts` | A4 |
+| `plexus.ts` | A4, A5 |
+| `reverse-plexus.ts` | A4, A5 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

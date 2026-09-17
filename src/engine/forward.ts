@@ -24,9 +24,15 @@ import {
   type Tone,
 } from '../kb/vocab.ts';
 import { idx, mapLesion, opposite, type Damage, type LesionMap, type LesionRegion } from './lesion.ts';
+import { limbFindings, limbReflex, mapPlexus, type LimbFindings, type PlexusRegion } from './limb.ts';
 import { crossingOffsets, damageAlong, motorRoute, sensoryRoute, type Route } from './routes.ts';
 
 export type { LesionMap, LesionRegion } from './lesion.ts';
+export type { PlexusRegion } from './limb.ts';
+
+/** Anything forward() can be asked about: a region of the cord or roots, or a place beyond them. */
+export type AnyRegion = LesionRegion | PlexusRegion;
+export const isPlexus = (r: AnyRegion): r is PlexusRegion => 'plexus' in r;
 export { mapLesion } from './lesion.ts';
 export type { Element, Route } from './routes.ts';
 export { crossingOffsets, motorRoute, sensoryRoute } from './routes.ts';
@@ -45,7 +51,7 @@ export type Findings = {
   readonly neurogenicShock: NeurogenicShock;
   readonly dysreflexia: Dysreflexia;
   readonly qualifiers: Readonly<Record<Qualifier, boolean>>;
-};
+} & LimbFindings;
 
 export type ForwardOptions = {
   readonly kb?: Kb;
@@ -146,7 +152,9 @@ function hornerFor(map: LesionMap, kb: Kb, x: Side): SignState {
   const [start, end] = [idx(centre[0]), idx(centre[1])];
   const descending = range(0, end).some((k) => map.damage('descending_autonomic', fibres, k) > 0);
   const centreHit = range(start, end).some((k) => map.damage('intermediolateral', x, k) > 0);
-  return descending || centreHit ? 'present' : 'absent';
+  const outflow = idx(kb.autonomic.sympatheticOutflow.root);
+  const rootHit = map.damage(kb.autonomic.sympatheticRootCompartment.compartment, x, outflow) > 0;
+  return descending || centreHit || rootHit ? 'present' : 'absent';
 }
 
 /** Level at which descending autonomic control is cut on both sides, or -1. */
@@ -186,9 +194,10 @@ function dysreflexiaFor(map: LesionMap, kb: Kb, t: Timepoint): Dysreflexia {
   return 'possible';
 }
 
-export function forward(lesion: readonly LesionRegion[], timepoint: Timepoint, options: ForwardOptions = {}): Findings {
+export function forward(lesion: readonly AnyRegion[], timepoint: Timepoint, options: ForwardOptions = {}): Findings {
   const kb = options.kb ?? KB;
-  const map = mapLesion(lesion, kb);
+  const map = mapLesion(lesion.filter((r): r is LesionRegion => !isPlexus(r)), kb);
+  const pmap = mapPlexus(lesion.filter(isPlexus));
 
   const sensory = {} as Record<Side, Record<SensoryModality, Record<Segment, SensoryState>>>;
   const motor = {} as Record<Side, Record<Segment, MotorFinding>>;
@@ -208,7 +217,7 @@ export function forward(lesion: readonly LesionRegion[], timepoint: Timepoint, o
       motor[x][seg] = motorFor(map, kb, timepoint, x, k);
     });
     reflexes[x] = {} as Record<Reflex, ReflexState>;
-    for (const r of REFLEXES) reflexes[x][r] = reflexFor(map, kb, timepoint, x, r);
+    for (const r of REFLEXES) reflexes[x][r] = limbReflex(kb, pmap, x, r, reflexFor(map, kb, timepoint, x, r));
   }
 
   const lowerLimb = kb.regions[kb.observations.romberg.region].span;
@@ -250,7 +259,13 @@ export function forward(lesion: readonly LesionRegion[], timepoint: Timepoint, o
     justAbove !== undefined &&
     SIDES.some((x) => ['lost', 'impaired'].includes(sensory[x].pain_temperature[justAbove]));
 
+  const limb = limbFindings(kb, pmap, {
+    motorHit: (x, s) => motor[x][s].lesion !== 'none',
+    sensory: (x, m, s) => sensory[x][m][s],
+  }, SIDES);
+
   return {
+    ...limb,
     resolvedSegments: map.segments.map((k) => SEGMENTS[k]).filter((s): s is Segment => s !== undefined),
     sensory,
     motor,

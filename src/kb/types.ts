@@ -3,13 +3,19 @@
 import type {
   BladderState,
   Compartment,
+  Muscle,
+  Nerve,
+  PlexusCord,
+  PlexusSite,
   Reflex,
   Segment,
   SensoryModality,
   SensoryState,
+  SkinArea,
   SourceId,
   Timepoint,
   Tone,
+  Trunk,
   Vertebra,
 } from './vocab.ts';
 
@@ -40,6 +46,66 @@ export type Meta = {
 
 type Row<T> = { readonly meta: Meta } & T;
 
+// ─── The upper limb (P4) ───
+export type Division = 'anterior' | 'posterior';
+/** Where a nerve leaves the plexus: straight from the roots, from a trunk, or from cords. */
+export type NerveOrigin =
+  | { readonly from: 'roots' }
+  | { readonly from: 'trunk'; readonly trunk: Trunk }
+  | { readonly from: 'cords'; readonly cords: readonly PlexusCord[] };
+/**
+ * A branch of a nerve. `after` counts the nerve's named lesion places that lie proximal to
+ * the branch, so a lesion at place i (0-based) damages the branch when i < after (D27).
+ */
+export type Supply = { readonly nerve: Nerve; readonly after: number };
+
+export type Plexus = {
+  readonly trunks: Row<{
+    /** The roots that form the plexus; the trunks must divide exactly these between them. */
+    readonly plexusRoots: Span;
+    readonly roots: Readonly<Record<Trunk, Span>>;
+  }>;
+  readonly cords: Row<{ readonly formedBy: Readonly<Record<PlexusCord, readonly Trunk[]>> }>;
+  /** A nerve's own root values are drawn, not computed with (D29); they live in the render KB. */
+  readonly nerves: Readonly<
+    Record<
+      Nerve,
+      Row<{
+        readonly origin: NerveOrigin;
+        /** Named lesion places along the nerve, proximal to distal. */
+        readonly sites: readonly PlexusSite[];
+      }>
+    >
+  >;
+  readonly muscles: Readonly<
+    Record<
+      Muscle,
+      Row<{
+        readonly supply: Supply;
+        /** From the myotome sources, not from the nerve (D29). */
+        readonly roots: Span;
+        readonly disputedRoots?: Span;
+        /** The single-segment strength test this muscle answers (D31). */
+        readonly myotome?: Segment;
+      }>
+    >
+  >;
+  readonly skin: Readonly<
+    Record<
+      SkinArea,
+      Row<{
+        readonly supply: readonly Supply[];
+        /** Null when no source read gives the patch's roots; disputedRoots then lists the nerve's. */
+        readonly roots: Span | null;
+        readonly disputedRoots?: Span;
+        /** The dermatome landmark this patch is (D30). */
+        readonly landmark?: Segment;
+      }>
+    >
+  >;
+  readonly reflexMuscles: Row<{ readonly muscles: Readonly<Partial<Record<Reflex, Muscle>>> }>;
+};
+
 export type Kb = {
   readonly pathways: {
     readonly posteriorColumn: Row<{ readonly ascendsOn: Laterality }>;
@@ -59,6 +125,9 @@ export type Kb = {
     readonly ciliospinal: Row<{ readonly centre: Span; readonly firstOrderRunsOn: Laterality }>;
     readonly micturitionCentre: Row<{ readonly span: Span; readonly arc: readonly Compartment[] }>;
     readonly bladderControl: Row<{ readonly requiresBilateralLesion: boolean }>;
+    /** The root whose loss interrupts the second-order oculosympathetic neuron (D33). */
+    readonly sympatheticOutflow: Row<{ readonly root: Segment }>;
+    readonly sympatheticRootCompartment: Row<{ readonly compartment: Compartment }>;
   };
   readonly reflexes: { readonly [R in Reflex]: Row<{ readonly span: Span }> };
   readonly vertebrae: readonly Row<{ readonly vertebra: Vertebra; readonly segments: Span }>[];
@@ -67,6 +136,7 @@ export type Kb = {
     readonly lowerLimb: Row<{ readonly span: Span }>;
     readonly sacral: Row<{ readonly span: Span }>;
   };
+  readonly plexus: Plexus;
   readonly observations: {
     readonly spinalShock: Row<{
       readonly reflexesAbsent: readonly Timepoint[];
@@ -110,6 +180,30 @@ export type LaminationProfile = {
 
 export type Disc = { readonly x: number; readonly z: number; readonly r: number };
 
+/** A point in the scene, for the patient's left side (x negative); the right mirrors x. */
+export type LimbPoint = readonly [x: number, y: number, z: number];
+/** A point along a nerve: a place a lesion can sit, or where branches leave. */
+export type Waypoint = {
+  readonly at: LimbPoint;
+  readonly site?: PlexusSite;
+  readonly branches?: readonly (Muscle | SkinArea)[];
+};
+export type LimbLayout = {
+  /** Trunks from where their roots meet to where they divide. */
+  readonly trunks: Readonly<Record<Trunk, readonly LimbPoint[]>>;
+  /** Cords from where their divisions meet to where their nerves leave. */
+  readonly cords: Readonly<Record<PlexusCord, readonly LimbPoint[]>>;
+  /** Each nerve from where it leaves its origin to its last branch. */
+  readonly nerves: Readonly<Record<Nerve, readonly Waypoint[]>>;
+  /** Where each muscle and patch of skin is drawn. */
+  readonly targets: Readonly<Record<Muscle | SkinArea, LimbPoint>>;
+  readonly clavicle: readonly LimbPoint[];
+  readonly firstRib: readonly LimbPoint[];
+  readonly artery: readonly LimbPoint[];
+  readonly scalenes: { readonly anterior: readonly LimbPoint[]; readonly middle: readonly LimbPoint[] };
+  readonly bones: readonly (readonly LimbPoint[])[];
+};
+
 /** A point on the schematic front-view body, for the patient's left side. */
 export type BodyPoint = { readonly x: number; readonly y: number };
 export type Landmark = { readonly segment: Segment; readonly place: string; readonly at: readonly BodyPoint[] };
@@ -122,8 +216,22 @@ export type MyotomeRow = {
 };
 
 export type RenderKb = {
+  /** Which division of each trunk runs to each cord (S34). */
+  readonly divisions: Row<{ readonly ofCord: Readonly<Record<PlexusCord, Division>> }>;
+  /**
+   * The plexus and arm in the scene. Positions are schematic and the arm is drawn at half
+   * scale; the relations — trunks between the scalenes, divisions behind the clavicle,
+   * cords named around the axillary artery — are the sourced part, and tests check them.
+   */
+  readonly limb: Row<LimbLayout>;
+  /** Root values of each nerve, as drawn. Muscles and skin carry their own (D29). */
+  readonly nerveRoots: Row<{
+    readonly nerves: Readonly<Record<Nerve, { readonly roots: Span; readonly disputedRoots?: Span }>>;
+  }>;
   readonly dermatomeLandmarks: Row<{ readonly landmarks: readonly Landmark[] }>;
   readonly saddle: Row<{ readonly span: Span; readonly place: string; readonly at: BodyPoint }>;
+  /** Nerve territories that are not dermatome landmarks, on the same body map (D30). */
+  readonly skinPatches: Row<{ readonly at: Readonly<Partial<Record<SkinArea, BodyPoint>>> }>;
   readonly myotomes: Row<{ readonly rows: readonly MyotomeRow[] }>;
   readonly cord: Row<{
     readonly lengthCm: Range;

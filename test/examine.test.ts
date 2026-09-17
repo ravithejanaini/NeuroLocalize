@@ -6,6 +6,7 @@ import { RENDER } from '../src/kb/render.ts';
 import { candidatesHtml, examBodySvg, examTables, nextValue, slotLabel, suggestionHtml } from '../src/render/examine.ts';
 import { examSlots } from '../src/render/slots.ts';
 import { bodySilhouetteSvg } from '../src/render/svg.ts';
+import { settledC6 } from './fixtures.ts';
 
 const SLOTS = examSlots(RENDER);
 const keysIn = (html: string): string[] => [...html.matchAll(/data-slot="([^"]+)"/g)].map((m) => m[1] ?? '');
@@ -26,9 +27,11 @@ describe('examination entry', () => {
     assert.deepEqual([...offered].sort(), SLOTS.map(slotKey).sort());
   });
 
-  it('draws one pressable mark per landmark point, both sides, plus the saddle', () => {
+  it('draws one pressable mark per landmark point and nerve territory, both sides, plus the saddle', () => {
     const svg = examBodySvg(RENDER, new Map(), 'pain_temperature', bodySilhouetteSvg('x'));
-    const points = RENDER.dermatomeLandmarks.landmarks.reduce((n, l) => n + l.at.length, 0) + 1;
+    // landmark points, the saddle, and the nerve territories that are not landmarks (D30)
+    const points =
+      RENDER.dermatomeLandmarks.landmarks.reduce((n, l) => n + l.at.length, 0) + 1 + Object.keys(RENDER.skinPatches.at).length;
     assert.equal((svg.match(/class="exdot /g) ?? []).length, points * 2);
     assert.equal((svg.match(/role="button" tabindex="0"/g) ?? []).length, points * 2, 'every mark is keyboard-reachable');
   });
@@ -80,8 +83,8 @@ describe('examination results', () => {
 
   it('says so when the findings already settle it', () => {
     prepareSync('chronic');
-    const f = findingsOf('reverse-radiculopathy-C6');
-    assert.match(suggestionHtml(RENDER, reverse([...f.values()], 'chronic', SLOTS), f.size), /already settle it/);
+    const obs = settledC6([...findingsOf('reverse-radiculopathy-C6').values()]);
+    assert.match(suggestionHtml(RENDER, reverse(obs, 'chronic', SLOTS), obs.length), /already settle it/);
   });
 
   it('names the suggested test in words and shows what each result would mean', () => {
