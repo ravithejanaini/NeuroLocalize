@@ -511,3 +511,11 @@ front at its own camera station, schematic and not to scale, which the stage say
 - *Levels no case had lesioned* — the lemnisci, sympathetic fibres, cerebellar peduncle and
   vestibular nuclei above the medulla, the basis alone, the capsule by region — are covered
   by amendment A8.
+
+**D47 — P5 closes at 94.9% on sourced rows.** 1,889 sourced mutants, 1,792 killed — 1,314
+of them by the engine refusing a part its level does not hold, which tests the structure
+rather than the clinical facts. The brain survivors are swaps between parts that every
+sourced lesion takes together: the six parts of the lateral medulla, the motor and sensory
+cortex, the genu and the posterior limb. Telling them apart would need lesions of one part
+alone that no source read describes, so the swaps stay recorded rather than tested with
+invented expectations.
