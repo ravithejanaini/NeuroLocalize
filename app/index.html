@@ -1,5 +1,5 @@
 <title>NeuroLocalize</title>
-<meta name="description" content="Place a lesion from the spinal cord to the nerves of the hand and watch which signals fail to arrive; or enter an examination and see where the lesion could be.">
+<meta name="description" content="Place a lesion anywhere from the cortex to the nerves of the hand and watch which signals fail to arrive; or enter an examination and see where the lesion could be.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <script type="importmap">
 { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js" } }
@@ -56,6 +56,14 @@ button,input{font:inherit;color:inherit}
 .lbl-seg.is-hit{color:var(--lesion);font-weight:600}
 .lbl-limb{color:var(--nerve-glow);font-size:9.5px;opacity:.9}
 .lbl-land{color:var(--stage-dim);font-style:italic}
+.lbl-brain{color:var(--stage-text);font-size:9.5px}
+.lbl-homunculus{color:var(--cst-glow);opacity:.85}
+.head{border-collapse:collapse;width:100%;font-family:var(--f-mono);font-size:10.5px}
+.head th{text-align:left;font-weight:400;color:var(--ink2);font-family:var(--f-body);font-size:12px;padding:2px 6px 2px 0}
+.head thead th{font-family:var(--f-mono);font-size:9.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em}
+.head td{padding:2px 6px 2px 0}
+.head tr.calm th,.head tr.calm td{color:var(--ink3)}
+.crossed{font-size:13px;margin:0 0 8px;padding:6px 10px;border-left:3px solid var(--ink);background:var(--sunk)}
 
 .hud{position:absolute;display:flex;gap:6px;flex-wrap:wrap;font-family:var(--f-mono);font-size:10.5px;color:var(--stage-text)}
 .stations{top:12px;left:12px}
@@ -301,8 +309,9 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
       <button type="button" data-station="axial" aria-pressed="false">Axial</button>
       <button type="button" data-station="side" aria-pressed="false">Side</button>
       <button type="button" data-station="arm" aria-pressed="false">Arm</button>
+      <button type="button" data-station="brain" aria-pressed="false">Brain</button>
     </div>
-    <p class="hud hint">Drag to turn · scroll or pinch to zoom · shift-drag to move along the cord · keys 1–5</p>
+    <p class="hud hint">Drag to turn · scroll or pinch to zoom · shift-drag to move along the cord · keys 1–6</p>
     <ul class="hud legend">
       <li><i style="background:var(--dc-glow)"></i>Posterior columns</li>
       <li><i style="background:var(--stt-glow)"></i>Spinothalamic</li>
@@ -318,6 +327,7 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
         <span>Speeds inside the cord illustrative</span>
         <span>Ruler interpolated</span>
         <span>Arm shortened, plexus schematic</span>
+        <span>Brain schematic, not to scale</span>
       </div>
     </div>
   </div>
@@ -340,8 +350,8 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
       </div>
       <label class="check"><input type="checkbox" id="by-vertebra" aria-label="Place the lesion by vertebra"> Place by vertebra, and see which segments it reaches</label>
       <div class="opt" id="limb-side-row" hidden>
-        <span>Which arm</span>
-        <span class="seg" role="radiogroup" aria-label="Which arm">
+        <span>Which side</span>
+        <span class="seg" role="radiogroup" aria-label="Which side">
           <label><input type="radio" name="limb-side" value="L" checked>Left</label>
           <label><input type="radio" name="limb-side" value="R">Right</label>
         </span>
@@ -430,7 +440,7 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
 
     <section class="sec" data-sec="model">
       <h2 class="sec-t">Keys</h2>
-      <p class="keys"><kbd>1</kbd>&ndash;<kbd>5</kbd> camera &middot; <kbd>[</kbd> <kbd>]</kbd> move the lesion &middot; <kbd>,</kbd> <kbd>.</kbd> move the slice &middot; drag to turn, pinch or scroll to zoom</p>
+      <p class="keys"><kbd>1</kbd>&ndash;<kbd>6</kbd> camera &middot; <kbd>[</kbd> <kbd>]</kbd> move the lesion &middot; <kbd>,</kbd> <kbd>.</kbd> move the slice &middot; drag to turn, pinch or scroll to zoom</p>
     </section>
 
     <section class="sec" data-sec="model">
@@ -440,6 +450,7 @@ kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule2);borde
         <li>Time is slowed <b class="dilation">333×</b>. Speed ratios between fibres are kept exactly: a C-fibre pulse really is fifteen times slower than an Aδ pulse.</li>
         <li>Peripheral and corticospinal speeds are sourced. Speeds of the posterior-column and spinothalamic axons inside the cord are not, and are drawn at one illustrative rate.</li>
         <li>The segment-to-vertebra ruler is interpolated between sourced anchors, with every vertebra drawn the same height.</li>
+        <li>The brain is schematic and not to scale. What is sourced is the order of levels, which parts lie medially or laterally, which side each tract serves, and the homunculus from leg to face.</li>
         <li>The arm is drawn shortened and the plexus is schematic. What is sourced is the order of things: trunks between the scalenes and over the first rib, divisions behind the clavicle, cords named around the axillary artery, and where each branch leaves its nerve.</li>
       </ul>
     </section>

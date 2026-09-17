@@ -258,6 +258,22 @@ export type LimbLayout = {
   readonly bones: readonly (readonly LimbPoint[])[];
 };
 
+/**
+ * The brain above C1, for the patient's left (x negative); the right mirrors x. Each level
+ * has a height and a drawn radius; each part a position at its level's height, in the
+ * level's own units (x lateral, z dorsal).
+ */
+export type BrainLayout = {
+  readonly levels: Readonly<Record<BrainLevel, { readonly y: number; readonly height: number; readonly radius: number }>>;
+  readonly parts: Readonly<Partial<Record<`${BrainLevel}:${BrainCompartment}`, LimbPoint>>>;
+  /** Where each body region sits on the cortical strips (motor and sensory share x and y). */
+  readonly homunculus: Readonly<Record<BodyRegion, LimbPoint>>;
+  /** Where the crossings happen: the pyramids and the internal arcuate fibres. */
+  readonly decussationY: number;
+  /** Where the face is drawn, for facial pulses. */
+  readonly face: LimbPoint;
+};
+
 /** A point on the schematic front-view body, for the patient's left side. */
 export type BodyPoint = { readonly x: number; readonly y: number };
 export type Landmark = { readonly segment: Segment; readonly place: string; readonly at: readonly BodyPoint[] };
@@ -278,6 +294,7 @@ export type RenderKb = {
    * cords named around the axillary artery — are the sourced part, and tests check them.
    */
   readonly limb: Row<LimbLayout>;
+  readonly brainLayout: Row<BrainLayout>;
   /** Root values of each nerve, as drawn. Muscles and skin carry their own (D29). */
   readonly nerveRoots: Row<{
     readonly nerves: Readonly<Record<Nerve, { readonly roots: Span; readonly disputedRoots?: Span }>>;

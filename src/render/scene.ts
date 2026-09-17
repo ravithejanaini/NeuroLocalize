@@ -34,7 +34,7 @@ const lineMat = (color: string, opacity: number): THREE.LineBasicMaterial =>
   new THREE.LineBasicMaterial({ color, transparent: true, opacity });
 
 /** `limb` labels belong to the arm and are shown only when the camera is there. */
-export type Label = { readonly el: HTMLElement; readonly at: THREE.Vector3; readonly limb?: boolean };
+export type Label = { readonly el: HTMLElement; readonly at: THREE.Vector3; readonly limb?: boolean; readonly brain?: boolean };
 
 export type Anatomy = {
   readonly root: THREE.Group;

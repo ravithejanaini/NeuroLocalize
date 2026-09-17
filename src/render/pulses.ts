@@ -15,7 +15,9 @@ import {
   type Path,
   type PathOptions,
 } from '../geometry/paths.ts';
+import { mapBrain, type BrainMap } from '../engine/brain.ts';
 import { mapPlexus, type PlexusMap } from '../engine/limb.ts';
+import { faceMotorPath, faceSensoryPath } from '../geometry/brain.ts';
 import { limbFate, limbPath, suppliesOf, TARGETS, type LimbPath, type Target } from '../geometry/plexus.ts';
 import type { Kb, RenderKb, Span } from '../kb/types.ts';
 import { MUSCLES, SEGMENTS, type Muscle, type Segment, type Side, type SkinArea } from '../kb/vocab.ts';
@@ -24,7 +26,7 @@ import type { Palette } from './scene.ts';
 /** Real conduction crosses the cord in milliseconds; everything is slowed by this (D15). */
 export const DILATION = 333;
 
-type Kind = 'pain' | 'posterior' | 'motor';
+type Kind = 'pain' | 'posterior' | 'motor' | 'face-sense' | 'face-motor';
 
 /** The arm part of a pulse: where its plexus route sits within the whole path. */
 type LimbLeg = {
@@ -93,6 +95,7 @@ export class PulseField {
   private readonly cache = new Map<string, { path: Path; times: number[] }>();
   private map: LesionMap | null = null;
   private pmap: PlexusMap = mapPlexus([]);
+  private bmap: BrainMap;
   private readonly limbCache = new Map<string, { path: Path; times: number[]; limb: LimbLeg } | null>();
   private options: PathOptions = { model: 'classical', painFibre: 'adelta' };
   private frozen = false;
@@ -111,6 +114,7 @@ export class PulseField {
     this.render = render;
     this.palette = palette;
     this.max = max;
+    this.bmap = mapBrain(kb, []);
     const material = new THREE.MeshBasicMaterial({
       transparent: true,
       depthWrite: false,
@@ -122,9 +126,10 @@ export class PulseField {
     scene.add(this.mesh);
   }
 
-  setLesion(map: LesionMap, pmap: PlexusMap = mapPlexus([])): void {
+  setLesion(map: LesionMap, pmap: PlexusMap = mapPlexus([]), bmap: BrainMap = mapBrain(this.kb, [])): void {
     this.map = map;
     this.pmap = pmap;
+    this.bmap = bmap;
     for (const p of this.pulses) {
       p.fate = this.fateOf(p.path, p.sacral, p.limb);
       p.flashed = false;
@@ -136,7 +141,7 @@ export class PulseField {
   private fateOf(path: Path, sacral: boolean, limb?: LimbLeg): Fate {
     const map = this.map;
     if (!map) return { diesAtPoint: -1, dimmed: false };
-    const cord = fate(map, this.kb, path, sacral);
+    const cord = fate(map, this.kb, path, sacral, this.bmap);
     if (!limb) return cord;
     const arm = limbFate(this.pmap, limb.lp, limb.side);
     if (limb.dir === 'motor') {
@@ -201,7 +206,7 @@ export class PulseField {
         const offset = mp.points.length - 1;
         const points = [...mp.points.slice(0, offset), ...lp.points];
         const legs = mp.legs.map((l, i) => (i === mp.legs.length - 1 ? { ...l, to: points.length - 1 } : l));
-        const path: Path = { points, legs, elementPoint: mp.elementPoint, route: mp.route };
+        const path: Path = { points, legs, elementPoint: mp.elementPoint, route: mp.route, brain: mp.brain };
         entry = { path, times: timeline(this.render, path), limb: { dir: 'motor', lp, side, offset } };
       } else {
         const sp = sensoryPath(this.kb, this.render, side, 'posterior_column', s, 0, this.options);
@@ -215,6 +220,7 @@ export class PulseField {
           ],
           elementPoint: sp.elementPoint.map((i) => i - 1 + n),
           route: sp.route,
+          brain: sp.brain.map((e) => ({ ...e, point: e.point - 1 + n })),
         };
         entry = { path, times: timeline(this.render, path), limb: { dir: 'sense', lp, side, offset: 0 } };
       }
@@ -251,8 +257,35 @@ export class PulseField {
     });
   }
 
+  /** A pulse to or from the face, through the trigeminal or facial routes. */
+  private spawnFace(t = 0, pick = Math.random): void {
+    if (!this.map || this.pulses.length >= this.max) return;
+    const side: Side = pick() < 0.5 ? 'L' : 'R';
+    const kind: Kind = pick() < 0.5 ? 'face-sense' : 'face-motor';
+    const key = `face|${kind}|${side}`;
+    let entry = this.cache.get(key);
+    if (!entry) {
+      const g = kind === 'face-sense' ? faceSensoryPath(this.kb, this.render, side) : faceMotorPath(this.kb, this.render, side);
+      const path: Path = {
+        points: g.points,
+        legs: [{ from: 0, to: g.points.length - 1, speed: kind === 'face-sense' ? 'abeta' : 'corticospinal' }],
+        elementPoint: [],
+        route: { elements: [], crossesAt: -1 },
+        brain: g.elements,
+      };
+      entry = { path, times: timeline(this.render, path) };
+      this.cache.set(key, entry);
+    }
+    this.pulses.push({ kind, path: entry.path, times: entry.times, sacral: false, t, fate: this.fateOf(entry.path, false), flashed: false });
+  }
+
   private spawnRandom(): void {
-    if (Math.random() < 0.35) {
+    const roll = Math.random();
+    if (roll < 0.12) {
+      this.spawnFace();
+      return;
+    }
+    if (roll < 0.42) {
       this.spawnLimb();
       return;
     }
@@ -274,6 +307,12 @@ export class PulseField {
       seed = (seed * 16807) % 2147483647;
       return seed / 2147483647;
     };
+    for (let i = 0; i < 6; i++) {
+      const before = this.pulses.length;
+      this.spawnFace(0, pick);
+      const p = this.pulses[before];
+      if (p) p.t = (p.times[p.times.length - 1] ?? 0) * (0.3 + pick() * 0.6);
+    }
     for (let i = 0; i < 40; i++) {
       const before = this.pulses.length;
       this.spawnLimb(0, pick);
@@ -304,7 +343,7 @@ export class PulseField {
   }
 
   private hue(kind: Kind): string {
-    return kind === 'pain' ? this.palette.stt : kind === 'posterior' ? this.palette.dc : this.palette.cst;
+    return kind === 'pain' || kind === 'face-sense' ? this.palette.stt : kind === 'posterior' ? this.palette.dc : this.palette.cst;
   }
 
   update(dt: number, camera: THREE.Camera): void {

@@ -1,9 +1,11 @@
 // Engine routes as 3D polylines, with the speed of every leg. The render animates these;
 // it never builds a route of its own (D18).
+import type { BrainMap } from '../engine/brain.ts';
 import { sensoryRoute, motorRoute, type LesionMap, type Route } from '../engine/forward.ts';
 import { damageAlong } from '../engine/routes.ts';
 import type { Kb, LaminationModel, RenderKb } from '../kb/types.ts';
 import { SEGMENTS, type SensoryModality, type Side } from '../kb/vocab.ts';
+import { ascendingTail, descendingHead, type BrainElement } from './brain.ts';
 import { segmentMid } from './ruler.ts';
 import { fibrePoint, widthCm } from './section.ts';
 
@@ -17,15 +19,14 @@ export type Path = {
   /** Index into `points` for each element of the route. */
   readonly elementPoint: readonly number[];
   readonly route: Route;
+  /** Parts of the brain the path passes, with their points (D39). */
+  readonly brain: readonly BrainElement[];
 };
 
 /** Drawn cross-sections are this many times wider than true, so tracts can be told apart. */
 export const EXAGGERATION = 3;
 /** Distance of skin and muscle from the cord axis, in vertebral units. Schematic. */
 const PERIPHERY = 2.4;
-/** Height above the top of C1 at which the brainstem crossings are drawn. */
-const MEDULLA = 0.8;
-const BRAIN = 1.6;
 
 export const cmPerUnit = (render: RenderKb): number =>
   (render.cord.lengthCm[0] + render.cord.lengthCm[1]) / 2 / render.ruler.cordEndsAtVertebra;
@@ -62,17 +63,10 @@ export function sensoryPath(
     if (p) points.push(place(render, e.segment, p));
   }
   const peripheralEnd = 1;
-  const last = points[points.length - 1];
-  if (last) {
-    if (modality === 'posterior_column') {
-      // Up to the dorsal column nuclei, then across in the medulla.
-      points.push({ x: last.x, y: MEDULLA, z: last.z });
-      points.push({ x: -last.x, y: MEDULLA + 0.25, z: last.z * 0.5 });
-      points.push({ x: -last.x, y: BRAIN, z: 0 });
-    } else {
-      points.push({ x: last.x, y: BRAIN, z: 0 });
-    }
-  }
+  const last = points[points.length - 1] ?? { x: 0, y: 0, z: 0 };
+  // On up through the brainstem and thalamus to the cortex.
+  const tail = ascendingTail(kb, render, modality, x, s, last, points.length);
+  points.push(...tail.points);
   const fibre: SpeedClass = modality === 'posterior_column' ? 'abeta' : options.painFibre;
   return {
     points,
@@ -82,6 +76,7 @@ export function sensoryPath(
     ],
     elementPoint,
     route,
+    brain: tail.elements,
   };
 }
 
@@ -91,11 +86,9 @@ export function motorPath(kb: Kb, render: RenderKb, x: Side, s: number, options:
   const tractSide = firstTract?.side ?? x;
   const top = fibrePoint(render, 'lateral_cst', tractSide, 0, s, options.model) ?? { x: 0, z: 0 };
   const start = place(render, 0, top);
-  const points: Vec3[] = [
-    { x: -start.x, y: BRAIN, z: 0 },
-    { x: -start.x, y: MEDULLA + 0.25, z: start.z },
-    { x: start.x, y: MEDULLA, z: start.z },
-  ];
+  // From the cortex, down through the capsule and brainstem, across at the pyramids.
+  const head = descendingHead(kb, render, x, Math.min(s, SEGMENTS.length - 1), start);
+  const points: Vec3[] = [...head.points];
   const elementPoint: number[] = [];
   for (const e of route.elements) {
     const p = fibrePoint(render, e.compartment, e.side, e.segment, s, options.model);
@@ -112,20 +105,30 @@ export function motorPath(kb: Kb, render: RenderKb, x: Side, s: number, options:
     ],
     elementPoint,
     route,
+    brain: head.elements,
   };
 }
 
 export type Fate = { readonly diesAtPoint: number; readonly dimmed: boolean };
 
-/** Where a pulse on this path stops, and whether it arrives weakened. */
-export function fate(map: LesionMap, kb: Kb, path: Path, inputIsSacral: boolean): Fate {
+/**
+ * Where a pulse on this path stops, and whether it arrives weakened. Cord and brain damage
+ * are met in the order the pulse travels, which the point indices record.
+ */
+export function fate(map: LesionMap, kb: Kb, path: Path, inputIsSacral: boolean, bmap?: BrainMap): Fate {
+  const met: { point: number; damage: number }[] = path.route.elements.map((e, i) => ({
+    point: path.elementPoint[i] ?? 0,
+    damage: damageAlong(map, kb, e, inputIsSacral),
+  }));
+  if (bmap && !bmap.empty) {
+    for (const e of path.brain) met.push({ point: e.point, damage: bmap.damage(e.level, e.compartment, e.side, e.region) });
+  }
+  // The cord's own order is kept for equal points; the sort is stable.
+  met.sort((a, b) => a.point - b.point);
   let dimmed = false;
-  for (let i = 0; i < path.route.elements.length; i++) {
-    const e = path.route.elements[i];
-    if (!e) continue;
-    const d = damageAlong(map, kb, e, inputIsSacral);
-    if (d === 2) return { diesAtPoint: path.elementPoint[i] ?? 0, dimmed };
-    if (d === 1) dimmed = true;
+  for (const m of met) {
+    if (m.damage === 2) return { diesAtPoint: m.point, dimmed };
+    if (m.damage === 1) dimmed = true;
   }
   return { diesAtPoint: -1, dimmed };
 }

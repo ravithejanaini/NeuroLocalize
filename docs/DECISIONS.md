@@ -487,3 +487,12 @@ indeterminate (S64 says "milder" without a side).
 
 **R25** — The corticobulbar fibres to the hypoglossal nucleus are drawn running with the
 pyramid to the medulla. No source read says where they leave the corticospinal tract.
+
+**D45 — Pulses run the whole neuraxis.** Motor pulses now start in the motor cortex at their
+segment's homunculus region and descend through the capsule, peduncle, basis and pyramid,
+crossing at the decussation before entering the cord; sensory pulses leave the cord through
+the medial lemniscus (after the internal arcuate crossing) or the spinothalamic tract to VPL,
+the capsule and the sensory cortex. Facial pulses follow the trigeminal and corticobulbar
+routes. `fate()` meets cord and brain damage in the order the pulse travels, and a test holds
+every drawn pulse to the engine's verdict for all ten A7 lesions. The brain is drawn from the
+front at its own camera station, schematic and not to scale, which the stage says.

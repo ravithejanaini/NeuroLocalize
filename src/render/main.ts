@@ -1,7 +1,9 @@
 // Entry point: state, controls, camera and the render loop, in two modes — placing a lesion
 // and seeing its findings, or entering findings and seeing where the lesion could be.
 import * as THREE from 'three';
-import { forward, isCord, isPlexus, mapLesion, type AnyRegion, type PlexusRegion } from '../engine/forward.ts';
+import { forward, isBrain, isCord, isPlexus, mapLesion, type AnyRegion, type PlexusRegion } from '../engine/forward.ts';
+import { mapBrain } from '../engine/brain.ts';
+import { territoryRegions } from '../engine/hypotheses.ts';
 import { mapPlexus } from '../engine/limb.ts';
 import { hypotheses, type Hypothesis } from '../engine/hypotheses.ts';
 import {
@@ -40,6 +42,7 @@ import { Panel } from './panel.ts';
 import { PRESETS, type Preset } from './presets.ts';
 import { DILATION, PulseField } from './pulses.ts';
 import { buildAnatomy, lesionMidY, type Palette } from './scene.ts';
+import { buildBrain } from './brain3d.ts';
 import { buildLimb } from './limb3d.ts';
 import { examSlots } from './slots.ts';
 import { bodySilhouetteSvg, sliceSvg } from './svg.ts';
@@ -125,7 +128,9 @@ const anatomy = buildAnatomy(RENDER, palette, labelLayer);
 scene.add(anatomy.root);
 const limb = buildLimb(KB, RENDER, palette, labelLayer);
 scene.add(limb.root);
-const allLabels = [...anatomy.labels, ...limb.labels];
+const brain = buildBrain(KB, RENDER, palette, labelLayer);
+scene.add(brain.root);
+const allLabels = [...anatomy.labels, ...limb.labels, ...brain.labels];
 /** The side the arm station looks at. */
 let armSide: Side = 'L';
 const pulses = new PulseField(scene, KB, RENDER, palette);
@@ -155,6 +160,9 @@ function station(name: string): View {
       return { theta: 0, phi: 0.06, radius: 5.5, y: -segmentMid(RENDER, sliceLevel()), x: 0 };
     case 'side':
       return { theta: -Math.PI / 2, phi: Math.PI / 2, radius: 12, y, x: 0 };
+    case 'brain':
+      // From the front, as the body map is drawn.
+      return { theta: Math.PI + 0.35, phi: 1.45, radius: 30, y: 4.6, x: 0 };
     case 'arm':
       // From the front, as the body map is drawn: the patient's left on the viewer's right,
       // turned a little toward the chosen arm.
@@ -242,6 +250,8 @@ type Shown = { regions: readonly AnyRegion[]; shape: Shape | null; top: number; 
 function showLesion(lesion: Shown): void {
   const cord = lesion.regions.filter(isCord);
   const plexus = lesion.regions.filter((r): r is PlexusRegion => isPlexus(r));
+  const bmap = mapBrain(KB, lesion.regions.filter(isBrain));
+  brain.setLesion(bmap);
   const map = mapLesion(cord, KB);
   limb.setLesions(plexus.flatMap((r) => r.sides.map((side) => ({ site: r.plexus, side }))));
   currentSegments = lesion.shape ? segmentsBetween(RENDER, lesion.top, lesion.bottom) : [...map.segments];
@@ -250,7 +260,7 @@ function showLesion(lesion: Shown): void {
   const inside = lesion.shape !== null && currentSegments.includes(k);
   anatomy.setLesion(lesion.shape, lesion.top, lesion.bottom, lesion.shape ? currentSegments : []);
   anatomy.setSlice(k, inside);
-  pulses.setLesion(map, mapPlexus(plexus));
+  pulses.setLesion(map, mapPlexus(plexus), bmap);
 
   $('#slice').innerHTML = sliceSvg(RENDER, k, state.model, inside ? lesion.shape : null);
   $('#slice-cap').textContent = `${SEGMENTS[k] ?? ''} — ${
@@ -260,6 +270,8 @@ function showLesion(lesion: Shown): void {
         : 'outside the lesion'
       : plexus.length && !cord.length
         ? 'this lesion lies beyond the roots; the cord is untouched'
+        : !cord.length && lesion.regions.some(isBrain)
+          ? 'this lesion lies above the cord; every segment here is intact, and what it carries is cut higher up'
         : 'this lesion selects tracts or roots, not a place in the cord'
   }`;
   $<HTMLInputElement>('#slice-level').value = String(k);
@@ -274,6 +286,7 @@ function placedLesion(): Shown {
   if (p.kind === 'limb') {
     return { regions: [{ plexus: p.site, sides: [state.limbSide], severity: 'complete' }], shape: null, top: 0, bottom: 0 };
   }
+  if (p.kind === 'brain') return { regions: territoryRegions(KB, p.territory, state.limbSide), shape: null, top: 0, bottom: 0 };
   let top: number;
   let bottom: number;
   if (state.byVertebra) {
@@ -291,6 +304,7 @@ function placedLesion(): Shown {
 function levelReadout(): string {
   if (state.preset.kind === 'system') return 'Set by the pattern';
   if (state.preset.kind === 'limb') return `${state.limbSide === 'L' ? 'Left' : 'Right'} ${SITE_NAME[state.preset.site]} — beyond the roots`;
+  if (state.preset.kind === 'brain') return `${state.limbSide === 'L' ? 'Left' : 'Right'} ${SITE_NAME[state.preset.territory]} — above the cord`;
   if (state.byVertebra) {
     const v = VERTEBRAE[state.level] ?? '';
     const segs = currentSegments.map((k) => SEGMENTS[k]);
@@ -313,7 +327,7 @@ function applyPlace(): void {
 
   const focal = state.preset.kind === 'focal';
   for (const id of ['#level', '#extent', '#by-vertebra']) ($(id) as HTMLInputElement).disabled = !focal;
-  $('#limb-side-row').hidden = state.preset.kind !== 'limb';
+  $('#limb-side-row').hidden = state.preset.kind !== 'limb' && state.preset.kind !== 'brain';
   const level = $<HTMLInputElement>('#level');
   level.max = String((state.byVertebra ? VERTEBRAE.length : SEGMENTS.length) - 1);
   level.value = String(state.level);
@@ -341,6 +355,7 @@ function hypothesisLesion(h: Hypothesis): Shown {
 }
 
 let preparing: Promise<void> | null = null;
+let lastRepIsBrain = false;
 
 function applyExamine(): void {
   const t = state.timepoint;
@@ -387,6 +402,7 @@ function applyExamine(): void {
     limb.setFindings(forward(rep.regions, t));
     const at = rep.regions.find(isPlexus);
     if (at?.sides[0]) armSide = at.sides[0];
+    lastRepIsBrain = rep.regions.some(isBrain);
   } else {
     showLesion({ regions: [], shape: null, top: 0, bottom: 0 });
     limb.setFindings(null);
@@ -443,7 +459,7 @@ presetList.innerHTML = PRESETS.map((p, i) => {
   const heading =
     PRESETS[i - 1]?.kind === p.kind
       ? ''
-      : `<div class="divider">${p.kind === 'focal' ? 'Placed in space' : p.kind === 'system' ? 'Selects tracts or roots' : 'Beyond the roots'}</div>`;
+      : `<div class="divider">${p.kind === 'focal' ? 'Placed in space' : p.kind === 'system' ? 'Selects tracts or roots' : p.kind === 'limb' ? 'Beyond the roots' : 'Above the cord'}</div>`;
   return `${heading}<button type="button" class="preset" data-preset="${p.id}" aria-pressed="false" aria-label="${p.label} — ${p.pattern}">
     <span class="preset-label">${p.label}</span><span class="preset-pattern">${p.pattern}</span></button>`;
 }).join('');
@@ -462,7 +478,7 @@ function choose(p: Preset): void {
   });
   if (p.kind === 'limb') armSide = state.limbSide;
   apply();
-  go(p.kind === 'focal' ? 'lesion' : p.kind === 'limb' ? 'arm' : 'whole');
+  go(p.kind === 'focal' ? 'lesion' : p.kind === 'limb' ? 'arm' : p.kind === 'brain' ? 'brain' : 'whole');
 }
 presetList.addEventListener('click', (e) => {
   const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-preset]');
@@ -559,6 +575,8 @@ function cycleSlot(key: string): void {
   else state.exam.set(key, { ...slot, value: next } as Observation);
   state.candidate = 0;
   apply();
+  // Follow a lead that moves into the brain, but only from the default views.
+  if (lastRepIsBrain && (currentStation === 'whole' || currentStation === 'lesion')) go('brain');
   const again = document.querySelector<HTMLElement>(`[data-slot="${CSS.escape(key)}"]`);
   again?.focus();
 }
@@ -596,7 +614,7 @@ $('#cands').addEventListener('click', (e) => {
   apply();
   const observations = [...state.exam.values()];
   const group = isPrepared(state.timepoint) ? reverse(observations, state.timepoint, SLOTS).groups[state.candidate] : undefined;
-  go(group?.members[0]?.site ? 'arm' : 'lesion');
+  go(lastRepIsBrain ? 'brain' : group?.members[0]?.site ? 'arm' : 'lesion');
 });
 $('#next').addEventListener('click', (e) => {
   const btn = (e.target as Element).closest<HTMLButtonElement>('[data-goto]');
@@ -639,7 +657,7 @@ document.querySelectorAll<HTMLButtonElement>('[data-tab-btn]').forEach((b) => {
 showTab('lesion');
 
 // Keyboard: 1–4 stations, [ ] move the lesion, , . move the slice.
-const STATIONS = ['whole', 'lesion', 'axial', 'side', 'arm'];
+const STATIONS = ['whole', 'lesion', 'axial', 'side', 'arm', 'brain'];
 window.addEventListener('keydown', (e) => {
   const typing = e.target instanceof Element && e.target.closest('input, textarea, select') !== null;
   if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
@@ -683,10 +701,15 @@ function placeLabels(): void {
   const w = viewport.clientWidth;
   const h = viewport.clientHeight;
   const nearArm = currentStation === 'arm' || view.radius < 20;
+  const nearBrain = currentStation === 'brain' || (view.y > 0 && view.radius < 34);
   for (const l of allLabels) {
     projected.copy(l.at).project(camera);
     const visible =
-      (!l.limb || nearArm) && projected.z < 1 && Math.abs(projected.x) < 1.05 && Math.abs(projected.y) < 1.05;
+      (!l.limb || nearArm) &&
+      (!l.brain || nearBrain) &&
+      projected.z < 1 &&
+      Math.abs(projected.x) < 1.05 &&
+      Math.abs(projected.y) < 1.05;
     l.el.style.visibility = visible ? 'visible' : 'hidden';
     if (visible) l.el.style.transform = `translate(${((projected.x + 1) / 2) * w}px, ${((1 - projected.y) / 2) * h}px)`;
   }

@@ -3,7 +3,7 @@
 // sit at a named place beyond the roots, on the side the arm control chooses.
 import type { LesionRegion } from '../engine/forward.ts';
 import { SHAPES, type Shape } from '../geometry/lesion3d.ts';
-import type { PlexusSite, Segment } from '../kb/vocab.ts';
+import type { PlexusSite, Segment, Territory } from '../kb/vocab.ts';
 
 type Common = { readonly id: string; readonly label: string; readonly pattern: string };
 export type FocalPreset = Common & {
@@ -14,7 +14,8 @@ export type FocalPreset = Common & {
 };
 export type SystemPreset = Common & { readonly kind: 'system'; readonly regions: readonly LesionRegion[] };
 export type LimbPreset = Common & { readonly kind: 'limb'; readonly site: PlexusSite };
-export type Preset = FocalPreset | SystemPreset | LimbPreset;
+export type BrainPreset = Common & { readonly kind: 'brain'; readonly territory: Territory };
+export type Preset = FocalPreset | SystemPreset | LimbPreset | BrainPreset;
 
 const both = ['L', 'R'] as const;
 
@@ -68,4 +69,13 @@ export const PRESETS: readonly Preset[] = [
   { id: 'median-wrist', kind: 'limb', label: 'Median, at the wrist', pattern: 'Carpal tunnel', site: 'median_wrist' },
   { id: 'ulnar-elbow', kind: 'limb', label: 'Ulnar, at the elbow', pattern: 'Claw hand, cubital tunnel', site: 'ulnar_elbow' },
   { id: 'ulnar-wrist', kind: 'limb', label: 'Ulnar, at the wrist', pattern: 'Guyon canal', site: 'ulnar_wrist' },
+  { id: 'lateral-medulla', kind: 'brain', label: 'Lateral medulla', pattern: 'Wallenberg (PICA)', territory: 'lateral_medullary' },
+  { id: 'medial-medulla', kind: 'brain', label: 'Medial medulla', pattern: 'Dejerine', territory: 'medial_medullary' },
+  { id: 'ventral-pons', kind: 'brain', label: 'Ventral pons', pattern: 'Millard-Gubler', territory: 'ventral_pons' },
+  { id: 'dorsal-pons', kind: 'brain', label: 'Abducens nucleus', pattern: 'Gaze palsy + facial palsy', territory: 'dorsal_pons' },
+  { id: 'peduncle', kind: 'brain', label: 'Cerebral peduncle', pattern: 'Weber', territory: 'midbrain_peduncle' },
+  { id: 'capsule', kind: 'brain', label: 'Internal capsule', pattern: 'Pure motor lacune', territory: 'internal_capsule' },
+  { id: 'thalamus', kind: 'brain', label: 'Lateral thalamus', pattern: 'Pure sensory lacune', territory: 'thalamus' },
+  { id: 'mca', kind: 'brain', label: 'Lateral cortex', pattern: 'MCA: face and arm', territory: 'mca_cortex' },
+  { id: 'aca', kind: 'brain', label: 'Medial cortex', pattern: 'ACA: leg', territory: 'aca_cortex' },
 ];

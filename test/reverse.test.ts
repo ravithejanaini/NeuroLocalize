@@ -217,7 +217,7 @@ describe('reverse engine contract', () => {
     );
     assert.match(face?.because ?? '', /left spinal trigeminal nucleus in the medulla is damaged/);
     assert.match(body?.because ?? '', /left spinothalamic tract in the medulla is damaged, above the crossing/);
-    assert.match(horner?.because ?? '', /left descending sympathetic fibres in the medulla/);
+    assert.match(horner?.because ?? '', /left descending sympathetic fibres in the medulla are damaged/);
     const weber = hypotheses().find((x) => x.id === 'brainstem_left:midbrain_peduncle');
     assert.ok(weber);
     const [weak] = explain(weber, [{ kind: 'strength', side: 'R', span: ['L3', 'L3'], value: 'weak' }], 'chronic');

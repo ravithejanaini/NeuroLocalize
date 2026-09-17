@@ -6,6 +6,7 @@ import type { Kb, Meta, RenderKb } from '../kb/types.ts';
 import { RENDER } from '../kb/render.ts';
 import { REFLEXES, SEGMENTS, SIDES, type Segment, type SensoryModality, type SensoryState, type Side } from '../kb/vocab.ts';
 import { armAffected, armMuscleTable, armSkinTable, deformityChips } from './arm.ts';
+import { headHtml } from './head.ts';
 import { bodyMapSvg, myotomeTable, sensoryLevelText } from './svg.ts';
 
 const SIDE_NAME: Record<Side, string> = { L: 'Left', R: 'Right' };
@@ -185,6 +186,25 @@ export class Panel {
         title: 'Motor',
         drivers: ['pathway.corticospinal', 'compartment.lower-motor-neuron', 'observation.chronic-umn', 'observation.lmn', 'render.myotomes'],
         body: sided((x) => this.motorLine(f, x)) + myotomeTable(render, f),
+      },
+      {
+        title: 'Head and brainstem',
+        drivers: [
+          'brain.face-nucleus',
+          'brain.face-ascending',
+          'brain.corticobulbar-face',
+          'brain.upper-face-bilateral',
+          'brain.facial-nucleus',
+          'brain.oculomotor',
+          'brain.abduction',
+          'brain.hypoglossal',
+          'brain.corticobulbar-tongue',
+          'brain.ambiguus',
+          'brain.corticobulbar-palate',
+          'brain.ataxia',
+          'brain.vertigo',
+        ],
+        body: headHtml(f),
       },
       {
         title: 'Arm',

@@ -1,6 +1,6 @@
 # NeuroLocalize
 
-Place a lesion anywhere from the spinal cord to a nerve in the hand, and see the deficits it
+Place a lesion anywhere from the cortex to a nerve in the hand, and see the deficits it
 produces and why. Or enter an examination, and see where the lesion could be, which test
 would tell the candidates apart, and the reasoning behind every ranking.
 
@@ -16,12 +16,13 @@ would tell the candidates apart, and the reasoning behind every ranking.
 | P2 | Body map, myotome grid, slice scrubber, phone layout |
 | P3 | Examination mode: ranked candidates, the next test worth doing, and the working |
 | P4 | The brachial plexus: roots, trunks, divisions, cords and nine nerves in 3D; fourteen muscles, seven nerve territories and five deformities (winged scapula, waiter's tip, wrist drop, claw hand, ape hand); examination mode separates root from plexus from nerve |
+| P5 | Above the cord: medulla, pons, midbrain, thalamus, internal capsule and the motor and sensory homunculus; facial sensation and strength (forehead sparing), five cranial nerve signs, ataxia and vertigo; nine named territories from the lateral medulla to the ACA cortex; examination mode ranks candidates from cortex to muscle |
 
-P5 (above the cord) and P6 (practice and offline use) are planned in `docs/plan.html`.
+P6 (practice and offline use) is planned in `docs/plan.html`.
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 46 open-access sources that were actually
+- **Expected outputs are written first**, from 66 open-access sources that were actually
   read (`docs/SOURCES.md`), and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

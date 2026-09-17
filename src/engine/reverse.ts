@@ -519,6 +519,10 @@ const LEVEL_NAME: Record<BrainLevel, string> = {
   medulla: 'medulla',
 };
 
+const PLURAL = /(fibres|nuclei|fascicles)( in the [a-z]+)?$/;
+/** "is damaged" or "are damaged", to agree with the part named at the end of `phrase`. */
+const damaged = (phrase: string): string => `${phrase} ${PLURAL.test(phrase) ? 'are' : 'is'} damaged`;
+
 /** The first damaged part along a brain route, in words. */
 function brainCut(bmap: BrainMap, steps: readonly { level: BrainLevel; compartment: BrainCompartment }[], side: Side, region: BodyRegion): string | null {
   const s = steps.find((x) => bmap.damage(x.level, x.compartment, side, region) > 0);
@@ -551,12 +555,12 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
     if (bmap.empty) return null;
     const route = kind === 'motor' ? b.corticospinal : kind === 'posterior_column' ? b.lemniscal : b.spinothalamic;
     const cut = brainCut(bmap, route.steps, partSideOf(x, route.serves), regionOf(kb, k));
-    return cut ? `${cut} is damaged, above the ${kind === 'motor' ? 'decussation' : 'crossing'}` : null;
+    return cut ? `${damaged(cut)}, above the ${kind === 'motor' ? 'decussation' : 'crossing'}` : null;
   };
   const faceCuts = (routes: readonly { steps: readonly { level: BrainLevel; compartment: BrainCompartment }[]; serves: 'ipsilateral' | 'contralateral' }[], x: Side): string[] =>
     routes.flatMap((r) => {
       const c = brainCut(bmap, r.steps, partSideOf(x, r.serves), 'face');
-      return c ? [`${c} is damaged`] : [];
+      return c ? [damaged(c)] : [];
     });
   switch (o.kind) {
     case 'face_sensation': {
@@ -590,7 +594,7 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
     }
     case 'vertigo': {
       const c = (['L', 'R'] as const).map((s) => brainCut(bmap, b.vertigo.steps, s, 'face')).filter((x): x is string => x !== null);
-      return c.length ? `${c.join('; ')} ${c.length > 1 ? 'are' : 'is'} damaged` : 'the vestibular nuclei are intact';
+      return c.length ? c.map(damaged).join('; ') : 'the vestibular nuclei are intact';
     }
     case 'muscle': {
       const causes = muscleReason(map, kb, pmap, o.side, o.muscle);
