@@ -837,3 +837,89 @@ spans that no modelled finding distinguishes (`brain.spinothalamic`, `brain.lemn
 `brain.vertigo`, `brain.sympathetic`), and the unsourced rows that stay pinned until a
 reviewer supplies a source. None of them is an eye-movement row.
 
+
+## P10 — language and the dominant hemisphere
+
+The analysis written before any P10 code is `docs/P10-analysis.md`; S100–S108 were read for it
+on 2026-09-18. This time the frozen cases were run red against the P9 engine before any P10
+engine code existed: 46 findings came back `undefined` across nine cases, and the territory
+check failed because the superior-division case now named Broca area and the knowledge base
+did not.
+
+### Source conflicts
+
+**C31 — The field of an inferior-division stroke.** S105: "Contralateral homonymous
+hemianopia is frequently observed". A lesion confined to the temporal lobe takes Meyer loop
+alone and gives a superior quadrantanopia (S97, P8). *Frequently* is not always. The model
+gives the inferior division both radiations — the hemianopia S105 describes — and leaves the
+smaller temporal lesion to the Wernicke-area and Meyer-loop places, which carry no field defect
+and a quadrantanopia respectively. The centre of the field is not asserted: S105 does not say
+whether the macula is spared.
+
+**C32 — Neglect after a left-hemisphere lesion.** S106 gives neglect persisting at twelve
+weeks in about 17% after right and 5% after left lesions. Rarer is not never, so a left
+inferior parietal lesion leaves right-sided neglect **unsettled**, not absent. The row carries
+the answer as data (`brain.neglect.afterDominant`), so a reviewer can change it without code.
+
+**C33 — Neglect outside the parietal lobe.** S106 says neglect *most often* involves the right
+posterior parietal cortex, which admits other sites. The model places neglect in the inferior
+parietal lobule only; no frozen case asserts that a frontal or temporal lesion spares it, and
+the superior-division and Broca-area cases list neglect as unasserted.
+
+**C34 — The superior temporal gyrus: Wernicke or conduction?** S101 localises Wernicke aphasia
+to the posterior superior temporal gyrus; S102 says a lesion of the left superior temporal
+gyrus *may* cause conduction aphasia. The model follows S101 for that gyrus and places
+conduction aphasia in the inferior parietal lobule, which S102 also names. Found while auditing
+the P10 analysis, before any code — the first draft had not noticed that S102 names the gyrus
+too.
+
+### Decisions
+
+**D68 — One dominant hemisphere, stated rather than modelled.** Language is read from the left
+hemisphere (S107). S108 gives how often that is wrong — about 4% of strong right-handers, 15%
+of the ambidextrous and 27% of strong left-handers are right-dominant — and the model does not
+take handedness as an input. The findings panel says so beside every language finding, and the
+working names the dominant hemisphere whenever it explains one. S108 was read as an abstract
+only; its full text is paywalled, and the registry says so.
+
+**D69 — The engine derives the facets; the panel names the aphasia.** The engine computes
+three findings — non-fluent speech, impaired comprehension, impaired repetition — each from
+the parts the sources put it in. It never names an aphasia. The findings panel reads the three
+back against S103's classification (Broca, Wernicke, conduction, global) and gives a
+combination the model cannot produce no name at all, rather than a guess. Global aphasia is
+therefore Broca area with Wernicke area, derived, exactly as one-and-a-half syndrome was in P9.
+
+**D70 — The superior-division place gained Broca area.** `mca_cortex` was sourced in P5 as the
+superior MCA division; S104 puts Broca area in that division's precentral branch. Leaving it
+out would make a left superior-division stroke speak normally. The frozen case gained its
+language findings under A14, and the P5 examination for that place now records the patient as
+understanding — the finding that separates it from the whole MCA, which the P5 examination was
+never asked to tell apart.
+
+**D71 — A territory may take part of the visual pathway.** The inferior division supplies the
+optic radiation as well as cortex, so a brain territory now carries an optional list of visual
+parts, lesioned on its own side. `territoryFailures` checks those parts against the frozen case
+exactly as it checks the brain parts, and `validateBrain` refuses a part the visual knowledge
+base does not hold.
+
+### Reviewer questions
+
+**R32** — C31: should the inferior-division place carry the whole hemianopia, or only Meyer
+loop's superior quadrantanopia, as the commoner finding in teaching?
+
+**R33** — C32: should right-sided neglect after a left parietal lesion be taught as unsettled,
+or as absent for practical purposes?
+
+**R34** — D68: is it worth adding handedness as an input, so a left-handed patient's language
+can be unsettled rather than left-hemisphere by assumption?
+
+**D72 — What the P10 mutation run showed.** 96.1% of sourced mutants are killed (3,737 of
+3,890), 95.3% of all — the highest yet, against 95.6% after P9 — and **no P10 row has a
+survivor**. The first run hid a gap in the mutator rather than the model: it had no pool for a
+side, so `brain.dominance` was never mutated at all, and it mutated the neglect row's answer
+after a dominant lesion with tone words (`reduced`, `increased`) that no sign can take. Both
+now have their own pools. The rerun flips the dominant hemisphere to the right and 22 frozen
+findings fail; no side-flip survives anywhere in the knowledge base. The same browser check
+caught the working calling "the language cortex of the dominant hemisphere" intact while the
+inferior parietal lobule — part of it — was damaged; it now names the part a spared facet
+depends on, and a test holds that wording.

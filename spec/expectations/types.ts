@@ -12,6 +12,7 @@ import type {
   Dysreflexia,
   FieldSector,
   FieldState,
+  LanguageSign,
   MotorLesion,
   Muscle,
   MuscleState,
@@ -156,7 +157,8 @@ export type BrainAssertion = Evidence &
 
 export type BrainEvaluation = {
   readonly timepoint: Timepoint;
-  readonly assertions: readonly (Assertion | LimbAssertion | BrainAssertion)[];
+  /** A14 admits language assertions: the superior-division case says what it does to speech. */
+  readonly assertions: readonly (Assertion | LimbAssertion | BrainAssertion | LanguageAssertion)[];
   readonly unasserted: readonly string[];
 };
 
@@ -201,4 +203,31 @@ export type VisionCase = {
   readonly pattern: string;
   readonly lesion: readonly (LesionRegion | PlexusRegion | BrainRegion | VisionRegion)[];
   readonly evaluations: readonly VisionEvaluation[];
+};
+
+// ─── Language and the dominant hemisphere (amendment A14) ──────────────────
+
+/**
+ * `language`: one bedside facet, named for its abnormal state, so 'present' means impaired.
+ * It belongs to the patient, not a side. `neglect`: the side is the side of **space** that is
+ * neglected, not the side of the lesion.
+ */
+export type LanguageAssertion = Evidence &
+  (
+    | { readonly kind: 'language'; readonly sign: LanguageSign; readonly oneOf: readonly SignState[] }
+    | (Sided & { readonly kind: 'neglect'; readonly oneOf: readonly SignState[] })
+  );
+
+export type LanguageEvaluation = {
+  readonly timepoint: Timepoint;
+  readonly assertions: readonly (Assertion | BrainAssertion | VisionAssertion | LanguageAssertion)[];
+  readonly unasserted: readonly string[];
+};
+
+export type LanguageCase = {
+  readonly id: string;
+  readonly title: string;
+  readonly pattern: string;
+  readonly lesion: readonly (BrainRegion | VisionRegion)[];
+  readonly evaluations: readonly LanguageEvaluation[];
 };

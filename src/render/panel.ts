@@ -7,7 +7,7 @@ import { RENDER } from '../kb/render.ts';
 import { REFLEXES, SEGMENTS, SIDES, type Segment, type SensoryModality, type SensoryState, type Side } from '../kb/vocab.ts';
 import { ARM, deformityChips, LEG, limbAffected, muscleTable, skinTable } from './arm.ts';
 import { visionAffected, visionPanel } from './vision.ts';
-import { headHtml } from './head.ts';
+import { headHtml, languageHtml } from './head.ts';
 import { bodyMapSvg, myotomeTable, sensoryLevelText } from './svg.ts';
 
 const SIDE_NAME: Record<Side, string> = { L: 'Left', R: 'Right' };
@@ -207,6 +207,12 @@ export class Panel {
           'brain.vertigo',
         ],
         body: headHtml(f),
+      },
+      {
+        title: 'Language and attention',
+        drivers: ['brain.dominance', 'brain.fluency', 'brain.comprehension', 'brain.repetition', 'brain.neglect'],
+        body: languageHtml(f),
+        note: 'Language is read from the left hemisphere, dominant in most people; how often it is not rises with left-handedness (S108). Neglect is recorded by the side of space, opposite the lesion. Not modelled: the transcortical and anomic aphasias, reading and writing, Gerstmann syndrome, anosognosia.',
       },
       {
         title: 'Arm',

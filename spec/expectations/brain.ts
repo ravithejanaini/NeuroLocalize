@@ -474,7 +474,9 @@ export const BRAIN_CASES: readonly BrainCase[] = [
     id: 'mca-cortex-left',
     title: 'Left lateral precentral and postcentral gyri',
     pattern: 'middle cerebral artery, superior division',
-    lesion: [at('cortex', ['motor_cortex', 'sensory_cortex'], ['face', 'arm'])],
+    // A14: the superior division's precentral branch also supplies Brodmann 44 and 45 — Broca
+    // area (S104) — so the lesion takes the inferior frontal gyrus as well.
+    lesion: [at('cortex', ['motor_cortex', 'sensory_cortex', 'inferior_frontal'], ['face', 'arm'])],
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
@@ -492,9 +494,13 @@ export const BRAIN_CASES: readonly BrainCase[] = [
         // A8
         sign('L', 'palate_weakness', 'open', { cite: ['S64', 'S54'], basis: 'composed', note: 'A8: the palate has both hemispheres' }),
         sign('R', 'palate_weakness', 'open', { cite: ['S64', 'S54'], basis: 'composed' }),
+        // A14: Broca aphasia, with the face and arm weakness that S100 says can accompany it.
+        { kind: 'language', sign: 'nonfluent_speech', oneOf: ['present'], cite: ['S104', 'S100'], basis: 'stated', note: 'a superior-division stroke of the dominant hemisphere: Broca aphasia' },
+        { kind: 'language', sign: 'impaired_comprehension', oneOf: ['absent'], cite: ['S104', 'S100'], basis: 'stated', note: 'preserved comprehension' },
+        { kind: 'language', sign: 'impaired_repetition', oneOf: ['present'], cite: ['S104', 'S100'], basis: 'stated', note: 'inability to repeat' },
       ],
       unasserted: [
-        'aphasia, neglect, gaze deviation and field cuts (S52): not modelled',
+        'neglect (C33), gaze deviation and field cuts (S52): not modelled for this lesion',
         'the Babinski sign: a lesion confined to the lateral cortex spares the leg fibres, but MCA strokes often reach deeper; not asserted',
         'neck and trunk: no source read assigns them to either artery',
       ],

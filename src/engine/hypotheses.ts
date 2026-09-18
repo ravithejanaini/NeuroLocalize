@@ -204,5 +204,8 @@ export function territoryRegions(kb: Kb, territory: (typeof TERRITORIES)[number]
       severity: 'complete',
       ...(row.regions ? { regions: row.regions } : {}),
     },
+    // P10: a territory may take part of the visual pathway too — the inferior MCA division
+    // takes the optic radiation of its own side (C31).
+    ...(row.vision ?? []).map((vision) => ({ vision, sides: [side], severity: 'complete' as const })),
   ];
 }

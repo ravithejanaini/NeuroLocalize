@@ -4,6 +4,7 @@
 import type {
   CranialSign,
   FaceWeaknessObservation,
+  LanguageSign,
   LesionFamily,
   SensoryModality,
   SensoryObservation,
@@ -24,7 +25,10 @@ export type BrainObservation =
   | { readonly kind: 'face_weakness'; readonly side: Side; readonly value: FaceWeaknessObservation }
   | { readonly kind: 'cranial'; readonly side: Side; readonly sign: CranialSign; readonly value: SignObservation }
   | { readonly kind: 'ataxia'; readonly side: Side; readonly value: SignObservation }
-  | { readonly kind: 'vertigo'; readonly value: SignObservation };
+  | { readonly kind: 'vertigo'; readonly value: SignObservation }
+  // A14: one facet of language, about the patient; neglect, by the side of space.
+  | { readonly kind: 'language'; readonly sign: LanguageSign; readonly value: SignObservation }
+  | { readonly kind: 'neglect'; readonly side: Side; readonly value: SignObservation };
 
 export type BrainReverseExpectation = ReverseExpectation & {
   readonly timepoint: Timepoint;
@@ -113,8 +117,11 @@ export const BRAIN_REVERSE_CASES: readonly BrainReverseCase[] = [
   },
   {
     id: 'reverse-mca-cortex',
-    title: 'Right face and arm weak and numb, right leg spared',
+    title: 'Right face and arm weak and numb, right leg spared; understands speech',
     observations: [
+      // A14: understanding is what separates the superior division from the whole MCA,
+      // which P10 added and which fits face and arm weakness equally well (D70).
+      { kind: 'language', sign: 'impaired_comprehension', value: 'absent' },
       power('R', 'C6', 'weak'),
       power('R', 'C7', 'weak'),
       power('R', 'L3', 'normal'),
@@ -126,9 +133,9 @@ export const BRAIN_REVERSE_CASES: readonly BrainReverseCase[] = [
       { kind: 'face_sensation', side: 'R', value: 'abnormal' },
     ],
     expectations: [{ timepoint: 'chronic', topFamily: 'hemisphere_left', topPlaces: ['mca_cortex'] }],
-    cite: ['S54', 'S66'],
+    cite: ['S54', 'S66', 'S103', 'S104'],
     basis: 'stated',
-    note: 'Face and arm without the leg is the lateral convexity (S54, S66).',
+    note: 'Face and arm without the leg is the lateral convexity (S54, S66); understanding speech keeps it to the superior division rather than the whole MCA, whose dominant lesion is global aphasia (S103, S104; A14).',
   },
   {
     id: 'reverse-weber',

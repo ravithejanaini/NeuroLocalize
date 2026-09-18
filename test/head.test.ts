@@ -4,7 +4,7 @@ import { territoryRegions } from '../src/engine/hypotheses.ts';
 import { forward } from '../src/engine/forward.ts';
 import { KB } from '../src/kb/kb.ts';
 import { TERRITORIES } from '../src/kb/vocab.ts';
-import { crossedSide, headAffected, headHtml } from '../src/render/head.ts';
+import { aphasiaName, crossedSide, headAffected, headHtml, languageAffected, languageHtml } from '../src/render/head.ts';
 import { PRESETS } from '../src/render/presets.ts';
 
 const at = (t: (typeof TERRITORIES)[number]) => forward(territoryRegions(KB, t, 'L'), 'chronic');
@@ -40,5 +40,30 @@ describe('the head and brainstem in the findings panel', () => {
   it('offers a preset for every territory', () => {
     const offered = PRESETS.flatMap((p) => (p.kind === 'brain' ? [p.territory] : []));
     assert.deepEqual([...offered].sort(), [...TERRITORIES].sort());
+  });
+});
+
+describe('language and attention in the findings panel (P10)', () => {
+  const on = (t: (typeof TERRITORIES)[number], side: 'L' | 'R') => forward(territoryRegions(KB, t, side), 'chronic');
+
+  it('names each aphasia from its three findings, as S103 classifies them (D69)', () => {
+    assert.match(aphasiaName(on('broca_area', 'L')) ?? '', /^Broca aphasia/);
+    assert.match(aphasiaName(on('wernicke_area', 'L')) ?? '', /^Wernicke aphasia/);
+    assert.match(aphasiaName(on('supramarginal', 'L')) ?? '', /^conduction aphasia/);
+    assert.match(aphasiaName(on('mca_whole', 'L')) ?? '', /^global aphasia/);
+    assert.match(aphasiaName(on('mca_cortex', 'L')) ?? '', /^Broca aphasia/, 'D70: the superior division holds Broca area');
+  });
+
+  it('names nothing when speech is normal, and nothing in the right hemisphere (D68)', () => {
+    assert.equal(aphasiaName(on('broca_area', 'R')), null);
+    assert.equal(aphasiaName(on('internal_capsule', 'L')), null);
+    assert.equal(languageAffected(on('broca_area', 'R')), false);
+  });
+
+  it('shows neglect by the side of space, and says when it is unsettled (C32)', () => {
+    const right = languageHtml(on('supramarginal', 'R'));
+    assert.match(right, /Neglect, left<\/span><span class="v st-sign-present">present/);
+    assert.match(right, /Neglect, right<\/span><span class="v quiet">absent/);
+    assert.match(languageHtml(on('supramarginal', 'L')), /Neglect, right<\/span><span class="v st-sign-present">uncertain/);
   });
 });

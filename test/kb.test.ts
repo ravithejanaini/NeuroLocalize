@@ -39,9 +39,9 @@ describe('knowledge-base integrity', () => {
 
   it('every cited source is registered, and the registry matches docs/SOURCES.md', () => {
     const table = readFileSync(resolve(DOCS, 'SOURCES.md'), 'utf8');
-    const documented = [...table.matchAll(/^\| (S\d\d) \|/gm)].map((m) => m[1]);
+    const documented = [...table.matchAll(/^\| (S\d{2,3}) \|/gm)].map((m) => m[1]);
     assert.deepEqual(documented, [...SOURCE_IDS]);
-    const linked = [...table.matchAll(/^\| (S\d\d) \| \[([^\]]+)\]\(([^)]+)\)/gm)].map((m) => ({ id: m[1], title: m[2], url: m[3] }));
+    const linked = [...table.matchAll(/^\| (S\d{2,3}) \| \[([^\]]+)\]\(([^)]+)\)/gm)].map((m) => ({ id: m[1], title: m[2], url: m[3] }));
     assert.deepEqual(SOURCES.map((s) => ({ id: s.id, title: s.title, url: s.url })), linked);
 
     const cited = new Set([

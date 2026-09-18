@@ -22,6 +22,8 @@ import type {
   Segment,
   SensoryModality,
   SensoryState,
+  Side,
+  SignState,
   SkinArea,
   SourceId,
   Timepoint,
@@ -168,6 +170,13 @@ export type Brain = {
   readonly sympathetic: BrainRoute;
   readonly ataxia: BrainRoute;
   readonly vertigo: Row<{ readonly steps: readonly BrainStep[] }>;
+  /** P10: which hemisphere holds language (D68), and the three facets read from it. */
+  readonly dominance: Row<{ readonly language: Side }>;
+  readonly fluency: Row<{ readonly steps: readonly BrainStep[] }>;
+  readonly comprehension: Row<{ readonly steps: readonly BrainStep[] }>;
+  readonly repetition: Row<{ readonly steps: readonly BrainStep[] }>;
+  /** Neglect of the side of space opposite the damaged part; after a dominant lesion, C32. */
+  readonly neglect: Row<{ readonly steps: readonly BrainStep[]; readonly afterDominant: SignState }>;
   /** Which parts exist at each level; routes and territories may name no others (D46). */
   readonly partsAt: Row<{ readonly parts: Readonly<Record<BrainLevel, readonly BrainCompartment[]>> }>;
   /** Parts laid out by body region (D41). */
@@ -181,6 +190,8 @@ export type Brain = {
         readonly level: BrainLevel;
         readonly compartments: readonly BrainCompartment[];
         readonly regions?: readonly BodyRegion[];
+        /** P10: the parts of the visual pathway the same territory takes (C31). */
+        readonly vision?: readonly VisualPart[];
       }>
     >
   >;

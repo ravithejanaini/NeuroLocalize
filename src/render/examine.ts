@@ -8,12 +8,14 @@ import { fieldChart } from './vision.ts';
 import {
   ARM_MUSCLES,
   CRANIAL_SIGNS,
+  LANGUAGE_SIGNS,
   LEG_MUSCLES,
   REFLEXES,
   SEGMENTS,
   SIDES,
   type CranialSign,
   type FieldSector,
+  type LanguageSign,
   type Muscle,
   type SensoryModality,
   type Side,
@@ -53,6 +55,13 @@ export const MUSCLE_NAME: Record<Muscle, { readonly movement: string; readonly m
   fibularis: { movement: 'ankle eversion', muscle: 'fibularis longus' },
   tibialis_posterior: { movement: 'ankle inversion', muscle: 'tibialis posterior' },
   gastrocnemius: { movement: 'ankle plantar flexion', muscle: 'gastrocnemius' },
+};
+
+/** P10: each facet of language, named for its abnormal state. */
+export const LANGUAGE_NAME: Record<LanguageSign, string> = {
+  nonfluent_speech: 'Speech non-fluent (effortful, few words)',
+  impaired_comprehension: 'Comprehension impaired',
+  impaired_repetition: 'Repetition impaired',
 };
 
 export const CRANIAL_NAME: Record<CranialSign, string> = {
@@ -116,6 +125,8 @@ export const CYCLE: Record<Slot['kind'], readonly string[]> = {
   vertigo: ['absent', 'present'],
   field: ['normal', 'abnormal'],
   rapd: ['absent', 'present'],
+  language: ['absent', 'present'],
+  neglect: ['absent', 'present'],
 };
 
 export function nextValue(slot: Slot, current: string | undefined): string | undefined {
@@ -168,6 +179,10 @@ export function slotLabel(render: RenderKb, s: Slot): string {
       return `${SIDE_WORD[s.eye]} eye · ${SECTOR_NAME[s.sector]}`;
     case 'rapd':
       return `${SIDE_WORD[s.side]} pupil, afferent defect`;
+    case 'language':
+      return LANGUAGE_NAME[s.sign];
+    case 'neglect':
+      return `Neglect of the ${SIDE_WORD[s.side].toLowerCase()} side of space`;
   }
 }
 
@@ -284,7 +299,11 @@ export function examTables(render: RenderKb, findings: Findings): string {
     ...CRANIAL_SIGNS.map((sign) => headRow(CRANIAL_NAME[sign], (side) => ({ kind: 'cranial', side, sign }))),
     headRow('Limb ataxia', (side) => ({ kind: 'ataxia', side })),
   ].join('');
-  return `<table class="extable"><thead><tr><th colspan="2">Head and eyes</th><th>Left</th><th>Right</th></tr></thead><tbody>${head}
+  // P10: language belongs to the patient, not a side; neglect is recorded by the side of space.
+  const language = LANGUAGE_SIGNS.map((sign) => single({ kind: 'language', sign }, LANGUAGE_NAME[sign])).join('');
+  const neglect = headRow('Neglect of that side of space', (side) => ({ kind: 'neglect', side }));
+  return `<table class="extable"><thead><tr><th colspan="2">Language and attention</th><th colspan="2"></th></tr></thead><tbody>${language}${neglect}</tbody>
+    <thead><tr><th colspan="2">Head and eyes</th><th>Left</th><th>Right</th></tr></thead><tbody>${head}
     ${single({ kind: 'vertigo' }, 'Vertigo, nystagmus')}</tbody>
     <thead><tr><th colspan="2">Strength</th><th>Left</th><th>Right</th></tr></thead><tbody>${strength}</tbody>
     <thead><tr><th colspan="2">Arm, muscle by muscle</th><th>Left</th><th>Right</th></tr></thead><tbody>${arm}</tbody>

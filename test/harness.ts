@@ -1,12 +1,14 @@
 // Judges engine output against frozen expectations. Shared by the test suite and the
 // mutation harness, so both apply exactly the same rules.
-import type { Assertion, BrainAssertion, BrainCase, Case, LimbAssertion, LimbCase, Span, VisionAssertion, VisionCase } from '../spec/expectations/types.ts';
+import type { Assertion, BrainAssertion, BrainCase, Case, LanguageAssertion, LanguageCase, LimbAssertion, LimbCase, Span, VisionAssertion, VisionCase } from '../spec/expectations/types.ts';
 import type { ReverseCase } from '../spec/expectations/reverse.ts';
 import { BRAIN_CASES } from '../spec/expectations/brain.ts';
 import { VISION_CASES } from '../spec/expectations/vision.ts';
+import { LANGUAGE_CASES } from '../spec/expectations/language.ts';
 import type { BrainReverseCase } from '../spec/expectations/reverse-brain.ts';
 import type { LimbReverseCase } from '../spec/expectations/reverse-plexus.ts';
 import type { VisionReverseCase } from '../spec/expectations/reverse-vision.ts';
+import type { LanguageReverseCase } from '../spec/expectations/reverse-language.ts';
 import { forward, type Findings } from '../src/engine/forward.ts';
 import { predict, prepareSync, reverse, slotKey, type Observation, type Slot } from '../src/engine/reverse.ts';
 import type { Kb } from '../src/kb/types.ts';
@@ -19,7 +21,7 @@ const sidesOf = (s: Side | 'both'): Side[] => (s === 'both' ? ['L', 'R'] : [s]);
 const miss = <T>(got: T, allowed: readonly T[]): boolean => !allowed.includes(got);
 const show = (xs: readonly unknown[]): string => `[${xs.join(', ')}]`;
 
-export function check(a: Assertion | LimbAssertion | BrainAssertion | VisionAssertion, f: Findings): string[] {
+export function check(a: Assertion | LimbAssertion | BrainAssertion | VisionAssertion | LanguageAssertion, f: Findings): string[] {
   const out: string[] = [];
   switch (a.kind) {
     case 'sensory':
@@ -88,6 +90,17 @@ export function check(a: Assertion | LimbAssertion | BrainAssertion | VisionAsse
     case 'vertigo':
       if (miss(f.vertigo, a.oneOf)) out.push(`vertigo: got ${f.vertigo}, expected ${show(a.oneOf)}`);
       break;
+    case 'language': {
+      const got = f.language[a.sign];
+      if (miss(got, a.oneOf)) out.push(`language ${a.sign}: got ${got}, expected ${show(a.oneOf)}`);
+      break;
+    }
+    case 'neglect':
+      for (const x of sidesOf(a.side)) {
+        const got = f.neglect[x];
+        if (miss(got, a.oneOf)) out.push(`neglect of ${x} space: got ${got}, expected ${show(a.oneOf)}`);
+      }
+      break;
     case 'field':
       for (const x of a.eye === 'both' ? (['L', 'R'] as const) : [a.eye])
         for (const sector of a.sectors) {
@@ -128,7 +141,7 @@ export function check(a: Assertion | LimbAssertion | BrainAssertion | VisionAsse
   return out;
 }
 
-export function runCase(kase: Case | LimbCase | BrainCase | VisionCase, kb?: Kb): Failure[] {
+export function runCase(kase: Case | LimbCase | BrainCase | VisionCase | LanguageCase, kb?: Kb): Failure[] {
   const failures: Failure[] = [];
   for (const ev of kase.evaluations) {
     const findings = forward(kase.lesion, ev.timepoint, kb ? { kb } : {});
@@ -139,12 +152,12 @@ export function runCase(kase: Case | LimbCase | BrainCase | VisionCase, kb?: Kb)
   return failures;
 }
 
-export const runAll = (cases: readonly (Case | LimbCase | BrainCase | VisionCase)[], kb?: Kb): Failure[] => cases.flatMap((c) => runCase(c, kb));
+export const runAll = (cases: readonly (Case | LimbCase | BrainCase | VisionCase | LanguageCase)[], kb?: Kb): Failure[] => cases.flatMap((c) => runCase(c, kb));
 
 // ── reverse ──────────────────────────────────────────────────────────────
 
 /** Every way a ranking breaks a frozen reverse expectation, one message each. */
-export function reverseFailures(kase: ReverseCase | LimbReverseCase | BrainReverseCase | VisionReverseCase, slots: readonly Slot[], kb?: Kb): Failure[] {
+export function reverseFailures(kase: ReverseCase | LimbReverseCase | BrainReverseCase | VisionReverseCase | LanguageReverseCase, slots: readonly Slot[], kb?: Kb): Failure[] {
   const out: Failure[] = [];
   const idx = (s: Segment): number => SEGMENTS.indexOf(s);
   const observations: readonly Observation[] = kase.observations;
@@ -219,6 +232,12 @@ export const TERRITORY_CASE: Readonly<Record<string, string>> = {
   thalamus: 'thalamus-left',
   mca_cortex: 'mca-cortex-left',
   aca_cortex: 'aca-cortex-left',
+  // P10.
+  mca_inferior: 'mca-inferior-left',
+  mca_whole: 'mca-whole-left',
+  broca_area: 'broca-area-left',
+  wernicke_area: 'wernicke-area-left',
+  supramarginal: 'supramarginal-left',
   // P9.
   mlf_pons: 'mlf-left',
   pontine_tegmentum: 'pontine-tegmentum-left',
@@ -265,8 +284,10 @@ export function territoryFailures(kb: Kb): Failure[] {
     [...(a ?? [])].sort().join(',') === [...(b ?? [])].sort().join(',');
   for (const [territory, row] of Object.entries(kb.brain.territories)) {
     const id = TERRITORY_CASE[territory];
-    const kase = BRAIN_CASES.find((c) => c.id === id);
+    const kase = BRAIN_CASES.find((c) => c.id === id) ?? LANGUAGE_CASES.find((c) => c.id === id);
     const lesion = kase?.lesion[0];
+    // P10: the visual parts a territory takes must be exactly the ones its case lesions.
+    const caseVision = (kase?.lesion ?? []).flatMap((r) => ('vision' in r ? [r.vision] : []));
     const fail = (message: string): void => {
       out.push({ caseId: id ?? territory, timepoint: 'chronic', message });
     };
@@ -277,6 +298,7 @@ export function territoryFailures(kb: Kb): Failure[] {
     if (lesion.brain !== row.level) fail(`territory ${territory} is in the ${row.level}, its case in the ${lesion.brain}`);
     if (!same(lesion.compartments, row.compartments)) fail(`territory ${territory} takes ${row.compartments.join(', ')}; its case ${lesion.compartments.join(', ')}`);
     if (!same(lesion.regions, row.regions)) fail(`territory ${territory} regions differ from its case`);
+    if (!same(caseVision, row.vision)) fail(`territory ${territory} takes the visual parts ${(row.vision ?? []).join(', ') || 'none'}; its case ${caseVision.join(', ') || 'none'}`);
   }
   return out;
 }

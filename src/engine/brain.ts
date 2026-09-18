@@ -6,6 +6,7 @@ import {
   BODY_REGIONS,
   BRAIN_LEVELS,
   CRANIAL_SIGNS,
+  LANGUAGE_SIGNS,
   SEGMENTS,
   SIDES,
   type BodyRegion,
@@ -13,6 +14,7 @@ import {
   type BrainLevel,
   type CranialSign,
   type FaceWeakness,
+  type LanguageSign,
   type Segment,
   type SensoryModality,
   type SensoryState,
@@ -73,6 +75,10 @@ export function validateBrain(kb: Kb): void {
     b.sympathetic.steps,
     b.ataxia.steps,
     b.vertigo.steps,
+    b.fluency.steps,
+    b.comprehension.steps,
+    b.repetition.steps,
+    b.neglect.steps,
   ];
   for (const steps of routes) {
     if (steps.length === 0) throw new Error('a brain route has no steps');
@@ -81,6 +87,7 @@ export function validateBrain(kb: Kb): void {
   for (const [name, t] of Object.entries(b.territories)) {
     if (t.compartments.length === 0) throw new Error(`territory ${name} takes nothing`);
     for (const c of t.compartments) if (!holds(t.level, c)) throw new Error(`territory ${name}: no ${c} in the ${t.level}`);
+    for (const v of t.vision ?? []) if (!(v in kb.vision.parts)) throw new Error(`territory ${name}: no visual part ${v}`);
   }
   for (const c of b.somatotopic.compartments) {
     if (!BRAIN_LEVELS.some((l) => holds(l, c))) throw new Error(`somatotopic ${c} exists nowhere`);
@@ -155,6 +162,10 @@ export type BrainFindings = {
   readonly cranial: Readonly<Record<Side, Readonly<Record<CranialSign, SignState>>>>;
   readonly ataxia: Readonly<Record<Side, SignState>>;
   readonly vertigo: SignState;
+  /** P10: each facet of language, read from the dominant hemisphere only (D68). */
+  readonly language: Readonly<Record<LanguageSign, SignState>>;
+  /** P10: neglect of each side of SPACE — the side opposite the damaged hemisphere. */
+  readonly neglect: Readonly<Record<Side, SignState>>;
 };
 
 function faceWeakness(kb: Kb, map: BrainMap, x: Side): FaceWeakness {
@@ -230,7 +241,24 @@ export function brainFindings(kb: Kb, map: BrainMap): BrainFindings {
     ataxia[x] = present(routeDamage(map, b.ataxia, x, 'face'));
   }
   const vertigo = present(worst(SIDES.map((h) => along(map, b.vertigo.steps, h, 'face'))));
-  return { faceSensation, faceWeakness: faceWeak, cranial, ataxia, vertigo };
+  // Language is read from the dominant hemisphere alone (D68). The parts are not somatotopic,
+  // so every body region carries the same damage and 'face' is only the key it is read by.
+  const dominant = b.dominance.language;
+  const facet: Record<LanguageSign, readonly BrainStep[]> = {
+    nonfluent_speech: b.fluency.steps,
+    impaired_comprehension: b.comprehension.steps,
+    impaired_repetition: b.repetition.steps,
+  };
+  const language = {} as Record<LanguageSign, SignState>;
+  for (const sign of LANGUAGE_SIGNS) language[sign] = present(along(map, facet[sign], dominant, 'face'));
+  // Neglect of side x of space comes from the hemisphere opposite; from the dominant one it
+  // is rarer, and the knowledge base says what to report (C32).
+  const neglect = {} as Record<Side, SignState>;
+  for (const x of SIDES) {
+    const h = other(x);
+    neglect[x] = along(map, b.neglect.steps, h, 'face') === 0 ? 'absent' : h === dominant ? b.neglect.afterDominant : 'present';
+  }
+  return { faceSensation, faceWeakness: faceWeak, cranial, ataxia, vertigo, language, neglect };
 }
 
 /** The ipsilateral oculosympathetic pathway in the brainstem (S16). */

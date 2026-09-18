@@ -114,6 +114,12 @@ export const PRESETS: readonly Preset[] = [
   { id: 'thalamus', kind: 'brain', label: 'Lateral thalamus', pattern: 'Pure sensory lacune', territory: 'thalamus' },
   { id: 'mca', kind: 'brain', label: 'Lateral cortex', pattern: 'MCA: face and arm', territory: 'mca_cortex' },
   { id: 'aca', kind: 'brain', label: 'Medial cortex', pattern: 'ACA: leg', territory: 'aca_cortex' },
+  // P10: language and attention. Language needs the left side; neglect the right.
+  { id: 'mca-inferior', kind: 'brain', label: 'MCA inferior division', pattern: 'Left: Wernicke + hemianopia · right: neglect', territory: 'mca_inferior' },
+  { id: 'mca-whole', kind: 'brain', label: 'Whole MCA cortex', pattern: 'Left: global aphasia + hemiparesis', territory: 'mca_whole' },
+  { id: 'broca', kind: 'brain', label: 'Inferior frontal gyrus', pattern: 'Left: Broca aphasia', territory: 'broca_area' },
+  { id: 'wernicke', kind: 'brain', label: 'Superior temporal gyrus', pattern: 'Left: Wernicke aphasia', territory: 'wernicke_area' },
+  { id: 'supramarginal', kind: 'brain', label: 'Inferior parietal lobule', pattern: 'Left: conduction · right: neglect', territory: 'supramarginal' },
   // P9: the eye movements.
   { id: 'mlf', kind: 'brain', label: 'Medial longitudinal fasciculus', pattern: 'Internuclear ophthalmoplegia', territory: 'mlf_pons' },
   { id: 'pontine-tegmentum', kind: 'brain', label: 'Pontine tegmentum', pattern: 'One-and-a-half syndrome', territory: 'pontine_tegmentum' },

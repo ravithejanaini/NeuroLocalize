@@ -9,7 +9,8 @@ import { BRAIN_CASES } from '../spec/expectations/brain.ts';
 import { PLEXUS_CASES } from '../spec/expectations/plexus.ts';
 import { LEG_CASES } from '../spec/expectations/leg.ts';
 import { VISION_CASES } from '../spec/expectations/vision.ts';
-import type { Assertion, BrainAssertion, LimbAssertion, VisionAssertion } from '../spec/expectations/types.ts';
+import { LANGUAGE_CASES } from '../spec/expectations/language.ts';
+import type { Assertion, BrainAssertion, LanguageAssertion, LimbAssertion, VisionAssertion } from '../spec/expectations/types.ts';
 import { KB } from '../src/kb/kb.ts';
 import { MECHANISMS } from '../src/kb/mechanisms.ts';
 import { RENDER } from '../src/kb/render.ts';
@@ -25,7 +26,7 @@ const span = (s: readonly [string, string]): string => (s[0] === s[1] ? s[0] : `
 const any = (xs: readonly string[]): string => xs.join(' or ');
 const words = (xs: readonly string[]): string => xs.map((x) => x.replace(/_/g, ' ')).join(', ');
 
-export function describe(a: Assertion | LimbAssertion | BrainAssertion | VisionAssertion): string {
+export function describe(a: Assertion | LimbAssertion | BrainAssertion | VisionAssertion | LanguageAssertion): string {
   switch (a.kind) {
     case 'sensory':
       return `${SIDE[a.side]} · ${a.modality === 'all' ? 'all sensation' : a.modality.replace('_', ' ')} · ${span(a.span)} → ${any(a.oneOf)}`;
@@ -50,6 +51,10 @@ export function describe(a: Assertion | LimbAssertion | BrainAssertion | VisionA
       return `${SIDE[a.side]} · ${a.sign.replace(/_/g, ' ')} → ${any(a.oneOf)}`;
     case 'vertigo':
       return `vertigo → ${any(a.oneOf)}`;
+    case 'language':
+      return `language · ${a.sign.replace(/_/g, ' ')} → ${any(a.oneOf)}`;
+    case 'neglect':
+      return `neglect of the ${SIDE[a.side].toLowerCase()} side of space → ${any(a.oneOf)}`;
     case 'field':
       return `${a.eye === 'both' ? 'both eyes' : `${SIDE[a.eye]} eye`} · field · ${words(a.sectors)} → ${any(a.oneOf)}`;
     case 'rapd':
@@ -64,7 +69,7 @@ export function describe(a: Assertion | LimbAssertion | BrainAssertion | VisionA
 }
 
 export function buildWorksheet(): Worksheet {
-  const urls = new Map([...read('docs/SOURCES.md').matchAll(/^\| (S\d\d) \| \[[^\]]+\]\(([^)]+)\)/gm)].map((m) => [m[1] ?? '', m[2] ?? '#']));
+  const urls = new Map([...read('docs/SOURCES.md').matchAll(/^\| (S\d{2,3}) \| \[[^\]]+\]\(([^)]+)\)/gm)].map((m) => [m[1] ?? '', m[2] ?? '#']));
   const sources = (ids: readonly string[]): Source[] => ids.map((id) => ({ id, url: urls.get(id) ?? '#' }));
 
   const weight = new Map<string, number>();
@@ -98,12 +103,12 @@ export function buildWorksheet(): Worksheet {
   let q = 0;
   for (const m of read('docs/DECISIONS.md').matchAll(/^\*\*(R\d+)\*\* — ([\s\S]*?)(?=\n\n)/gm)) {
     const id = m[1] ?? '';
-    const cited = [...new Set((m[2] ?? '').match(/\bS\d\d\b/g) ?? [])];
+    const cited = [...new Set((m[2] ?? '').match(/\bS\d{2,3}\b/g) ?? [])];
     items.push({ id, section: 'question', n: ++q, title: (m[2] ?? '').replace(/\n/g, ' '), tags: [id], sources: sources(cited) });
   }
 
   let k = 0;
-  for (const c of [...CORD_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES]) {
+  for (const c of [...CORD_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES]) {
     const findings: Finding[] = c.evaluations.flatMap((e) =>
       e.assertions
         .filter((a) => a.basis === 'composed')

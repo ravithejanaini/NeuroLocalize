@@ -5,7 +5,7 @@ import type { Findings } from '../engine/forward.ts';
 import type { Hypothesis } from '../engine/hypotheses.ts';
 import type { Observation } from '../engine/reverse.ts';
 import { KB } from '../kb/kb.ts';
-import { FIELD_SECTORS, MUSCLES, SEGMENTS, SIDES, type Segment, type Side } from '../kb/vocab.ts';
+import { FIELD_SECTORS, LANGUAGE_SIGNS, MUSCLES, SEGMENTS, SIDES, type Segment, type Side } from '../kb/vocab.ts';
 
 export const PATHWAYS = [
   'spinothalamic',
@@ -20,6 +20,7 @@ export const PATHWAYS = [
   'eye_movements',
   'cerebellar_vestibular',
   'visual',
+  'language',
 ] as const;
 export type Pathway = (typeof PATHWAYS)[number];
 
@@ -36,6 +37,7 @@ export const PATHWAY_NAME: Record<Pathway, { readonly name: string; readonly wha
   eye_movements: { name: 'Conjugate gaze', what: 'gaze palsy, internuclear ophthalmoplegia and one-and-a-half: which eye fails to move, and which way' },
   cerebellar_vestibular: { name: 'Ataxia and vertigo', what: 'the cerebellar peduncles and vestibular nuclei' },
   visual: { name: 'Visual fields', what: 'the optic nerve, chiasm, tract, radiations and occipital cortex, and the pupil' },
+  language: { name: 'Language and attention', what: 'fluency, comprehension and repetition in the dominant hemisphere; neglect in the other' },
 };
 
 const hurt = (s: string): boolean => s === 'lost' || s === 'impaired';
@@ -89,6 +91,7 @@ export function pathwaysOf(f: Findings, h: Hypothesis): Pathway[] {
   }
   if (f.vertigo === 'present') out.add('cerebellar_vestibular');
   if (SIDES.some((x) => FIELD_SECTORS.some((s) => f.fields[x][s] === 'lost')) || SIDES.some((x) => f.rapd[x] === 'present')) out.add('visual');
+  if (LANGUAGE_SIGNS.some((s) => f.language[s] === 'present') || SIDES.some((x) => f.neglect[x] === 'present')) out.add('language');
   return PATHWAYS.filter((p) => out.has(p));
 }
 
@@ -174,6 +177,10 @@ export function pathwaysShown(observations: readonly Observation[], f: Findings,
         break;
       case 'rapd':
         if (o.value === 'present') out.add('visual');
+        break;
+      case 'language':
+      case 'neglect':
+        if (o.value === 'present') out.add('language');
         break;
     }
   }

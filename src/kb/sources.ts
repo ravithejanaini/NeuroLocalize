@@ -11,6 +11,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S67', 'S68', 'S69', 'S70',
   'S71', 'S72', 'S73', 'S74', 'S75', 'S76', 'S77', 'S78', 'S79', 'S80', 'S81', 'S82', 'S83', 'S84', 'S85', 'S86', 'S87', 'S88', 'S89', 'S90',
   'S91', 'S92', 'S93', 'S94', 'S95', 'S96', 'S97', 'S98', 'S99',
+  'S100', 'S101', 'S102', 'S103', 'S104', 'S105', 'S106', 'S107', 'S108',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -115,4 +116,13 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S97', title: 'StatPearls — Homonymous Hemianopsia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK558929/' },
   { id: 'S98', title: 'StatPearls — Internuclear Ophthalmoplegia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK441970/' },
   { id: 'S99', title: 'Xue et al. — One-and-a-half syndrome with its spectrum disorders (Quant Imaging Med Surg, 2017)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5756788/' },
+  { id: 'S100', title: 'StatPearls — Broca Aphasia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK436010/' },
+  { id: 'S101', title: 'StatPearls — Wernicke Aphasia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK441951/' },
+  { id: 'S102', title: 'StatPearls — Conduction Aphasia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537006/' },
+  { id: 'S103', title: 'StatPearls — Aphasia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK559315/' },
+  { id: 'S104', title: 'StatPearls — Middle Cerebral Artery Stroke', url: 'https://www.ncbi.nlm.nih.gov/books/NBK556132/' },
+  { id: 'S105', title: 'StatPearls — Neuroanatomy, Middle Cerebral Artery', url: 'https://www.ncbi.nlm.nih.gov/books/NBK526002/' },
+  { id: 'S106', title: 'StatPearls — Spatial Neglect', url: 'https://www.ncbi.nlm.nih.gov/books/NBK562184/' },
+  { id: 'S107', title: 'StatPearls — Neuroanatomy, Cerebral Hemisphere', url: 'https://www.ncbi.nlm.nih.gov/books/NBK549789/' },
+  { id: 'S108', title: 'Knecht et al. — Handedness and hemispheric language dominance in healthy humans (Brain, 2000)', url: 'https://academic.oup.com/brain/article/123/12/2512/325690' },
 ];

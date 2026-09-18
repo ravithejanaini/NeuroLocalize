@@ -98,12 +98,14 @@ export const VISION_REVERSE_CASES: readonly VisionReverseCase[] = [
   },
   {
     id: 'reverse-occipital-cortex',
-    title: 'Right homonymous hemianopia, centre lost, pupils normal',
-    observations: [...rightHalf('abnormal'), ...leftHalfNormal, ...noPupilDefect],
+    title: 'Right homonymous hemianopia, centre lost, pupils normal, speech normal',
+    // A14: a left inferior-division MCA stroke cuts both radiations and gives the same field;
+    // normal comprehension is what puts this lesion in the occipital lobe instead (C31).
+    observations: [...rightHalf('abnormal'), ...leftHalfNormal, ...noPupilDefect, { kind: 'language', sign: 'impaired_comprehension', value: 'absent' }],
     expectations: [{ timepoint: 'chronic', topFamily: 'visual_left', topPlaces: ['occipital_cortex'] }],
-    cite: ['S97', 'S92'],
+    cite: ['S97', 'S92', 'S101', 'S105'],
     basis: 'stated',
-    note: 'Normal pupils exclude the tract (S97); the centre being lost excludes a lesion that spares the pole (S92).',
+    note: 'Normal pupils exclude the tract (S97); the centre being lost excludes a lesion that spares the pole (S92); understanding speech excludes a left inferior-division stroke, which gives the same field with Wernicke aphasia (S101, S105; A14).',
   },
   {
     id: 'reverse-macular-sparing',

@@ -293,6 +293,10 @@ export const BRAIN_COMPARTMENTS = [
   'mlf',
   'pprf',
   'oculomotor_nucleus',
+  // P10: cortex beyond the homunculus. The gyri are bilateral; language is not.
+  'inferior_frontal',
+  'superior_temporal',
+  'inferior_parietal',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 
@@ -314,6 +318,13 @@ export const CRANIAL_SIGNS = [
 ] as const;
 export type CranialSign = (typeof CRANIAL_SIGNS)[number];
 
+/**
+ * P10: the three bedside facets of language, each named for its abnormal state. They are
+ * findings about the patient, not a side: language lives in the dominant hemisphere (D68).
+ */
+export const LANGUAGE_SIGNS = ['nonfluent_speech', 'impaired_comprehension', 'impaired_repetition'] as const;
+export type LanguageSign = (typeof LANGUAGE_SIGNS)[number];
+
 /** 'lower': the forehead spared, as after an upper-motor-neuron lesion. 'whole': the forehead too. */
 export type FaceWeakness = 'none' | 'lower' | 'whole' | 'indeterminate';
 export type FaceWeaknessObservation = 'normal' | 'lower' | 'whole';
@@ -333,6 +344,12 @@ export const TERRITORIES = [
   'mlf_pons',
   'pontine_tegmentum',
   'oculomotor_nucleus',
+  // P10.
+  'mca_inferior',
+  'mca_whole',
+  'broca_area',
+  'wernicke_area',
+  'supramarginal',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

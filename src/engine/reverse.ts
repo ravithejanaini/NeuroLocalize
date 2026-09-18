@@ -15,6 +15,7 @@ import {
   type BrainCompartment,
   type BrainLevel,
   type CranialSign,
+  type LanguageSign,
   type FieldSector,
   VISUAL_PARTS,
   type VisualPart,
@@ -60,7 +61,10 @@ export type Observation =
   | { readonly kind: 'vertigo'; readonly value: SignObservation }
   /** P8: one sector of one eye's visual field, and the relative afferent pupillary defect. */
   | { readonly kind: 'field'; readonly eye: Side; readonly sector: FieldSector; readonly value: SensoryObservation }
-  | { readonly kind: 'rapd'; readonly side: Side; readonly value: SignObservation };
+  | { readonly kind: 'rapd'; readonly side: Side; readonly value: SignObservation }
+  /** P10: one facet of language (about the patient, not a side), and neglect of one side of space. */
+  | { readonly kind: 'language'; readonly sign: LanguageSign; readonly value: SignObservation }
+  | { readonly kind: 'neglect'; readonly side: Side; readonly value: SignObservation };
 
 /** An observation not yet made: everything but its value. */
 export type Slot = Observation extends infer O ? (O extends Observation ? Omit<O, 'value'> : never) : never;
@@ -90,6 +94,8 @@ const DOMAIN: Record<Observation['kind'], readonly string[]> = {
   vertigo: ['present', 'absent'],
   field: ['normal', 'abnormal'],
   rapd: ['present', 'absent'],
+  language: ['present', 'absent'],
+  neglect: ['present', 'absent'],
 };
 
 const idx = (s: Segment): number => SEGMENTS.indexOf(s);
@@ -120,6 +126,10 @@ export const slotKey = (s: Slot): string => {
       return `field|${s.eye}|${s.sector}`;
     case 'rapd':
       return `rapd|${s.side}`;
+    case 'language':
+      return `language|${s.sign}`;
+    case 'neglect':
+      return `neglect|${s.side}`;
     default:
       return s.kind;
   }
@@ -172,6 +182,14 @@ export function predict(f: Findings, s: Slot, kb: Kb = KB): Value | 'unknown' {
     }
     case 'vertigo':
       return f.vertigo === 'indeterminate' ? 'unknown' : f.vertigo;
+    case 'language': {
+      const v = f.language[s.sign];
+      return v === 'indeterminate' ? 'unknown' : v;
+    }
+    case 'neglect': {
+      const v = f.neglect[s.side];
+      return v === 'indeterminate' ? 'unknown' : v;
+    }
     case 'field': {
       const state = f.fields[s.eye][s.sector];
       return state === 'indeterminate' ? 'unknown' : state === 'lost' ? 'abnormal' : 'normal';
@@ -486,6 +504,11 @@ export const SITE_NAME: Record<Place, string> = {
   dorsal_pons: 'dorsal pons',
   midbrain_peduncle: 'cerebral peduncle',
   mlf_pons: 'medial longitudinal fasciculus, in the pons',
+  mca_inferior: 'MCA inferior division (temporal and parietal cortex, optic radiation)',
+  mca_whole: 'MCA cortex, both divisions',
+  broca_area: 'inferior frontal gyrus (Broca area)',
+  wernicke_area: 'posterior superior temporal gyrus (Wernicke area)',
+  supramarginal: 'inferior parietal lobule (supramarginal and angular gyri)',
   pontine_tegmentum: 'pontine tegmentum (abducens nucleus and MLF)',
   oculomotor_nucleus: 'oculomotor nucleus, in the midbrain',
   internal_capsule: 'internal capsule',
@@ -565,6 +588,9 @@ const PART_NAME: Record<BrainCompartment, string> = {
   peduncle: 'cerebral peduncle',
   oculomotor: 'oculomotor fascicles',
   oculomotor_nucleus: 'oculomotor nucleus',
+  inferior_frontal: 'inferior frontal gyrus',
+  superior_temporal: 'posterior superior temporal gyrus',
+  inferior_parietal: 'inferior parietal lobule',
   mlf: 'medial longitudinal fasciculus',
   pprf: 'paramedian pontine reticular formation',
   basis: 'basis pontis',
@@ -701,6 +727,27 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
     case 'vertigo': {
       const c = (['L', 'R'] as const).map((s) => brainCut(bmap, b.vertigo.steps, s, 'face')).filter((x): x is string => x !== null);
       return c.length ? c.map(damaged).join('; ') : 'the vestibular nuclei are intact';
+    }
+    case 'language': {
+      // Read from the dominant hemisphere only (D68).
+      const dominant = b.dominance.language;
+      const steps = o.sign === 'nonfluent_speech' ? b.fluency.steps : o.sign === 'impaired_comprehension' ? b.comprehension.steps : b.repetition.steps;
+      const cut = brainCut(bmap, steps, dominant, 'face');
+      if (cut) return `${damaged(cut)}, in the dominant hemisphere`;
+      const other = brainCut(bmap, steps, dominant === 'L' ? 'R' : 'L', 'face');
+      if (other) return `${damaged(other)}, but language lives in the dominant hemisphere — the ${SIDE[dominant]}, in most people (D68)`;
+      const parts = steps.map((x) => PART_NAME[x.compartment]);
+      const named = parts.length > 1 ? `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}` : parts[0];
+      return `the ${SIDE[dominant]} ${named}, which ${parts.length > 1 ? 'this depends' : 'it depends'} on, ${parts.length > 1 ? 'are' : 'is'} intact`;
+    }
+    case 'neglect': {
+      const h = o.side === 'L' ? 'R' : 'L';
+      const cut = brainCut(bmap, b.neglect.steps, h, 'face');
+      if (!cut) return `the ${SIDE[h]} inferior parietal lobule, which attends to that side of space, is intact`;
+      if (h === b.dominance.language && f.neglect[o.side] === 'indeterminate') {
+        return `${damaged(cut)} — the dominant side, after which neglect is rarer and less lasting (C32)`;
+      }
+      return `${damaged(cut)}: the nondominant parietal lobe attends to the opposite side of space`;
     }
     case 'field': {
       const vmap = mapVision(kb, h.regions.filter(isVision));

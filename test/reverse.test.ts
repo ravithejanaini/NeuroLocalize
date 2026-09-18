@@ -4,6 +4,7 @@ import { BRAIN_REVERSE_CASES } from '../spec/expectations/reverse-brain.ts';
 import { LIMB_REVERSE_CASES } from '../spec/expectations/reverse-plexus.ts';
 import { LEG_REVERSE_CASES } from '../spec/expectations/reverse-leg.ts';
 import { VISION_REVERSE_CASES } from '../spec/expectations/reverse-vision.ts';
+import { LANGUAGE_REVERSE_CASES } from '../spec/expectations/reverse-language.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
 import { hypotheses } from '../src/engine/hypotheses.ts';
@@ -18,7 +19,7 @@ import { examSlots } from '../src/render/slots.ts';
 const SLOTS = examSlots(RENDER);
 
 describe('frozen reverse expectations (A3, A4, A7)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES]) {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });
@@ -35,7 +36,9 @@ describe('reverse engine contract', () => {
     // P8 adds, per side, six sectors of that eye's field and its pupil.
     // P9 takes the cranial signs per side from five to nine: adduction, abducting nystagmus,
     // ptosis and elevation join them, so that term is 2 * 12 rather than 2 * 8.
-    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 12 + 1 + 2 * 7);
+    // P10 adds three facets of language, which belong to the patient and not a side, and
+    // neglect of each side of space: 3 + 2.
+    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 12 + 1 + 2 * 7 + 3 + 2);
   });
 
   it('with no findings, prefers nothing in particular and still suggests a test', () => {
@@ -199,8 +202,8 @@ describe('reverse engine contract', () => {
     assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 56, 'D32, P7: 18 arm and 10 leg places on each side');
     assert.equal(
       places.filter((x) => x.family.startsWith('brainstem') || x.family.startsWith('hemisphere')).length,
-      24,
-      'D44, P9: 12 territories on each side — the nine of P5 plus the MLF, the pontine tegmentum and the oculomotor nucleus',
+      34,
+      'D44, P9, P10: 17 territories on each side — the nine of P5, three from P9 and five from P10',
     );
   });
 
@@ -265,5 +268,50 @@ describe('reverse engine contract', () => {
     assert.ok(nucleus);
     const [lid] = explain(nucleus, [{ kind: 'cranial', side: 'R', sign: 'ptosis', value: 'present' }], 'chronic');
     assert.match(lid?.because ?? '', /both lids: ptosis on both sides or on neither/);
+  });
+});
+
+describe('the working for language and attention (P10)', () => {
+  it('names the damaged gyrus and the dominant hemisphere', () => {
+    prepareSync('chronic');
+    const broca = hypotheses().find((x) => x.id === 'hemisphere_left:broca_area');
+    assert.ok(broca);
+    const [fluency] = explain(broca, [{ kind: 'language', sign: 'nonfluent_speech', value: 'present' }], 'chronic');
+    assert.match(fluency?.because ?? '', /left inferior frontal gyrus is damaged, in the dominant hemisphere/);
+  });
+
+  it('says why a right-sided lesion leaves speech alone (D68)', () => {
+    const right = hypotheses().find((x) => x.id === 'hemisphere_right:broca_area');
+    assert.ok(right);
+    const [fluency] = explain(right, [{ kind: 'language', sign: 'nonfluent_speech', value: 'absent' }], 'chronic');
+    assert.match(fluency?.because ?? '', /language lives in the dominant hemisphere/);
+  });
+
+  it('explains neglect from the side of space, and the dominant side as unsettled (C32)', () => {
+    const right = hypotheses().find((x) => x.id === 'hemisphere_right:supramarginal');
+    const left = hypotheses().find((x) => x.id === 'hemisphere_left:supramarginal');
+    assert.ok(right && left);
+    const [l] = explain(right, [{ kind: 'neglect', side: 'L', value: 'present' }], 'chronic');
+    assert.match(l?.because ?? '', /right inferior parietal lobule is damaged: the nondominant parietal lobe/);
+    const [r] = explain(left, [{ kind: 'neglect', side: 'R', value: 'present' }], 'chronic');
+    assert.match(r?.because ?? '', /the dominant side, after which neglect is rarer/);
+  });
+});
+
+describe('the working names the part a spared facet depends on (P10)', () => {
+  it('does not call the language cortex intact when only another part of it is damaged', () => {
+    prepareSync('chronic');
+    const conduction = hypotheses().find((x) => x.id === 'hemisphere_left:supramarginal');
+    assert.ok(conduction);
+    const [fluent, understands] = explain(
+      conduction,
+      [
+        { kind: 'language', sign: 'nonfluent_speech', value: 'absent' },
+        { kind: 'language', sign: 'impaired_comprehension', value: 'absent' },
+      ],
+      'chronic',
+    );
+    assert.match(fluent?.because ?? '', /the left inferior frontal gyrus, which it depends on, is intact/);
+    assert.match(understands?.because ?? '', /the left posterior superior temporal gyrus, which it depends on, is intact/);
   });
 });

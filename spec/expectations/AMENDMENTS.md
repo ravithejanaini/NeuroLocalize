@@ -263,6 +263,30 @@ situation the freeze exists to catch.
   flipping the conjugate-gaze rule from contralateral to ipsilateral fails three of them, and
   the mutation run over the new rows is the standing evidence that they bite.
 
+## A14 — Language and the dominant hemisphere (P10, 2026-09-18)
+
+- **Changed:** two new files. `language.ts` holds eight cases: the inferior division of the MCA
+  on each side, the whole MCA cortex, the inferior frontal gyrus on each side, the superior
+  temporal gyrus, and the inferior parietal lobule on each side. `reverse-language.ts` holds
+  five examinations: Broca aphasia with a hemiparesis, conduction aphasia, Wernicke aphasia with
+  a hemianopia, global aphasia, and left neglect. `types.ts` gains the `language` and `neglect`
+  assertions and admits them in a brain case; `reverse-brain.ts` gains the two observations.
+- **Changed, not added:** `brain.ts`'s superior-division case now lesions the inferior frontal
+  gyrus too — S104 puts Broca area in that division's precentral branch (D70) — and asserts
+  Broca aphasia. Two earlier examinations each gain one observation, never lose one:
+  `reverse-mca-cortex` (P5) and `reverse-occipital-cortex` (P8) now record that the patient
+  understands speech. P10 added places that fit their original findings equally — the whole
+  MCA, and a left inferior-division stroke cutting both radiations — and understanding is the
+  bedside finding that separates them. The expected answers are unchanged; widening them to
+  admit the new places was the alternative, and would have stopped testing the distinction.
+- **Why:** P10 adds three language findings, neglect, three cortical parts and five places. A
+  row no frozen case observes is an untested row (rule 5).
+- **How circularity was avoided — and this time the order was kept.** Every assertion is
+  quoted from S100–S108, read into `docs/P10-analysis.md` before any code. The cases were then
+  **run red against the P9 engine** before a line of P10 engine code existed: nine cases
+  failed with 46 findings `undefined`, and the territory check failed on the amended
+  superior-division lesion. P9 wrote its cases after its engine (A13); P10 did not.
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -271,14 +295,16 @@ situation the freeze exists to catch.
 | `boundaries.ts` | A2 |
 | `index.ts` | A2 (exports the boundary cases) |
 | `reverse.ts` | A3 |
-| `types.ts` | A4, A6, A7, A11 |
+| `types.ts` | A4, A6, A7, A11, A14 |
 | `plexus.ts` | A4, A5, A6, A9 |
 | `reverse-plexus.ts` | A4, A5 |
-| `brain.ts` | A7, A8, A9, A13 |
-| `reverse-brain.ts` | A7, A13 |
+| `brain.ts` | A7, A8, A9, A13, A14 |
+| `reverse-brain.ts` | A7, A13, A14 |
 | `leg.ts` | A10 |
 | `reverse-leg.ts` | A10 |
 | `vision.ts` | A11 |
-| `reverse-vision.ts` | A11 |
+| `reverse-vision.ts` | A11, A14 |
+| `language.ts` | A14 |
+| `reverse-language.ts` | A14 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

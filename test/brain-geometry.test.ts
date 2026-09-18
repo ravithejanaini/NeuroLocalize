@@ -100,6 +100,14 @@ describe('the drawn brain keeps the sourced relations', () => {
     assert.ok(Math.abs(mid('mlf').x) < Math.abs(mid('peduncle').x), 'the MLF stays paramedian in the midbrain');
   });
 
+  it('puts Broca area in front of the motor strip and the inferior parietal lobule behind the sensory strip (S104, S107)', () => {
+    const at = (c: Parameters<typeof partPoint>[2], r: 'face' | 'arm' = 'face') => partPoint(RENDER, 'cortex', c, 'L', r);
+    assert.ok(at('inferior_frontal').z < at('motor_cortex').z, 'the inferior frontal gyrus is anterior');
+    assert.ok(at('inferior_parietal').z > at('sensory_cortex').z, 'the inferior parietal lobule is posterior');
+    assert.ok(at('superior_temporal').y < at('inferior_parietal').y, 'the temporal lobe lies below the parietal');
+    assert.ok(Math.abs(at('superior_temporal').x) >= Math.abs(at('motor_cortex', 'face').x), 'the Sylvian cortex is lateral, beside the face area');
+  });
+
   it('draws every part a territory names', () => {
     for (const row of Object.values(KB.brain.territories)) {
       for (const c of row.compartments) assert.ok(partPoint(RENDER, row.level, c, 'R', 'face'), `${row.level} ${c}`);

@@ -1,7 +1,7 @@
 // The head and brainstem findings, as HTML strings. No DOM, so it is tested under Node.
 import type { Findings } from '../engine/forward.ts';
-import { CRANIAL_SIGNS, SEGMENTS, SIDES, type FaceWeakness, type SensoryState, type Side, type SignState } from '../kb/vocab.ts';
-import { CRANIAL_NAME } from './examine.ts';
+import { CRANIAL_SIGNS, LANGUAGE_SIGNS, SEGMENTS, SIDES, type FaceWeakness, type SensoryState, type Side, type SignState } from '../kb/vocab.ts';
+import { CRANIAL_NAME, LANGUAGE_NAME } from './examine.ts';
 
 const FACE_WORD: Record<FaceWeakness, string> = {
   none: 'strong',
@@ -64,3 +64,42 @@ export function headHtml(f: Findings): string {
   return `${lead}<table class="head"><thead><tr><th></th><th>Left</th><th>Right</th></tr></thead><tbody>${rows}</tbody></table>
     <div class="kv"><span class="k">Vertigo</span><span class="v">${SIGN_WORD[f.vertigo]}</span></div>`;
 }
+
+// ── P10: language and attention ───────────────────────────────────────────
+
+/**
+ * The classical name for a combination of the three facets, from S103's classification. The
+ * engine never names an aphasia; this only reads its three findings back as the table does.
+ * Combinations the model cannot produce (the transcortical and anomic aphasias keep
+ * repetition) get no name rather than a guess.
+ */
+export function aphasiaName(f: Findings): string | null {
+  const l = f.language;
+  if (LANGUAGE_SIGNS.some((s) => l[s] === 'indeterminate')) return null;
+  const key = `${l.nonfluent_speech}|${l.impaired_comprehension}|${l.impaired_repetition}`;
+  const NAMES: Record<string, string> = {
+    'present|absent|present': 'Broca aphasia: non-fluent, understands, cannot repeat',
+    'absent|present|present': 'Wernicke aphasia: fluent, does not understand, cannot repeat',
+    'absent|absent|present': 'conduction aphasia: fluent, understands, cannot repeat',
+    'present|present|present': 'global aphasia: non-fluent, does not understand, cannot repeat',
+  };
+  return NAMES[key] ?? null;
+}
+
+export function languageAffected(f: Findings): boolean {
+  return LANGUAGE_SIGNS.some((s) => f.language[s] !== 'absent') || SIDES.some((x) => f.neglect[x] !== 'absent');
+}
+
+export function languageHtml(f: Findings): string {
+  if (!languageAffected(f)) return '<p class="quiet">Speech fluent, comprehension and repetition intact; no neglect.</p>';
+  const name = aphasiaName(f);
+  const lead = name ? `<p class="pattern">${name.charAt(0).toUpperCase()}${name.slice(1)}.</p>` : '';
+  const facets = LANGUAGE_SIGNS.map(
+    (s) => `<div class="kv"><span class="k">${LANGUAGE_NAME[s].replace(/ \(.*\)$/, '')}</span><span class="v ${f.language[s] === 'absent' ? 'quiet' : 'st-sign-present'}">${f.language[s] === 'absent' ? 'no' : SIGN_WORD[f.language[s]]}</span></div>`,
+  ).join('');
+  const neglect = SIDES.map(
+    (x) => `<div class="kv"><span class="k">Neglect, ${SIDE_WORD[x]}</span><span class="v ${f.neglect[x] === 'absent' ? 'quiet' : 'st-sign-present'}">${SIGN_WORD[f.neglect[x]]}</span></div>`,
+  ).join('');
+  return `${lead}${facets}${neglect}`;
+}
+
