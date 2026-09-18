@@ -485,6 +485,9 @@ export const SITE_NAME: Record<Place, string> = {
   ventral_pons: 'ventral pons',
   dorsal_pons: 'dorsal pons',
   midbrain_peduncle: 'cerebral peduncle',
+  mlf_pons: 'medial longitudinal fasciculus, in the pons',
+  pontine_tegmentum: 'pontine tegmentum (abducens nucleus and MLF)',
+  oculomotor_nucleus: 'oculomotor nucleus, in the midbrain',
   internal_capsule: 'internal capsule',
   thalamus: 'lateral thalamus',
   mca_cortex: 'lateral cortex (MCA)',
@@ -561,6 +564,9 @@ const PART_NAME: Record<BrainCompartment, string> = {
   vpm: 'VPM nucleus of the thalamus',
   peduncle: 'cerebral peduncle',
   oculomotor: 'oculomotor fascicles',
+  oculomotor_nucleus: 'oculomotor nucleus',
+  mlf: 'medial longitudinal fasciculus',
+  pprf: 'paramedian pontine reticular formation',
   basis: 'basis pontis',
   facial: 'facial nucleus and fascicle',
   abducens_nucleus: 'abducens nucleus',
@@ -674,10 +680,17 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
         : o.sign === 'abduction_weakness' ? [b.abduction]
         : o.sign === 'gaze_palsy' ? [b.gaze]
         : o.sign === 'tongue_weakness' ? [b.hypoglossal, b.corticobulbarTongue]
+        : o.sign === 'adduction_weakness' ? [b.adduction, b.adductionGaze]
+        : o.sign === 'abducting_nystagmus' ? [b.abductingNystagmus]
+        : o.sign === 'ptosis' ? [b.ptosis]
+        : o.sign === 'elevation_weakness' ? [b.elevation, b.elevationCrossed]
         : [b.ambiguus];
       const c = faceCuts(routes, o.side);
       if (o.sign === 'palate_weakness' && !c.length && f.cranial[o.side].palate_weakness === 'indeterminate') {
         return 'one hemisphere\'s supply is cut, and the palate has both: at most a milder weakness';
+      }
+      if (o.sign === 'ptosis' && !c.length && f.cranial[o.side].ptosis === 'indeterminate') {
+        return 'the oculomotor nucleus is cut, and one central caudal nucleus raises both lids: ptosis on both sides or on neither (C29)';
       }
       return c.length ? c.join('; ') : 'its nucleus, fascicle and supranuclear supply are intact';
     }

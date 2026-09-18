@@ -157,6 +157,14 @@ export type Brain = {
   readonly oculomotor: BrainRoute;
   readonly abduction: BrainRoute;
   readonly gaze: BrainRoute;
+  /** P9 eye movements: the MLF, the lid and the superior rectus (C29). */
+  readonly adduction: BrainRoute;
+  readonly adductionGaze: BrainRoute;
+  readonly abductingNystagmus: BrainRoute;
+  readonly ptosis: BrainRoute;
+  readonly ptosisNuclear: Row<{ readonly steps: readonly BrainStep[]; readonly bilateral: boolean }>;
+  readonly elevation: BrainRoute;
+  readonly elevationCrossed: BrainRoute;
   readonly sympathetic: BrainRoute;
   readonly ataxia: BrainRoute;
   readonly vertigo: Row<{ readonly steps: readonly BrainStep[] }>;

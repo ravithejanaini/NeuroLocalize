@@ -10,7 +10,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S47', 'S48', 'S49', 'S50', 'S51', 'S52', 'S53', 'S54', 'S55', 'S56', 'S57', 'S58', 'S59', 'S60', 'S61', 'S62', 'S63', 'S64', 'S65', 'S66',
   'S67', 'S68', 'S69', 'S70',
   'S71', 'S72', 'S73', 'S74', 'S75', 'S76', 'S77', 'S78', 'S79', 'S80', 'S81', 'S82', 'S83', 'S84', 'S85', 'S86', 'S87', 'S88', 'S89', 'S90',
-  'S91', 'S92', 'S93', 'S94', 'S95', 'S96', 'S97',
+  'S91', 'S92', 'S93', 'S94', 'S95', 'S96', 'S97', 'S98', 'S99',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -113,4 +113,6 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S95', title: 'StatPearls — Marcus Gunn Pupil', url: 'https://www.ncbi.nlm.nih.gov/books/NBK557675/' },
   { id: 'S96', title: 'StatPearls — Neuroanatomy, Bitemporal Hemianopsia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK545213/' },
   { id: 'S97', title: 'StatPearls — Homonymous Hemianopsia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK558929/' },
+  { id: 'S98', title: 'StatPearls — Internuclear Ophthalmoplegia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK441970/' },
+  { id: 'S99', title: 'Xue et al. — One-and-a-half syndrome with its spectrum disorders (Quant Imaging Med Surg, 2017)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5756788/' },
 ];

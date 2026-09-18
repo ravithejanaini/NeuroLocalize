@@ -114,6 +114,10 @@ export const PRESETS: readonly Preset[] = [
   { id: 'thalamus', kind: 'brain', label: 'Lateral thalamus', pattern: 'Pure sensory lacune', territory: 'thalamus' },
   { id: 'mca', kind: 'brain', label: 'Lateral cortex', pattern: 'MCA: face and arm', territory: 'mca_cortex' },
   { id: 'aca', kind: 'brain', label: 'Medial cortex', pattern: 'ACA: leg', territory: 'aca_cortex' },
+  // P9: the eye movements.
+  { id: 'mlf', kind: 'brain', label: 'Medial longitudinal fasciculus', pattern: 'Internuclear ophthalmoplegia', territory: 'mlf_pons' },
+  { id: 'pontine-tegmentum', kind: 'brain', label: 'Pontine tegmentum', pattern: 'One-and-a-half syndrome', territory: 'pontine_tegmentum' },
+  { id: 'oculomotor-nucleus', kind: 'brain', label: 'Oculomotor nucleus', pattern: 'Nuclear third nerve palsy', territory: 'oculomotor_nucleus' },
   // P8: the visual pathway.
   { id: 'optic-nerve', kind: 'vision', label: 'Optic nerve', pattern: 'One eye blind, pupil defect', place: 'optic_nerve' },
   { id: 'chiasm', kind: 'vision', label: 'Optic chiasm', pattern: 'Bitemporal hemianopia', place: 'chiasm' },

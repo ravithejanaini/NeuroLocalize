@@ -219,6 +219,10 @@ export const TERRITORY_CASE: Readonly<Record<string, string>> = {
   thalamus: 'thalamus-left',
   mca_cortex: 'mca-cortex-left',
   aca_cortex: 'aca-cortex-left',
+  // P9.
+  mlf_pons: 'mlf-left',
+  pontine_tegmentum: 'pontine-tegmentum-left',
+  oculomotor_nucleus: 'oculomotor-nucleus-left',
 };
 
 /** P8: the frozen case that describes each place of the visual pathway. */

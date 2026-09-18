@@ -289,6 +289,10 @@ export const BRAIN_COMPARTMENTS = [
   'ambiguus',
   'cerebellar_peduncle',
   'vestibular',
+  // P9.
+  'mlf',
+  'pprf',
+  'oculomotor_nucleus',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 
@@ -296,7 +300,18 @@ export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 export const BODY_REGIONS = ['face', 'neck', 'arm', 'trunk', 'leg'] as const;
 export type BodyRegion = (typeof BODY_REGIONS)[number];
 
-export const CRANIAL_SIGNS = ['oculomotor_palsy', 'abduction_weakness', 'gaze_palsy', 'tongue_weakness', 'palate_weakness'] as const;
+export const CRANIAL_SIGNS = [
+  'oculomotor_palsy',
+  'abduction_weakness',
+  'gaze_palsy',
+  'tongue_weakness',
+  'palate_weakness',
+  // P9: the eye movements of the brainstem.
+  'adduction_weakness',
+  'abducting_nystagmus',
+  'ptosis',
+  'elevation_weakness',
+] as const;
 export type CranialSign = (typeof CRANIAL_SIGNS)[number];
 
 /** 'lower': the forehead spared, as after an upper-motor-neuron lesion. 'whole': the forehead too. */
@@ -314,6 +329,10 @@ export const TERRITORIES = [
   'thalamus',
   'mca_cortex',
   'aca_cortex',
+  // P9.
+  'mlf_pons',
+  'pontine_tegmentum',
+  'oculomotor_nucleus',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

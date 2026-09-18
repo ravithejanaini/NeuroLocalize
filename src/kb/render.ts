@@ -221,8 +221,8 @@ export const RENDER: RenderKb = {
   brainLayout: {
     meta: {
       id: 'render.brain-layout',
-      claim: 'The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally. Positions are schematic.',
-      sources: ['S48', 'S58', 'S47', 'S54', 'S66', 'S59'],
+      claim: 'The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally. Positions are schematic.',
+      sources: ['S48', 'S58', 'S47', 'S54', 'S66', 'S59', 'S98', 'S99', 'S70'],
       tier: 'T1',
       bookRef: 'pending',
     },
@@ -248,6 +248,9 @@ export const RENDER: RenderKb = {
       'pons:basis': [-0.4, 0, -0.95],
       'pons:facial': [-0.62, -0.3, 0.08],
       'pons:abducens_nucleus': [-0.2, -0.45, 0.55],
+      // P9: the MLF is paramedian and dorsal, the PPRF beside the abducens nucleus (S98, S99).
+      'pons:mlf': [-0.1, -0.2, 0.5],
+      'pons:pprf': [-0.32, -0.35, 0.34],
       'pons:abducens_fascicle': [-0.28, -0.4, -0.35],
       'pons:medial_lemniscus': [-0.3, 0.2, -0.12],
       'pons:spinothalamic': [-0.82, 0.2, 0.0],
@@ -256,6 +259,8 @@ export const RENDER: RenderKb = {
       'pons:vestibular': [-0.76, -0.5, 0.55],
       'midbrain:peduncle': [-0.55, 0, -0.62],
       'midbrain:oculomotor': [-0.2, 0.15, -0.3],
+      'midbrain:oculomotor_nucleus': [-0.13, 0.35, 0.22],
+      'midbrain:mlf': [-0.09, 0.1, 0.3],
       'midbrain:medial_lemniscus': [-0.6, 0, 0.0],
       'midbrain:spinothalamic': [-0.76, 0.1, 0.2],
       'midbrain:sympathetic': [-0.66, -0.2, 0.32],

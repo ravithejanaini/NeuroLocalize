@@ -61,6 +61,10 @@ export const CRANIAL_NAME: Record<CranialSign, string> = {
   gaze_palsy: 'gaze palsy toward this side',
   tongue_weakness: 'tongue weak (deviates to this side)',
   palate_weakness: 'palate weak (uvula deviates away)',
+  adduction_weakness: 'this eye does not adduct',
+  abducting_nystagmus: 'nystagmus of this eye as it abducts',
+  ptosis: 'lid droops on this side',
+  elevation_weakness: 'this eye does not elevate (superior rectus)',
 };
 
 /** Each sector of one eye's field, as it is asked about. */

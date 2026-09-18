@@ -231,6 +231,38 @@ situation the freeze exists to catch.
   root-to-territory claim quoted from S31, S79, S81, S82, S86, S87 or S88, not read off the
   engine; the sources were read for P7 before any leg code existed.
 
+## A13 — The eye movements (P9, 2026-09-18)
+
+- **Changed:** `brain.ts` gains four cases — the MLF (internuclear ophthalmoplegia), the PPRF
+  (a horizontal gaze palsy), the pontine tegmentum (one-and-a-half syndrome) and the
+  oculomotor nucleus (a nuclear third nerve palsy). Two existing cases gain assertions rather
+  than losing any: the dorsal pons now states that the far eye loses adduction with the gaze
+  palsy, and Weber states the lid, the medial and the superior rectus part by part.
+  `quietCranial` now covers the four new signs, so every earlier case says the eye movements
+  it does not name are normal. `reverse-brain.ts` gains five examinations: a sixth nerve palsy
+  against a gaze palsy, a gaze palsy against one-and-a-half, an INO, one-and-a-half, and a
+  nuclear third nerve palsy.
+- **Why:** P9 adds four signs and three parts, and a sign no frozen case observes is an
+  untested sign (rule 5). The four cases and five examinations are what hold the new rows.
+- **How circularity was avoided:** every assertion is quoted from S98 (StatPearls,
+  Internuclear Ophthalmoplegia), S99 (Xue et al. on one-and-a-half syndrome), S70 (Cornblath)
+  or S61/S62/S49, all read and written into `docs/P9-analysis.md` before any P9 code existed.
+  The conflict the sources leave open — bilateral ptosis or none in a nuclear lesion — is
+  asserted as unsettled on both sides (C29), not resolved.
+- **Added after the first P9 mutation run:** a fifth case, `mlf-midbrain-left`. 61 mutants of
+  the midbrain end of the MLF survived, because every case lesioned the tract in the pons
+  only (D66).
+- **Added after the second P9 mutation run:** `midbrain-peduncle-only-left`. Three mutants
+  that redirected the oculomotor fascicles to the cerebral peduncle survived, because the only
+  case lesioning the fascicles takes the peduncle with them (Weber). A case that takes the
+  peduncle alone and states that no third nerve sign follows kills all three, and says what
+  makes Weber crossed. The same run found `validateBrain` had never been given the P9 routes,
+  so nothing held them to the parts-at table — fixed in `src/engine/brain.ts`, not here.
+- **Honest note on order:** the four forward cases were written after the engine rows in this
+  phase, not before them, so their first run was green. They were then falsified deliberately:
+  flipping the conjugate-gaze rule from contralateral to ipsilateral fails three of them, and
+  the mutation run over the new rows is the standing evidence that they bite.
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -242,8 +274,8 @@ situation the freeze exists to catch.
 | `types.ts` | A4, A6, A7, A11 |
 | `plexus.ts` | A4, A5, A6, A9 |
 | `reverse-plexus.ts` | A4, A5 |
-| `brain.ts` | A7, A8, A9 |
-| `reverse-brain.ts` | A7 |
+| `brain.ts` | A7, A8, A9, A13 |
+| `reverse-brain.ts` | A7, A13 |
 | `leg.ts` | A10 |
 | `reverse-leg.ts` | A10 |
 | `vision.ts` | A11 |

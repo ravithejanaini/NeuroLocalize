@@ -17,6 +17,7 @@ export const PATHWAYS = [
   'trigeminal',
   'corticobulbar',
   'cranial_nuclei',
+  'eye_movements',
   'cerebellar_vestibular',
   'visual',
 ] as const;
@@ -31,12 +32,15 @@ export const PATHWAY_NAME: Record<Pathway, { readonly name: string; readonly wha
   peripheral_nerve: { name: 'Plexus and nerves', what: 'root against trunk against cord against nerve' },
   trigeminal: { name: 'Facial sensation', what: 'the ipsilateral trigeminal nucleus and the crossed route above it' },
   corticobulbar: { name: 'Face from above', what: 'lower-face weakness with the forehead spared' },
-  cranial_nuclei: { name: 'Cranial nerve nuclei', what: 'third nerve, abduction, gaze, tongue, palate and the whole face' },
+  cranial_nuclei: { name: 'Cranial nerve nuclei', what: 'third nerve, abduction, tongue, palate and the whole face' },
+  eye_movements: { name: 'Conjugate gaze', what: 'gaze palsy, internuclear ophthalmoplegia and one-and-a-half: which eye fails to move, and which way' },
   cerebellar_vestibular: { name: 'Ataxia and vertigo', what: 'the cerebellar peduncles and vestibular nuclei' },
   visual: { name: 'Visual fields', what: 'the optic nerve, chiasm, tract, radiations and occipital cortex, and the pupil' },
 };
 
 const hurt = (s: string): boolean => s === 'lost' || s === 'impaired';
+/** The signs that are read across both eyes rather than nerve by nerve (D65). */
+const GAZE_SIGNS: ReadonlySet<string> = new Set(['gaze_palsy', 'adduction_weakness', 'abducting_nystagmus']);
 const PERIPHERAL = new Set(['plexus_left', 'plexus_right', 'nerve_left', 'nerve_right']);
 
 export function pathwaysOf(f: Findings, h: Hypothesis): Pathway[] {
@@ -68,9 +72,17 @@ export function pathwaysOf(f: Findings, h: Hypothesis): Pathway[] {
   for (const x of SIDES) {
     if (f.faceWeakness[x] === 'lower') out.add('corticobulbar');
     const c = f.cranial[x];
-    if (f.faceWeakness[x] === 'whole' || c.oculomotor_palsy === 'present' || c.abduction_weakness === 'present' || c.gaze_palsy === 'present' || c.palate_weakness === 'present') {
+    if (
+      f.faceWeakness[x] === 'whole' ||
+      c.oculomotor_palsy === 'present' ||
+      c.abduction_weakness === 'present' ||
+      c.palate_weakness === 'present' ||
+      c.ptosis === 'present' ||
+      c.elevation_weakness === 'present'
+    ) {
       out.add('cranial_nuclei');
     }
+    if (c.gaze_palsy === 'present' || c.adduction_weakness === 'present' || c.abducting_nystagmus === 'present') out.add('eye_movements');
     // A weak tongue beside a lower-face weakness is supranuclear; alone, it is the nucleus.
     if (c.tongue_weakness === 'present') out.add(f.faceWeakness[x] === 'lower' ? 'corticobulbar' : 'cranial_nuclei');
     if (f.ataxia[x] === 'present') out.add('cerebellar_vestibular');
@@ -144,7 +156,13 @@ export function pathwaysShown(observations: readonly Observation[], f: Findings,
         break;
       case 'cranial':
         if (o.value === 'present') {
-          out.add(o.sign === 'tongue_weakness' && f.faceWeakness[o.side] === 'lower' ? 'corticobulbar' : 'cranial_nuclei');
+          out.add(
+            GAZE_SIGNS.has(o.sign)
+              ? 'eye_movements'
+              : o.sign === 'tongue_weakness' && f.faceWeakness[o.side] === 'lower'
+                ? 'corticobulbar'
+                : 'cranial_nuclei',
+          );
         }
         break;
       case 'ataxia':

@@ -722,6 +722,22 @@ leaves the pupils unsettled for a chiasmal lesion rather than calling them norma
 **C28 — How much of the centre macular sparing keeps.** S97 gives 5° to 25°. The model has
 one central sector on each side of fixation and does not grade it.
 
+The analysis written before any P9 code is `docs/P9-analysis.md`; S98 and S99 were read for
+it, beside S61, S62, S49 and S70 already in the registry.
+
+**C29 — Ptosis in a nuclear third nerve lesion.** S70 says a lesion of the oculomotor nucleus
+gives either bilateral ptosis or no ptosis at all, because one central caudal nucleus raises
+both lids. The two outcomes are opposite and the source picks neither, so the model reports
+the lid **unsettled on both sides** for a nuclear lesion rather than choosing (the same shape
+as the palate, C15). A fascicular third nerve palsy is not affected: the lid droops on its own
+side (S62), and that is what separates the two lesions in the app.
+
+**C30 — Convergence in an internuclear ophthalmoplegia.** S98 says convergence may be
+preserved, which is the classical bedside distinction between an INO and a medial rectus palsy
+of the third nerve. **Convergence is not examined in this model**, so nothing is asserted about
+it; the INO case says so in its `unasserted` list. The model separates the two by the lid and
+the superior rectus instead, both of which the sources state.
+
 ### Decisions
 
 **D59 — The ranked list puts conflicts before probability.** Until P8 the candidates were
@@ -773,4 +789,51 @@ with 88 leg survivors, which A12 cut to 57. What still survives, and why:
 - *Places of the visual pathway* were checked only by reverse mode, as brain territories once
   were (D46); each is now held to the frozen case that describes it, in the test suite and in
   the mutation run alike.
+
+**D63 — Adduction has three causes, and the model keeps them apart.** One eye failing to
+adduct means the MLF on that side (S98), the third nerve on that side — the medial rectus is
+III, so the eye rests down and out (S62) — or the abducens nucleus or PPRF on the **other**
+side, whose interneurons drive that medial rectus so the gaze palsy is conjugate (S61, S99).
+The engine takes the worst of an ipsilateral route and a contralateral one. This is what lets
+the app derive one-and-a-half syndrome rather than name it: an abducens nucleus and an MLF on
+one side leave only the other eye's abduction, and the frozen case asserts exactly that.
+
+**D64 — A sixth nerve palsy is only examined inside the ventral pons.** The model has no place
+for an abducens fascicle standing alone: the ventral pontine territory carries the basis and
+the facial fascicle with it (S49, Millard–Gubler). The examination that separates a fascicle
+from a nucleus is therefore a full ventral pontine syndrome, and it still makes the point the
+phase is for — one eye fails to abduct, the other still adducts, so the gaze is not conjugate
+and the nucleus is spared (S61). Inventing a fascicle-only territory would assert a lesion no
+source read describes.
+
+**D65 — Conjugate gaze is its own practice pathway.** Gaze palsy, failed adduction and
+abducting nystagmus are read across **both** eyes: which eye fails, and in which direction,
+is the whole question. They now schedule review under `eye_movements` rather than
+`cranial_nuclei`, which keeps the single-nerve signs — the third nerve, abduction, the lid,
+the superior rectus, the tongue, the palate, the whole face — where they were. A student who
+misreads an INO sees a gaze palsy again, not a palatal weakness.
+
+**D66 — The MLF is one tract, and only the pons is a place.** The frozen cases lesion the MLF
+twice, in the pons and in the midbrain, because the tract runs between them and a rule that
+only held at one end would be untested at the other — the first P9 mutation run left 61
+mutants of the midbrain step standing for exactly that reason. Only the pontine one is offered
+as a place to localise to: the two produce identical findings in this model, so a second
+candidate would be a choice the examination can never settle rather than a lesion the student
+can find.
+
+**D67 — What the P9 mutation run left standing.** 95.6% of sourced mutants are killed (3,316
+of 3,467), 94.8% of all mutants — the highest of any phase, against 94.2% after A12. **No P9
+row has a survivor.** Getting there took three runs and two real corrections, both recorded in
+A13: the midbrain end of the MLF was never lesioned by a case (61 survivors, fixed by
+`mlf-midbrain-left`), and the oculomotor fascicles were never lesioned without the peduncle
+beside them (3 survivors, fixed by `midbrain-peduncle-only-left`). The second run also showed
+that `validateBrain` had never been given the seven P9 routes, so nothing held them to the
+parts-at table — a gap in the engine that no test had asked about, found by a mutant of the
+data rather than by review.
+
+What still survives is what earlier phases already recorded: the ends of tract and plexus
+spans that no modelled finding distinguishes (`brain.spinothalamic`, `brain.lemniscal`,
+`plexus.leg-parts`), rows whose parts are always examined together (`brain.ataxia`,
+`brain.vertigo`, `brain.sympathetic`), and the unsourced rows that stay pinned until a
+reviewer supplies a source. None of them is an eye-movement row.
 

@@ -63,6 +63,13 @@ export function validateBrain(kb: Kb): void {
     b.oculomotor.steps,
     b.abduction.steps,
     b.gaze.steps,
+    b.adduction.steps,
+    b.adductionGaze.steps,
+    b.abductingNystagmus.steps,
+    b.ptosis.steps,
+    b.ptosisNuclear.steps,
+    b.elevation.steps,
+    b.elevationCrossed.steps,
     b.sympathetic.steps,
     b.ataxia.steps,
     b.vertigo.steps,
@@ -169,6 +176,15 @@ function palate(kb: Kb, map: BrainMap, x: Side): SignState {
   return cut.length === 1 ? 'indeterminate' : 'absent';
 }
 
+/** The lid: the fascicles droop their own side, the nucleus both sides or neither (C29). */
+function lid(kb: Kb, map: BrainMap, x: Side): SignState {
+  if (routeDamage(map, kb.brain.ptosis, x, 'face') > 0) return 'present';
+  const { steps, bilateral } = kb.brain.ptosisNuclear;
+  const cut = SIDES.filter((h) => along(map, steps, h, 'face') > 0);
+  if (!bilateral) return along(map, steps, x, 'face') > 0 ? 'present' : 'absent';
+  return cut.length > 0 ? 'indeterminate' : 'absent';
+}
+
 export function brainFindings(kb: Kb, map: BrainMap): BrainFindings {
   const faceSensation = {} as Record<Side, SensoryState>;
   const faceWeak = {} as Record<Side, FaceWeakness>;
@@ -195,6 +211,18 @@ export function brainFindings(kb: Kb, map: BrainMap): BrainFindings {
           break;
         case 'palate_weakness':
           signs[sign] = palate(kb, map, x);
+          break;
+        case 'adduction_weakness':
+          signs[sign] = present(worst([routeDamage(map, b.adduction, x, 'face'), routeDamage(map, b.adductionGaze, x, 'face')]));
+          break;
+        case 'abducting_nystagmus':
+          signs[sign] = present(routeDamage(map, b.abductingNystagmus, x, 'face'));
+          break;
+        case 'ptosis':
+          signs[sign] = lid(kb, map, x);
+          break;
+        case 'elevation_weakness':
+          signs[sign] = present(worst([routeDamage(map, b.elevation, x, 'face'), routeDamage(map, b.elevationCrossed, x, 'face')]));
           break;
       }
     }

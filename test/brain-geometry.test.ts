@@ -90,6 +90,16 @@ describe('the drawn brain keeps the sourced relations', () => {
     assert.ok(partPoint(RENDER, 'cortex', 'motor_cortex', 'L', 'arm').z < partPoint(RENDER, 'cortex', 'sensory_cortex', 'L', 'arm').z, 'motor strip in front of sensory');
   });
 
+  it('keeps the MLF paramedian and dorsal, the third nerve nucleus behind its fascicles (S98, S99, S70)', () => {
+    const pons = (c: Parameters<typeof partPoint>[2]) => partPoint(RENDER, 'pons', c, 'L', 'face');
+    assert.ok(Math.abs(pons('mlf').x) < Math.abs(pons('abducens_nucleus').x), 'the MLF is the more medial of the two');
+    assert.ok(pons('mlf').z > pons('basis').z, 'the MLF is dorsal: the basis is ventral');
+    assert.ok(Math.abs(pons('pprf').x - pons('abducens_nucleus').x) < 0.4, 'the PPRF lies beside the abducens nucleus');
+    const mid = (c: Parameters<typeof partPoint>[2]) => partPoint(RENDER, 'midbrain', c, 'L', 'face');
+    assert.ok(mid('oculomotor_nucleus').z > mid('oculomotor').z, 'the nucleus is dorsal to the fascicles it sends forward');
+    assert.ok(Math.abs(mid('mlf').x) < Math.abs(mid('peduncle').x), 'the MLF stays paramedian in the midbrain');
+  });
+
   it('draws every part a territory names', () => {
     for (const row of Object.values(KB.brain.territories)) {
       for (const c of row.compartments) assert.ok(partPoint(RENDER, row.level, c, 'R', 'face'), `${row.level} ${c}`);

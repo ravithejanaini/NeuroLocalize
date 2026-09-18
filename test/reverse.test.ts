@@ -33,7 +33,9 @@ describe('reverse engine contract', () => {
     // landmarks (D30, P7), and per side facial sensation, facial strength, ataxia and five
     // cranial signs, plus vertigo (P5)
     // P8 adds, per side, six sectors of that eye's field and its pupil.
-    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 8 + 1 + 2 * 7);
+    // P9 takes the cranial signs per side from five to nine: adduction, abducting nystagmus,
+    // ptosis and elevation join them, so that term is 2 * 12 rather than 2 * 8.
+    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 12 + 1 + 2 * 7);
   });
 
   it('with no findings, prefers nothing in particular and still suggests a test', () => {
@@ -195,7 +197,11 @@ describe('reverse engine contract', () => {
     assert.deepEqual(nerve.sites, ['long_thoracic'], 'the only nerve place that weakens serratus');
     const places = hypotheses().filter((x) => x.site);
     assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 56, 'D32, P7: 18 arm and 10 leg places on each side');
-    assert.equal(places.filter((x) => x.family.startsWith('brainstem') || x.family.startsWith('hemisphere')).length, 18, 'D44: 9 territories on each side');
+    assert.equal(
+      places.filter((x) => x.family.startsWith('brainstem') || x.family.startsWith('hemisphere')).length,
+      24,
+      'D44, P9: 12 territories on each side — the nine of P5 plus the MLF, the pontine tegmentum and the oculomotor nucleus',
+    );
   });
 
   // ── above the cord (D42–D44) ──
@@ -232,5 +238,32 @@ describe('reverse engine contract', () => {
     assert.ok(weber);
     const [weak] = explain(weber, [{ kind: 'strength', side: 'R', span: ['L3', 'L3'], value: 'weak' }], 'chronic');
     assert.match(weak?.because ?? '', /left cerebral peduncle in the midbrain is damaged, above the decussation/);
+  });
+
+  it('explains each eye-movement sign by its own route (P9)', () => {
+    const mlf = hypotheses().find((x) => x.id === 'brainstem_left:mlf_pons');
+    assert.ok(mlf);
+    const [adduct, nystagmus] = explain(
+      mlf,
+      [
+        { kind: 'cranial', side: 'L', sign: 'adduction_weakness', value: 'present' },
+        { kind: 'cranial', side: 'R', sign: 'abducting_nystagmus', value: 'present' },
+      ],
+      'chronic',
+    );
+    assert.match(adduct?.because ?? '', /left medial longitudinal fasciculus in the pons is damaged/);
+    assert.match(nystagmus?.because ?? '', /left medial longitudinal fasciculus in the pons is damaged/, 'the nystagmus is of the far eye');
+
+    // The conjugate half of a gaze palsy: the other eye's medial rectus goes with it (D63).
+    const gaze = hypotheses().find((x) => x.id === 'brainstem_left:dorsal_pons');
+    assert.ok(gaze);
+    const [far] = explain(gaze, [{ kind: 'cranial', side: 'R', sign: 'adduction_weakness', value: 'present' }], 'chronic');
+    assert.match(far?.because ?? '', /left abducens nucleus in the pons is damaged/);
+
+    // C29: the nuclear lid is unsettled, and the working says why.
+    const nucleus = hypotheses().find((x) => x.id === 'brainstem_left:oculomotor_nucleus');
+    assert.ok(nucleus);
+    const [lid] = explain(nucleus, [{ kind: 'cranial', side: 'R', sign: 'ptosis', value: 'present' }], 'chronic');
+    assert.match(lid?.because ?? '', /both lids: ptosis on both sides or on neither/);
   });
 });

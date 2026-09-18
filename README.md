@@ -22,10 +22,11 @@ teaching from a phone.
 | P6 | Practice: cases generated from the model and checked by it, answers explained by the engine's own working, review scheduled by the pathways answered wrongly; progress kept in the browser with save and load to a file; presentation mode; offline use from the standalone build |
 | P8 | The visual pathway: optic nerve, chiasm, tract, Meyer loop, parietal radiation and occipital cortex; each eye's field in six sectors with the pupil; monocular loss, bitemporal hemianopia, both quadrantanopias, and hemianopia with or without macular sparing |
 | P7 | The leg: lumbar and sacral plexuses and nine nerves in 3D, eleven muscles, nine territories, foot drop and the Trendelenburg gait; examination mode separates the fibular nerve from L5, the sciatic nerve from the plexus, and the femoral nerve from the lumbar roots |
+| P9 | Eye movements: the medial longitudinal fasciculus, the paramedian pontine reticular formation and the oculomotor nucleus, with four signs — adduction, abducting nystagmus, ptosis and elevation. Internuclear ophthalmoplegia, horizontal gaze palsy, one-and-a-half syndrome and a nuclear third nerve palsy, each derived rather than named; examination mode separates a sixth nerve palsy from a gaze palsy and a gaze palsy from one-and-a-half |
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 97 open-access sources that were actually
+- **Expected outputs are written first**, from 99 open-access sources that were actually
   read (`docs/SOURCES.md`), and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

@@ -10,7 +10,7 @@ content could only be queried for paraphrase; its raw table text was not obtaine
 
 Accessed 2026-09-16 unless noted. S33–S46 were read on 2026-09-17 for P4 and S47–S66 the same day for P5; S16 and S19 were
 read again that day for the facts added to their rows. S67–S70 were read on 2026-09-17 for
-the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.md`); S91–S97 for P8 (`docs/P8-analysis.md`).
+the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.md`); S91–S97 for P8 (`docs/P8-analysis.md`); S98–S99 on 2026-09-18 for P9 (`docs/P9-analysis.md`).
 
 | Id | Source | Authors | Last updated | Used for |
 |---|---|---|---|---|
@@ -111,6 +111,8 @@ the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.m
 | S95 | [StatPearls — Marcus Gunn Pupil](https://www.ncbi.nlm.nih.gov/books/NBK557675/) | Simakurthy, Stokkermans, Tripathy | 2026-04-30 | optic nerve lesions are among the commonest causes; chiasmal lesions may cause one when one eye loses more fibres; optic tract lesions cause a contralateral defect; pretectal lesions a contralateral defect without visual loss |
 | S96 | [StatPearls — Neuroanatomy, Bitemporal Hemianopsia](https://www.ncbi.nlm.nih.gov/books/NBK545213/) | Yoshihara, Lui | 2023-08-07 | loss of the outer temporal halves of both visual fields from damage to the crossing nasal fibres; pituitary adenomas, craniopharyngiomas and meningiomas are the commonest causes |
 | S97 | [StatPearls — Homonymous Hemianopsia](https://www.ncbi.nlm.nih.gov/books/NBK558929/) | Wolberg, Tripathy, Kapoor | 2024-03-01 | any retrochiasmal lesion may cause it; about 60% of radiation and 50% of tract lesions are congruous; macular sparing leaves 5°–25° of central vision; tract lesions often involve afferent pupillary fibres, and lesions behind the lateral geniculate nucleus do not cause a relative afferent pupillary defect |
+| S98 | [StatPearls — Internuclear Ophthalmoplegia](https://www.ncbi.nlm.nih.gov/books/NBK441970/) | Feroze, Wang | 2023-06-26 | impaired adduction on the same side as the medial longitudinal fasciculus lesion; the contralateral abducting eye may show a dissociated horizontal nystagmus; some patients keep normal convergence; the MLF is a paired tract near the midline joining the ocular motor nuclei |
+| S99 | [Xue et al. — One-and-a-half syndrome with its spectrum disorders (Quant Imaging Med Surg, 2017)](https://pmc.ncbi.nlm.nih.gov/articles/PMC5756788/) | Xue, Zhang, Zhang, Ying, Sha, Ding | 2017 | ipsilateral conjugate horizontal gaze palsy with ipsilateral internuclear ophthalmoplegia, from a lesion of one side of the pontine tegmentum damaging the PPRF (or abducens nucleus) and the MLF; abduction of the other eye is what remains; eight-and-a-half syndrome adds the facial nerve |
 
 ## Not used, and why
 

@@ -7,7 +7,7 @@ practice mode in front of it.
 **Education only. Not clinical decision support. No patient data, ever.**
 
 Plan: `docs/plan.html` (published revision C); later phases are analysed before they are
-built (`docs/P7-analysis.md`, `docs/P8-analysis.md`). Sources: `docs/SOURCES.md`.
+built (`docs/P7-analysis.md`, `docs/P8-analysis.md`, `docs/P9-analysis.md`). Sources: `docs/SOURCES.md`.
 Deviations, conflicts and open reviewer questions: `docs/DECISIONS.md`.
 
 ## Commands

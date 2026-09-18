@@ -28,10 +28,20 @@ const sign = (side: 'L' | 'R', sign: Extract<BrainAssertion, { kind: 'cranial' }
 const face = (side: 'L' | 'R', w: 'none' | 'lower' | 'whole', e: E): BrainAssertion => ({ kind: 'face_weakness', side, oneOf: [w], ...e });
 const feel = (side: 'L' | 'R', oneOf: readonly ('intact' | 'lost' | 'impaired')[], e: E): BrainAssertion => ({ kind: 'face_sensation', side, oneOf, ...e });
 
-/** No eye, tongue or palate sign on either side. */
+/** No eye, tongue or palate sign on either side. A13 added the four eye-movement signs. */
 const quietCranial = (e: E, except: readonly string[] = []): BrainAssertion[] =>
   (['L', 'R'] as const).flatMap((side) =>
-    (['oculomotor_palsy', 'abduction_weakness', 'gaze_palsy', 'tongue_weakness', 'palate_weakness'] as const)
+    ([
+      'oculomotor_palsy',
+      'abduction_weakness',
+      'gaze_palsy',
+      'tongue_weakness',
+      'palate_weakness',
+      'adduction_weakness',
+      'abducting_nystagmus',
+      'ptosis',
+      'elevation_weakness',
+    ] as const)
       .filter((s) => !except.includes(`${side}:${s}`))
       .map((s) => sign(side, s, false, e)),
   );
@@ -154,6 +164,15 @@ export const BRAIN_CASES: readonly BrainCase[] = [
         sense('L', 'all', all, ['intact'], { cite: ['S57', 'S58'], basis: 'composed' }),
         sense('R', 'all', all, ['intact'], { cite: ['S57', 'S58'], basis: 'composed' }),
         sign('R', 'gaze_palsy', false, { cite: ['S61'], basis: 'composed' }),
+        // A13: the nucleus holds the interneurons for the other eye's medial rectus, so the
+        // gaze palsy is conjugate — the right eye does not adduct either.
+        sign('R', 'adduction_weakness', true, { cite: ['S61', 'S99'], basis: 'composed', note: 'the interneurons cross to the right medial rectus' }),
+        sign('L', 'adduction_weakness', false, { cite: ['S98'], basis: 'composed', note: 'the left MLF is spared, so the left eye still adducts' }),
+        sign('R', 'abduction_weakness', false, { cite: ['S61'], basis: 'composed', note: 'gaze to the right is intact' }),
+        sign('L', 'abducting_nystagmus', false, { cite: ['S98'], basis: 'composed' }),
+        sign('R', 'abducting_nystagmus', false, { cite: ['S98'], basis: 'composed' }),
+        sign('L', 'ptosis', false, { cite: ['S70'], basis: 'composed' }),
+        sign('R', 'ptosis', false, { cite: ['S70'], basis: 'composed' }),
       ],
       unasserted: ['Foville syndrome adds a hemiparesis (S49); this lesion leaves the basis alone'],
     }],
@@ -181,8 +200,204 @@ export const BRAIN_CASES: readonly BrainCase[] = [
         sign('R', 'palate_weakness', 'open', { cite: ['S64'], basis: 'composed' }),
         { kind: 'babinski', side: 'R', oneOf: ['present'], cite: ['S54'], basis: 'composed' },
         { kind: 'horner', side: 'both', oneOf: ['absent'], cite: ['S16'], basis: 'composed' },
+        // A13: what "third nerve palsy" contains, stated part by part.
+        sign('L', 'ptosis', true, { cite: ['S50', 'S62'], basis: 'stated', note: 'S50 names ptosis in Weber syndrome' }),
+        sign('R', 'ptosis', false, { cite: ['S70'], basis: 'composed', note: 'the fascicles are one-sided; only the nucleus takes both lids' }),
+        sign('L', 'adduction_weakness', true, { cite: ['S62'], basis: 'composed', note: 'the eye rests down and out: the medial rectus is III' }),
+        sign('R', 'adduction_weakness', false, { cite: ['S62'], basis: 'composed' }),
+        sign('L', 'elevation_weakness', true, { cite: ['S70'], basis: 'composed', note: 'the superior rectus is III' }),
+        sign('R', 'elevation_weakness', false, { cite: ['S70'], basis: 'composed', note: 'a fascicle lesion spares the other eye; a nuclear one would not' }),
+        sign('L', 'abducting_nystagmus', false, { cite: ['S98'], basis: 'composed' }),
+        sign('L', 'gaze_palsy', false, { cite: ['S61'], basis: 'composed', note: 'gaze is a pontine sign' }),
+        sign('L', 'abduction_weakness', false, { cite: ['S61'], basis: 'composed', note: 'the sixth nerve is not in the midbrain' }),
       ],
       unasserted: ['sensation: S50 mentions crossed deficits "either sensory or motor" without saying which'],
+    }],
+  },
+
+  // ──────────────────────────────────────────────── A13: the eye movements (P9)
+  {
+    id: 'mlf-left',
+    title: 'Left medial longitudinal fasciculus',
+    pattern: 'internuclear ophthalmoplegia',
+    lesion: [at('pons', ['mlf'])],
+    evaluations: [{
+      timepoint: 'chronic',
+      assertions: [
+        sign('L', 'adduction_weakness', true, { cite: ['S98'], basis: 'stated', note: 'S98: impaired adduction on the same side as the MLF lesion' }),
+        sign('R', 'abducting_nystagmus', true, { cite: ['S98'], basis: 'stated', note: 'S98: the contralateral abducting eye may show a dissociated nystagmus' }),
+        sign('L', 'abducting_nystagmus', false, { cite: ['S98'], basis: 'composed', note: 'the left eye is the adducting one' }),
+        sign('R', 'adduction_weakness', false, { cite: ['S98'], basis: 'composed' }),
+        sign('L', 'abduction_weakness', false, { cite: ['S98', 'S61'], basis: 'stated', note: 'abduction is the sixth nerve and is spared: this is what separates an INO from a sixth nerve palsy' }),
+        sign('R', 'abduction_weakness', false, { cite: ['S61'], basis: 'composed' }),
+        sign('L', 'gaze_palsy', false, { cite: ['S61'], basis: 'composed', note: 'the abducens nucleus and the PPRF are not in this lesion' }),
+        sign('R', 'gaze_palsy', false, { cite: ['S61'], basis: 'composed' }),
+        sign('L', 'oculomotor_palsy', false, { cite: ['S62'], basis: 'composed' }),
+        sign('L', 'ptosis', false, { cite: ['S98', 'S70'], basis: 'composed', note: 'the lid is the third nerve; an INO leaves it alone' }),
+        sign('R', 'ptosis', false, { cite: ['S70'], basis: 'composed' }),
+        sign('L', 'elevation_weakness', false, { cite: ['S70'], basis: 'composed' }),
+        sign('R', 'elevation_weakness', false, { cite: ['S70'], basis: 'composed' }),
+        face('L', 'none', { cite: ['S51'], basis: 'composed' }),
+        face('R', 'none', { cite: ['S51'], basis: 'composed' }),
+        motor('L', all, 'none', { cite: ['S54'], basis: 'composed' }),
+        motor('R', all, 'none', { cite: ['S54'], basis: 'composed' }),
+        sense('L', 'all', all, ['intact'], { cite: ['S57', 'S58'], basis: 'composed' }),
+        sense('R', 'all', all, ['intact'], { cite: ['S57', 'S58'], basis: 'composed' }),
+        { kind: 'horner', side: 'both', oneOf: ['absent'], cite: ['S16'], basis: 'composed' },
+      ],
+      unasserted: [
+        'convergence: S98 says it may be preserved (C30); the model does not examine it',
+        'skew deviation and the vestibulo-ocular reflex are not modelled',
+      ],
+    }],
+  },
+  {
+    id: 'mlf-midbrain-left',
+    title: 'Left medial longitudinal fasciculus, in the midbrain',
+    pattern: 'internuclear ophthalmoplegia from the rostral end of the tract',
+    lesion: [at('midbrain', ['mlf'])],
+    evaluations: [{
+      timepoint: 'chronic',
+      assertions: [
+        // The MLF ascends from the abducens nucleus in the pons to the oculomotor nucleus in
+        // the midbrain, so the same signs appear wherever along it the tract is cut (S98).
+        sign('L', 'adduction_weakness', true, { cite: ['S98'], basis: 'composed', note: 'the tract is the same tract at its rostral end' }),
+        sign('R', 'abducting_nystagmus', true, { cite: ['S98'], basis: 'composed' }),
+        sign('L', 'abduction_weakness', false, { cite: ['S61'], basis: 'composed', note: 'the sixth nerve is pontine' }),
+        sign('L', 'gaze_palsy', false, { cite: ['S61'], basis: 'composed' }),
+        sign('R', 'gaze_palsy', false, { cite: ['S61'], basis: 'composed' }),
+        sign('R', 'adduction_weakness', false, { cite: ['S98'], basis: 'composed' }),
+        sign('L', 'oculomotor_palsy', false, { cite: ['S62'], basis: 'composed', note: 'the fascicles and the nucleus are beside the tract, not in this lesion' }),
+        sign('L', 'ptosis', false, { cite: ['S70'], basis: 'composed' }),
+        sign('R', 'ptosis', false, { cite: ['S70'], basis: 'composed' }),
+        sign('L', 'elevation_weakness', false, { cite: ['S70'], basis: 'composed' }),
+        sign('R', 'elevation_weakness', false, { cite: ['S70'], basis: 'composed' }),
+        motor('L', all, 'none', { cite: ['S54'], basis: 'composed', note: 'the peduncle is ventral' }),
+        motor('R', all, 'none', { cite: ['S54'], basis: 'composed' }),
+        sense('R', 'all', all, ['intact'], { cite: ['S57', 'S58'], basis: 'composed' }),
+        face('L', 'none', { cite: ['S51'], basis: 'composed' }),
+      ],
+      unasserted: [
+        'vertical gaze and the dorsal midbrain syndrome are not modelled, so a rostral lesion asserts nothing about them',
+        'this lesion is not a named place in the app: it produces exactly what the pontine MLF produces (D66)',
+      ],
+    }],
+  },
+  {
+    id: 'pprf-left',
+    title: 'Left paramedian pontine reticular formation',
+    pattern: 'horizontal gaze palsy toward the lesion',
+    lesion: [at('pons', ['pprf'])],
+    evaluations: [{
+      timepoint: 'chronic',
+      assertions: [
+        sign('L', 'gaze_palsy', true, { cite: ['S99', 'S61'], basis: 'stated', note: 'a gaze palsy toward its own side' }),
+        sign('L', 'abduction_weakness', true, { cite: ['S99', 'S61'], basis: 'composed', note: 'the left eye cannot abduct within the gaze palsy' }),
+        sign('R', 'adduction_weakness', true, { cite: ['S61', 'S99'], basis: 'composed', note: 'the gaze is conjugate: the right medial rectus goes with it' }),
+        sign('L', 'adduction_weakness', false, { cite: ['S98'], basis: 'composed', note: 'the MLF is spared, so this is a gaze palsy and not one-and-a-half' }),
+        sign('R', 'abduction_weakness', false, { cite: ['S61'], basis: 'composed' }),
+        sign('R', 'gaze_palsy', false, { cite: ['S61'], basis: 'composed' }),
+        sign('L', 'abducting_nystagmus', false, { cite: ['S98'], basis: 'composed' }),
+        sign('R', 'abducting_nystagmus', false, { cite: ['S98'], basis: 'composed' }),
+        sign('L', 'ptosis', false, { cite: ['S70'], basis: 'composed' }),
+        sign('R', 'ptosis', false, { cite: ['S70'], basis: 'composed' }),
+        sign('L', 'oculomotor_palsy', false, { cite: ['S62'], basis: 'composed' }),
+        face('L', 'none', { cite: ['S51'], basis: 'composed', note: 'the facial genu lies dorsally, around the abducens nucleus' }),
+        motor('L', all, 'none', { cite: ['S54'], basis: 'composed' }),
+        motor('R', all, 'none', { cite: ['S54'], basis: 'composed' }),
+        sense('R', 'all', all, ['intact'], { cite: ['S57', 'S58'], basis: 'composed' }),
+      ],
+      unasserted: ['saccades and pursuit are not modelled separately'],
+    }],
+  },
+  {
+    id: 'pontine-tegmentum-left',
+    title: 'Left pontine tegmentum: abducens nucleus and MLF',
+    pattern: 'one-and-a-half syndrome',
+    lesion: [at('pons', ['abducens_nucleus', 'mlf'])],
+    evaluations: [{
+      timepoint: 'chronic',
+      assertions: [
+        sign('L', 'gaze_palsy', true, { cite: ['S99', 'S61'], basis: 'stated', note: 'the "one": a gaze palsy toward the lesion' }),
+        sign('L', 'abduction_weakness', true, { cite: ['S99'], basis: 'composed', note: 'within that gaze palsy' }),
+        sign('L', 'adduction_weakness', true, { cite: ['S99', 'S98'], basis: 'stated', note: 'the "half": an INO on the same side, so the left eye does not move horizontally at all' }),
+        sign('R', 'adduction_weakness', true, { cite: ['S99', 'S61'], basis: 'composed', note: 'the conjugate half of the gaze palsy' }),
+        sign('R', 'abduction_weakness', false, { cite: ['S99'], basis: 'stated', note: 'S99: abduction of the contralateral eye is what remains' }),
+        sign('R', 'abducting_nystagmus', true, { cite: ['S98'], basis: 'stated', note: 'the one movement left is the one that shows the nystagmus' }),
+        sign('R', 'gaze_palsy', false, { cite: ['S61'], basis: 'composed' }),
+        sign('L', 'abducting_nystagmus', false, { cite: ['S98'], basis: 'composed' }),
+        sign('L', 'ptosis', false, { cite: ['S70'], basis: 'composed' }),
+        sign('R', 'ptosis', false, { cite: ['S70'], basis: 'composed' }),
+        sign('L', 'elevation_weakness', false, { cite: ['S70'], basis: 'composed', note: 'vertical gaze is not pontine' }),
+        sign('L', 'oculomotor_palsy', false, { cite: ['S62'], basis: 'composed' }),
+        motor('L', all, 'none', { cite: ['S54'], basis: 'composed' }),
+        motor('R', all, 'none', { cite: ['S54'], basis: 'composed' }),
+        sense('R', 'all', all, ['intact'], { cite: ['S57', 'S58'], basis: 'composed' }),
+      ],
+      unasserted: [
+        'eight-and-a-half syndrome adds the facial nerve (S99); the facial genu is not in this lesion',
+        'the cause — infarct, demyelination, tumour — is not modelled',
+      ],
+    }],
+  },
+  {
+    id: 'oculomotor-nucleus-left',
+    title: 'Left oculomotor nucleus',
+    pattern: 'nuclear third nerve palsy',
+    lesion: [at('midbrain', ['oculomotor_nucleus'])],
+    evaluations: [{
+      timepoint: 'chronic',
+      assertions: [
+        sign('L', 'oculomotor_palsy', true, { cite: ['S70'], basis: 'stated', note: 'a unilateral third nerve palsy on the side of the nucleus' }),
+        sign('R', 'oculomotor_palsy', false, { cite: ['S70'], basis: 'composed' }),
+        sign('L', 'adduction_weakness', true, { cite: ['S70', 'S62'], basis: 'composed', note: 'the medial rectus subnucleus is in the lesion' }),
+        sign('L', 'elevation_weakness', true, { cite: ['S70'], basis: 'composed', note: 'the ipsilateral superior rectus' }),
+        sign('R', 'elevation_weakness', true, { cite: ['S70'], basis: 'stated', note: 'the superior rectus subnucleus serves the other eye: this is what marks the lesion as nuclear' }),
+        sign('L', 'ptosis', 'open', { cite: ['S70'], basis: 'stated', note: 'C29: one central caudal nucleus serves both lids — bilateral ptosis or none' }),
+        sign('R', 'ptosis', 'open', { cite: ['S70'], basis: 'stated', note: 'C29: unsettled on this side too' }),
+        sign('R', 'adduction_weakness', false, { cite: ['S70'], basis: 'composed', note: 'the medial rectus subnucleus is uncrossed' }),
+        sign('L', 'gaze_palsy', false, { cite: ['S61'], basis: 'composed' }),
+        sign('L', 'abduction_weakness', false, { cite: ['S61'], basis: 'composed' }),
+        sign('L', 'abducting_nystagmus', false, { cite: ['S98'], basis: 'composed' }),
+        motor('L', all, 'none', { cite: ['S54'], basis: 'composed', note: 'the peduncle lies ventral: this is not Weber syndrome' }),
+        motor('R', all, 'none', { cite: ['S54'], basis: 'composed' }),
+        sense('R', 'all', all, ['intact'], { cite: ['S57', 'S58'], basis: 'composed' }),
+      ],
+      unasserted: [
+        'the pupil is not modelled (C21)',
+        'the inferior rectus, inferior oblique and their subnuclei are not modelled separately',
+      ],
+    }],
+  },
+
+  {
+    id: 'midbrain-peduncle-only-left',
+    title: 'Left cerebral peduncle, the oculomotor fascicles spared',
+    pattern: 'a hemiparesis from the midbrain with no third nerve palsy',
+    lesion: [at('midbrain', ['peduncle'])],
+    evaluations: [{
+      timepoint: 'chronic',
+      assertions: [
+        // A13: the crossed sign of Weber syndrome needs the fascicles. Without them the
+        // midbrain gives a hemiparesis that looks capsular (S50, S62).
+        motor('R', ARM, 'umn', { cite: ['S50', 'S65'], basis: 'composed' }),
+        motor('R', LEG, 'umn', { cite: ['S50', 'S65'], basis: 'composed' }),
+        motor('L', all, 'none', { cite: ['S54'], basis: 'composed' }),
+        sign('L', 'oculomotor_palsy', false, { cite: ['S50', 'S62'], basis: 'composed', note: 'the fascicles lie medial to the peduncle and are not in this lesion' }),
+        sign('L', 'ptosis', false, { cite: ['S62'], basis: 'composed' }),
+        sign('R', 'ptosis', false, { cite: ['S70'], basis: 'composed' }),
+        sign('L', 'elevation_weakness', false, { cite: ['S70'], basis: 'composed' }),
+        sign('R', 'elevation_weakness', false, { cite: ['S70'], basis: 'composed' }),
+        sign('L', 'adduction_weakness', false, { cite: ['S62', 'S98'], basis: 'composed' }),
+        sign('R', 'adduction_weakness', false, { cite: ['S62'], basis: 'composed' }),
+        sign('L', 'abducting_nystagmus', false, { cite: ['S98'], basis: 'composed' }),
+        { kind: 'babinski', side: 'R', oneOf: ['present'], cite: ['S54'], basis: 'composed' },
+        { kind: 'horner', side: 'both', oneOf: ['absent'], cite: ['S16'], basis: 'composed' },
+      ],
+      unasserted: [
+        'this is not a named place in the app: the territory it belongs to is Weber syndrome, which takes the fascicles too',
+        'sensation: as in the Weber case, S50 does not say which crossed deficits it means',
+      ],
     }],
   },
 
