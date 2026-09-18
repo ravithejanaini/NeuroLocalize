@@ -268,7 +268,7 @@ export function forward(lesion: readonly AnyRegion[], timepoint: Timepoint, opti
   const brain = brainFindings(kb, bmap);
   const unreadable =
     kb.observations.romberg.unreadableWithVertigoOrAtaxia &&
-    (brain.vertigo !== 'absent' || SIDES.some((x) => brain.ataxia[x] !== 'absent'));
+    (brain.vertigo !== 'absent' || brain.truncalAtaxia !== 'absent' || SIDES.some((x) => brain.ataxia[x] !== 'absent'));
   const romberg: SignState = unreadable
     ? 'indeterminate'
     : !legSense

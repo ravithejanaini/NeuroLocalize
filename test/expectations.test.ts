@@ -6,11 +6,12 @@ import { PLEXUS_CASES } from '../spec/expectations/plexus.ts';
 import { LEG_CASES } from '../spec/expectations/leg.ts';
 import { VISION_CASES } from '../spec/expectations/vision.ts';
 import { LANGUAGE_CASES } from '../spec/expectations/language.ts';
+import { CEREBELLUM_CASES } from '../spec/expectations/cerebellum.ts';
 import { forward } from '../src/engine/forward.ts';
 import { KB as KB_FOR_TERRITORIES } from '../src/kb/kb.ts';
 import { check, territoryFailures, visionPlaceFailures } from './harness.ts';
 
-const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES];
+const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES];
 
 describe('frozen expectations', () => {
   for (const kase of CASES) {

@@ -923,3 +923,53 @@ findings fail; no side-flip survives anywhere in the knowledge base. The same br
 caught the working calling "the language cortex of the dominant hemisphere" intact while the
 inferior parietal lobule — part of it — was damaged; it now names the part a spared facet
 depends on, and a test holds that wording.
+
+## P11 — the cerebellum
+
+The analysis written before any P11 code is `docs/P11-analysis.md`; S109–S112 were read for it
+on 2026-09-18. The two frozen cases were run red against the P10 engine first: limb ataxia
+from the hemisphere came back absent, truncal ataxia undefined, and the Romberg test readable.
+
+### Source conflicts
+
+**C35 — Truncal ataxia from a hemisphere lesion.** S111: midline lesions give imbalance while
+hemispheric lesions "result mainly in incoordination" — mainly, not only. S109 gives truncal
+ataxia to the vermis. The model reports truncal ataxia **unsettled** after a hemisphere lesion,
+never absent; the answer is data (`brain.truncal-after-hemisphere`), not code.
+
+**C36 — Nystagmus from the cerebellum.** S110 calls dysarthria and nystagmus common after a
+hemisphere lesion. The model's "vertigo and nystagmus" finding comes from the vestibular nuclei
+(P5) and was not extended, so no frozen case asserts it either way for a cerebellar lesion.
+Dysarthria is not modelled.
+
+### Decisions
+
+**D73 — The cerebellum is a level beside the stack, not in it.** It lies behind the pons and
+medulla, so it has its own level, its own families (`cerebellum_left`, `cerebellum_right`,
+`cerebellum_midline`) and is drawn dorsally rather than as a ring of the brainstem lathe.
+
+**D74 — A midline territory is one candidate.** The vermis is midline, so the place takes both
+halves and is offered once, as the chiasm is in P8; the side picker does not change it. The
+territory row says so (`midline: true`), and `territoryRegions` lesions both sides.
+
+**D75 — Truncal ataxia makes the Romberg test unreadable.** The model already withheld the test
+with limb ataxia or vertigo (S67, A9). A patient unsteady sitting or standing with the eyes open
+(S111) cannot show what closing them adds, and a positive test points to the sensory pathway
+rather than the cerebellum (S111) — which one of the three new examinations teaches.
+
+### Reviewer questions
+
+**R35** — C35: should a hemisphere lesion be taught as leaving truncal balance intact, or is
+"unsettled" the better teaching?
+
+**R36** — PICA supplies the inferior vermis and the undersurface of the hemisphere (S110). Should
+the lateral medullary place take the cerebellum too?
+
+**D76 — What the P11 mutation run showed.** 96.4% of sourced mutants are killed (4,076 of
+4,229), 95.6% of all — up from 96.1% after P10 — and **no P11 mutant survives**: the new
+hemisphere step of the ataxia route, both truncal rows, both places and the vermis's `midline`
+flag. Two gaps were closed before the run rather than found by it. The P10 lesson said the new
+`state: 'indeterminate'` would be mutated with tone words, so it got the sign pool; and nothing
+compared a territory's `midline` flag with its frozen case, so `territoryFailures` now does. The
+six ataxia survivors are P5's peduncle steps, unchanged since P10 (the same six in both runs):
+the only lesion that takes the medullary peduncle takes its neighbours with it.

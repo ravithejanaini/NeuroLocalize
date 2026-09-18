@@ -153,6 +153,8 @@ export type BrainAssertion = Evidence &
     | (Sided & { readonly kind: 'cranial'; readonly sign: CranialSign; readonly oneOf: readonly SignState[] })
     | (Sided & { readonly kind: 'ataxia'; readonly oneOf: readonly SignState[] })
     | { readonly kind: 'vertigo'; readonly oneOf: readonly SignState[] }
+    // A15: truncal ataxia belongs to the patient, not a side.
+    | { readonly kind: 'truncal_ataxia'; readonly oneOf: readonly SignState[] }
   );
 
 export type BrainEvaluation = {

@@ -287,6 +287,22 @@ situation the freeze exists to catch.
   failed with 46 findings `undefined`, and the territory check failed on the amended
   superior-division lesion. P9 wrote its cases after its engine (A13); P10 did not.
 
+## A15 — The cerebellum (P11, 2026-09-18)
+
+- **Changed:** two new files. `cerebellum.ts` holds two cases: the left cerebellar hemisphere
+  and the vermis. `reverse-cerebellum.ts` holds three examinations: one-sided limb ataxia
+  (hemisphere against brainstem), truncal ataxia with the limbs spared (vermis against
+  hemisphere), and a positive Romberg test with vibration lost (sensory against cerebellar
+  unsteadiness). `types.ts` gains the `truncal_ataxia` assertion and `reverse-brain.ts` the
+  matching observation. No earlier case or examination changed.
+- **Why:** P11 adds a level, two parts, one finding and two places; a row no frozen case
+  observes is an untested row (rule 5).
+- **How circularity was avoided:** every assertion is quoted from S109–S112, read into
+  `docs/P11-analysis.md` before any code, and the two cases were **run red against the P10
+  engine** before any P11 engine code existed: limb ataxia from the hemisphere came back
+  absent, truncal ataxia undefined, the Romberg test readable. Reflexes are never asserted for
+  a cerebellar lesion, because the model does not show hypotonia or pendular reflexes.
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -295,16 +311,18 @@ situation the freeze exists to catch.
 | `boundaries.ts` | A2 |
 | `index.ts` | A2 (exports the boundary cases) |
 | `reverse.ts` | A3 |
-| `types.ts` | A4, A6, A7, A11, A14 |
+| `types.ts` | A4, A6, A7, A11, A14, A15 |
 | `plexus.ts` | A4, A5, A6, A9 |
 | `reverse-plexus.ts` | A4, A5 |
 | `brain.ts` | A7, A8, A9, A13, A14 |
-| `reverse-brain.ts` | A7, A13, A14 |
+| `reverse-brain.ts` | A7, A13, A14, A15 |
 | `leg.ts` | A10 |
 | `reverse-leg.ts` | A10 |
 | `vision.ts` | A11 |
 | `reverse-vision.ts` | A11, A14 |
 | `language.ts` | A14 |
 | `reverse-language.ts` | A14 |
+| `cerebellum.ts` | A15 |
+| `reverse-cerebellum.ts` | A15 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

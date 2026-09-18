@@ -119,6 +119,9 @@ export const PRESETS: readonly Preset[] = [
   { id: 'mca-whole', kind: 'brain', label: 'Whole MCA cortex', pattern: 'Left: global aphasia + hemiparesis', territory: 'mca_whole' },
   { id: 'broca', kind: 'brain', label: 'Inferior frontal gyrus', pattern: 'Left: Broca aphasia', territory: 'broca_area' },
   { id: 'wernicke', kind: 'brain', label: 'Superior temporal gyrus', pattern: 'Left: Wernicke aphasia', territory: 'wernicke_area' },
+  // P11: the cerebellum. The vermis is midline, so the side does not change it.
+  { id: 'cerebellar-hemisphere', kind: 'brain', label: 'Cerebellar hemisphere', pattern: 'Limb ataxia, same side', territory: 'cerebellar_hemisphere' },
+  { id: 'vermis', kind: 'brain', label: 'Cerebellar vermis', pattern: 'Truncal ataxia, limbs spared', territory: 'vermis' },
   { id: 'supramarginal', kind: 'brain', label: 'Inferior parietal lobule', pattern: 'Left: conduction · right: neglect', territory: 'supramarginal' },
   // P9: the eye movements.
   { id: 'mlf', kind: 'brain', label: 'Medial longitudinal fasciculus', pattern: 'Internuclear ophthalmoplegia', territory: 'mlf_pons' },

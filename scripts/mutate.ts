@@ -11,6 +11,7 @@ import { PLEXUS_CASES } from '../spec/expectations/plexus.ts';
 import { LEG_CASES } from '../spec/expectations/leg.ts';
 import { VISION_CASES } from '../spec/expectations/vision.ts';
 import { LANGUAGE_CASES } from '../spec/expectations/language.ts';
+import { CEREBELLUM_CASES } from '../spec/expectations/cerebellum.ts';
 import { KB } from '../src/kb/kb.ts';
 import type { Kb } from '../src/kb/types.ts';
 import {
@@ -32,13 +33,14 @@ import { LIMB_REVERSE_CASES } from '../spec/expectations/reverse-plexus.ts';
 import { LEG_REVERSE_CASES } from '../spec/expectations/reverse-leg.ts';
 import { VISION_REVERSE_CASES } from '../spec/expectations/reverse-vision.ts';
 import { LANGUAGE_REVERSE_CASES } from '../spec/expectations/reverse-language.ts';
+import { CEREBELLUM_REVERSE_CASES } from '../spec/expectations/reverse-cerebellum.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { RENDER } from '../src/kb/render.ts';
 import { examSlots } from '../src/render/slots.ts';
 import { reverseFailures, runAll, territoryFailures, visionPlaceFailures } from '../test/harness.ts';
 import { locateRows } from '../test/rows.ts';
 
-const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES];
+const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES];
 const THRESHOLD = 0.9;
 const ROOT = resolve(import.meta.dirname, '..');
 
@@ -87,7 +89,8 @@ function poolFor(key: string, value: string): readonly string[] | undefined {
   if (key === 'trunk') return POOLS.trunk;
   if (key === 'division') return POOLS.division;
   if (key === 'from') return POOLS.from;
-  if (key === 'afterDominant') return POOLS.sign;
+  // P10, P11: an answer the knowledge base gives as a sign state, never a tone word.
+  if (key === 'afterDominant' || key === 'state') return POOLS.sign;
   return Object.values(POOLS).find((p) => p.includes(value));
 }
 
@@ -214,7 +217,7 @@ const mutants: Mutant[] = [];
 collect(KB, [], mutants);
 
 type Result = { row: string; describe: string; killed: boolean; failures: number; threw: boolean; byReverse: boolean };
-const REVERSE = [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES];
+const REVERSE = [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES];
 const SLOTS = examSlots(RENDER);
 const results: Result[] = mutants.map((m) => {
   const base = { row: rowOf(m.path), describe: m.describe };

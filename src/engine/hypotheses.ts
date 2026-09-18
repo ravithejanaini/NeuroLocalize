@@ -160,10 +160,16 @@ export function hypotheses(): readonly Hypothesis[] {
   for (const territory of TERRITORIES) {
     const row = KB.brain.territories[territory];
     const hemisphere = ['cortex', 'capsule', 'thalamus'].includes(row.level);
-    for (const side of SIDES) {
-      const family: LesionFamily = hemisphere
-        ? side === 'L' ? 'hemisphere_left' : 'hemisphere_right'
-        : side === 'L' ? 'brainstem_left' : 'brainstem_right';
+    const cerebellum = row.level === 'cerebellum';
+    // P11: a midline place is one candidate taking both sides, as the chiasm is in P8.
+    for (const side of row.midline ? (['L'] as const) : SIDES) {
+      const family: LesionFamily = row.midline
+        ? 'cerebellum_midline'
+        : cerebellum
+          ? side === 'L' ? 'cerebellum_left' : 'cerebellum_right'
+          : hemisphere
+            ? side === 'L' ? 'hemisphere_left' : 'hemisphere_right'
+            : side === 'L' ? 'brainstem_left' : 'brainstem_right';
       out.push({
         id: `${family}:${territory}`,
         family,
@@ -199,7 +205,7 @@ export function territoryRegions(kb: Kb, territory: (typeof TERRITORIES)[number]
   return [
     {
       brain: row.level,
-      sides: [side],
+      sides: row.midline ? ['L', 'R'] : [side],
       compartments: row.compartments,
       severity: 'complete',
       ...(row.regions ? { regions: row.regions } : {}),

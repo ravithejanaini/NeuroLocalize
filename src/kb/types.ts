@@ -170,6 +170,9 @@ export type Brain = {
   readonly sympathetic: BrainRoute;
   readonly ataxia: BrainRoute;
   readonly vertigo: Row<{ readonly steps: readonly BrainStep[] }>;
+  /** P11: truncal ataxia from the vermis; after a hemisphere lesion the answer is data (C35). */
+  readonly truncalAtaxia: Row<{ readonly steps: readonly BrainStep[] }>;
+  readonly truncalAfterHemisphere: Row<{ readonly steps: readonly BrainStep[]; readonly state: SignState }>;
   /** P10: which hemisphere holds language (D68), and the three facets read from it. */
   readonly dominance: Row<{ readonly language: Side }>;
   readonly fluency: Row<{ readonly steps: readonly BrainStep[] }>;
@@ -192,6 +195,8 @@ export type Brain = {
         readonly regions?: readonly BodyRegion[];
         /** P10: the parts of the visual pathway the same territory takes (C31). */
         readonly vision?: readonly VisualPart[];
+        /** P11: a midline place takes both sides at once, and is one candidate, not two. */
+        readonly midline?: boolean;
       }>
     >
   >;

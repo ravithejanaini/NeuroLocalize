@@ -59,6 +59,8 @@ export type Observation =
   | { readonly kind: 'cranial'; readonly side: Side; readonly sign: CranialSign; readonly value: SignObservation }
   | { readonly kind: 'ataxia'; readonly side: Side; readonly value: SignObservation }
   | { readonly kind: 'vertigo'; readonly value: SignObservation }
+  /** P11: truncal ataxia, about the patient. */
+  | { readonly kind: 'truncal_ataxia'; readonly value: SignObservation }
   /** P8: one sector of one eye's visual field, and the relative afferent pupillary defect. */
   | { readonly kind: 'field'; readonly eye: Side; readonly sector: FieldSector; readonly value: SensoryObservation }
   | { readonly kind: 'rapd'; readonly side: Side; readonly value: SignObservation }
@@ -92,6 +94,7 @@ const DOMAIN: Record<Observation['kind'], readonly string[]> = {
   cranial: ['present', 'absent'],
   ataxia: ['present', 'absent'],
   vertigo: ['present', 'absent'],
+  truncal_ataxia: ['present', 'absent'],
   field: ['normal', 'abnormal'],
   rapd: ['present', 'absent'],
   language: ['present', 'absent'],
@@ -182,6 +185,8 @@ export function predict(f: Findings, s: Slot, kb: Kb = KB): Value | 'unknown' {
     }
     case 'vertigo':
       return f.vertigo === 'indeterminate' ? 'unknown' : f.vertigo;
+    case 'truncal_ataxia':
+      return f.truncalAtaxia === 'indeterminate' ? 'unknown' : f.truncalAtaxia;
     case 'language': {
       const v = f.language[s.sign];
       return v === 'indeterminate' ? 'unknown' : v;
@@ -509,6 +514,8 @@ export const SITE_NAME: Record<Place, string> = {
   broca_area: 'inferior frontal gyrus (Broca area)',
   wernicke_area: 'posterior superior temporal gyrus (Wernicke area)',
   supramarginal: 'inferior parietal lobule (supramarginal and angular gyri)',
+  cerebellar_hemisphere: 'cerebellar hemisphere',
+  vermis: 'vermis',
   pontine_tegmentum: 'pontine tegmentum (abducens nucleus and MLF)',
   oculomotor_nucleus: 'oculomotor nucleus, in the midbrain',
   internal_capsule: 'internal capsule',
@@ -591,6 +598,8 @@ const PART_NAME: Record<BrainCompartment, string> = {
   inferior_frontal: 'inferior frontal gyrus',
   superior_temporal: 'posterior superior temporal gyrus',
   inferior_parietal: 'inferior parietal lobule',
+  cerebellar_hemisphere: 'cerebellar hemisphere',
+  vermis: 'half of the vermis',
   mlf: 'medial longitudinal fasciculus',
   pprf: 'paramedian pontine reticular formation',
   basis: 'basis pontis',
@@ -614,6 +623,7 @@ const LEVEL_NAME: Record<BrainLevel, string> = {
   midbrain: 'midbrain',
   pons: 'pons',
   medulla: 'medulla',
+  cerebellum: 'cerebellum',
 };
 
 const PLURAL = /(fibres|nuclei|fascicles)( in the [a-z]+)?$/;
@@ -624,7 +634,7 @@ const damaged = (phrase: string): string => `${phrase} ${PLURAL.test(phrase) ? '
 function brainCut(bmap: BrainMap, steps: readonly { level: BrainLevel; compartment: BrainCompartment }[], side: Side, region: BodyRegion): string | null {
   const s = steps.find((x) => bmap.damage(x.level, x.compartment, side, region) > 0);
   if (!s) return null;
-  const at = ['cortex', 'capsule', 'thalamus'].includes(s.level) ? '' : ` in the ${LEVEL_NAME[s.level]}`;
+  const at = ['cortex', 'capsule', 'thalamus', 'cerebellum'].includes(s.level) ? '' : ` in the ${LEVEL_NAME[s.level]}`;
   return `the ${SIDE[side]} ${PART_NAME[s.compartment]}${at}`;
 }
 const opp = (s: Side): Side => (s === 'L' ? 'R' : 'L');
@@ -727,6 +737,13 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
     case 'vertigo': {
       const c = (['L', 'R'] as const).map((s) => brainCut(bmap, b.vertigo.steps, s, 'face')).filter((x): x is string => x !== null);
       return c.length ? c.map(damaged).join('; ') : 'the vestibular nuclei are intact';
+    }
+    case 'truncal_ataxia': {
+      const cut = (['L', 'R'] as const).map((s) => brainCut(bmap, b.truncalAtaxia.steps, s, 'face')).find((x): x is string => x !== null);
+      if (cut) return `${damaged(cut)}: the vermis coordinates the trunk`;
+      const hemi = (['L', 'R'] as const).map((s) => brainCut(bmap, b.truncalAfterHemisphere.steps, s, 'face')).find((x): x is string => x !== null);
+      if (hemi) return `${damaged(hemi)} — a hemisphere lesion gives mainly limb incoordination, and truncal imbalance is unsettled (C35)`;
+      return 'the vermis is intact';
     }
     case 'language': {
       // Read from the dominant hemisphere only (D68).

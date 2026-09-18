@@ -28,7 +28,7 @@ export function examSlots(render: RenderKb): Slot[] {
     for (const sector of FIELD_SECTORS) out.push({ kind: 'field', eye: side, sector });
     out.push({ kind: 'rapd', side });
   }
-  out.push({ kind: 'romberg' }, { kind: 'bladder' }, { kind: 'vertigo' });
+  out.push({ kind: 'romberg' }, { kind: 'bladder' }, { kind: 'vertigo' }, { kind: 'truncal_ataxia' });
   // P10: the three facets of language, and neglect of each side of space.
   for (const sign of LANGUAGE_SIGNS) out.push({ kind: 'language', sign });
   for (const side of SIDES) out.push({ kind: 'neglect', side });

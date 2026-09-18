@@ -35,7 +35,7 @@ export const PATHWAY_NAME: Record<Pathway, { readonly name: string; readonly wha
   corticobulbar: { name: 'Face from above', what: 'lower-face weakness with the forehead spared' },
   cranial_nuclei: { name: 'Cranial nerve nuclei', what: 'third nerve, abduction, tongue, palate and the whole face' },
   eye_movements: { name: 'Conjugate gaze', what: 'gaze palsy, internuclear ophthalmoplegia and one-and-a-half: which eye fails to move, and which way' },
-  cerebellar_vestibular: { name: 'Ataxia and vertigo', what: 'the cerebellar peduncles and vestibular nuclei' },
+  cerebellar_vestibular: { name: 'Ataxia and vertigo', what: 'the cerebellar hemispheres, vermis and peduncles, and the vestibular nuclei' },
   visual: { name: 'Visual fields', what: 'the optic nerve, chiasm, tract, radiations and occipital cortex, and the pupil' },
   language: { name: 'Language and attention', what: 'fluency, comprehension and repetition in the dominant hemisphere; neglect in the other' },
 };
@@ -89,7 +89,7 @@ export function pathwaysOf(f: Findings, h: Hypothesis): Pathway[] {
     if (c.tongue_weakness === 'present') out.add(f.faceWeakness[x] === 'lower' ? 'corticobulbar' : 'cranial_nuclei');
     if (f.ataxia[x] === 'present') out.add('cerebellar_vestibular');
   }
-  if (f.vertigo === 'present') out.add('cerebellar_vestibular');
+  if (f.vertigo === 'present' || f.truncalAtaxia === 'present') out.add('cerebellar_vestibular');
   if (SIDES.some((x) => FIELD_SECTORS.some((s) => f.fields[x][s] === 'lost')) || SIDES.some((x) => f.rapd[x] === 'present')) out.add('visual');
   if (LANGUAGE_SIGNS.some((s) => f.language[s] === 'present') || SIDES.some((x) => f.neglect[x] === 'present')) out.add('language');
   return PATHWAYS.filter((p) => out.has(p));
@@ -170,6 +170,7 @@ export function pathwaysShown(observations: readonly Observation[], f: Findings,
         break;
       case 'ataxia':
       case 'vertigo':
+      case 'truncal_ataxia':
         if (o.value === 'present') out.add('cerebellar_vestibular');
         break;
       case 'field':

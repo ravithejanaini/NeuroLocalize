@@ -24,10 +24,11 @@ teaching from a phone.
 | P7 | The leg: lumbar and sacral plexuses and nine nerves in 3D, eleven muscles, nine territories, foot drop and the Trendelenburg gait; examination mode separates the fibular nerve from L5, the sciatic nerve from the plexus, and the femoral nerve from the lumbar roots |
 | P9 | Eye movements: the medial longitudinal fasciculus, the paramedian pontine reticular formation and the oculomotor nucleus, with four signs — adduction, abducting nystagmus, ptosis and elevation. Internuclear ophthalmoplegia, horizontal gaze palsy, one-and-a-half syndrome and a nuclear third nerve palsy, each derived rather than named; examination mode separates a sixth nerve palsy from a gaze palsy and a gaze palsy from one-and-a-half |
 | P10 | Language and the dominant hemisphere: Broca area, Wernicke area and the inferior parietal lobule; fluency, comprehension and repetition read from the dominant hemisphere, and neglect from the other. Broca, Wernicke, conduction and global aphasia derived rather than named; the superior and inferior divisions of the MCA, the latter carrying its hemianopia; examination mode separates Broca from conduction, conduction from Wernicke, Wernicke from global, and aphasia from neglect |
+| P11 | The cerebellum: each hemisphere and the midline vermis, behind the brainstem. Limb ataxia on the side of a hemisphere lesion, truncal ataxia with the limbs spared from the vermis, and the Romberg test withheld when the patient is unsteady with the eyes open; examination mode separates a cerebellar hemisphere from the brainstem, the vermis from a hemisphere, and cerebellar from sensory unsteadiness |
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 108 open-access sources that were
+- **Expected outputs are written first**, from 112 open-access sources that were
   actually read — one of them, S108, as its free abstract only (`docs/SOURCES.md`) — and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

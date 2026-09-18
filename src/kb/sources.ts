@@ -12,6 +12,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S71', 'S72', 'S73', 'S74', 'S75', 'S76', 'S77', 'S78', 'S79', 'S80', 'S81', 'S82', 'S83', 'S84', 'S85', 'S86', 'S87', 'S88', 'S89', 'S90',
   'S91', 'S92', 'S93', 'S94', 'S95', 'S96', 'S97', 'S98', 'S99',
   'S100', 'S101', 'S102', 'S103', 'S104', 'S105', 'S106', 'S107', 'S108',
+  'S109', 'S110', 'S111', 'S112',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -125,4 +126,8 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S106', title: 'StatPearls — Spatial Neglect', url: 'https://www.ncbi.nlm.nih.gov/books/NBK562184/' },
   { id: 'S107', title: 'StatPearls — Neuroanatomy, Cerebral Hemisphere', url: 'https://www.ncbi.nlm.nih.gov/books/NBK549789/' },
   { id: 'S108', title: 'Knecht et al. — Handedness and hemispheric language dominance in healthy humans (Brain, 2000)', url: 'https://academic.oup.com/brain/article/123/12/2512/325690' },
+  { id: 'S109', title: 'StatPearls — Ataxia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK562284/' },
+  { id: 'S110', title: 'StatPearls — Neuroanatomy, Cerebellum', url: 'https://www.ncbi.nlm.nih.gov/books/NBK538167/' },
+  { id: 'S111', title: 'StatPearls — Cerebellar Dysfunction', url: 'https://www.ncbi.nlm.nih.gov/books/NBK562317/' },
+  { id: 'S112', title: 'StatPearls — Neuroanatomy, Cerebellar Dysfunction', url: 'https://www.ncbi.nlm.nih.gov/books/NBK545251/' },
 ];

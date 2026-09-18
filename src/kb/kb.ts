@@ -315,8 +315,8 @@ export const KB: Kb = {
     romberg: {
       meta: {
         id: 'observation.romberg',
-        claim: 'Proprioceptive loss in the legs produces a positive Romberg test. Uncompensated vestibular dysfunction can also make it positive, and cerebellar patients are unsteady with the eyes open, so it is not read when either is present. It is reported as untestable when the legs are weak.',
-        sources: ['S13', 'S67'],
+        claim: 'Proprioceptive loss in the legs produces a positive Romberg test. Uncompensated vestibular dysfunction can also make it positive, and cerebellar patients — ataxic in the limbs or the trunk — are unsteady with the eyes open, so it is not read when any of these is present. It is reported as untestable when the legs are weak.',
+        sources: ['S13', 'S67', 'S111'],
         tier: 'T2',
         bookRef: 'pending',
         pendingSource: 'the weak-legs exclusion is a modelling convention; no source read states it',

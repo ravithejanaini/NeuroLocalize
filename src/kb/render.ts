@@ -221,8 +221,8 @@ export const RENDER: RenderKb = {
   brainLayout: {
     meta: {
       id: 'render.brain-layout',
-      claim: 'The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally, with the inferior frontal gyrus in front of the motor strip, the inferior parietal lobule behind the sensory strip and the superior temporal gyrus below them. Positions are schematic.',
-      sources: ['S48', 'S58', 'S47', 'S54', 'S66', 'S59', 'S98', 'S99', 'S70', 'S104', 'S105', 'S107'],
+      claim: 'The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally, with the inferior frontal gyrus in front of the motor strip, the inferior parietal lobule behind the sensory strip and the superior temporal gyrus below them; the cerebellum lies behind the pons and medulla, its hemispheres lateral to the midline vermis. Positions are schematic.',
+      sources: ['S48', 'S58', 'S47', 'S54', 'S66', 'S59', 'S98', 'S99', 'S70', 'S104', 'S105', 'S107', 'S110'],
       tier: 'T1',
       bookRef: 'pending',
     },
@@ -234,6 +234,8 @@ export const RENDER: RenderKb = {
       thalamus: { y: 6.8, height: 1.2, radius: 1.3 },
       capsule: { y: 8.0, height: 1.2, radius: 1.9 },
       cortex: { y: 11.0, height: 2.4, radius: 3.6 },
+      // P11: behind the pons and upper medulla, not in the stack; its parts sit dorsally (+z).
+      cerebellum: { y: 2.4, height: 2.2, radius: 2.4 },
     },
     parts: {
       'medulla:pyramid': [-0.25, 0, -0.7],
@@ -275,6 +277,8 @@ export const RENDER: RenderKb = {
       'cortex:inferior_frontal': [-3.3, -0.5, -1.2],
       'cortex:superior_temporal': [-3.4, -1.1, 0.55],
       'cortex:inferior_parietal': [-3.0, 0.4, 1.25],
+      'cerebellum:cerebellar_hemisphere': [-1.7, 0, 2.3],
+      'cerebellum:vermis': [-0.2, 0.1, 2.5],
     },
     // Motor strip at z −0.3, sensory at z +0.4; the leg sits next to the midline.
     homunculus: {

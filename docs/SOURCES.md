@@ -10,7 +10,7 @@ content could only be queried for paraphrase; its raw table text was not obtaine
 
 Accessed 2026-09-16 unless noted. S33–S46 were read on 2026-09-17 for P4 and S47–S66 the same day for P5; S16 and S19 were
 read again that day for the facts added to their rows. S67–S70 were read on 2026-09-17 for
-the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.md`); S91–S97 for P8 (`docs/P8-analysis.md`); S98–S99 on 2026-09-18 for P9 (`docs/P9-analysis.md`); S100–S108 the same day for P10 (`docs/P10-analysis.md`).
+the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.md`); S91–S97 for P8 (`docs/P8-analysis.md`); S98–S99 on 2026-09-18 for P9 (`docs/P9-analysis.md`); S100–S108 the same day for P10 (`docs/P10-analysis.md`); S109–S112 the same day for P11 (`docs/P11-analysis.md`).
 
 | Id | Source | Authors | Last updated | Used for |
 |---|---|---|---|---|
@@ -122,6 +122,10 @@ the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.m
 | S106 | [StatPearls — Spatial Neglect](https://www.ncbi.nlm.nih.gov/books/NBK562184/) | Benjamin, Gillespie | 2026-07-05 | left-sided neglect after right-hemisphere lesions, most often the posterior parietal cortex; persistent in about 17% after right and 5% after left lesions (C32, C33) |
 | S107 | [StatPearls — Neuroanatomy, Cerebral Hemisphere](https://www.ncbi.nlm.nih.gov/books/NBK549789/) | Bui, Das | 2023-07-24 | the dominant hemisphere is the left in most individuals; Broca and Wernicke areas in the dominant hemisphere; nondominant parietal damage gives hemispatial neglect |
 | S108 | [Knecht et al. — Handedness and hemispheric language dominance in healthy humans (Brain, 2000)](https://academic.oup.com/brain/article/123/12/2512/325690) | Knecht, Dräger, Deppe, Bobe, Lohmann, Flöel, Ringelstein, Henningsen | 2000 | **abstract only** (full text paywalled, not read): right-hemisphere language dominance in 4% of strong right-handers, 15% of ambidextrous people and 27% of strong left-handers — why the model states its assumption of a left-dominant hemisphere (D68) |
+| S109 | [StatPearls — Ataxia](https://www.ncbi.nlm.nih.gov/books/NBK562284/) | Hafiz, De Jesus | 2023-08-23 | lesions of the vermis give truncal and gait ataxia with the limbs spared; lesions of a hemisphere give limb ataxia |
+| S110 | [StatPearls — Neuroanatomy, Cerebellum](https://www.ncbi.nlm.nih.gov/books/NBK538167/) | Jimsheleishvili, Dididze | 2023-07-24 | each hemisphere controls the same side of the body; the vermis coordinates the trunk; vermis syndrome; dysarthria and nystagmus common after a hemisphere lesion (C36); PICA, SCA and AICA territories |
+| S111 | [StatPearls — Cerebellar Dysfunction](https://www.ncbi.nlm.nih.gov/books/NBK562317/) | Ataullah, Singla, Naqvi | 2024-05-06 | midline lesions give imbalance, hemispheric lesions mainly incoordination (C35); truncal ataxia shown sitting or standing; a positive Romberg test points to the sensory pathway, not the cerebellum |
+| S112 | [StatPearls — Neuroanatomy, Cerebellar Dysfunction](https://www.ncbi.nlm.nih.gov/books/NBK545251/) | Unverdi, Alsayouri | 2023-07-25 | limb ataxia follows the somatotopy of the involved hemisphere; the territories of the SCA, AICA and PICA |
 
 ## Not used, and why
 

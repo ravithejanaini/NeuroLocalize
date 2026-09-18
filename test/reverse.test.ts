@@ -5,6 +5,7 @@ import { LIMB_REVERSE_CASES } from '../spec/expectations/reverse-plexus.ts';
 import { LEG_REVERSE_CASES } from '../spec/expectations/reverse-leg.ts';
 import { VISION_REVERSE_CASES } from '../spec/expectations/reverse-vision.ts';
 import { LANGUAGE_REVERSE_CASES } from '../spec/expectations/reverse-language.ts';
+import { CEREBELLUM_REVERSE_CASES } from '../spec/expectations/reverse-cerebellum.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
 import { hypotheses } from '../src/engine/hypotheses.ts';
@@ -19,7 +20,7 @@ import { examSlots } from '../src/render/slots.ts';
 const SLOTS = examSlots(RENDER);
 
 describe('frozen reverse expectations (A3, A4, A7)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES]) {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });
@@ -38,7 +39,8 @@ describe('reverse engine contract', () => {
     // ptosis and elevation join them, so that term is 2 * 12 rather than 2 * 8.
     // P10 adds three facets of language, which belong to the patient and not a side, and
     // neglect of each side of space: 3 + 2.
-    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 12 + 1 + 2 * 7 + 3 + 2);
+    // P11 adds truncal ataxia, which belongs to the patient: + 1.
+    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 12 + 1 + 2 * 7 + 3 + 2 + 1);
   });
 
   it('with no findings, prefers nothing in particular and still suggests a test', () => {
@@ -205,6 +207,8 @@ describe('reverse engine contract', () => {
       34,
       'D44, P9, P10: 17 territories on each side — the nine of P5, three from P9 and five from P10',
     );
+    // P11: a hemisphere on each side and one midline vermis, never counted twice.
+    assert.equal(places.filter((x) => x.family.startsWith('cerebellum')).length, 3, 'P11: two cerebellar hemispheres and one vermis');
   });
 
   // ── above the cord (D42–D44) ──
@@ -313,5 +317,31 @@ describe('the working names the part a spared facet depends on (P10)', () => {
     );
     assert.match(fluent?.because ?? '', /the left inferior frontal gyrus, which it depends on, is intact/);
     assert.match(understands?.because ?? '', /the left posterior superior temporal gyrus, which it depends on, is intact/);
+  });
+});
+
+describe('the working for the cerebellum (P11)', () => {
+  it('explains truncal ataxia by the vermis, and leaves it unsettled after a hemisphere lesion (C35)', () => {
+    prepareSync('chronic');
+    const vermis = hypotheses().find((x) => x.id === 'cerebellum_midline:vermis');
+    const hemisphere = hypotheses().find((x) => x.id === 'cerebellum_left:cerebellar_hemisphere');
+    assert.ok(vermis && hemisphere);
+    const [v] = explain(vermis, [{ kind: 'truncal_ataxia', value: 'present' }], 'chronic');
+    assert.match(v?.because ?? '', /half of the vermis is damaged: the vermis coordinates the trunk/);
+    const [limb, trunk] = explain(
+      hemisphere,
+      [
+        { kind: 'ataxia', side: 'L', value: 'present' },
+        { kind: 'truncal_ataxia', value: 'present' },
+      ],
+      'chronic',
+    );
+    assert.match(limb?.because ?? '', /left cerebellar hemisphere is damaged/);
+    assert.match(trunk?.because ?? '', /truncal imbalance is unsettled \(C35\)/);
+  });
+
+  it('offers the vermis once, whatever the side (D74)', () => {
+    const ids = hypotheses().filter((x) => x.site === 'vermis').map((x) => x.id);
+    assert.deepEqual(ids, ['cerebellum_midline:vermis']);
   });
 });

@@ -288,12 +288,16 @@ export const BRAIN: Brain = {
   ataxia: {
     meta: {
       id: 'brain.ataxia',
-      claim: 'A lesion of the inferior cerebellar peduncle gives ipsilateral limb ataxia; the pontine peduncle is drawn with it.',
-      sources: ['S47', 'S65'],
+      claim: 'A lesion of the inferior cerebellar peduncle gives ipsilateral limb ataxia, the pontine peduncle drawn with it; so does a lesion of the cerebellar hemisphere, which controls the same side of the body.',
+      sources: ['S47', 'S65', 'S109', 'S110'],
       tier: 'T2',
       bookRef: p,
     },
-    steps: [{ level: 'pons', compartment: 'cerebellar_peduncle' }, { level: 'medulla', compartment: 'cerebellar_peduncle' }],
+    steps: [
+      { level: 'pons', compartment: 'cerebellar_peduncle' },
+      { level: 'medulla', compartment: 'cerebellar_peduncle' },
+      { level: 'cerebellum', compartment: 'cerebellar_hemisphere' },
+    ],
     serves: 'ipsilateral',
   },
   vertigo: {
@@ -305,6 +309,28 @@ export const BRAIN: Brain = {
       bookRef: p,
     },
     steps: [{ level: 'pons', compartment: 'vestibular' }, { level: 'medulla', compartment: 'vestibular' }],
+  },
+  truncalAtaxia: {
+    meta: {
+      id: 'brain.truncal-ataxia',
+      claim: 'A lesion of the vermis gives truncal and gait ataxia with the limbs spared: the vermis coordinates the trunk.',
+      sources: ['S109', 'S110'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'cerebellum', compartment: 'vermis' }],
+  },
+  truncalAfterHemisphere: {
+    meta: {
+      id: 'brain.truncal-after-hemisphere',
+      claim: 'Hemispheric cerebellar lesions give mainly incoordination and midline lesions imbalance, so after a hemisphere lesion truncal ataxia is left unsettled rather than absent (C35).',
+      sources: ['S111', 'S109'],
+      tier: 'T3',
+      bookRef: p,
+      conflict: 'C35',
+    },
+    steps: [{ level: 'cerebellum', compartment: 'cerebellar_hemisphere' }],
+    state: 'indeterminate',
   },
   dominance: {
     meta: {
@@ -366,8 +392,8 @@ export const BRAIN: Brain = {
   partsAt: {
     meta: {
       id: 'brain.parts-at',
-      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure; the genu and posterior limb of the capsule; VPL and VPM; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus and the medial longitudinal fasciculus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.',
-      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105'],
+      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure; the genu and posterior limb of the capsule; VPL and VPM; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus and the medial longitudinal fasciculus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.',
+      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110'],
       tier: 'T1',
       bookRef: p,
     },
@@ -400,6 +426,7 @@ export const BRAIN: Brain = {
         'cerebellar_peduncle',
         'vestibular',
       ],
+      cerebellum: ['cerebellar_hemisphere', 'vermis'],
     },
   },
   somatotopic: {
@@ -586,6 +613,29 @@ export const BRAIN: Brain = {
       },
       level: 'cortex',
       compartments: ['inferior_parietal'],
+    },
+    cerebellar_hemisphere: {
+      meta: {
+        id: 'territory.cerebellar-hemisphere',
+        claim: 'A lesion of one cerebellar hemisphere gives limb ataxia on the same side.',
+        sources: ['S109', 'S110'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'cerebellum',
+      compartments: ['cerebellar_hemisphere'],
+    },
+    vermis: {
+      meta: {
+        id: 'territory.vermis',
+        claim: 'A lesion of the vermis, a midline structure, gives truncal and gait ataxia with the limbs spared.',
+        sources: ['S109', 'S110'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'cerebellum',
+      compartments: ['vermis'],
+      midline: true,
     },
     aca_cortex: {
       meta: {

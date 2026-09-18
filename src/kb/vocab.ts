@@ -90,6 +90,9 @@ export const LESION_FAMILIES = [
   'brainstem_right',
   'hemisphere_left',
   'hemisphere_right',
+  'cerebellum_left',
+  'cerebellum_right',
+  'cerebellum_midline',
   'visual_left',
   'visual_right',
   'visual_chiasm',
@@ -262,7 +265,8 @@ export type Deformity = (typeof DEFORMITIES)[number];
 
 // ---- above the cord (P5) -------------------------------------------------
 /** Rostral to caudal. The cord begins below the medulla. */
-export const BRAIN_LEVELS = ['cortex', 'capsule', 'thalamus', 'midbrain', 'pons', 'medulla'] as const;
+/** P11 adds the cerebellum, which lies behind the pons and medulla rather than in the stack. */
+export const BRAIN_LEVELS = ['cortex', 'capsule', 'thalamus', 'midbrain', 'pons', 'medulla', 'cerebellum'] as const;
 export type BrainLevel = (typeof BRAIN_LEVELS)[number];
 
 /** Named parts of the brain a lesion can take. Each belongs to one or more levels. */
@@ -297,6 +301,9 @@ export const BRAIN_COMPARTMENTS = [
   'inferior_frontal',
   'superior_temporal',
   'inferior_parietal',
+  // P11: the cerebellum. The vermis is midline; each side holds half of it.
+  'cerebellar_hemisphere',
+  'vermis',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 
@@ -350,6 +357,9 @@ export const TERRITORIES = [
   'broca_area',
   'wernicke_area',
   'supramarginal',
+  // P11.
+  'cerebellar_hemisphere',
+  'vermis',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

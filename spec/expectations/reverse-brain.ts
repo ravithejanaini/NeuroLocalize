@@ -26,6 +26,8 @@ export type BrainObservation =
   | { readonly kind: 'cranial'; readonly side: Side; readonly sign: CranialSign; readonly value: SignObservation }
   | { readonly kind: 'ataxia'; readonly side: Side; readonly value: SignObservation }
   | { readonly kind: 'vertigo'; readonly value: SignObservation }
+  // A15.
+  | { readonly kind: 'truncal_ataxia'; readonly value: SignObservation }
   // A14: one facet of language, about the patient; neglect, by the side of space.
   | { readonly kind: 'language'; readonly sign: LanguageSign; readonly value: SignObservation }
   | { readonly kind: 'neglect'; readonly side: Side; readonly value: SignObservation };

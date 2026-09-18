@@ -108,6 +108,15 @@ describe('the drawn brain keeps the sourced relations', () => {
     assert.ok(Math.abs(at('superior_temporal').x) >= Math.abs(at('motor_cortex', 'face').x), 'the Sylvian cortex is lateral, beside the face area');
   });
 
+  it('puts the cerebellum behind the brainstem, the vermis medial to the hemispheres (S110)', () => {
+    const at = (c: Parameters<typeof partPoint>[2]) => partPoint(RENDER, 'cerebellum', c, 'L', 'face');
+    assert.ok(at('cerebellar_hemisphere').z > partPoint(RENDER, 'pons', 'facial', 'L', 'face').z, 'dorsal to the pons tegmentum');
+    assert.ok(at('vermis').z > partPoint(RENDER, 'medulla', 'vestibular', 'L', 'face').z, 'dorsal to the medulla');
+    assert.ok(Math.abs(at('vermis').x) < Math.abs(at('cerebellar_hemisphere').x), 'the vermis is midline');
+    const { cerebellum, pons, medulla } = L.levels;
+    assert.ok(cerebellum.y > medulla.y && cerebellum.y < pons.y + pons.height / 2, 'beside the pons and upper medulla');
+  });
+
   it('draws every part a territory names', () => {
     for (const row of Object.values(KB.brain.territories)) {
       for (const c of row.compartments) assert.ok(partPoint(RENDER, row.level, c, 'R', 'face'), `${row.level} ${c}`);

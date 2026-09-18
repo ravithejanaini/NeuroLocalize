@@ -25,6 +25,7 @@ const LEVEL_WORD: Record<BrainLevel, string> = {
   thalamus: 'thalamus',
   capsule: 'internal capsule',
   cortex: 'cortex',
+  cerebellum: 'cerebellum',
 };
 
 export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HTMLElement): BrainScene {
@@ -59,6 +60,18 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
     ring.rotation.x = Math.PI / 2;
     ring.position.y = y + height / 2;
     root.add(ring);
+  }
+
+  // P11: the cerebellum as two faint lobes behind the pons and medulla, joined by the vermis.
+  {
+    const c = layout.levels.cerebellum;
+    for (const side of SIDES) {
+      const lobe = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), basic(palette.cord, 0.06));
+      lobe.scale.set(1.25, 0.85, 0.9);
+      lobe.position.set((side === 'L' ? -1 : 1) * 1.3, c.y, 2.2);
+      root.add(lobe);
+    }
+    label(LEVEL_WORD.cerebellum, new THREE.Vector3(-2.9, c.y - 0.9, 2.2));
   }
 
   // Thalamus and capsule as faint forms on either side; the cortex as two shells.

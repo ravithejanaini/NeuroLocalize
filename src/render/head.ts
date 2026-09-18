@@ -42,11 +42,11 @@ export function headAffected(f: Findings): boolean {
       f.faceSensation[x] !== 'intact' ||
       f.ataxia[x] !== 'absent' ||
       CRANIAL_SIGNS.some((s) => f.cranial[x][s] !== 'absent'),
-  ) || f.vertigo !== 'absent';
+  ) || f.vertigo !== 'absent' || f.truncalAtaxia !== 'absent';
 }
 
 export function headHtml(f: Findings): string {
-  if (!headAffected(f)) return '<p class="quiet">Face, eyes, tongue and palate normal; no ataxia or vertigo.</p>';
+  if (!headAffected(f)) return '<p class="quiet">Face, eyes, tongue and palate normal; no ataxia, truncal or limb, and no vertigo.</p>';
   const crossed = crossedSide(f);
   const lead = crossed
     ? `<p class="crossed">Crossed: signs in the ${SIDE_WORD[crossed]} head with a deficit in the ${SIDE_WORD[other(crossed)]} body — the mark of a brainstem lesion.</p>`
@@ -62,7 +62,8 @@ export function headHtml(f: Findings): string {
     row('Limb ataxia', (x) => ({ word: SIGN_WORD[f.ataxia[x]], quiet: f.ataxia[x] === 'absent' })),
   ].join('');
   return `${lead}<table class="head"><thead><tr><th></th><th>Left</th><th>Right</th></tr></thead><tbody>${rows}</tbody></table>
-    <div class="kv"><span class="k">Vertigo</span><span class="v">${SIGN_WORD[f.vertigo]}</span></div>`;
+    <div class="kv"><span class="k">Vertigo</span><span class="v">${SIGN_WORD[f.vertigo]}</span></div>
+    <div class="kv"><span class="k">Truncal ataxia</span><span class="v">${SIGN_WORD[f.truncalAtaxia]}</span></div>`;
 }
 
 // ── P10: language and attention ───────────────────────────────────────────
