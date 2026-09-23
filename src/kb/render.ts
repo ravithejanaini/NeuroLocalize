@@ -259,6 +259,8 @@ export const RENDER: RenderKb = {
       'pons:sympathetic': [-0.7, 0.1, 0.22],
       'pons:cerebellar_peduncle': [-1.25, 0.1, 0.42],
       'pons:vestibular': [-0.76, -0.5, 0.55],
+      // P12: the cochlear nuclei, lateral to the vestibular nuclei (S65, S114).
+      'pons:cochlear': [-1.05, -0.55, 0.45],
       'midbrain:peduncle': [-0.55, 0, -0.62],
       'midbrain:oculomotor': [-0.2, 0.15, -0.3],
       'midbrain:oculomotor_nucleus': [-0.13, 0.35, 0.22],

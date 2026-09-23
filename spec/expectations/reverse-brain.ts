@@ -90,11 +90,14 @@ export const BRAIN_REVERSE_CASES: readonly BrainReverseCase[] = [
       { kind: 'vertigo', value: 'present' },
       { kind: 'babinski', side: 'L', value: 'absent' },
       { kind: 'babinski', side: 'R', value: 'absent' },
+      // A16: the whole PICA territory fits every finding above and takes the cerebellum too;
+      // a steady trunk is what keeps this lesion to the medulla (S114, C38).
+      { kind: 'truncal_ataxia', value: 'absent' },
     ],
     expectations: [{ timepoint: 'chronic', topFamily: 'brainstem_left', topPlaces: ['lateral_medullary'], unexplained: false }],
     cite: ['S47', 'S58', 'S60', 'S16'],
     basis: 'stated',
-    note: 'The crossed sensory loss — face on one side, body on the other — is what only the lateral medulla gives (S58).',
+    note: 'The crossed sensory loss — face on one side, body on the other — is what only the lateral medulla gives (S58); a steady trunk keeps it out of the PICA’s cerebellar territory (S114; A16).',
   },
   {
     id: 'reverse-internal-capsule',

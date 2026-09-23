@@ -72,6 +72,7 @@ export function validateBrain(kb: Kb): void {
     b.ptosisNuclear.steps,
     b.elevation.steps,
     b.elevationCrossed.steps,
+    b.hearing.steps,
     b.sympathetic.steps,
     b.ataxia.steps,
     b.vertigo.steps,
@@ -90,6 +91,10 @@ export function validateBrain(kb: Kb): void {
     if (t.compartments.length === 0) throw new Error(`territory ${name} takes nothing`);
     for (const c of t.compartments) if (!holds(t.level, c)) throw new Error(`territory ${name}: no ${c} in the ${t.level}`);
     for (const v of t.vision ?? []) if (!(v in kb.vision.parts)) throw new Error(`territory ${name}: no visual part ${v}`);
+    for (const a of t.also ?? []) {
+      if (a.compartments.length === 0) throw new Error(`territory ${name} takes nothing in the ${a.level}`);
+      for (const c of a.compartments) if (!holds(a.level, c)) throw new Error(`territory ${name}: no ${c} in the ${a.level}`);
+    }
   }
   for (const c of b.somatotopic.compartments) {
     if (!BRAIN_LEVELS.some((l) => holds(l, c))) throw new Error(`somatotopic ${c} exists nowhere`);
@@ -235,6 +240,9 @@ export function brainFindings(kb: Kb, map: BrainMap): BrainFindings {
           break;
         case 'ptosis':
           signs[sign] = lid(kb, map, x);
+          break;
+        case 'hearing_loss':
+          signs[sign] = present(routeDamage(map, b.hearing, x, 'face'));
           break;
         case 'elevation_weakness':
           signs[sign] = present(worst([routeDamage(map, b.elevation, x, 'face'), routeDamage(map, b.elevationCrossed, x, 'face')]));

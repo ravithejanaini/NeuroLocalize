@@ -117,9 +117,17 @@ describe('the drawn brain keeps the sourced relations', () => {
     assert.ok(cerebellum.y > medulla.y && cerebellum.y < pons.y + pons.height / 2, 'beside the pons and upper medulla');
   });
 
+  it('puts the cochlear nuclei lateral to the vestibular nuclei in the pons (P12)', () => {
+    const at = (c: Parameters<typeof partPoint>[2]) => partPoint(RENDER, 'pons', c, 'L', 'face');
+    assert.ok(Math.abs(at('cochlear').x) > Math.abs(at('vestibular').x), 'the cochlear nuclei are the more lateral');
+    assert.ok(at('cochlear').z > at('basis').z, 'dorsal to the basis');
+  });
+
   it('draws every part a territory names', () => {
     for (const row of Object.values(KB.brain.territories)) {
       for (const c of row.compartments) assert.ok(partPoint(RENDER, row.level, c, 'R', 'face'), `${row.level} ${c}`);
+      // P12: and every part it takes at another level (D77).
+      for (const a of row.also ?? []) for (const c of a.compartments) assert.ok(partPoint(RENDER, a.level, c, 'R', 'face'), `${a.level} ${c}`);
     }
   });
 });

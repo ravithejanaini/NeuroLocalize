@@ -13,6 +13,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S91', 'S92', 'S93', 'S94', 'S95', 'S96', 'S97', 'S98', 'S99',
   'S100', 'S101', 'S102', 'S103', 'S104', 'S105', 'S106', 'S107', 'S108',
   'S109', 'S110', 'S111', 'S112',
+  'S113', 'S114', 'S115',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -130,4 +131,7 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S110', title: 'StatPearls — Neuroanatomy, Cerebellum', url: 'https://www.ncbi.nlm.nih.gov/books/NBK538167/' },
   { id: 'S111', title: 'StatPearls — Cerebellar Dysfunction', url: 'https://www.ncbi.nlm.nih.gov/books/NBK562317/' },
   { id: 'S112', title: 'StatPearls — Neuroanatomy, Cerebellar Dysfunction', url: 'https://www.ncbi.nlm.nih.gov/books/NBK545251/' },
+  { id: 'S113', title: 'StatPearls — Cerebellar Infarction', url: 'https://www.ncbi.nlm.nih.gov/books/NBK470416/' },
+  { id: 'S114', title: 'StatPearls — Vertebrobasilar Stroke', url: 'https://www.ncbi.nlm.nih.gov/books/NBK556084/' },
+  { id: 'S115', title: 'StatPearls — Pontine Infarction', url: 'https://www.ncbi.nlm.nih.gov/books/NBK554418/' },
 ];

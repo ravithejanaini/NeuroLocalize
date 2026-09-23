@@ -156,6 +156,8 @@ export const BRAIN_CASES: readonly BrainCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        // A16: hearing is the cochlear nuclei alone (S114, D78); the facial nucleus sits beside the cochlear nuclei but is not them.
+        { kind: 'cranial', side: 'L', sign: 'hearing_loss', oneOf: ['absent'], cite: ['S114'], basis: 'composed' },
         sign('L', 'gaze_palsy', true, { cite: ['S61'], basis: 'stated', note: 'toward the side of the lesion' }),
         sign('L', 'abduction_weakness', true, { cite: ['S61'], basis: 'composed', note: 'the left eye cannot abduct within the gaze palsy' }),
         face('L', 'whole', { cite: ['S61', 'S51'], basis: 'stated', note: 'the facial genu wraps the nucleus' }),
@@ -536,6 +538,8 @@ export const BRAIN_CASES: readonly BrainCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        // A16: hearing is the cochlear nuclei alone (S114, D78); the tract runs past the cochlear nuclei but is not them.
+        { kind: 'cranial', side: 'L', sign: 'hearing_loss', oneOf: ['absent'], cite: ['S114'], basis: 'composed' },
         sense('R', 'posterior_column', all, ['lost'], { cite: ['S57'], basis: 'stated', note: 'A8: the lemniscus serves the contralateral body throughout the brainstem' }),
         sense('R', 'pain_temperature', all, ['lost'], { cite: ['S58'], basis: 'stated', note: 'A8: a brainstem lesion removes contralateral body pain' }),
         sense('L', 'all', all, ['intact'], { cite: ['S57', 'S58'], basis: 'composed' }),
@@ -571,6 +575,8 @@ export const BRAIN_CASES: readonly BrainCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        // A16: hearing is the cochlear nuclei alone (S114, D78); the sympathetic fibres are not the cochlear nuclei.
+        { kind: 'cranial', side: 'L', sign: 'hearing_loss', oneOf: ['absent'], cite: ['S114'], basis: 'composed' },
         { kind: 'horner', side: 'L', oneOf: ['present'], cite: ['S16'], basis: 'composed', note: 'A8: first-order fibres descend uncrossed through the pons' },
         { kind: 'horner', side: 'R', oneOf: ['absent'], cite: ['S16'], basis: 'composed' },
         motor('R', all, 'none', { cite: ['S54'], basis: 'composed' }),
@@ -600,6 +606,8 @@ export const BRAIN_CASES: readonly BrainCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        // A16: hearing is the cochlear nuclei alone (S114, D78); the vestibular nuclei are the eighth nerve's balance half; hearing is the cochlear half.
+        { kind: 'cranial', side: 'L', sign: 'hearing_loss', oneOf: ['absent'], cite: ['S114'], basis: 'composed' },
         { kind: 'ataxia', side: 'L', oneOf: ['present'], cite: ['S65'], basis: 'composed', note: 'A8: ipsilateral limb ataxia in lateral pontine lesions' },
         { kind: 'ataxia', side: 'R', oneOf: ['absent'], cite: ['S65'], basis: 'composed' },
         { kind: 'vertigo', oneOf: ['present'], cite: ['S59', 'S47'], basis: 'composed', note: 'A8: vestibular nuclei lie in the inferior pons' },

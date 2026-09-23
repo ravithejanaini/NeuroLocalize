@@ -310,6 +310,17 @@ export const BRAIN: Brain = {
     },
     steps: [{ level: 'pons', compartment: 'vestibular' }, { level: 'medulla', compartment: 'vestibular' }],
   },
+  hearing: {
+    meta: {
+      id: 'brain.hearing',
+      claim: 'The AICA supplies the lateral pons with the cochlear nuclei of the eighth nerve, and gives the labyrinthine artery; a lesion there loses hearing on its own side.',
+      sources: ['S113', 'S114', 'S65', 'S115'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'pons', compartment: 'cochlear' }],
+    serves: 'ipsilateral',
+  },
   truncalAtaxia: {
     meta: {
       id: 'brain.truncal-ataxia',
@@ -392,8 +403,8 @@ export const BRAIN: Brain = {
   partsAt: {
     meta: {
       id: 'brain.parts-at',
-      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure; the genu and posterior limb of the capsule; VPL and VPM; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus and the medial longitudinal fasciculus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.',
-      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110'],
+      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure; the genu and posterior limb of the capsule; VPL and VPM; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus and the medial longitudinal fasciculus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.',
+      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114'],
       tier: 'T1',
       bookRef: p,
     },
@@ -414,6 +425,7 @@ export const BRAIN: Brain = {
         'sympathetic',
         'cerebellar_peduncle',
         'vestibular',
+        'cochlear',
       ],
       medulla: [
         'pyramid',
@@ -636,6 +648,42 @@ export const BRAIN: Brain = {
       level: 'cerebellum',
       compartments: ['vermis'],
       midline: true,
+    },
+    aica: {
+      meta: {
+        id: 'territory.aica',
+        claim: 'The anterior inferior cerebellar artery supplies the lateral pons — the facial nucleus, the cochlear and vestibular nuclei, the spinothalamic tract, the descending sympathetic fibres and the cerebellar peduncle — and the ear through its labyrinthine branch. Whether the corticospinal tract and lemniscus belong to it is disputed (C37).',
+        sources: ['S113', 'S114', 'S65'],
+        tier: 'T3',
+        bookRef: p,
+        conflict: 'C37',
+      },
+      level: 'pons',
+      compartments: ['facial', 'cochlear', 'vestibular', 'spinothalamic', 'sympathetic', 'cerebellar_peduncle'],
+    },
+    pica: {
+      meta: {
+        id: 'territory.pica',
+        claim: 'The posterior inferior cerebellar artery supplies the lateral medulla and the inferior vermis and undersurface of the cerebellar hemisphere; it may spare either, and the medulla alone stays as its own place (C38).',
+        sources: ['S110', 'S113', 'S114', 'S47'],
+        tier: 'T3',
+        bookRef: p,
+        conflict: 'C38',
+      },
+      level: 'medulla',
+      compartments: ['spinothalamic', 'spinal_trigeminal', 'sympathetic', 'ambiguus', 'cerebellar_peduncle', 'vestibular'],
+      also: [{ level: 'cerebellum', compartments: ['cerebellar_hemisphere', 'vermis'] }],
+    },
+    sca: {
+      meta: {
+        id: 'territory.sca',
+        claim: 'The superior cerebellar artery supplies the superior vermis and the superior cortex of the hemisphere. Its midbrain branches are not modelled.',
+        sources: ['S110', 'S113', 'S114'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'cerebellum',
+      compartments: ['cerebellar_hemisphere', 'vermis'],
     },
     aca_cortex: {
       meta: {

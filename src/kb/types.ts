@@ -167,6 +167,8 @@ export type Brain = {
   readonly ptosisNuclear: Row<{ readonly steps: readonly BrainStep[]; readonly bilateral: boolean }>;
   readonly elevation: BrainRoute;
   readonly elevationCrossed: BrainRoute;
+  /** P12: the cochlear nuclei, on the side of the lesion. */
+  readonly hearing: BrainRoute;
   readonly sympathetic: BrainRoute;
   readonly ataxia: BrainRoute;
   readonly vertigo: Row<{ readonly steps: readonly BrainStep[] }>;
@@ -197,6 +199,8 @@ export type Brain = {
         readonly vision?: readonly VisualPart[];
         /** P11: a midline place takes both sides at once, and is one candidate, not two. */
         readonly midline?: boolean;
+        /** P12: parts at other levels on the same side — PICA takes the medulla and the cerebellum. */
+        readonly also?: readonly { readonly level: BrainLevel; readonly compartments: readonly BrainCompartment[] }[];
       }>
     >
   >;

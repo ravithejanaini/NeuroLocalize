@@ -26,11 +26,14 @@ export const CEREBELLUM_REVERSE_CASES: readonly BrainReverseCase[] = [
       { kind: 'face_sensation', side: 'L', value: 'normal' },
       { kind: 'face_weakness', side: 'L', value: 'normal' },
       { kind: 'vertigo', value: 'absent' },
+      // A16: the SCA takes the superior vermis as well as the hemisphere; a steady trunk is
+      // what separates the hemisphere alone from the whole SCA territory (S110).
+      trunk('absent'),
     ],
     expectations: [{ timepoint: 'chronic', topFamily: 'cerebellum_left', topPlaces: ['cerebellar_hemisphere'] }],
     cite: ['S109', 'S110'],
     basis: 'stated',
-    note: 'Limb ataxia on one side with nothing else: that cerebellar hemisphere (S110). The brainstem places that give ataxia bring crossed sensory loss, a facial sign or vertigo with it.',
+    note: 'Limb ataxia on one side with nothing else: that cerebellar hemisphere (S110). The brainstem places that give ataxia bring crossed sensory loss, a facial sign or vertigo with it, and the whole SCA territory brings truncal ataxia (A16).',
   },
   {
     id: 'reverse-vermis',

@@ -516,6 +516,9 @@ export const SITE_NAME: Record<Place, string> = {
   supramarginal: 'inferior parietal lobule (supramarginal and angular gyri)',
   cerebellar_hemisphere: 'cerebellar hemisphere',
   vermis: 'vermis',
+  aica: 'anterior inferior cerebellar artery (lateral pons)',
+  pica: 'posterior inferior cerebellar artery (lateral medulla and inferior cerebellum)',
+  sca: 'superior cerebellar artery (superior cerebellum)',
   pontine_tegmentum: 'pontine tegmentum (abducens nucleus and MLF)',
   oculomotor_nucleus: 'oculomotor nucleus, in the midbrain',
   internal_capsule: 'internal capsule',
@@ -600,6 +603,7 @@ const PART_NAME: Record<BrainCompartment, string> = {
   inferior_parietal: 'inferior parietal lobule',
   cerebellar_hemisphere: 'cerebellar hemisphere',
   vermis: 'half of the vermis',
+  cochlear: 'cochlear nuclei',
   mlf: 'medial longitudinal fasciculus',
   pprf: 'paramedian pontine reticular formation',
   basis: 'basis pontis',
@@ -720,6 +724,7 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
         : o.sign === 'abducting_nystagmus' ? [b.abductingNystagmus]
         : o.sign === 'ptosis' ? [b.ptosis]
         : o.sign === 'elevation_weakness' ? [b.elevation, b.elevationCrossed]
+        : o.sign === 'hearing_loss' ? [b.hearing]
         : [b.ambiguus];
       const c = faceCuts(routes, o.side);
       if (o.sign === 'palate_weakness' && !c.length && f.cranial[o.side].palate_weakness === 'indeterminate') {

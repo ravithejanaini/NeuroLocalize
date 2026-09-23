@@ -210,6 +210,13 @@ export function territoryRegions(kb: Kb, territory: (typeof TERRITORIES)[number]
       severity: 'complete',
       ...(row.regions ? { regions: row.regions } : {}),
     },
+    // P12: and parts at other levels on the same side — PICA takes medulla and cerebellum.
+    ...(row.also ?? []).map((a) => ({
+      brain: a.level,
+      sides: row.midline ? (['L', 'R'] as const) : ([side] as const),
+      compartments: a.compartments,
+      severity: 'complete' as const,
+    })),
     // P10: a territory may take part of the visual pathway too — the inferior MCA division
     // takes the optic radiation of its own side (C31).
     ...(row.vision ?? []).map((vision) => ({ vision, sides: [side], severity: 'complete' as const })),

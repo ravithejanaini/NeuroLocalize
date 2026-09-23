@@ -6,6 +6,7 @@ import { BRAIN_CASES } from '../spec/expectations/brain.ts';
 import { VISION_CASES } from '../spec/expectations/vision.ts';
 import { LANGUAGE_CASES } from '../spec/expectations/language.ts';
 import { CEREBELLUM_CASES } from '../spec/expectations/cerebellum.ts';
+import { POSTERIOR_CASES } from '../spec/expectations/posterior.ts';
 import type { BrainReverseCase } from '../spec/expectations/reverse-brain.ts';
 import type { LimbReverseCase } from '../spec/expectations/reverse-plexus.ts';
 import type { VisionReverseCase } from '../spec/expectations/reverse-vision.ts';
@@ -245,6 +246,10 @@ export const TERRITORY_CASE: Readonly<Record<string, string>> = {
   // P11.
   cerebellar_hemisphere: 'cerebellar-hemisphere-left',
   vermis: 'vermis',
+  // P12.
+  aica: 'aica-left',
+  pica: 'pica-left',
+  sca: 'sca-left',
   // P9.
   mlf_pons: 'mlf-left',
   pontine_tegmentum: 'pontine-tegmentum-left',
@@ -291,7 +296,7 @@ export function territoryFailures(kb: Kb): Failure[] {
     [...(a ?? [])].sort().join(',') === [...(b ?? [])].sort().join(',');
   for (const [territory, row] of Object.entries(kb.brain.territories)) {
     const id = TERRITORY_CASE[territory];
-    const kase = BRAIN_CASES.find((c) => c.id === id) ?? LANGUAGE_CASES.find((c) => c.id === id) ?? CEREBELLUM_CASES.find((c) => c.id === id);
+    const kase = BRAIN_CASES.find((c) => c.id === id) ?? LANGUAGE_CASES.find((c) => c.id === id) ?? CEREBELLUM_CASES.find((c) => c.id === id) ?? POSTERIOR_CASES.find((c) => c.id === id);
     const lesion = kase?.lesion[0];
     // P10: the visual parts a territory takes must be exactly the ones its case lesions.
     const caseVision = (kase?.lesion ?? []).flatMap((r) => ('vision' in r ? [r.vision] : []));
@@ -307,6 +312,10 @@ export function territoryFailures(kb: Kb): Failure[] {
     if (!same(lesion.regions, row.regions)) fail(`territory ${territory} regions differ from its case`);
     // P11: a midline territory takes both sides, and its case must lesion both (D74).
     if (!!row.midline !== (lesion.sides.length === 2)) fail(`territory ${territory} is ${row.midline ? '' : 'not '}midline; its case lesions ${lesion.sides.join(' and ')}`);
+    // P12: every further brain level the case lesions must be one the territory names, and the reverse.
+    const caseAlso = (kase?.lesion ?? []).slice(1).flatMap((r) => ('brain' in r ? [`${r.brain}:${[...r.compartments].sort().join('+')}`] : []));
+    const rowAlso = (row.also ?? []).map((a) => `${a.level}:${[...a.compartments].sort().join('+')}`);
+    if (!same(caseAlso, rowAlso)) fail(`territory ${territory} also takes ${rowAlso.join('; ') || 'nothing'}; its case ${caseAlso.join('; ') || 'nothing'}`);
     if (!same(caseVision, row.vision)) fail(`territory ${territory} takes the visual parts ${(row.vision ?? []).join(', ') || 'none'}; its case ${caseVision.join(', ') || 'none'}`);
   }
   return out;

@@ -74,6 +74,7 @@ export const CRANIAL_NAME: Record<CranialSign, string> = {
   abducting_nystagmus: 'nystagmus of this eye as it abducts',
   ptosis: 'lid droops on this side',
   elevation_weakness: 'this eye does not elevate (superior rectus)',
+  hearing_loss: 'hearing reduced in this ear',
 };
 
 /** Each sector of one eye's field, as it is asked about. */

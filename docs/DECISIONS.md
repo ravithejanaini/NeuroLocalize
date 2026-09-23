@@ -973,3 +973,71 @@ flag. Two gaps were closed before the run rather than found by it. The P10 lesso
 compared a territory's `midline` flag with its frozen case, so `territoryFailures` now does. The
 six ataxia survivors are P5's peduncle steps, unchanged since P10 (the same six in both runs):
 the only lesion that takes the medullary peduncle takes its neighbours with it.
+
+## P12 — the posterior circulation
+
+The analysis written before any P12 code is `docs/P12-analysis.md`; S113–S115 were read for it
+on 2026-09-23, and S65 was re-read for the lateral pontine syndrome. NCBI's first path returned
+a CAPTCHA page; the chapters were read through NCBI's own `/sites/books/` path instead. The
+three frozen cases were run red against the P11 engine first: hearing came back undefined in
+all three.
+
+### Source conflicts
+
+**C37 — Weakness and position sense in the lateral pons.** S65's Marie-Foix syndrome gives
+contralateral hemiparesis and loss of proprioception and vibration, from the basilar perforators
+as well as the AICA. S113 and S114, describing the AICA territory, name neither. The AICA place
+takes the lateral structures only, and its case asserts neither strength nor vibration.
+
+**C38 — PICA without the medulla, or without the cerebellum.** S113: PICA occlusion only
+*sometimes* gives the full Wallenberg syndrome, so it may be cerebellar alone; and the lateral
+medulla can be lost without the cerebellum (S47: "PICA or vertebral artery"). The model offers
+the whole PICA territory and keeps P5's lateral medullary place beside it.
+
+**C39 — Facial sensation in the AICA syndrome.** S113: "facial paralysis or anesthesia". The
+model's trigeminal nucleus is medullary (P5), so the AICA place does not take it and nothing is
+asserted about facial sensation.
+
+**C40 — Vertigo from the SCA.** S113 says vertigo is *less frequent* with the SCA, not absent.
+The SCA place does not take the vestibular nuclei, and its case asserts nothing about vertigo.
+
+### Decisions
+
+**D77 — A territory may span levels.** PICA supplies the lateral medulla and the inferior
+cerebellum, so a territory gains `also`: further parts at other levels on its own side.
+`validateBrain` checks them against the parts-at table, and `territoryFailures` checks them
+against the frozen case — falsified on purpose by dropping the vermis from PICA, which the check
+names exactly.
+
+**D78 — Hearing is one sign, from the cochlear nuclei.** The AICA supplies the cochlear nuclei
+and, through the labyrinthine artery, the inner ear (S114). The model has one part, `cochlear`,
+standing for both; the labyrinth as a separate structure and tinnitus are not modelled.
+
+**D79 — Two earlier examinations gained a steady trunk.** The whole PICA territory fits every
+finding of the P5 lateral medullary examination, and the SCA every finding of the P11
+cerebellar-hemisphere examination; neither examination had looked at the trunk. Each gained
+one observation — truncal ataxia absent — and kept its expected answer (A16), as A14 did.
+
+### Reviewer questions
+
+**R37** — C37: should the lateral pontine place take the corticospinal tract and lemniscus, as
+S65's Marie-Foix syndrome does, rather than the AICA territory alone?
+
+**R38** — C39: should the model add a pontine trigeminal nucleus, so the AICA place can take
+facial sensation?
+
+R36 (PICA and the cerebellum) is answered by D77 and C38.
+
+**D80 — The lateral medulla preset no longer says "PICA".** Its P5 label read "Wallenberg
+(PICA)". With a PICA place beside it that also takes the cerebellum, that label made the two
+presets indistinguishable — the browser check selected the wrong one by it. It now reads
+"Wallenberg, medulla only"; S47 gives the medullary lesion to "PICA or vertebral artery" (C38).
+
+**D81 — What the P12 mutation runs showed.** The final run kills 96.6% of sourced mutants
+(4,226 of 4,377) and 95.8% of all — up from 96.4% after P11 — and **no P12 row has a survivor**.
+The first run left five mutants of the new hearing route standing: each moved it onto a
+neighbour inside the AICA territory (the facial nucleus, the spinothalamic tract, the
+sympathetic fibres, the cerebellar peduncle, the vestibular nuclei), and no case lesioned those
+without the cochlear nuclei and asked about hearing. Four P5 cases that lesion exactly those
+parts now say hearing is spared (A16), and the rerun kills all 38 hearing mutants. The six P5
+ataxia survivors are unchanged from P10 and P11.

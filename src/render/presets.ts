@@ -105,7 +105,7 @@ export const PRESETS: readonly Preset[] = [
   { id: 'sciatic', kind: 'limb', leg: true, label: 'Sciatic nerve', pattern: 'Flail foot, gluteals spared', site: 'sciatic' },
   { id: 'tibial', kind: 'limb', leg: true, label: 'Tibial nerve', pattern: 'Weak plantar flexion, numb sole', site: 'tibial' },
   { id: 'common-fibular', kind: 'limb', leg: true, label: 'Common fibular, fibular neck', pattern: 'Foot drop, inversion spared', site: 'common_fibular' },
-  { id: 'lateral-medulla', kind: 'brain', label: 'Lateral medulla', pattern: 'Wallenberg (PICA)', territory: 'lateral_medullary' },
+  { id: 'lateral-medulla', kind: 'brain', label: 'Lateral medulla', pattern: 'Wallenberg, medulla only', territory: 'lateral_medullary' },
   { id: 'medial-medulla', kind: 'brain', label: 'Medial medulla', pattern: 'Dejerine', territory: 'medial_medullary' },
   { id: 'ventral-pons', kind: 'brain', label: 'Ventral pons', pattern: 'Millard-Gubler', territory: 'ventral_pons' },
   { id: 'dorsal-pons', kind: 'brain', label: 'Abducens nucleus', pattern: 'Gaze palsy + facial palsy', territory: 'dorsal_pons' },
@@ -122,6 +122,10 @@ export const PRESETS: readonly Preset[] = [
   // P11: the cerebellum. The vermis is midline, so the side does not change it.
   { id: 'cerebellar-hemisphere', kind: 'brain', label: 'Cerebellar hemisphere', pattern: 'Limb ataxia, same side', territory: 'cerebellar_hemisphere' },
   { id: 'vermis', kind: 'brain', label: 'Cerebellar vermis', pattern: 'Truncal ataxia, limbs spared', territory: 'vermis' },
+  // P12: the three cerebellar arteries.
+  { id: 'aica', kind: 'brain', label: 'AICA, lateral pons', pattern: 'Face, ear, limb + crossed pain loss', territory: 'aica' },
+  { id: 'pica', kind: 'brain', label: 'PICA', pattern: 'Wallenberg + truncal ataxia', territory: 'pica' },
+  { id: 'sca', kind: 'brain', label: 'SCA', pattern: 'Limb and truncal ataxia, no ear', territory: 'sca' },
   { id: 'supramarginal', kind: 'brain', label: 'Inferior parietal lobule', pattern: 'Left: conduction · right: neglect', territory: 'supramarginal' },
   // P9: the eye movements.
   { id: 'mlf', kind: 'brain', label: 'Medial longitudinal fasciculus', pattern: 'Internuclear ophthalmoplegia', territory: 'mlf_pons' },

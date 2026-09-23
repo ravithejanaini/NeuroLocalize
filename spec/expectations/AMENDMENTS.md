@@ -303,6 +303,28 @@ situation the freeze exists to catch.
   absent, truncal ataxia undefined, the Romberg test readable. Reflexes are never asserted for
   a cerebellar lesion, because the model does not show hypotonia or pendular reflexes.
 
+## A16 — The posterior circulation (P12, 2026-09-23)
+
+- **Changed:** two new files. `posterior.ts` holds three cases — the AICA, the PICA and the SCA,
+  each on the left. `reverse-posterior.ts` holds three examinations: the AICA against the other
+  pontine places, the PICA against the lateral medulla alone, and the SCA against a cerebellar
+  hemisphere alone.
+- **Changed, not added:** two earlier examinations each gain one observation and keep their
+  expected answers. `reverse-lateral-medullary` (P5, `reverse-brain.ts`) and
+  `reverse-cerebellar-hemisphere` (P11, `reverse-cerebellum.ts`) now record a steady trunk. The
+  new PICA and SCA places fit every one of their other findings, and truncal ataxia is the
+  bedside finding that separates them (D79).
+- **Added after the first P12 mutation run:** four P5 cases in `brain.ts` — the dorsal pons,
+  and the pons lesions of the lemnisci, the sympathetic fibres and the cerebellar peduncle with
+  the vestibular nuclei — each gain one assertion: hearing on the lesion's side is spared. Five
+  mutants that moved the hearing route onto those neighbours survived, because no case lesioned
+  them without the cochlear nuclei and asked about hearing.
+- **Why:** P12 adds a part, a sign and three places; a row no frozen case observes is an
+  untested row (rule 5).
+- **How circularity was avoided:** every assertion is quoted from S65, S110 or S113–S115, read
+  into `docs/P12-analysis.md` before any code; the three cases were **run red against the P11
+  engine** first. What the sources dispute is left unasserted and named (C37, C39, C40).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -314,8 +336,8 @@ situation the freeze exists to catch.
 | `types.ts` | A4, A6, A7, A11, A14, A15 |
 | `plexus.ts` | A4, A5, A6, A9 |
 | `reverse-plexus.ts` | A4, A5 |
-| `brain.ts` | A7, A8, A9, A13, A14 |
-| `reverse-brain.ts` | A7, A13, A14, A15 |
+| `brain.ts` | A7, A8, A9, A13, A14, A16 |
+| `reverse-brain.ts` | A7, A13, A14, A15, A16 |
 | `leg.ts` | A10 |
 | `reverse-leg.ts` | A10 |
 | `vision.ts` | A11 |
@@ -323,6 +345,8 @@ situation the freeze exists to catch.
 | `language.ts` | A14 |
 | `reverse-language.ts` | A14 |
 | `cerebellum.ts` | A15 |
-| `reverse-cerebellum.ts` | A15 |
+| `reverse-cerebellum.ts` | A15, A16 |
+| `posterior.ts` | A16 |
+| `reverse-posterior.ts` | A16 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

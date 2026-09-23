@@ -304,6 +304,8 @@ export const BRAIN_COMPARTMENTS = [
   // P11: the cerebellum. The vermis is midline; each side holds half of it.
   'cerebellar_hemisphere',
   'vermis',
+  // P12: the cochlear nuclei and eighth nerve, in the pons.
+  'cochlear',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 
@@ -322,6 +324,8 @@ export const CRANIAL_SIGNS = [
   'abducting_nystagmus',
   'ptosis',
   'elevation_weakness',
+  // P12: the ear, on the side of the lesion.
+  'hearing_loss',
 ] as const;
 export type CranialSign = (typeof CRANIAL_SIGNS)[number];
 
@@ -360,6 +364,10 @@ export const TERRITORIES = [
   // P11.
   'cerebellar_hemisphere',
   'vermis',
+  // P12: the three cerebellar arteries.
+  'aica',
+  'pica',
+  'sca',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

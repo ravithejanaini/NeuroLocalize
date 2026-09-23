@@ -6,6 +6,7 @@ import { LEG_REVERSE_CASES } from '../spec/expectations/reverse-leg.ts';
 import { VISION_REVERSE_CASES } from '../spec/expectations/reverse-vision.ts';
 import { LANGUAGE_REVERSE_CASES } from '../spec/expectations/reverse-language.ts';
 import { CEREBELLUM_REVERSE_CASES } from '../spec/expectations/reverse-cerebellum.ts';
+import { POSTERIOR_REVERSE_CASES } from '../spec/expectations/reverse-posterior.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
 import { hypotheses } from '../src/engine/hypotheses.ts';
@@ -20,7 +21,7 @@ import { examSlots } from '../src/render/slots.ts';
 const SLOTS = examSlots(RENDER);
 
 describe('frozen reverse expectations (A3, A4, A7)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES]) {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });
@@ -39,8 +40,9 @@ describe('reverse engine contract', () => {
     // ptosis and elevation join them, so that term is 2 * 12 rather than 2 * 8.
     // P10 adds three facets of language, which belong to the patient and not a side, and
     // neglect of each side of space: 3 + 2.
-    // P11 adds truncal ataxia, which belongs to the patient: + 1.
-    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 12 + 1 + 2 * 7 + 3 + 2 + 1);
+    // P11 adds truncal ataxia, which belongs to the patient: + 1. P12 adds hearing, a tenth
+    // cranial sign on each side, so that term becomes 2 * 13.
+    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 13 + 1 + 2 * 7 + 3 + 2 + 1);
   });
 
   it('with no findings, prefers nothing in particular and still suggests a test', () => {
@@ -204,11 +206,11 @@ describe('reverse engine contract', () => {
     assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 56, 'D32, P7: 18 arm and 10 leg places on each side');
     assert.equal(
       places.filter((x) => x.family.startsWith('brainstem') || x.family.startsWith('hemisphere')).length,
-      34,
-      'D44, P9, P10: 17 territories on each side — the nine of P5, three from P9 and five from P10',
+      38,
+      'D44, P9, P10, P12: 19 brainstem and cerebral territories on each side — nine from P5, three from P9, five from P10, and AICA and PICA from P12',
     );
     // P11: a hemisphere on each side and one midline vermis, never counted twice.
-    assert.equal(places.filter((x) => x.family.startsWith('cerebellum')).length, 3, 'P11: two cerebellar hemispheres and one vermis');
+    assert.equal(places.filter((x) => x.family.startsWith('cerebellum')).length, 5, 'P11, P12: two cerebellar hemispheres, one vermis and the SCA on each side');
   });
 
   // ── above the cord (D42–D44) ──
@@ -343,5 +345,18 @@ describe('the working for the cerebellum (P11)', () => {
   it('offers the vermis once, whatever the side (D74)', () => {
     const ids = hypotheses().filter((x) => x.site === 'vermis').map((x) => x.id);
     assert.deepEqual(ids, ['cerebellum_midline:vermis']);
+  });
+});
+
+describe('the working for the posterior circulation (P12)', () => {
+  it('explains hearing loss by the cochlear nuclei, and PICA’s truncal ataxia by the vermis (D77, D78)', () => {
+    prepareSync('chronic');
+    const aica = hypotheses().find((x) => x.id === 'brainstem_left:aica');
+    const pica = hypotheses().find((x) => x.id === 'brainstem_left:pica');
+    assert.ok(aica && pica);
+    const [ear] = explain(aica, [{ kind: 'cranial', side: 'L', sign: 'hearing_loss', value: 'present' }], 'chronic');
+    assert.match(ear?.because ?? '', /left cochlear nuclei in the pons are damaged/);
+    const [trunk] = explain(pica, [{ kind: 'truncal_ataxia', value: 'present' }], 'chronic');
+    assert.match(trunk?.because ?? '', /half of the vermis is damaged: the vermis coordinates the trunk/);
   });
 });
