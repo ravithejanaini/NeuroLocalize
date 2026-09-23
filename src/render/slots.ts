@@ -3,7 +3,7 @@
 import type { Slot } from '../engine/reverse.ts';
 import { KB } from '../kb/kb.ts';
 import type { RenderKb } from '../kb/types.ts';
-import { CRANIAL_SIGNS, FIELD_SECTORS, LANGUAGE_SIGNS, MUSCLES, REFLEXES, SENSORY_MODALITIES, SIDES, SKIN_AREAS } from '../kb/vocab.ts';
+import { CRANIAL_SIGNS, DORSAL_MIDBRAIN_SIGNS, FIELD_SECTORS, LANGUAGE_SIGNS, MUSCLES, REFLEXES, SENSORY_MODALITIES, SIDES, SKIN_AREAS } from '../kb/vocab.ts';
 
 /** Patches examined on their own: those that are not already a dermatome landmark (D30). */
 export const OWN_AREAS = SKIN_AREAS.filter((a) => KB.plexus.skin[a].landmark === undefined);
@@ -31,6 +31,8 @@ export function examSlots(render: RenderKb): Slot[] {
   out.push({ kind: 'romberg' }, { kind: 'bladder' }, { kind: 'vertigo' }, { kind: 'truncal_ataxia' });
   // P10: the three facets of language, and neglect of each side of space.
   for (const sign of LANGUAGE_SIGNS) out.push({ kind: 'language', sign });
+  // P13: signs of both eyes together.
+  for (const sign of DORSAL_MIDBRAIN_SIGNS) out.push({ kind: 'eyes', sign });
   for (const side of SIDES) out.push({ kind: 'neglect', side });
   return out;
 }

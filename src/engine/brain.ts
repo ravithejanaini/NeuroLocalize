@@ -7,6 +7,7 @@ import {
   BRAIN_LEVELS,
   CRANIAL_SIGNS,
   LANGUAGE_SIGNS,
+  DORSAL_MIDBRAIN_SIGNS,
   SEGMENTS,
   SIDES,
   type BodyRegion,
@@ -15,6 +16,7 @@ import {
   type CranialSign,
   type FaceWeakness,
   type LanguageSign,
+  type DorsalMidbrainSign,
   type Segment,
   type SensoryModality,
   type SensoryState,
@@ -73,6 +75,9 @@ export function validateBrain(kb: Kb): void {
     b.elevation.steps,
     b.elevationCrossed.steps,
     b.hearing.steps,
+    b.upgaze.steps,
+    b.lightNear.steps,
+    b.convergenceRetraction.steps,
     b.sympathetic.steps,
     b.ataxia.steps,
     b.vertigo.steps,
@@ -171,6 +176,8 @@ export type BrainFindings = {
   readonly vertigo: SignState;
   /** P11: truncal ataxia, from the vermis; unsettled after a hemisphere lesion (C35). */
   readonly truncalAtaxia: SignState;
+  /** P13: signs of both eyes together, from either half of the pretectum (C43). */
+  readonly eyes: Readonly<Record<DorsalMidbrainSign, SignState>>;
   /** P10: each facet of language, read from the dominant hemisphere only (D68). */
   readonly language: Readonly<Record<LanguageSign, SignState>>;
   /** P10: neglect of each side of SPACE — the side opposite the damaged hemisphere. */
@@ -257,6 +264,14 @@ export function brainFindings(kb: Kb, map: BrainMap): BrainFindings {
   const trunkHit = SIDES.some((h) => along(map, b.truncalAtaxia.steps, h, 'face') > 0);
   const hemisphereHit = SIDES.some((h) => along(map, b.truncalAfterHemisphere.steps, h, 'face') > 0);
   const truncalAtaxia: SignState = trunkHit ? 'present' : hemisphereHit ? b.truncalAfterHemisphere.state : 'absent';
+  // The dorsal midbrain is compressed from the midline; either half is enough (C43).
+  const eyeRoute: Record<DorsalMidbrainSign, readonly BrainStep[]> = {
+    upgaze_palsy: b.upgaze.steps,
+    light_near_dissociation: b.lightNear.steps,
+    convergence_retraction_nystagmus: b.convergenceRetraction.steps,
+  };
+  const eyes = {} as Record<DorsalMidbrainSign, SignState>;
+  for (const sign of DORSAL_MIDBRAIN_SIGNS) eyes[sign] = present(worst(SIDES.map((h) => along(map, eyeRoute[sign], h, 'face'))));
   // Language is read from the dominant hemisphere alone (D68). The parts are not somatotopic,
   // so every body region carries the same damage and 'face' is only the key it is read by.
   const dominant = b.dominance.language;
@@ -274,7 +289,7 @@ export function brainFindings(kb: Kb, map: BrainMap): BrainFindings {
     const h = other(x);
     neglect[x] = along(map, b.neglect.steps, h, 'face') === 0 ? 'absent' : h === dominant ? b.neglect.afterDominant : 'present';
   }
-  return { faceSensation, faceWeakness: faceWeak, cranial, ataxia, vertigo, truncalAtaxia, language, neglect };
+  return { faceSensation, faceWeakness: faceWeak, cranial, ataxia, vertigo, truncalAtaxia, eyes, language, neglect };
 }
 
 /** The ipsilateral oculosympathetic pathway in the brainstem (S16). */

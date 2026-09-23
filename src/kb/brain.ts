@@ -321,6 +321,36 @@ export const BRAIN: Brain = {
     steps: [{ level: 'pons', compartment: 'cochlear' }],
     serves: 'ipsilateral',
   },
+  upgaze: {
+    meta: {
+      id: 'brain.upgaze',
+      claim: 'Compression of the rostral midbrain and pretectum at the level of the superior colliculus, where the vertical gaze centres lie, limits conjugate upgaze; downgaze is classically preserved (C42).',
+      sources: ['S116', 'S119'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'midbrain', compartment: 'pretectum' }],
+  },
+  lightNear: {
+    meta: {
+      id: 'brain.light-near',
+      claim: 'The light-reflex fibres end in the pretectal nucleus, which signals both Edinger–Westphal nuclei; damage there leaves the pupils poorly reactive to light but constricting to near — light–near dissociation.',
+      sources: ['S116', 'S117', 'S118'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'midbrain', compartment: 'pretectum' }],
+  },
+  convergenceRetraction: {
+    meta: {
+      id: 'brain.convergence-retraction',
+      claim: 'A dorsal midbrain lesion gives convergence–retraction nystagmus: jerky convergence and retraction of both eyes, especially on attempted upgaze.',
+      sources: ['S116'],
+      tier: 'T2',
+      bookRef: p,
+    },
+    steps: [{ level: 'midbrain', compartment: 'pretectum' }],
+  },
   truncalAtaxia: {
     meta: {
       id: 'brain.truncal-ataxia',
@@ -403,8 +433,8 @@ export const BRAIN: Brain = {
   partsAt: {
     meta: {
       id: 'brain.parts-at',
-      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure; the genu and posterior limb of the capsule; VPL and VPM; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus and the medial longitudinal fasciculus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.',
-      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114'],
+      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure; the genu and posterior limb of the capsule; VPL and VPM; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus and, dorsally at the superior colliculus, the pretectum; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.',
+      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116'],
       tier: 'T1',
       bookRef: p,
     },
@@ -412,7 +442,7 @@ export const BRAIN: Brain = {
       cortex: ['motor_cortex', 'sensory_cortex', 'inferior_frontal', 'superior_temporal', 'inferior_parietal'],
       capsule: ['capsule_genu', 'capsule_posterior_motor', 'capsule_posterior_sensory'],
       thalamus: ['vpl', 'vpm'],
-      midbrain: ['peduncle', 'oculomotor', 'oculomotor_nucleus', 'mlf', 'medial_lemniscus', 'spinothalamic', 'sympathetic'],
+      midbrain: ['peduncle', 'oculomotor', 'oculomotor_nucleus', 'mlf', 'pretectum', 'medial_lemniscus', 'spinothalamic', 'sympathetic'],
       pons: [
         'basis',
         'facial',
@@ -729,6 +759,18 @@ export const BRAIN: Brain = {
       },
       level: 'midbrain',
       compartments: ['oculomotor_nucleus'],
+    },
+    dorsal_midbrain: {
+      meta: {
+        id: 'territory.dorsal-midbrain',
+        claim: 'Compression of the dorsal midbrain — the pretectum at the superior colliculus, as from a pineal tumour or hydrocephalus — gives Parinaud syndrome: upgaze palsy, convergence–retraction nystagmus and light–near dissociation. It takes both sides (C43).',
+        sources: ['S116', 'S119'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'midbrain',
+      compartments: ['pretectum'],
+      midline: true,
     },
   },
 };

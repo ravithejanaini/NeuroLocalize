@@ -13,6 +13,7 @@ import type {
   FieldSector,
   FieldState,
   LanguageSign,
+  DorsalMidbrainSign,
   MotorLesion,
   Muscle,
   MuscleState,
@@ -155,6 +156,8 @@ export type BrainAssertion = Evidence &
     | { readonly kind: 'vertigo'; readonly oneOf: readonly SignState[] }
     // A15: truncal ataxia belongs to the patient, not a side.
     | { readonly kind: 'truncal_ataxia'; readonly oneOf: readonly SignState[] }
+    // A17: signs of both eyes together, about the patient.
+    | { readonly kind: 'eyes'; readonly sign: DorsalMidbrainSign; readonly oneOf: readonly SignState[] }
   );
 
 export type BrainEvaluation = {

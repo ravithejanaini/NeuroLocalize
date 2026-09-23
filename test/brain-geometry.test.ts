@@ -123,6 +123,13 @@ describe('the drawn brain keeps the sourced relations', () => {
     assert.ok(at('cochlear').z > at('basis').z, 'dorsal to the basis');
   });
 
+  it('puts the pretectum dorsal and rostral in the midbrain, near the midline (S116)', () => {
+    const mid = (c: Parameters<typeof partPoint>[2]) => partPoint(RENDER, 'midbrain', c, 'L', 'face');
+    assert.ok(mid('pretectum').z > mid('oculomotor_nucleus').z, 'dorsal to the third nerve nucleus');
+    assert.ok(mid('pretectum').y > mid('oculomotor').y, 'rostral, at the superior colliculus');
+    assert.ok(Math.abs(mid('pretectum').x) < Math.abs(mid('peduncle').x), 'near the midline');
+  });
+
   it('draws every part a territory names', () => {
     for (const row of Object.values(KB.brain.territories)) {
       for (const c of row.compartments) assert.ok(partPoint(RENDER, row.level, c, 'R', 'face'), `${row.level} ${c}`);

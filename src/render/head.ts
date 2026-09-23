@@ -1,7 +1,7 @@
 // The head and brainstem findings, as HTML strings. No DOM, so it is tested under Node.
 import type { Findings } from '../engine/forward.ts';
-import { CRANIAL_SIGNS, LANGUAGE_SIGNS, SEGMENTS, SIDES, type FaceWeakness, type SensoryState, type Side, type SignState } from '../kb/vocab.ts';
-import { CRANIAL_NAME, LANGUAGE_NAME } from './examine.ts';
+import { CRANIAL_SIGNS, DORSAL_MIDBRAIN_SIGNS, LANGUAGE_SIGNS, SEGMENTS, SIDES, type FaceWeakness, type SensoryState, type Side, type SignState } from '../kb/vocab.ts';
+import { CRANIAL_NAME, EYES_NAME, LANGUAGE_NAME } from './examine.ts';
 
 const FACE_WORD: Record<FaceWeakness, string> = {
   none: 'strong',
@@ -42,7 +42,7 @@ export function headAffected(f: Findings): boolean {
       f.faceSensation[x] !== 'intact' ||
       f.ataxia[x] !== 'absent' ||
       CRANIAL_SIGNS.some((s) => f.cranial[x][s] !== 'absent'),
-  ) || f.vertigo !== 'absent' || f.truncalAtaxia !== 'absent';
+  ) || f.vertigo !== 'absent' || f.truncalAtaxia !== 'absent' || DORSAL_MIDBRAIN_SIGNS.some((s) => f.eyes[s] !== 'absent');
 }
 
 export function headHtml(f: Findings): string {
@@ -63,7 +63,8 @@ export function headHtml(f: Findings): string {
   ].join('');
   return `${lead}<table class="head"><thead><tr><th></th><th>Left</th><th>Right</th></tr></thead><tbody>${rows}</tbody></table>
     <div class="kv"><span class="k">Vertigo</span><span class="v">${SIGN_WORD[f.vertigo]}</span></div>
-    <div class="kv"><span class="k">Truncal ataxia</span><span class="v">${SIGN_WORD[f.truncalAtaxia]}</span></div>`;
+    <div class="kv"><span class="k">Truncal ataxia</span><span class="v">${SIGN_WORD[f.truncalAtaxia]}</span></div>
+    ${DORSAL_MIDBRAIN_SIGNS.map((s) => `<div class="kv"><span class="k">${EYES_NAME[s]}</span><span class="v">${SIGN_WORD[f.eyes[s]]}</span></div>`).join('')}`;
 }
 
 // ── P10: language and attention ───────────────────────────────────────────

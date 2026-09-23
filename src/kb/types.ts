@@ -169,6 +169,10 @@ export type Brain = {
   readonly elevationCrossed: BrainRoute;
   /** P12: the cochlear nuclei, on the side of the lesion. */
   readonly hearing: BrainRoute;
+  /** P13: the three dorsal midbrain signs, each read from either half of the pretectum. */
+  readonly upgaze: Row<{ readonly steps: readonly BrainStep[] }>;
+  readonly lightNear: Row<{ readonly steps: readonly BrainStep[] }>;
+  readonly convergenceRetraction: Row<{ readonly steps: readonly BrainStep[] }>;
   readonly sympathetic: BrainRoute;
   readonly ataxia: BrainRoute;
   readonly vertigo: Row<{ readonly steps: readonly BrainStep[] }>;

@@ -5,7 +5,7 @@ import type { Findings } from '../engine/forward.ts';
 import type { Hypothesis } from '../engine/hypotheses.ts';
 import type { Observation } from '../engine/reverse.ts';
 import { KB } from '../kb/kb.ts';
-import { FIELD_SECTORS, LANGUAGE_SIGNS, MUSCLES, SEGMENTS, SIDES, type Segment, type Side } from '../kb/vocab.ts';
+import { DORSAL_MIDBRAIN_SIGNS, FIELD_SECTORS, LANGUAGE_SIGNS, MUSCLES, SEGMENTS, SIDES, type Segment, type Side } from '../kb/vocab.ts';
 
 export const PATHWAYS = [
   'spinothalamic',
@@ -34,7 +34,7 @@ export const PATHWAY_NAME: Record<Pathway, { readonly name: string; readonly wha
   trigeminal: { name: 'Facial sensation', what: 'the ipsilateral trigeminal nucleus and the crossed route above it' },
   corticobulbar: { name: 'Face from above', what: 'lower-face weakness with the forehead spared' },
   cranial_nuclei: { name: 'Cranial nerve nuclei', what: 'third nerve, abduction, tongue, palate, the whole face and hearing' },
-  eye_movements: { name: 'Conjugate gaze', what: 'gaze palsy, internuclear ophthalmoplegia and one-and-a-half: which eye fails to move, and which way' },
+  eye_movements: { name: 'Conjugate gaze', what: 'gaze palsy, internuclear ophthalmoplegia and one-and-a-half, and the dorsal midbrain: which eye fails to move, which way, and how the pupils react' },
   cerebellar_vestibular: { name: 'Ataxia and vertigo', what: 'the cerebellar hemispheres, vermis and peduncles, and the vestibular nuclei' },
   visual: { name: 'Visual fields', what: 'the optic nerve, chiasm, tract, radiations and occipital cortex, and the pupil' },
   language: { name: 'Language and attention', what: 'fluency, comprehension and repetition in the dominant hemisphere; neglect in the other' },
@@ -92,6 +92,8 @@ export function pathwaysOf(f: Findings, h: Hypothesis): Pathway[] {
   }
   if (f.vertigo === 'present' || f.truncalAtaxia === 'present') out.add('cerebellar_vestibular');
   if (SIDES.some((x) => FIELD_SECTORS.some((s) => f.fields[x][s] === 'lost')) || SIDES.some((x) => f.rapd[x] === 'present')) out.add('visual');
+  // P13: the dorsal midbrain's signs are read across both eyes, as conjugate gaze is.
+  if (DORSAL_MIDBRAIN_SIGNS.some((s) => f.eyes[s] === 'present')) out.add('eye_movements');
   if (LANGUAGE_SIGNS.some((s) => f.language[s] === 'present') || SIDES.some((x) => f.neglect[x] === 'present')) out.add('language');
   return PATHWAYS.filter((p) => out.has(p));
 }
@@ -179,6 +181,9 @@ export function pathwaysShown(observations: readonly Observation[], f: Findings,
         break;
       case 'rapd':
         if (o.value === 'present') out.add('visual');
+        break;
+      case 'eyes':
+        if (o.value === 'present') out.add('eye_movements');
         break;
       case 'language':
       case 'neglect':

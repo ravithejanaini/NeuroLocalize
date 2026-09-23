@@ -16,6 +16,7 @@ import {
   type BrainLevel,
   type CranialSign,
   type LanguageSign,
+  type DorsalMidbrainSign,
   type FieldSector,
   VISUAL_PARTS,
   type VisualPart,
@@ -61,6 +62,8 @@ export type Observation =
   | { readonly kind: 'vertigo'; readonly value: SignObservation }
   /** P11: truncal ataxia, about the patient. */
   | { readonly kind: 'truncal_ataxia'; readonly value: SignObservation }
+  /** P13: a sign of both eyes together. */
+  | { readonly kind: 'eyes'; readonly sign: DorsalMidbrainSign; readonly value: SignObservation }
   /** P8: one sector of one eye's visual field, and the relative afferent pupillary defect. */
   | { readonly kind: 'field'; readonly eye: Side; readonly sector: FieldSector; readonly value: SensoryObservation }
   | { readonly kind: 'rapd'; readonly side: Side; readonly value: SignObservation }
@@ -95,6 +98,7 @@ const DOMAIN: Record<Observation['kind'], readonly string[]> = {
   ataxia: ['present', 'absent'],
   vertigo: ['present', 'absent'],
   truncal_ataxia: ['present', 'absent'],
+  eyes: ['present', 'absent'],
   field: ['normal', 'abnormal'],
   rapd: ['present', 'absent'],
   language: ['present', 'absent'],
@@ -131,6 +135,8 @@ export const slotKey = (s: Slot): string => {
       return `rapd|${s.side}`;
     case 'language':
       return `language|${s.sign}`;
+    case 'eyes':
+      return `eyes|${s.sign}`;
     case 'neglect':
       return `neglect|${s.side}`;
     default:
@@ -187,6 +193,10 @@ export function predict(f: Findings, s: Slot, kb: Kb = KB): Value | 'unknown' {
       return f.vertigo === 'indeterminate' ? 'unknown' : f.vertigo;
     case 'truncal_ataxia':
       return f.truncalAtaxia === 'indeterminate' ? 'unknown' : f.truncalAtaxia;
+    case 'eyes': {
+      const v = f.eyes[s.sign];
+      return v === 'indeterminate' ? 'unknown' : v;
+    }
     case 'language': {
       const v = f.language[s.sign];
       return v === 'indeterminate' ? 'unknown' : v;
@@ -519,6 +529,7 @@ export const SITE_NAME: Record<Place, string> = {
   aica: 'anterior inferior cerebellar artery (lateral pons)',
   pica: 'posterior inferior cerebellar artery (lateral medulla and inferior cerebellum)',
   sca: 'superior cerebellar artery (superior cerebellum)',
+  dorsal_midbrain: 'dorsal midbrain (pretectum, superior colliculus)',
   pontine_tegmentum: 'pontine tegmentum (abducens nucleus and MLF)',
   oculomotor_nucleus: 'oculomotor nucleus, in the midbrain',
   internal_capsule: 'internal capsule',
@@ -604,6 +615,7 @@ const PART_NAME: Record<BrainCompartment, string> = {
   cerebellar_hemisphere: 'cerebellar hemisphere',
   vermis: 'half of the vermis',
   cochlear: 'cochlear nuclei',
+  pretectum: 'half of the pretectum',
   mlf: 'medial longitudinal fasciculus',
   pprf: 'paramedian pontine reticular formation',
   basis: 'basis pontis',
@@ -749,6 +761,12 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
       const hemi = (['L', 'R'] as const).map((s) => brainCut(bmap, b.truncalAfterHemisphere.steps, s, 'face')).find((x): x is string => x !== null);
       if (hemi) return `${damaged(hemi)} — a hemisphere lesion gives mainly limb incoordination, and truncal imbalance is unsettled (C35)`;
       return 'the vermis is intact';
+    }
+    case 'eyes': {
+      const steps = o.sign === 'upgaze_palsy' ? b.upgaze.steps : o.sign === 'light_near_dissociation' ? b.lightNear.steps : b.convergenceRetraction.steps;
+      const cut = (['L', 'R'] as const).map((s) => brainCut(bmap, steps, s, 'face')).find((x): x is string => x !== null);
+      if (cut) return `${damaged(cut)}: the dorsal midbrain at the superior colliculus`;
+      return 'the pretectum and the vertical gaze centres beside it are intact';
     }
     case 'language': {
       // Read from the dominant hemisphere only (D68).

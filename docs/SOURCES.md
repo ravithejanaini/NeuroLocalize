@@ -10,7 +10,7 @@ content could only be queried for paraphrase; its raw table text was not obtaine
 
 Accessed 2026-09-16 unless noted. S33–S46 were read on 2026-09-17 for P4 and S47–S66 the same day for P5; S16 and S19 were
 read again that day for the facts added to their rows. S67–S70 were read on 2026-09-17 for
-the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.md`); S91–S97 for P8 (`docs/P8-analysis.md`); S98–S99 on 2026-09-18 for P9 (`docs/P9-analysis.md`); S100–S108 the same day for P10 (`docs/P10-analysis.md`); S109–S112 the same day for P11 (`docs/P11-analysis.md`); S113–S115 on 2026-09-23 for P12 (`docs/P12-analysis.md`), when S65 was also re-read for the lateral pontine syndrome.
+the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.md`); S91–S97 for P8 (`docs/P8-analysis.md`); S98–S99 on 2026-09-18 for P9 (`docs/P9-analysis.md`); S100–S108 the same day for P10 (`docs/P10-analysis.md`); S109–S112 the same day for P11 (`docs/P11-analysis.md`); S113–S115 on 2026-09-23 for P12 (`docs/P12-analysis.md`), when S65 was also re-read for the lateral pontine syndrome; S116–S119 the same day for P13 (`docs/P13-analysis.md`).
 
 | Id | Source | Authors | Last updated | Used for |
 |---|---|---|---|---|
@@ -129,6 +129,10 @@ the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.m
 | S113 | [StatPearls — Cerebellar Infarction](https://www.ncbi.nlm.nih.gov/books/NBK470416/) | Lui, Naqvi | 2026-06-17 | PICA occlusion gives vertigo and inability to walk or stand, only sometimes the full Wallenberg syndrome (C38); AICA gives dysmetria, unilateral hearing loss, ipsilateral facial paralysis or anaesthesia (C39) and contralateral pain and temperature loss; SCA gives more ataxia and less frequent vertigo (C40) |
 | S114 | [StatPearls — Vertebrobasilar Stroke](https://www.ncbi.nlm.nih.gov/books/NBK556084/) | Benjamin, Ighodaro | 2026-06-08 | AICA: dysmetria, ipsilateral hearing loss and facial paralysis, and its labyrinthine branch; ipsilateral Horner syndrome in the lateral pontine syndrome; PICA: vertigo, truncal ataxia and nystagmus; SCA: ataxia |
 | S115 | [StatPearls — Pontine Infarction](https://www.ncbi.nlm.nih.gov/books/NBK554418/) | Malla, Jillella | 2023-05-29 | the lateral pons is supplied by the basilar artery and the AICA; sensorineural hearing loss and vertigo in caudal pontine infarction |
+| S116 | [StatPearls — Parinaud Syndrome](https://www.ncbi.nlm.nih.gov/books/NBK441892/) | Feroze, Patel | 2023-07-31 | the triad of upgaze palsy, convergence–retraction nystagmus and pupillary hyporeflexia; compression of the rostral midbrain and pretectum at the superior colliculus; downgaze classically preserved (C42); light–near dissociation; Collier sign in about 40% (C41) |
+| S117 | [StatPearls — Pupillary Light Reflex](https://www.ncbi.nlm.nih.gov/books/NBK537180/) | Belliveau, Somani, Dossani | 2023-07-25 | each pretectal area signals bilaterally to the Edinger–Westphal nuclei; the Argyll Robertson pupil constricts to near but not to light |
+| S118 | [StatPearls — Neuroanatomy, Pupillary Light Reflexes and Pathway](https://www.ncbi.nlm.nih.gov/books/NBK553169/) | Akova, Yoo, Launico | 2025-09-15 | the light-reflex fibres end in the pretectal nucleus, not the LGN; damage there gives light–near dissociation |
+| S119 | [StatPearls — Neuroanatomy, Mesencephalon Midbrain](https://www.ncbi.nlm.nih.gov/books/NBK551509/) | Caminero, Cascella | 2024-09-10 | Parinaud (dorsal midbrain) syndrome: its causes, and decreased or absent upgaze as its distinguishing sign |
 
 ## Not used, and why
 

@@ -12,6 +12,7 @@ import { VISION_CASES } from '../spec/expectations/vision.ts';
 import { LANGUAGE_CASES } from '../spec/expectations/language.ts';
 import { CEREBELLUM_CASES } from '../spec/expectations/cerebellum.ts';
 import { POSTERIOR_CASES } from '../spec/expectations/posterior.ts';
+import { MIDBRAIN_CASES } from '../spec/expectations/midbrain.ts';
 import type { Assertion, BrainAssertion, LanguageAssertion, LimbAssertion, VisionAssertion } from '../spec/expectations/types.ts';
 import { KB } from '../src/kb/kb.ts';
 import { MECHANISMS } from '../src/kb/mechanisms.ts';
@@ -55,6 +56,8 @@ export function describe(a: Assertion | LimbAssertion | BrainAssertion | VisionA
       return `vertigo → ${any(a.oneOf)}`;
     case 'truncal_ataxia':
       return `truncal ataxia → ${any(a.oneOf)}`;
+    case 'eyes':
+      return `both eyes · ${a.sign.replace(/_/g, ' ')} → ${any(a.oneOf)}`;
     case 'language':
       return `language · ${a.sign.replace(/_/g, ' ')} → ${any(a.oneOf)}`;
     case 'neglect':
@@ -112,7 +115,7 @@ export function buildWorksheet(): Worksheet {
   }
 
   let k = 0;
-  for (const c of [...CORD_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES]) {
+  for (const c of [...CORD_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES]) {
     const findings: Finding[] = c.evaluations.flatMap((e) =>
       e.assertions
         .filter((a) => a.basis === 'composed')

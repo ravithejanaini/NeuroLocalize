@@ -325,6 +325,22 @@ situation the freeze exists to catch.
   into `docs/P12-analysis.md` before any code; the three cases were **run red against the P11
   engine** first. What the sources dispute is left unasserted and named (C37, C39, C40).
 
+## A17 — The dorsal midbrain (P13, 2026-09-23)
+
+- **Changed:** two new files. `midbrain.ts` holds one case, the dorsal midbrain (Parinaud
+  syndrome), taking both halves of the pretectum. `reverse-midbrain.ts` holds one examination
+  separating it from the horizontal-gaze places of P9. `types.ts` gains the `eyes` assertion and
+  `reverse-brain.ts` the matching observation.
+- **Changed, not added:** one `unasserted` note in `brain.ts` (`mlf-midbrain-left`) said the
+  dorsal midbrain was not modelled; it now says the dorsal midbrain is not in that lesion (D85).
+  No assertion changed.
+- **Why:** P13 adds a part, three findings and a place; a row no frozen case observes is an
+  untested row (rule 5).
+- **How circularity was avoided:** every assertion is quoted from S116–S119, read into
+  `docs/P13-analysis.md` before any code, and the case was **run red against the P12 engine**
+  first: the three findings came back undefined. The lid, downgaze and one-sided lesions are
+  left unasserted and named (C41–C43).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -333,11 +349,11 @@ situation the freeze exists to catch.
 | `boundaries.ts` | A2 |
 | `index.ts` | A2 (exports the boundary cases) |
 | `reverse.ts` | A3 |
-| `types.ts` | A4, A6, A7, A11, A14, A15 |
+| `types.ts` | A4, A6, A7, A11, A14, A15, A17 |
 | `plexus.ts` | A4, A5, A6, A9 |
 | `reverse-plexus.ts` | A4, A5 |
-| `brain.ts` | A7, A8, A9, A13, A14, A16 |
-| `reverse-brain.ts` | A7, A13, A14, A15, A16 |
+| `brain.ts` | A7, A8, A9, A13, A14, A16, A17 |
+| `reverse-brain.ts` | A7, A13, A14, A15, A16, A17 |
 | `leg.ts` | A10 |
 | `reverse-leg.ts` | A10 |
 | `vision.ts` | A11 |
@@ -348,5 +364,7 @@ situation the freeze exists to catch.
 | `reverse-cerebellum.ts` | A15, A16 |
 | `posterior.ts` | A16 |
 | `reverse-posterior.ts` | A16 |
+| `midbrain.ts` | A17 |
+| `reverse-midbrain.ts` | A17 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

@@ -13,6 +13,7 @@ import { VISION_CASES } from '../spec/expectations/vision.ts';
 import { LANGUAGE_CASES } from '../spec/expectations/language.ts';
 import { CEREBELLUM_CASES } from '../spec/expectations/cerebellum.ts';
 import { POSTERIOR_CASES } from '../spec/expectations/posterior.ts';
+import { MIDBRAIN_CASES } from '../spec/expectations/midbrain.ts';
 import { KB } from '../src/kb/kb.ts';
 import type { Kb } from '../src/kb/types.ts';
 import {
@@ -36,13 +37,14 @@ import { VISION_REVERSE_CASES } from '../spec/expectations/reverse-vision.ts';
 import { LANGUAGE_REVERSE_CASES } from '../spec/expectations/reverse-language.ts';
 import { CEREBELLUM_REVERSE_CASES } from '../spec/expectations/reverse-cerebellum.ts';
 import { POSTERIOR_REVERSE_CASES } from '../spec/expectations/reverse-posterior.ts';
+import { MIDBRAIN_REVERSE_CASES } from '../spec/expectations/reverse-midbrain.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { RENDER } from '../src/kb/render.ts';
 import { examSlots } from '../src/render/slots.ts';
 import { reverseFailures, runAll, territoryFailures, visionPlaceFailures } from '../test/harness.ts';
 import { locateRows } from '../test/rows.ts';
 
-const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES];
+const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES];
 const THRESHOLD = 0.9;
 const ROOT = resolve(import.meta.dirname, '..');
 
@@ -219,7 +221,7 @@ const mutants: Mutant[] = [];
 collect(KB, [], mutants);
 
 type Result = { row: string; describe: string; killed: boolean; failures: number; threw: boolean; byReverse: boolean };
-const REVERSE = [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES];
+const REVERSE = [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES];
 const SLOTS = examSlots(RENDER);
 const results: Result[] = mutants.map((m) => {
   const base = { row: rowOf(m.path), describe: m.describe };

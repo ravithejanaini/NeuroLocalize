@@ -25,6 +25,7 @@ export const FAMILY_NAME: Record<LesionFamily, string> = {
   cerebellum_left: 'Left cerebellum',
   cerebellum_right: 'Right cerebellum',
   cerebellum_midline: 'Cerebellar vermis (midline)',
+  brainstem_midline: 'Brainstem, midline',
   brainstem_right: 'Right brainstem',
   hemisphere_left: 'Left hemisphere',
   hemisphere_right: 'Right hemisphere',

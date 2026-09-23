@@ -3,6 +3,7 @@
 // a property of the ranking, never a number (as in A3 and A4).
 import type {
   CranialSign,
+  DorsalMidbrainSign,
   FaceWeaknessObservation,
   LanguageSign,
   LesionFamily,
@@ -28,6 +29,8 @@ export type BrainObservation =
   | { readonly kind: 'vertigo'; readonly value: SignObservation }
   // A15.
   | { readonly kind: 'truncal_ataxia'; readonly value: SignObservation }
+  // A17.
+  | { readonly kind: 'eyes'; readonly sign: DorsalMidbrainSign; readonly value: SignObservation }
   // A14: one facet of language, about the patient; neglect, by the side of space.
   | { readonly kind: 'language'; readonly sign: LanguageSign; readonly value: SignObservation }
   | { readonly kind: 'neglect'; readonly side: Side; readonly value: SignObservation };

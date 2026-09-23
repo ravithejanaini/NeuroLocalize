@@ -93,6 +93,7 @@ export const LESION_FAMILIES = [
   'cerebellum_left',
   'cerebellum_right',
   'cerebellum_midline',
+  'brainstem_midline',
   'visual_left',
   'visual_right',
   'visual_chiasm',
@@ -306,6 +307,8 @@ export const BRAIN_COMPARTMENTS = [
   'vermis',
   // P12: the cochlear nuclei and eighth nerve, in the pons.
   'cochlear',
+  // P13: the pretectal area and the vertical gaze centres beside it. Midline; each side holds half.
+  'pretectum',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 
@@ -335,6 +338,13 @@ export type CranialSign = (typeof CRANIAL_SIGNS)[number];
  */
 export const LANGUAGE_SIGNS = ['nonfluent_speech', 'impaired_comprehension', 'impaired_repetition'] as const;
 export type LanguageSign = (typeof LANGUAGE_SIGNS)[number];
+
+/**
+ * P13: findings about both eyes together, named for their abnormal state: conjugate upgaze
+ * limited; pupils poor to light but constricting to near; convergence–retraction nystagmus.
+ */
+export const DORSAL_MIDBRAIN_SIGNS = ['upgaze_palsy', 'light_near_dissociation', 'convergence_retraction_nystagmus'] as const;
+export type DorsalMidbrainSign = (typeof DORSAL_MIDBRAIN_SIGNS)[number];
 
 /** 'lower': the forehead spared, as after an upper-motor-neuron lesion. 'whole': the forehead too. */
 export type FaceWeakness = 'none' | 'lower' | 'whole' | 'indeterminate';
@@ -368,6 +378,8 @@ export const TERRITORIES = [
   'aica',
   'pica',
   'sca',
+  // P13.
+  'dorsal_midbrain',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

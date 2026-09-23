@@ -215,6 +215,10 @@ export class Panel {
           'brain.truncal-ataxia',
           'brain.truncal-after-hemisphere',
           'brain.hearing',
+          // P13: the dorsal midbrain.
+          'brain.upgaze',
+          'brain.light-near',
+          'brain.convergence-retraction',
         ],
         body: headHtml(f),
       },

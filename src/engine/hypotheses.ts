@@ -164,7 +164,7 @@ export function hypotheses(): readonly Hypothesis[] {
     // P11: a midline place is one candidate taking both sides, as the chiasm is in P8.
     for (const side of row.midline ? (['L'] as const) : SIDES) {
       const family: LesionFamily = row.midline
-        ? 'cerebellum_midline'
+        ? cerebellum ? 'cerebellum_midline' : 'brainstem_midline'
         : cerebellum
           ? side === 'L' ? 'cerebellum_left' : 'cerebellum_right'
           : hemisphere

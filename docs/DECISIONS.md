@@ -1052,3 +1052,53 @@ hearing were never shown as chips; they are now, and `test/panel-drivers.test.ts
 panel ever names a row that does not exist (falsified with a misspelt id). Nothing checks that
 a claim's prose still matches its data; that remains the reviewer's job, and the reason the
 review page exists.
+
+## P13 — vertical gaze and the pupils: the dorsal midbrain
+
+The analysis written before any P13 code is `docs/P13-analysis.md`; S116–S119 were read for it
+on 2026-09-23. One claim met on the way — that the near-reflex centre lies ventral to the
+pretectal nucleus — was seen only in a search summary and in no page read, so it is not used.
+The frozen case was run red against the P12 engine first: the three new findings came back
+undefined, and nothing else in the case failed.
+
+### Source conflicts and limits
+
+**C41 — The lid.** S116: lid retraction in primary position, the Collier sign, in about 40% of
+patients. Not modelled; the case asserts nothing about the lid.
+
+**C42 — Downgaze.** S116: "classically preserved, but the reason for this is not entirely
+explained". The model has no downgaze finding, so the preservation is taught in words, not
+computed; no case depends on it.
+
+**C43 — One side.** Every source read describes compression of the dorsal midbrain, not a
+one-sided lesion. The model's place takes both halves of the pretectum and reads either half as
+enough; no case depends on what one half alone would do.
+
+### Decisions
+
+**D83 — Three signs of both eyes together.** Upgaze palsy, light–near dissociation and
+convergence–retraction nystagmus belong to the patient, not to a side (S116 describes them for
+both eyes), and are examined as one control each. They schedule practice under conjugate gaze.
+
+**D84 — A midline brainstem place has its own family.** Until P13 a midline territory was always
+the vermis, and the candidate code said so. The dorsal midbrain is the first midline place in
+the brainstem, so it gets `brainstem_midline` rather than borrowing the cerebellum's family.
+
+**D85 — A stale note in a P9 case.** `mlf-midbrain-left` listed "vertical gaze and the dorsal
+midbrain syndrome are not modelled". After P13 the dorsal midbrain is modelled, so the note now
+says the dorsal midbrain is not in that lesion and no source read says what a rostral MLF lesion
+alone does to vertical gaze (A17).
+
+### Reviewer questions
+
+**R39** — C43: is it right to teach Parinaud syndrome as a midline lesion only, or should a
+one-sided pretectal lesion be a place of its own?
+
+**R40** — Should the Argyll Robertson pupil (bilateral pretectal damage in neurosyphilis, S117,
+S118) be offered as a teaching preset, given that it is not a focal lesion?
+
+**D86 — What the P13 mutation run showed.** 96.7% of sourced mutants are killed (4,418 of
+4,569), 96.0% of all — up from 96.6% after P12 — and **no P13 row has a survivor on the first
+run**: all 38 mutants of each of the three sign rows, all 8 of the place, and the pretectum's
+entry in the parts-at table. The dorsal midbrain case lesions only the pretectum, so any mutant
+that moves a sign to another part leaves the case without it.

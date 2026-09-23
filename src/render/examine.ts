@@ -8,12 +8,14 @@ import { fieldChart } from './vision.ts';
 import {
   ARM_MUSCLES,
   CRANIAL_SIGNS,
+  DORSAL_MIDBRAIN_SIGNS,
   LANGUAGE_SIGNS,
   LEG_MUSCLES,
   REFLEXES,
   SEGMENTS,
   SIDES,
   type CranialSign,
+  type DorsalMidbrainSign,
   type FieldSector,
   type LanguageSign,
   type Muscle,
@@ -55,6 +57,13 @@ export const MUSCLE_NAME: Record<Muscle, { readonly movement: string; readonly m
   fibularis: { movement: 'ankle eversion', muscle: 'fibularis longus' },
   tibialis_posterior: { movement: 'ankle inversion', muscle: 'tibialis posterior' },
   gastrocnemius: { movement: 'ankle plantar flexion', muscle: 'gastrocnemius' },
+};
+
+/** P13: signs of both eyes together, named for their abnormal state. */
+export const EYES_NAME: Record<DorsalMidbrainSign, string> = {
+  upgaze_palsy: 'Both eyes cannot look up',
+  light_near_dissociation: 'Pupils: poor to light, constrict to near',
+  convergence_retraction_nystagmus: 'Convergence–retraction nystagmus on looking up',
 };
 
 /** P10: each facet of language, named for its abnormal state. */
@@ -125,6 +134,7 @@ export const CYCLE: Record<Slot['kind'], readonly string[]> = {
   ataxia: ['absent', 'present'],
   vertigo: ['absent', 'present'],
   truncal_ataxia: ['absent', 'present'],
+  eyes: ['absent', 'present'],
   field: ['normal', 'abnormal'],
   rapd: ['absent', 'present'],
   language: ['absent', 'present'],
@@ -179,6 +189,8 @@ export function slotLabel(render: RenderKb, s: Slot): string {
       return 'Vertigo and nystagmus';
     case 'truncal_ataxia':
       return 'Truncal ataxia (unsteady sitting or standing)';
+    case 'eyes':
+      return EYES_NAME[s.sign];
     case 'field':
       return `${SIDE_WORD[s.eye]} eye · ${SECTOR_NAME[s.sector]}`;
     case 'rapd':
@@ -308,7 +320,7 @@ export function examTables(render: RenderKb, findings: Findings): string {
   const neglect = headRow('Neglect of that side of space', (side) => ({ kind: 'neglect', side }));
   return `<table class="extable"><thead><tr><th colspan="2">Language and attention</th><th colspan="2"></th></tr></thead><tbody>${language}${neglect}</tbody>
     <thead><tr><th colspan="2">Head and eyes</th><th>Left</th><th>Right</th></tr></thead><tbody>${head}
-    ${single({ kind: 'vertigo' }, 'Vertigo, nystagmus')}${single({ kind: 'truncal_ataxia' }, 'Truncal ataxia')}</tbody>
+    ${single({ kind: 'vertigo' }, 'Vertigo, nystagmus')}${single({ kind: 'truncal_ataxia' }, 'Truncal ataxia')}${DORSAL_MIDBRAIN_SIGNS.map((sign) => single({ kind: 'eyes', sign }, EYES_NAME[sign])).join('')}</tbody>
     <thead><tr><th colspan="2">Strength</th><th>Left</th><th>Right</th></tr></thead><tbody>${strength}</tbody>
     <thead><tr><th colspan="2">Arm, muscle by muscle</th><th>Left</th><th>Right</th></tr></thead><tbody>${arm}</tbody>
     <thead><tr><th colspan="2">Leg, muscle by muscle</th><th>Left</th><th>Right</th></tr></thead><tbody>${leg}</tbody>

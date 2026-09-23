@@ -14,6 +14,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S100', 'S101', 'S102', 'S103', 'S104', 'S105', 'S106', 'S107', 'S108',
   'S109', 'S110', 'S111', 'S112',
   'S113', 'S114', 'S115',
+  'S116', 'S117', 'S118', 'S119',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -134,4 +135,8 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S113', title: 'StatPearls — Cerebellar Infarction', url: 'https://www.ncbi.nlm.nih.gov/books/NBK470416/' },
   { id: 'S114', title: 'StatPearls — Vertebrobasilar Stroke', url: 'https://www.ncbi.nlm.nih.gov/books/NBK556084/' },
   { id: 'S115', title: 'StatPearls — Pontine Infarction', url: 'https://www.ncbi.nlm.nih.gov/books/NBK554418/' },
+  { id: 'S116', title: 'StatPearls — Parinaud Syndrome', url: 'https://www.ncbi.nlm.nih.gov/books/NBK441892/' },
+  { id: 'S117', title: 'StatPearls — Pupillary Light Reflex', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537180/' },
+  { id: 'S118', title: 'StatPearls — Neuroanatomy, Pupillary Light Reflexes and Pathway', url: 'https://www.ncbi.nlm.nih.gov/books/NBK553169/' },
+  { id: 'S119', title: 'StatPearls — Neuroanatomy, Mesencephalon Midbrain', url: 'https://www.ncbi.nlm.nih.gov/books/NBK551509/' },
 ];

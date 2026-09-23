@@ -280,7 +280,7 @@ export const BRAIN_CASES: readonly BrainCase[] = [
         face('L', 'none', { cite: ['S51'], basis: 'composed' }),
       ],
       unasserted: [
-        'vertical gaze and the dorsal midbrain syndrome are not modelled, so a rostral lesion asserts nothing about them',
+        'vertical gaze: the dorsal midbrain (A17) is not in this lesion, and no source read says what a rostral MLF lesion alone does to vertical gaze',
         'this lesion is not a named place in the app: it produces exactly what the pontine MLF produces (D66)',
       ],
     }],
