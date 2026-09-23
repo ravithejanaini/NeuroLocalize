@@ -7,7 +7,7 @@ claims are what it teaches. Mark each one; where a claim is wrong, a one-line co
 with a source is the most useful thing you can give.
 
 The same review can be filled in on screen and saved to a file: `review/review.html`.
-Worksheet version `8e9f2380cd47`.
+Worksheet version `e3c1ed047764`.
 
 177 knowledge-base claims, 19 displayed facts, 38 open questions, 735 composed findings in 113 cases. Mutation score 96.6% over sourced rows, 95.8% over all rows.
 Claims are ordered by load-bearing weight: how many expected findings fail when the claim
@@ -395,7 +395,7 @@ Correction and source (a book and page is ideal): ____
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**64. A lesion of the oculomotor fascicles in the midbrain gives a third nerve palsy on the same side. A lesion of the nucleus itself is not modelled: it gives bilateral ptosis or none, and weakens the opposite superior rectus.**
+**64. A lesion of the oculomotor fascicles or nucleus in the midbrain gives a third nerve palsy on the same side. A nuclear lesion also gives ptosis on both sides or neither (C29) and weakens the opposite superior rectus (P9).**
 `brain.oculomotor` · tier T1 · weight 21 · sources [S62](https://www.ncbi.nlm.nih.gov/books/NBK526112/), [S50](https://www.ncbi.nlm.nih.gov/books/NBK559158/), [S70](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/)
 
 ☐ right ☐ wrong ☐ unsure

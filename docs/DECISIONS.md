@@ -1041,3 +1041,14 @@ sympathetic fibres, the cerebellar peduncle, the vestibular nuclei), and no case
 without the cochlear nuclei and asked about hearing. Four P5 cases that lesion exactly those
 parts now say hearing is spared (A16), and the rerun kills all 38 hearing mutants. The six P5
 ataxia survivors are unchanged from P10 and P11.
+
+**D82 — Two stale things the published review page showed.** Reading the live review page
+before republishing it turned up `brain.oculomotor` still claiming "a lesion of the nucleus
+itself is not modelled" — true until P9, false since, and contradicted by the route directly
+below the claim. A reviewer would have been asked to judge a sentence the app no longer
+follows. It now says what the model does. The same pass found the findings panel's head group
+still citing only the P5 rows, so the sources behind gaze, the MLF, the lid, truncal ataxia and
+hearing were never shown as chips; they are now, and `test/panel-drivers.test.ts` fails if the
+panel ever names a row that does not exist (falsified with a misspelt id). Nothing checks that
+a claim's prose still matches its data; that remains the reviewer's job, and the reason the
+review page exists.
