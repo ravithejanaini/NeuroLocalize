@@ -99,13 +99,13 @@ export const LEG_NERVE_ROWS: Pick<Plexus['nerves'], LegNerve> = {
   tibial: {
     meta: {
       id: 'nerve.tibial',
-      claim: 'The tibial nerve divides from the sciatic nerve before the popliteal fossa; the lesion place is below the division, above its muscle branches.',
-      sources: ['S75', 'S79'],
+      claim: 'The tibial nerve divides from the sciatic nerve before the popliteal fossa; its first lesion place is below the division, above its muscle branches. It then supplies the calf, gives its branch to the sural nerve, and passes behind the medial malleolus through the tarsal tunnel — its second place — to divide into the plantar nerves.',
+      sources: ['S75', 'S79', 'S140', 'S141'],
       tier: 'T1',
       bookRef: p,
     },
     origin: { from: 'nerve', nerve: 'sciatic' },
-    sites: ['tibial'],
+    sites: ['tibial', 'tarsal_tunnel'],
   },
   common_fibular: {
     meta: {
@@ -383,12 +383,13 @@ export const LEG_SKIN_ROWS: Pick<Plexus['skin'], LegSkinArea> = {
   sole: {
     meta: {
       id: 'skin.sole',
-      claim: 'The sole is supplied by the medial and lateral plantar branches of the tibial nerve; no source read gives its roots.',
-      sources: ['S79'],
+      claim: 'The sole is supplied by the medial and lateral plantar branches of the tibial nerve, which divide in the tarsal tunnel; no source read gives its roots.',
+      sources: ['S79', 'S140'],
       tier: 'T2',
       bookRef: p,
     },
-    supply: [{ nerve: 'tibial', after: 1 }],
+    // P20: past the tarsal tunnel, so a tibial lesion in the leg or at the ankle takes it.
+    supply: [{ nerve: 'tibial', after: 2 }],
     roots: null,
     disputedRoots: ['L4', 'S3'],
   },

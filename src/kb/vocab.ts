@@ -190,6 +190,8 @@ export const PLEXUS_SITES = [
   'deep_fibular',
   'anterior_tarsal',
   'superficial_fibular',
+  // P20: the tibial nerve at the ankle.
+  'tarsal_tunnel',
 ] as const;
 export type PlexusSite = (typeof PLEXUS_SITES)[number];
 export const ARM_SITES = PLEXUS_SITES.slice(0, PLEXUS_SITES.indexOf('lumbar_plexus'));

@@ -177,7 +177,9 @@ export const RENDER: RenderKb = {
       tibial: [
         { at: [-2.4, -36.4, 0.8], site: 'tibial' },
         { at: [-2.3, -38.5, 0.8], branches: ['gastrocnemius', 'tibialis_posterior', 'lateral_foot'] },
-        { at: [-2.1, -45.5, 0.3], branches: ['sole'] },
+        // P20: behind the medial malleolus, the tarsal tunnel, then the plantar nerves.
+        { at: [-2.0, -45.0, 0.5], site: 'tarsal_tunnel' },
+        { at: [-2.1, -45.8, 0.3], branches: ['sole'] },
       ],
       common_fibular: [
         { at: [-2.9, -36.4, 0.7] },

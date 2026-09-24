@@ -446,6 +446,21 @@ situation the freeze exists to catch.
   intact. Two mutants that moved the sural share onto a branch survived because no case looked
   there (D109).
 
+## A24 — The tarsal tunnel (P20, 2026-09-24)
+
+- **Changed:** two new files. `tarsal.ts` holds one case, the tibial nerve in the tarsal tunnel:
+  the sole numb, the calf and the ankle reflex kept. `reverse-tarsal.ts` holds one examination:
+  that picture, answered by the tunnel.
+- **Changed in `leg.ts`:** the tibial case's note "the tarsal tunnel: not modelled" was removed,
+  because it is no longer true. Its assertions did not change, and it passes unchanged.
+- **Amended after its first run:** the examination gained "the right sole normal" after the
+  P20 engine ranked both S2 roots above the tunnel with no conflict. Recorded in D111 as a change
+  made after seeing the answer; the tunnel's lead is narrow and rests on no refuting finding
+  (C61).
+- **How circularity was avoided:** every assertion is quoted from S140 or S141, read into
+  `docs/P20-analysis.md` before any code; the case and the examination were **run red against
+  the P19 engine** first. The heel and the intrinsic foot muscles are never asserted (C59, C60).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -459,7 +474,7 @@ situation the freeze exists to catch.
 | `reverse-plexus.ts` | A4, A5 |
 | `brain.ts` | A7, A8, A9, A13, A14, A16, A17, A18 |
 | `reverse-brain.ts` | A7, A13, A14, A15, A16, A17, A19, A20 |
-| `leg.ts` | A10, A23 |
+| `leg.ts` | A10, A23, A24 |
 | `reverse-leg.ts` | A10 |
 | `vision.ts` | A11 |
 | `reverse-vision.ts` | A11, A14 |
@@ -483,5 +498,7 @@ situation the freeze exists to catch.
 | `reverse-occipital.ts` | A22 |
 | `fibular.ts` | A23 |
 | `reverse-fibular.ts` | A23 |
+| `tarsal.ts` | A24 |
+| `reverse-tarsal.ts` | A24 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

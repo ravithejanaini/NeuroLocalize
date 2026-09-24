@@ -160,7 +160,8 @@ export const LEG_CASES: readonly LimbCase[] = [
         reflex('achilles', ['reduced', 'absent'], { cite: ['S82', 'S79'], basis: 'composed' }),
         ...rightUntouched,
       ],
-      unasserted: ['the tarsal tunnel: not modelled'],
+      // A24: the tarsal tunnel is a place of its own since P20 (tarsal.ts).
+      unasserted: [],
     }],
   },
 

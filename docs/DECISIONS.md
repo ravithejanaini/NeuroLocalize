@@ -1418,3 +1418,49 @@ new nerves are killed (24 and 23).
 
 **R50** — C58: should the model add the short toe extensors on the foot, so that the anterior
 tarsal tunnel can show weakness as well as numbness?
+
+## P20 — the tarsal tunnel
+
+The analysis written before any P20 code is `docs/P20-analysis.md`; S140–S141 were read for it
+on 2026-09-24. The frozen case and the examination were run against the P19 engine first and
+both failed: the sole came back intact, and the examination found no place at the ankle.
+
+### Source conflicts and limits
+
+**C59 — The heel.** S141: "the sparing of sensation over the heel", because the calcaneal branch
+leaves above the tunnel. S140: in about 25% the heel's nerve comes from the lateral plantar nerve
+or runs outside the retinaculum. The model has one plantar patch and no heel, so it shows
+neither.
+
+**C60 — Weakness in the tunnel.** S140 gives weakness of the intrinsic foot muscles as a late
+finding. They are not in the model, which shows the tunnel as purely sensory.
+
+**C61 — The sole has no roots.** No source read gives the sole's roots (P7), so a root lesion
+from L4 to S3 never conflicts with a numb sole. For a numb sole alone, several root and cord
+candidates stay without conflict, and the ranking among them rests on the prior and the pattern
+of what else is normal, not on a finding that rules them out.
+
+### Decisions
+
+**D110 — The tibial nerve gets a second place.** The tarsal tunnel is below the branches to the
+calf and to the sural nerve and above the plantar nerves, so the sole moved to after both places
+(`after: 2`), and the gastrocnemius, tibialis posterior and the sural share stay after the first.
+The P7 tibial case passes unchanged.
+
+**D111 — The examination was amended after its first run, and why.** As first written, the
+tarsal-tunnel examination looked at the left foot only. Against the P20 engine it ranked both S2
+roots first and the tunnel second, both with no conflict (C61). "The right sole normal" was then
+added — the comparison a bedside examination makes — and the tunnel now ranks first, narrowly:
+posterior 0.039 against 0.029 for both S2 roots, with no conflict for either. This is recorded as
+a change made after seeing the engine's answer. The examination still fails against the P19
+engine, which has no place at the ankle.
+
+**D112 — What the P20 mutation run showed.** 97.2% of sourced mutants are killed (5,242 of
+5,392). All 24 mutants of the tibial nerve row, which now holds both places, are killed. The
+limb rows' survivors are exactly those left after P19; the three in the sole's row are
+mutations of its unsourced roots (C61, R51) and predate this phase.
+
+### Reviewer questions
+
+**R51** — C61: is there a source that gives the sole of the foot its roots (S1, or S1–S2), so that
+a root lesion can be told from the tarsal tunnel by the sole alone?

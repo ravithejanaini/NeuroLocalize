@@ -109,6 +109,8 @@ export const PRESETS: readonly Preset[] = [
   { id: 'deep-fibular', kind: 'limb', leg: true, label: 'Deep fibular nerve', pattern: 'Foot drop, eversion spared', site: 'deep_fibular' },
   { id: 'superficial-fibular', kind: 'limb', leg: true, label: 'Superficial fibular nerve', pattern: 'Weak eversion, dorsum numb', site: 'superficial_fibular' },
   { id: 'anterior-tarsal', kind: 'limb', leg: true, label: 'Anterior tarsal tunnel', pattern: 'First web numb only', site: 'anterior_tarsal' },
+  // P20: the tibial nerve at the ankle.
+  { id: 'tarsal-tunnel', kind: 'limb', leg: true, label: 'Tarsal tunnel', pattern: 'Sole numb, calf and reflex kept', site: 'tarsal_tunnel' },
   { id: 'lateral-medulla', kind: 'brain', label: 'Lateral medulla', pattern: 'Wallenberg, medulla only', territory: 'lateral_medullary' },
   { id: 'medial-medulla', kind: 'brain', label: 'Medial medulla', pattern: 'Dejerine', territory: 'medial_medullary' },
   { id: 'ventral-pons', kind: 'brain', label: 'Ventral pons', pattern: 'Millard-Gubler', territory: 'ventral_pons' },
