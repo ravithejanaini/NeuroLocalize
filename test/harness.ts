@@ -12,6 +12,7 @@ import { MIDBRAIN_CASES } from '../spec/expectations/midbrain.ts';
 import { NERVE_CASES } from '../spec/expectations/nerves.ts';
 import { BASAL_CASES } from '../spec/expectations/basal.ts';
 import { BASILAR_CASES } from '../spec/expectations/basilar.ts';
+import { TRANSCORTICAL_CASES } from '../spec/expectations/transcortical.ts';
 import { CORTEX_CASES } from '../spec/expectations/cortex.ts';
 import type { BrainReverseCase } from '../spec/expectations/reverse-brain.ts';
 import type { LimbReverseCase } from '../spec/expectations/reverse-plexus.ts';
@@ -281,6 +282,9 @@ export const TERRITORY_CASE: Readonly<Record<string, string>> = {
   frontal_eye_field: 'frontal-eye-field-left',
   // P17.
   ventral_pons_bilateral: 'ventral-pons-both',
+  // P21.
+  borderzone_anterior: 'borderzone-anterior-left',
+  borderzone_posterior: 'borderzone-posterior-left',
   // P9.
   mlf_pons: 'mlf-left',
   pontine_tegmentum: 'pontine-tegmentum-left',
@@ -329,7 +333,7 @@ export function territoryFailures(kb: Kb): Failure[] {
     [...(a ?? [])].sort().join(',') === [...(b ?? [])].sort().join(',');
   for (const [territory, row] of Object.entries(kb.brain.territories)) {
     const id = TERRITORY_CASE[territory];
-    const kase = BRAIN_CASES.find((c) => c.id === id) ?? LANGUAGE_CASES.find((c) => c.id === id) ?? CEREBELLUM_CASES.find((c) => c.id === id) ?? POSTERIOR_CASES.find((c) => c.id === id) ?? MIDBRAIN_CASES.find((c) => c.id === id) ?? NERVE_CASES.find((c) => c.id === id) ?? BASAL_CASES.find((c) => c.id === id) ?? CORTEX_CASES.find((c) => c.id === id) ?? BASILAR_CASES.find((c) => c.id === id);
+    const kase = BRAIN_CASES.find((c) => c.id === id) ?? LANGUAGE_CASES.find((c) => c.id === id) ?? CEREBELLUM_CASES.find((c) => c.id === id) ?? POSTERIOR_CASES.find((c) => c.id === id) ?? MIDBRAIN_CASES.find((c) => c.id === id) ?? NERVE_CASES.find((c) => c.id === id) ?? BASAL_CASES.find((c) => c.id === id) ?? CORTEX_CASES.find((c) => c.id === id) ?? BASILAR_CASES.find((c) => c.id === id) ?? TRANSCORTICAL_CASES.find((c) => c.id === id);
     const lesion = kase?.lesion[0];
     // P10: the visual parts a territory takes must be exactly the ones its case lesions.
     const caseVision = (kase?.lesion ?? []).flatMap((r) => ('vision' in r ? [r.vision] : []));

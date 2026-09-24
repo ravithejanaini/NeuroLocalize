@@ -138,6 +138,9 @@ export const PRESETS: readonly Preset[] = [
   { id: 'dorsal-midbrain', kind: 'brain', label: 'Dorsal midbrain', pattern: 'Parinaud: cannot look up', territory: 'dorsal_midbrain' },
   // P17: the ventral pons on both sides is midline, so the side does not change it.
   { id: 'locked-in', kind: 'brain', label: 'Ventral pons, both sides', pattern: 'Locked-in: awake, looks up to answer', territory: 'ventral_pons_bilateral' },
+  // P21: the border zones; the left side gives the transcortical aphasias.
+  { id: 'borderzone-anterior', kind: 'brain', label: 'Anterior border zone (ACA–MCA)', pattern: 'Left: non-fluent but repeats', territory: 'borderzone_anterior' },
+  { id: 'borderzone-posterior', kind: 'brain', label: 'Posterior border zone (MCA–PCA)', pattern: 'Left: fluent, no understanding, repeats', territory: 'borderzone_posterior' },
   // P16: the frontal eye field; its deviation fades, so the timepoint matters.
   { id: 'frontal-eye-field', kind: 'brain', label: 'Frontal eye field', pattern: 'Eyes deviate toward it; recovers in days', territory: 'frontal_eye_field' },
   // P15: the basal ganglia.

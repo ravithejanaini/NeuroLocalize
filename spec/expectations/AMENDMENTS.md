@@ -461,6 +461,20 @@ situation the freeze exists to catch.
   `docs/P20-analysis.md` before any code; the case and the examination were **run red against
   the P19 engine** first. The heel and the intrinsic foot muscles are never asserted (C59, C60).
 
+## A25 — The transcortical aphasias (P21, 2026-09-24)
+
+- **Changed:** two new files. `transcortical.ts` holds four cases: each border zone on the left
+  (transcortical motor and sensory aphasia) and on the right (no aphasia).
+  `reverse-transcortical.ts` holds two examinations, each answered by a left border zone because
+  repetition is kept. No earlier case or examination changed.
+- **Why:** P21 adds two parts and two places; a row no frozen case observes is an untested row
+  (rule 5).
+- **How circularity was avoided:** every assertion is quoted from S103 or S142, read into
+  `docs/P21-analysis.md` before any code. Run against the P20 engine, both left-sided cases and
+  both examinations **failed**; the two right-sided cases passed, because nothing about the
+  nondominant hemisphere changed, and are kept as guards. The early mixed form is never asserted
+  (C62).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -500,5 +514,7 @@ situation the freeze exists to catch.
 | `reverse-fibular.ts` | A23 |
 | `tarsal.ts` | A24 |
 | `reverse-tarsal.ts` | A24 |
+| `transcortical.ts` | A25 |
+| `reverse-transcortical.ts` | A25 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

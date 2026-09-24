@@ -442,28 +442,34 @@ export const BRAIN: Brain = {
   fluency: {
     meta: {
       id: 'brain.fluency',
-      claim: 'Broca area, in the inferior frontal gyrus of the dominant hemisphere (Brodmann 44 and 45), is where a lesion makes speech non-fluent.',
-      sources: ['S100', 'S103', 'S107'],
+      claim: 'Broca area, in the inferior frontal gyrus of the dominant hemisphere (Brodmann 44 and 45), is where a lesion makes speech non-fluent. So does the anterior border zone around it, between the anterior and middle cerebral arteries, which spares and isolates it (P21).',
+      sources: ['S100', 'S103', 'S107', 'S142'],
       tier: 'T1',
       bookRef: p,
     },
-    steps: [{ level: 'cortex', compartment: 'inferior_frontal' }],
+    steps: [
+      { level: 'cortex', compartment: 'inferior_frontal' },
+      { level: 'cortex', compartment: 'anterior_borderzone' },
+    ],
   },
   comprehension: {
     meta: {
       id: 'brain.comprehension',
-      claim: 'Wernicke area, in the posterior superior temporal gyrus of the dominant hemisphere, is where a lesion impairs comprehension. S102 says a lesion of the same gyrus may instead give conduction aphasia, with comprehension kept (C34).',
-      sources: ['S101', 'S102', 'S107'],
+      claim: 'Wernicke area, in the posterior superior temporal gyrus of the dominant hemisphere, is where a lesion impairs comprehension. S102 says a lesion of the same gyrus may instead give conduction aphasia, with comprehension kept (C34). The posterior border zone around it, between the middle and posterior cerebral arteries, also impairs comprehension while sparing and isolating it (P21).',
+      sources: ['S101', 'S102', 'S107', 'S103', 'S142'],
       tier: 'T3',
       bookRef: p,
       conflict: 'C34',
     },
-    steps: [{ level: 'cortex', compartment: 'superior_temporal' }],
+    steps: [
+      { level: 'cortex', compartment: 'superior_temporal' },
+      { level: 'cortex', compartment: 'posterior_borderzone' },
+    ],
   },
   repetition: {
     meta: {
       id: 'brain.repetition',
-      claim: 'Repetition fails after a dominant lesion of Broca area, of Wernicke area, or of the inferior parietal lobule between them — the last alone being conduction aphasia.',
+      claim: 'Repetition fails after a dominant lesion of Broca area, of Wernicke area, or of the inferior parietal lobule between them — the last alone being conduction aphasia. A border-zone lesion around them spares it: the transcortical aphasias (P21).',
       sources: ['S100', 'S101', 'S102', 'S103'],
       tier: 'T1',
       bookRef: p,
@@ -495,7 +501,7 @@ export const BRAIN: Brain = {
       bookRef: p,
     },
     parts: {
-      cortex: ['motor_cortex', 'sensory_cortex', 'inferior_frontal', 'superior_temporal', 'inferior_parietal', 'frontal_eye_field'],
+      cortex: ['motor_cortex', 'sensory_cortex', 'inferior_frontal', 'superior_temporal', 'inferior_parietal', 'frontal_eye_field', 'anterior_borderzone', 'posterior_borderzone'],
       capsule: ['capsule_genu', 'capsule_posterior_motor', 'capsule_posterior_sensory'],
       thalamus: ['vpl', 'vpm', 'subthalamic'],
       midbrain: ['peduncle', 'oculomotor', 'oculomotor_nucleus', 'mlf', 'pretectum', 'trochlear_nucleus', 'medial_lemniscus', 'spinothalamic', 'sympathetic'],
@@ -853,6 +859,28 @@ export const BRAIN: Brain = {
       },
       level: 'cortex',
       compartments: ['frontal_eye_field'],
+    },
+    borderzone_anterior: {
+      meta: {
+        id: 'territory.borderzone-anterior',
+        claim: 'The border zone between the anterior and middle cerebral arteries, around Broca area but sparing it: in the dominant hemisphere, transcortical motor aphasia — non-fluent, understands, repeats. S142 says it begins as the mixed form (C62).',
+        sources: ['S103', 'S142'],
+        tier: 'T2',
+        bookRef: p,
+      },
+      level: 'cortex',
+      compartments: ['anterior_borderzone'],
+    },
+    borderzone_posterior: {
+      meta: {
+        id: 'territory.borderzone-posterior',
+        claim: 'The border zone between the middle and posterior cerebral arteries, around Wernicke area but sparing it: in the dominant hemisphere, transcortical sensory aphasia — fluent, does not understand, repeats. S142 says it begins as the mixed form (C62).',
+        sources: ['S103', 'S142'],
+        tier: 'T2',
+        bookRef: p,
+      },
+      level: 'cortex',
+      compartments: ['posterior_borderzone'],
     },
     subthalamic_nucleus: {
       meta: {

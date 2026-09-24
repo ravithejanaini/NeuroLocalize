@@ -52,6 +52,12 @@ describe('language and attention in the findings panel (P10)', () => {
     assert.match(aphasiaName(on('supramarginal', 'L')) ?? '', /^conduction aphasia/);
     assert.match(aphasiaName(on('mca_whole', 'L')) ?? '', /^global aphasia/);
     assert.match(aphasiaName(on('mca_cortex', 'L')) ?? '', /^Broca aphasia/, 'D70: the superior division holds Broca area');
+    // P21: the border zones keep repetition.
+    assert.match(aphasiaName(on('borderzone_anterior', 'L')) ?? '', /^transcortical motor aphasia/);
+    assert.match(aphasiaName(on('borderzone_posterior', 'L')) ?? '', /^transcortical sensory aphasia/);
+    const both = forward([...territoryRegions(KB, 'borderzone_anterior', 'L'), ...territoryRegions(KB, 'borderzone_posterior', 'L')], 'chronic');
+    assert.match(aphasiaName(both) ?? '', /^mixed transcortical aphasia/, 'C63: named, though not a place');
+    assert.equal(aphasiaName(on('borderzone_anterior', 'R')), null);
   });
 
   it('names nothing when speech is normal, and nothing in the right hemisphere (D68)', () => {

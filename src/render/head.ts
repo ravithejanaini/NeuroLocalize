@@ -74,8 +74,8 @@ export function headHtml(f: Findings): string {
 /**
  * The classical name for a combination of the three facets, from S103's classification. The
  * engine never names an aphasia; this only reads its three findings back as the table does.
- * Combinations the model cannot produce (the transcortical and anomic aphasias keep
- * repetition) get no name rather than a guess.
+ * P21 adds the transcortical aphasias, which keep repetition (S103). Anomic aphasia, with all
+ * three facets normal, cannot be told from no aphasia here, so it gets no name.
  */
 export function aphasiaName(f: Findings): string | null {
   const l = f.language;
@@ -86,6 +86,10 @@ export function aphasiaName(f: Findings): string | null {
     'absent|present|present': 'Wernicke aphasia: fluent, does not understand, cannot repeat',
     'absent|absent|present': 'conduction aphasia: fluent, understands, cannot repeat',
     'present|present|present': 'global aphasia: non-fluent, does not understand, cannot repeat',
+    // P21 (S103): repetition kept.
+    'present|absent|absent': 'transcortical motor aphasia: non-fluent, understands, repeats',
+    'absent|present|absent': 'transcortical sensory aphasia: fluent, does not understand, repeats',
+    'present|present|absent': 'mixed transcortical aphasia: non-fluent, does not understand, repeats',
   };
   return NAMES[key] ?? null;
 }

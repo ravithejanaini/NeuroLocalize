@@ -1464,3 +1464,52 @@ mutations of its unsourced roots (C61, R51) and predate this phase.
 
 **R51** — C61: is there a source that gives the sole of the foot its roots (S1, or S1–S2), so that
 a root lesion can be told from the tarsal tunnel by the sole alone?
+
+## P21 — the transcortical aphasias
+
+The analysis written before any P21 code is `docs/P21-analysis.md`; S142 was read for it, and
+S103 re-read, on 2026-09-24. Run against the P20 engine first, the two left-sided cases failed
+on their one new claim each (non-fluent speech; impaired comprehension), and both examinations
+failed: no candidate explained a language deficit with repetition kept. The two right-sided
+cases **passed** against P20, because the nondominant border zones produce nothing either way;
+they are guards against a border zone ever being read outside the dominant hemisphere.
+
+### Source conflicts and limits
+
+**C62 — The course of border-zone aphasia.** S142: patients "initially presented with mixed
+TCA", which then evolved toward the motor or sensory form by the site of the infarct. Its
+abstract gives no times, so the model shows the settled form at every timepoint and the frozen
+cases assert it only after a month.
+
+**C63 — Mixed transcortical aphasia is not a place.** S103 describes it; no source read gives it
+a site of its own. The panel names it when both border zones are damaged, and the reverse engine
+offers no candidate for it.
+
+### Decisions
+
+**D113 — Two border zones join fluency and comprehension, never repetition.** The anterior
+border zone is a second part on the fluency facet and the posterior border zone a second part on
+the comprehension facet. The repetition facet still lists Broca area, Wernicke area and the
+inferior parietal lobule alone. This is the transcortical aphasias' definition in the model's
+own terms: the lesion isolates the language loop and leaves it working (S103).
+
+**D114 — The panel names three more aphasias.** Non-fluent with repetition kept is transcortical
+motor; fluent, not understanding, repeating is transcortical sensory; both, repeating, is mixed
+(S103). Anomic aphasia keeps all three facets, so the model cannot tell it from no aphasia and
+still gives it no name.
+
+**D115 — One explanation's wording changed, and the test with it.** The working for a spared
+language facet names every part it depends on. Fluency now depends on Broca area and the
+anterior border zone, so it reads "the left inferior frontal gyrus and anterior border zone,
+which this depends on, are intact". `test/reverse.test.ts` pinned the one-part wording and was
+updated to the two-part wording; it asserts the same thing.
+
+**D116 — What the P21 mutation run showed.** 97.3% of sourced mutants are killed (5,504 of
+5,654), 96.9% of all, and no P21 row has a survivor: all 90 mutants each of the fluency and
+comprehension rows, all 135 of the repetition row (among them every mutant that would put a
+border zone into repetition), and all 7 of each new place.
+
+### Reviewer questions
+
+**R52** — C62: how long does border-zone aphasia usually stay mixed before it settles into the
+motor or the sensory form?

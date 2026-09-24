@@ -232,9 +232,9 @@ export class Panel {
       },
       {
         title: 'Language and attention',
-        drivers: ['brain.dominance', 'brain.fluency', 'brain.comprehension', 'brain.repetition', 'brain.gerstmann', 'brain.neglect'],
+        drivers: ['brain.dominance', 'brain.fluency', 'brain.comprehension', 'brain.repetition', 'brain.gerstmann', 'brain.neglect', 'territory.borderzone-anterior', 'territory.borderzone-posterior'],
         body: languageHtml(f),
-        note: 'Language is read from the left hemisphere, dominant in most people; how often it is not rises with left-handedness (S108). Neglect is recorded by the side of space, opposite the lesion. Gerstmann signs come from the dominant inferior parietal lobule and mean some or all of the four; the complete tetrad is rare (S128). Not modelled: the transcortical and anomic aphasias, reading, apraxia, anosognosia, and the four Gerstmann signs apart.',
+        note: 'Language is read from the left hemisphere, dominant in most people; how often it is not rises with left-handedness (S108). Neglect is recorded by the side of space, opposite the lesion. Gerstmann signs come from the dominant inferior parietal lobule and mean some or all of the four; the complete tetrad is rare (S128). A border-zone lesion around Broca or Wernicke area spares repetition — the transcortical aphasias (S103). Not modelled: anomic aphasia, reading, apraxia, anosognosia, and the four Gerstmann signs apart.',
       },
       {
         title: 'Arm',

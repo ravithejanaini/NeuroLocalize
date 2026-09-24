@@ -328,6 +328,9 @@ export const BRAIN_COMPARTMENTS = [
   'subthalamic',
   // P16: the frontal eye field, Brodmann area 8.
   'frontal_eye_field',
+  // P21: the cortex between arterial territories, around Broca and around Wernicke area.
+  'anterior_borderzone',
+  'posterior_borderzone',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 
@@ -411,6 +414,9 @@ export const TERRITORIES = [
   'frontal_eye_field',
   // P17: the ventral pons on both sides — locked-in syndrome.
   'ventral_pons_bilateral',
+  // P21: the border zones that give the transcortical aphasias.
+  'borderzone_anterior',
+  'borderzone_posterior',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 
