@@ -271,7 +271,7 @@ export class Panel {
         body: visionAffected(f)
           ? visionPanel(f)
           : '<p class="quiet">Both visual fields full, both pupils equal.</p>',
-        note: 'Each eye’s field is drawn as the patient sees it: the temporal half away from the nose, the centre split at fixation. Not modelled: acuity, colour, congruity (C26), and the lateral geniculate nucleus as a place of its own.',
+        note: 'Each eye’s field is drawn as the patient sees it: the temporal half away from the nose, the centre split at fixation. With both occipital lobes, vision is lost on both sides but the pupils react and the centre is usually kept (S137, C56). Not modelled: acuity, colour, congruity (C26), and the lateral geniculate nucleus as a place of its own.',
       },
       {
         title: 'Leg',

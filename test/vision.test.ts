@@ -85,10 +85,11 @@ describe('the visual field chart (P8)', () => {
     assert.deepEqual([...offered].sort(), wanted.sort());
   });
 
-  it('is a candidate at every named place, the chiasm once', () => {
+  it('is a candidate at every named place, the chiasm and both PCAs once', () => {
     const vision = hypotheses().filter((h) => h.family.startsWith('visual'));
     assert.equal(vision.filter((h) => h.family === 'visual_chiasm').length, 1, 'the chiasm is midline');
-    assert.equal(vision.length, 6 * 2 + 1);
+    assert.equal(vision.filter((h) => h.family === 'visual_both').length, 1, 'both PCAs are one candidate (P18)');
+    assert.equal(vision.length, 6 * 2 + 2);
   });
 });
 

@@ -184,7 +184,9 @@ export function hypotheses(): readonly Hypothesis[] {
   for (const place of VISION_PLACES) {
     const midline = KB.vision.places[place].midline === true;
     for (const side of midline ? (['L'] as const) : SIDES) {
-      const family: LesionFamily = midline ? 'visual_chiasm' : side === 'L' ? 'visual_left' : 'visual_right';
+      const family: LesionFamily = midline
+        ? KB.vision.places[place].parts.includes('chiasm') ? 'visual_chiasm' : 'visual_both'
+        : side === 'L' ? 'visual_left' : 'visual_right';
       out.push({
         id: `${family}:${place}`,
         family,

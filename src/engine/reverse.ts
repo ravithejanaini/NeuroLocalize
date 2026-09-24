@@ -533,6 +533,7 @@ export const SITE_NAME: Record<Place, string> = {
   meyer_loop: 'Meyer loop, in the temporal lobe',
   parietal_radiation: 'parietal optic radiation',
   pca_occipital: 'occipital cortex (posterior cerebral artery), pole spared',
+  pca_bilateral: 'occipital lobes on both sides (both posterior cerebral arteries), poles spared',
   occipital_cortex: 'whole occipital cortex',
   lateral_medullary: 'lateral medulla',
   medial_medullary: 'medial medulla',

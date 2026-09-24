@@ -17,7 +17,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S116', 'S117', 'S118', 'S119',
   'S120', 'S121', 'S122', 'S123', 'S124',
   'S125', 'S126', 'S127',
-  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134',
+  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -157,4 +157,7 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S132', title: 'StatPearls — Locked-in Syndrome', url: 'https://www.ncbi.nlm.nih.gov/books/NBK559026/' },
   { id: 'S133', title: 'Smith, Delargy — Locked-in syndrome (BMJ, 2005)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC549115/' },
   { id: 'S134', title: 'StatPearls — Anatomy, Head and Neck: Basilar Artery', url: 'https://www.ncbi.nlm.nih.gov/books/NBK459137/' },
+  { id: 'S135', title: 'Caplan — "Top of the basilar" syndrome (Neurology, 1980)', url: 'https://pubmed.ncbi.nlm.nih.gov/7188637/' },
+  { id: 'S136', title: 'Lieschke et al. — Symptoms, Imaging Features, Treatment Decisions, and Outcomes of Patients with Top of the Basilar Artery Syndrome (Neurocritical Care, 2025)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC12321678/' },
+  { id: 'S137', title: 'StatPearls — Cortical Blindness', url: 'https://www.ncbi.nlm.nih.gov/books/NBK560626/' },
 ];

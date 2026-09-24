@@ -1314,3 +1314,55 @@ as lost, intact, or unsettled?
 
 **R47** — C53: should the model's locked-in place take the medial longitudinal fasciculus or the
 gaze centre, so that medial gaze is lost too?
+
+## P18 — both occipital lobes
+
+The analysis written before any P18 code is `docs/P18-analysis.md`; S135–S137 were read for it
+on 2026-09-24. Run against the P17 engine first, the frozen forward case **passed**: it lesions
+the calcarine banks of both sides by name, and those parts already existed. The examination
+failed (`top is visual_left … (4 conflicts)`, `unexplained is true`): no candidate took both
+occipital lobes.
+
+### Source conflicts and limits
+
+**C55 — The top of the basilar is not a place.** The phase was planned as the top-of-the-basilar
+syndrome. S135 describes infarction of the rostral brainstem and the hemispheres fed by the
+distal basilar artery; S136, in 96 patients, says the symptoms "vary depending on the length and
+position of the clot", found no infarct on first imaging in 49%, and both occipital lobes
+infarcted in 2. Its defining findings — reduced consciousness, hallucinations, memory, the
+pupils — are not in this model. No fixed set of parts could be sourced, so the model offers only
+both occipital lobes, named for the posterior cerebral arteries and not taught as the basilar.
+
+**C56 — Cortical blindness with the centre kept.** S137 defines cortical blindness as loss of
+vision, then says central vision "remains intact" in the majority of cases because the occipital
+pole has a second supply, and that complete destruction of V1 by stroke is "extremely rare". The
+model shows the common, incomplete form: the periphery lost on both sides, the centre kept. The
+place is T3.
+
+### Decisions
+
+**D102 — P18 is both occipital lobes, on purpose.** As in P15 (D91), the phase was cut to what
+the sources support rather than widened to what the plan named.
+
+**D103 — A visual part is midline only when every place holding it is.** The engine counted a
+part as midline — lesioned on both sides from either — when any midline place held it. That was
+safe while the chiasm was the only midline place. The calcarine banks now sit in a midline place
+(both PCAs) and in one-sided ones, and the old rule would have made every one-sided occipital
+lesion two-sided. `placeRegions` now takes both sides itself for a midline place, as
+`territoryRegions` already did for the brain (P11). The one-sided occipital cases and
+examinations of P8 pass unchanged.
+
+**D104 — A family for both visual pathways.** A midline visual place was always the chiasm, so
+its family was `visual_chiasm`. Both PCAs get their own family, `visual_both`, so the ranking
+never calls them the chiasm.
+
+**D105 — What the P18 mutation run showed.** 97.1% of sourced mutants are killed (5,100 of
+5,250), 96.7% of all, and the new place has no survivor: all 3 of its mutants are killed.
+
+### Reviewer questions
+
+**R48** — C56: should the model also offer complete cortical blindness, the poles included, even
+though S137 calls it extremely rare after stroke?
+
+**R49** — C55: is there a source that gives the top-of-the-basilar syndrome a fixed set of
+findings firm enough to teach as a place?

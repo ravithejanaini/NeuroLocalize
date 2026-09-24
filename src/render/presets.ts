@@ -149,5 +149,7 @@ export const PRESETS: readonly Preset[] = [
   { id: 'meyer-loop', kind: 'vision', label: 'Meyer loop (temporal)', pattern: 'Superior quadrantanopia', place: 'meyer_loop' },
   { id: 'parietal-radiation', kind: 'vision', label: 'Parietal radiation', pattern: 'Inferior quadrantanopia', place: 'parietal_radiation' },
   { id: 'pca-occipital', kind: 'vision', label: 'Occipital cortex (PCA)', pattern: 'Hemianopia, macula spared', place: 'pca_occipital' },
+  // P18: both PCAs are midline, so the side does not change it.
+  { id: 'pca-both', kind: 'vision', label: 'Both occipital lobes (PCAs)', pattern: 'Cortical blindness, pupils react', place: 'pca_bilateral' },
   { id: 'occipital-cortex', kind: 'vision', label: 'Whole occipital cortex', pattern: 'Hemianopia, macula lost', place: 'occipital_cortex' },
 ];

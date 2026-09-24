@@ -32,6 +32,7 @@ export const FAMILY_NAME: Record<LesionFamily, string> = {
   visual_left: 'Left visual pathway',
   visual_right: 'Right visual pathway',
   visual_chiasm: 'Optic chiasm',
+  visual_both: 'Both visual pathways',
 };
 
 export type Placed = {

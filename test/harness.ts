@@ -4,6 +4,7 @@ import type { Assertion, BrainAssertion, BrainCase, Case, LanguageAssertion, Lan
 import type { ReverseCase } from '../spec/expectations/reverse.ts';
 import { BRAIN_CASES } from '../spec/expectations/brain.ts';
 import { VISION_CASES } from '../spec/expectations/vision.ts';
+import { OCCIPITAL_CASES } from '../spec/expectations/occipital.ts';
 import { LANGUAGE_CASES } from '../spec/expectations/language.ts';
 import { CEREBELLUM_CASES } from '../spec/expectations/cerebellum.ts';
 import { POSTERIOR_CASES } from '../spec/expectations/posterior.ts';
@@ -295,6 +296,8 @@ export const VISION_PLACE_CASE: Readonly<Record<string, string>> = {
   parietal_radiation: 'parietal-radiation-left',
   pca_occipital: 'pca-occipital-left',
   occipital_cortex: 'occipital-cortex-left',
+  // P18.
+  pca_bilateral: 'pca-both',
 };
 
 /** Every visual place must take exactly the parts its frozen case lesions (D46, for P8). */
@@ -302,7 +305,7 @@ export function visionPlaceFailures(kb: Kb): Failure[] {
   const out: Failure[] = [];
   for (const [place, row] of Object.entries(kb.vision.places)) {
     const id = VISION_PLACE_CASE[place];
-    const kase = VISION_CASES.find((c) => c.id === id);
+    const kase = VISION_CASES.find((c) => c.id === id) ?? OCCIPITAL_CASES.find((c) => c.id === id);
     const fail = (message: string): void => {
       out.push({ caseId: id ?? place, timepoint: 'chronic', message });
     };
@@ -313,7 +316,7 @@ export function visionPlaceFailures(kb: Kb): Failure[] {
     const lesioned = kase.lesion.flatMap((l) => ('vision' in l ? [l.vision] : []));
     const same = [...lesioned].sort().join(',') === [...row.parts].sort().join(',');
     if (!same) fail(`visual place ${place} takes ${row.parts.join(', ')}; its case ${lesioned.join(', ')}`);
-    // The chiasm is the one midline place: its case lesions it from both sides at once.
+    // A midline place (the chiasm, and from P18 both PCAs) is lesioned from both sides at once.
     const midline = kase.lesion.every((l) => 'vision' in l && l.sides.length === 2);
     if ((row.midline === true) !== midline) fail(`visual place ${place} is ${row.midline ? '' : 'not '}midline, its case ${midline ? '' : 'not '}so`);
   }

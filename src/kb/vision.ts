@@ -193,6 +193,18 @@ export const VISION: Vision = {
       },
       parts: ['calcarine_lower', 'calcarine_upper', 'occipital_pole'],
     },
+    pca_bilateral: {
+      meta: {
+        id: 'vision-place.pca-bilateral',
+        claim: 'Both occipital lobes in the territory of both posterior cerebral arteries: cortical blindness — vision lost on both sides with the pupils reacting normally and no afferent defect — with the centre usually kept, because the occipital pole has a second supply (C55, C56).',
+        sources: ['S137', 'S94'],
+        tier: 'T3',
+        bookRef: p,
+        conflict: 'C56',
+      },
+      parts: ['calcarine_lower', 'calcarine_upper'],
+      midline: true,
+    },
   },
 
   rapd: {

@@ -32,8 +32,11 @@ export function mapVision(kb: Kb, regions: readonly VisionRegion[]): VisionMap {
   for (const r of regions) {
     if (!(VISUAL_PARTS as readonly string[]).includes(r.vision)) throw new Error(`${r.vision} is not a part of the visual pathway`);
     const d: Damage = r.severity === 'complete' ? 2 : 1;
-    // A midline part has no side: lesioning it on one side lesions it for both.
-    const midline = Object.values(kb.vision.places).some((q) => q.midline && q.parts.includes(r.vision));
+    // A midline part has no side: lesioning it on one side lesions it for both. A part is
+    // midline only when every place holding it is (the chiasm); the calcarine banks sit in both
+    // PCAs (P18) but also in one-sided places, so they keep their side.
+    const holders = Object.values(kb.vision.places).filter((q) => q.parts.includes(r.vision));
+    const midline = holders.length > 0 && holders.every((q) => q.midline === true);
     const sides = midline ? SIDES : r.sides;
     for (const side of sides) {
       const key = `${r.vision}|${side}`;
@@ -121,5 +124,8 @@ export function visionFindings(kb: Kb, map: VisionMap): VisionFindings {
 }
 
 /** The parts a named place takes, for the candidates reverse inference ranks. */
-export const placeRegions = (kb: Kb, place: keyof Kb['vision']['places'], side: Side): VisionRegion[] =>
-  kb.vision.places[place].parts.map((vision) => ({ vision, sides: [side], severity: 'complete' as const }));
+export const placeRegions = (kb: Kb, place: keyof Kb['vision']['places'], side: Side): VisionRegion[] => {
+  // A midline place takes both sides whichever side is asked for (the chiasm; both PCAs, P18).
+  const sides: readonly Side[] = kb.vision.places[place].midline === true ? SIDES : [side];
+  return kb.vision.places[place].parts.map((vision) => ({ vision, sides, severity: 'complete' as const }));
+};

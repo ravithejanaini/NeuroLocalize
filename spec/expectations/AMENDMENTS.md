@@ -414,6 +414,19 @@ situation the freeze exists to catch.
   examination was **red** against P16: the best candidate was a cervical cord lesion with four
   conflicts. Sensation and medial gaze are never asserted (C52, C53).
 
+## A22 — Both occipital lobes (P18, 2026-09-24)
+
+- **Changed:** two new files. `occipital.ts` holds one case, both posterior cerebral arteries:
+  the periphery lost in both eyes on both sides, the centre kept, no afferent pupillary defect.
+  `reverse-occipital.ts` holds one examination: that picture, answered by both occipital lobes
+  with no conflict. No earlier case or examination changed.
+- **Why:** P18 adds a place; a row no frozen case observes is an untested row (rule 5).
+- **How circularity was avoided:** every assertion is quoted from S137, read into
+  `docs/P18-analysis.md` before any code. Run against the P17 engine, the forward case
+  **passed**, because it names its parts and they existed. The examination was **red**: the best
+  candidate was one occipital lobe with four conflicts. The pupils' light reflex, Anton syndrome
+  and the top of the basilar are never asserted (C55, C56).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -447,5 +460,7 @@ situation the freeze exists to catch.
 | `reverse-cortex.ts` | A20 |
 | `basilar.ts` | A21 |
 | `reverse-basilar.ts` | A21 |
+| `occipital.ts` | A22 |
+| `reverse-occipital.ts` | A22 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

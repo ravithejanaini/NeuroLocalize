@@ -97,6 +97,8 @@ export const LESION_FAMILIES = [
   'visual_left',
   'visual_right',
   'visual_chiasm',
+  // P18: both posterior cerebral arteries, one candidate across the midline.
+  'visual_both',
 ] as const;
 export type LesionFamily = (typeof LESION_FAMILIES)[number];
 
@@ -441,6 +443,8 @@ export const VISION_PLACES = [
   'parietal_radiation',
   'pca_occipital',
   'occipital_cortex',
+  // P18: both occipital lobes.
+  'pca_bilateral',
 ] as const;
 export type VisionPlace = (typeof VISION_PLACES)[number];
 
