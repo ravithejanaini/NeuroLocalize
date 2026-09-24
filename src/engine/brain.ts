@@ -75,6 +75,8 @@ export function validateBrain(kb: Kb): void {
     b.elevation.steps,
     b.elevationCrossed.steps,
     b.hearing.steps,
+    b.trochlear.steps,
+    b.jaw.steps,
     b.upgaze.steps,
     b.lightNear.steps,
     b.convergenceRetraction.steps,
@@ -250,6 +252,12 @@ export function brainFindings(kb: Kb, map: BrainMap): BrainFindings {
           break;
         case 'hearing_loss':
           signs[sign] = present(routeDamage(map, b.hearing, x, 'face'));
+          break;
+        case 'superior_oblique_weakness':
+          signs[sign] = present(routeDamage(map, b.trochlear, x, 'face'));
+          break;
+        case 'jaw_deviation':
+          signs[sign] = present(routeDamage(map, b.jaw, x, 'face'));
           break;
         case 'elevation_weakness':
           signs[sign] = present(worst([routeDamage(map, b.elevation, x, 'face'), routeDamage(map, b.elevationCrossed, x, 'face')]));

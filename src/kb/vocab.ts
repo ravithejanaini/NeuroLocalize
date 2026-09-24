@@ -309,6 +309,10 @@ export const BRAIN_COMPARTMENTS = [
   'cochlear',
   // P13: the pretectal area and the vertical gaze centres beside it. Midline; each side holds half.
   'pretectum',
+  // P14: the fourth nerve's nucleus; the fifth nerve's motor and principal sensory nuclei.
+  'trochlear_nucleus',
+  'trigeminal_motor',
+  'trigeminal_sensory',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 
@@ -329,6 +333,9 @@ export const CRANIAL_SIGNS = [
   'elevation_weakness',
   // P12: the ear, on the side of the lesion.
   'hearing_loss',
+  // P14: the fourth and fifth nerves.
+  'superior_oblique_weakness',
+  'jaw_deviation',
 ] as const;
 export type CranialSign = (typeof CRANIAL_SIGNS)[number];
 
@@ -380,6 +387,9 @@ export const TERRITORIES = [
   'sca',
   // P13.
   'dorsal_midbrain',
+  // P14.
+  'trochlear_nucleus',
+  'midpontine_tegmentum',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

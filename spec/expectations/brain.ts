@@ -538,6 +538,9 @@ export const BRAIN_CASES: readonly BrainCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        // A18: the trigeminal nuclei lie beside these parts in the pontine tegmentum but are not them (S122).
+        { kind: 'cranial', side: 'L', sign: 'jaw_deviation', oneOf: ['absent'], cite: ['S122'], basis: 'composed' },
+        { kind: 'face_sensation', side: 'L', oneOf: ['intact'], cite: ['S122'], basis: 'composed' },
         // A16: hearing is the cochlear nuclei alone (S114, D78); the tract runs past the cochlear nuclei but is not them.
         { kind: 'cranial', side: 'L', sign: 'hearing_loss', oneOf: ['absent'], cite: ['S114'], basis: 'composed' },
         sense('R', 'posterior_column', all, ['lost'], { cite: ['S57'], basis: 'stated', note: 'A8: the lemniscus serves the contralateral body throughout the brainstem' }),
@@ -606,6 +609,9 @@ export const BRAIN_CASES: readonly BrainCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        // A18: the trigeminal nuclei lie beside these parts in the pontine tegmentum but are not them (S122).
+        { kind: 'cranial', side: 'L', sign: 'jaw_deviation', oneOf: ['absent'], cite: ['S122'], basis: 'composed' },
+        { kind: 'face_sensation', side: 'L', oneOf: ['intact'], cite: ['S122'], basis: 'composed' },
         // A16: hearing is the cochlear nuclei alone (S114, D78); the vestibular nuclei are the eighth nerve's balance half; hearing is the cochlear half.
         { kind: 'cranial', side: 'L', sign: 'hearing_loss', oneOf: ['absent'], cite: ['S114'], basis: 'composed' },
         { kind: 'ataxia', side: 'L', oneOf: ['present'], cite: ['S65'], basis: 'composed', note: 'A8: ipsilateral limb ataxia in lateral pontine lesions' },

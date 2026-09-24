@@ -10,7 +10,7 @@ content could only be queried for paraphrase; its raw table text was not obtaine
 
 Accessed 2026-09-16 unless noted. S33–S46 were read on 2026-09-17 for P4 and S47–S66 the same day for P5; S16 and S19 were
 read again that day for the facts added to their rows. S67–S70 were read on 2026-09-17 for
-the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.md`); S91–S97 for P8 (`docs/P8-analysis.md`); S98–S99 on 2026-09-18 for P9 (`docs/P9-analysis.md`); S100–S108 the same day for P10 (`docs/P10-analysis.md`); S109–S112 the same day for P11 (`docs/P11-analysis.md`); S113–S115 on 2026-09-23 for P12 (`docs/P12-analysis.md`), when S65 was also re-read for the lateral pontine syndrome; S116–S119 the same day for P13 (`docs/P13-analysis.md`).
+the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.md`); S91–S97 for P8 (`docs/P8-analysis.md`); S98–S99 on 2026-09-18 for P9 (`docs/P9-analysis.md`); S100–S108 the same day for P10 (`docs/P10-analysis.md`); S109–S112 the same day for P11 (`docs/P11-analysis.md`); S113–S115 on 2026-09-23 for P12 (`docs/P12-analysis.md`), when S65 was also re-read for the lateral pontine syndrome; S116–S119 the same day for P13 (`docs/P13-analysis.md`); S120–S124 the same day for P14 (`docs/P14-analysis.md`), when S62 was re-read for the pupil.
 
 | Id | Source | Authors | Last updated | Used for |
 |---|---|---|---|---|
@@ -133,6 +133,11 @@ the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.m
 | S117 | [StatPearls — Pupillary Light Reflex](https://www.ncbi.nlm.nih.gov/books/NBK537180/) | Belliveau, Somani, Dossani | 2023-07-25 | each pretectal area signals bilaterally to the Edinger–Westphal nuclei; the Argyll Robertson pupil constricts to near but not to light |
 | S118 | [StatPearls — Neuroanatomy, Pupillary Light Reflexes and Pathway](https://www.ncbi.nlm.nih.gov/books/NBK553169/) | Akova, Yoo, Launico | 2025-09-15 | the light-reflex fibres end in the pretectal nucleus, not the LGN; damage there gives light–near dissociation |
 | S119 | [StatPearls — Neuroanatomy, Mesencephalon Midbrain](https://www.ncbi.nlm.nih.gov/books/NBK551509/) | Caminero, Cascella | 2024-09-10 | Parinaud (dorsal midbrain) syndrome: its causes, and decreased or absent upgaze as its distinguishing sign |
+| S120 | [StatPearls — Neuroanatomy, Cranial Nerve 4 (Trochlear)](https://www.ncbi.nlm.nih.gov/books/NBK537244/) | Kim, Motlagh, Naqvi | 2023-07-15 | the nucleus near the midline beside the MLF; fibres decussate before a dorsal exit; a nuclear lesion affects the contralateral superior oblique (C46), a fascicular one the ipsilateral (C44); hypertropia, diplopia worse looking down |
+| S121 | [StatPearls — Neuroanatomy, Trigeminal Reflexes](https://www.ncbi.nlm.nih.gov/books/NBK551641/) | Ogino, Tadi | 2023-06-05 | the motor nucleus in the upper pontine tegmentum; jaw deviation toward the side of the lesion |
+| S122 | [StatPearls — Neuroanatomy, Cranial Nerve 5 (Trigeminal)](https://www.ncbi.nlm.nih.gov/books/NBK482283/) | Huff, Weisbrod, Daly | 2024-04-20 | the motor nucleus medial to the principal sensory nucleus in the lateral pontine tegmentum; it supplies the muscles of mastication |
+| S123 | [Walker — Cranial Nerve V: The Trigeminal Nerve, in Clinical Methods, 3rd edition (1990)](https://www.ncbi.nlm.nih.gov/books/NBK384/) | Walker | 1990 | the mandible deviates toward the paralysed side on opening, from the unopposed opposite pterygoid |
+| S124 | [StatPearls — Trochlear Nerve Palsy](https://www.ncbi.nlm.nih.gov/books/NBK565850/) | Khanam, Sood | 2024-09-08 | the hypertropia of the paretic eye; it does not discuss the nucleus (C46) |
 
 ## Not used, and why
 

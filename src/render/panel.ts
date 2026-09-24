@@ -219,6 +219,9 @@ export class Panel {
           'brain.upgaze',
           'brain.light-near',
           'brain.convergence-retraction',
+          // P14.
+          'brain.trochlear',
+          'brain.jaw',
         ],
         body: headHtml(f),
       },

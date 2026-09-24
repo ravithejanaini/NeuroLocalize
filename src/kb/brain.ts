@@ -56,12 +56,12 @@ export const BRAIN: Brain = {
   faceNucleus: {
     meta: {
       id: 'brain.face-nucleus',
-      claim: 'The spinal trigeminal nucleus and tract in the lateral medulla carry sensation from the ipsilateral face.',
-      sources: ['S60', 'S47', 'S58'],
+      claim: 'The spinal trigeminal nucleus and tract in the lateral medulla, and the principal sensory nucleus in the pontine tegmentum above it, carry sensation from the ipsilateral face.',
+      sources: ['S60', 'S47', 'S58', 'S122', 'S115'],
       tier: 'T1',
       bookRef: p,
     },
-    steps: [{ level: 'medulla', compartment: 'spinal_trigeminal' }],
+    steps: [{ level: 'medulla', compartment: 'spinal_trigeminal' }, { level: 'pons', compartment: 'trigeminal_sensory' }],
     serves: 'ipsilateral',
   },
   faceAscending: {
@@ -310,6 +310,28 @@ export const BRAIN: Brain = {
     },
     steps: [{ level: 'pons', compartment: 'vestibular' }, { level: 'medulla', compartment: 'vestibular' }],
   },
+  trochlear: {
+    meta: {
+      id: 'brain.trochlear',
+      claim: 'The trochlear fibres cross before they leave the dorsal midbrain, so a lesion of one trochlear nucleus weakens the superior oblique of the other eye: it rides high, worse looking down. One source states the crossing (C46).',
+      sources: ['S120', 'S124'],
+      tier: 'T2',
+      bookRef: p,
+    },
+    steps: [{ level: 'midbrain', compartment: 'trochlear_nucleus' }],
+    serves: 'contralateral',
+  },
+  jaw: {
+    meta: {
+      id: 'brain.jaw',
+      claim: 'The trigeminal motor nucleus in the pontine tegmentum supplies the muscles of mastication; when one side is weak the jaw deviates toward it on opening, pushed by the other side’s pterygoids.',
+      sources: ['S121', 'S122', 'S123'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'pons', compartment: 'trigeminal_motor' }],
+    serves: 'ipsilateral',
+  },
   hearing: {
     meta: {
       id: 'brain.hearing',
@@ -433,8 +455,8 @@ export const BRAIN: Brain = {
   partsAt: {
     meta: {
       id: 'brain.parts-at',
-      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure; the genu and posterior limb of the capsule; VPL and VPM; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus and, dorsally at the superior colliculus, the pretectum; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.',
-      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116'],
+      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure; the genu and posterior limb of the capsule; VPL and VPM; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.',
+      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122'],
       tier: 'T1',
       bookRef: p,
     },
@@ -442,7 +464,7 @@ export const BRAIN: Brain = {
       cortex: ['motor_cortex', 'sensory_cortex', 'inferior_frontal', 'superior_temporal', 'inferior_parietal'],
       capsule: ['capsule_genu', 'capsule_posterior_motor', 'capsule_posterior_sensory'],
       thalamus: ['vpl', 'vpm'],
-      midbrain: ['peduncle', 'oculomotor', 'oculomotor_nucleus', 'mlf', 'pretectum', 'medial_lemniscus', 'spinothalamic', 'sympathetic'],
+      midbrain: ['peduncle', 'oculomotor', 'oculomotor_nucleus', 'mlf', 'pretectum', 'trochlear_nucleus', 'medial_lemniscus', 'spinothalamic', 'sympathetic'],
       pons: [
         'basis',
         'facial',
@@ -456,6 +478,8 @@ export const BRAIN: Brain = {
         'cerebellar_peduncle',
         'vestibular',
         'cochlear',
+        'trigeminal_motor',
+        'trigeminal_sensory',
       ],
       medulla: [
         'pyramid',
@@ -771,6 +795,28 @@ export const BRAIN: Brain = {
       level: 'midbrain',
       compartments: ['pretectum'],
       midline: true,
+    },
+    trochlear_nucleus: {
+      meta: {
+        id: 'territory.trochlear-nucleus',
+        claim: 'A lesion of one trochlear nucleus, near the midline beside the MLF at the inferior colliculus, weakens the superior oblique of the other eye.',
+        sources: ['S120', 'S124'],
+        tier: 'T2',
+        bookRef: p,
+      },
+      level: 'midbrain',
+      compartments: ['trochlear_nucleus'],
+    },
+    midpontine_tegmentum: {
+      meta: {
+        id: 'territory.midpontine-tegmentum',
+        claim: 'A lesion of the mid-pontine tegmentum takes the trigeminal motor and sensory nuclei, the spinothalamic tract, the medial lemniscus and the cerebellar peduncle: the jaw and face on one side, the body on the other, and ataxia on the side of the lesion.',
+        sources: ['S115', 'S122'],
+        tier: 'T2',
+        bookRef: p,
+      },
+      level: 'pons',
+      compartments: ['trigeminal_motor', 'trigeminal_sensory', 'spinothalamic', 'medial_lemniscus', 'cerebellar_peduncle'],
     },
   },
 };

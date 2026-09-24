@@ -341,6 +341,25 @@ situation the freeze exists to catch.
   first: the three findings came back undefined. The lid, downgaze and one-sided lesions are
   left unasserted and named (C41–C43).
 
+## A18 — The fourth and fifth nerves (P14, 2026-09-23)
+
+- **Changed:** two new files. `nerves.ts` holds two cases — the left trochlear nucleus and the
+  left mid-pontine tegmentum. `reverse-nerves.ts` holds two examinations: a right superior
+  oblique palsy (answer: the left nucleus), and a jaw deviating with crossed body sensory loss
+  (answer: the mid-pontine tegmentum, not the AICA or the lateral medulla). No earlier case or
+  examination changed.
+- **Added after the first P14 mutation run:** two single-nucleus cases in `nerves.ts` (the
+  trigeminal motor nucleus alone, the principal sensory nucleus alone), and two P5 cases in
+  `brain.ts` (the pontine lemnisci; the pontine peduncle with the vestibular nuclei) each gain
+  "jaw normal" and "facial sensation intact". Eight mutants that moved the jaw or the pontine
+  face step onto a neighbour inside the mid-pontine tegmentum survived, because every case took
+  those parts together.
+- **Why:** P14 adds three parts, two signs and two places; a row no frozen case observes is an
+  untested row (rule 5).
+- **How circularity was avoided:** every assertion is quoted from S115 or S120–S124, read into
+  `docs/P14-analysis.md` before any code; both cases were **run red against the P13 engine**
+  first. The pupil is never asserted (C45), and the one-source crossing is marked T2 (C46).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -352,7 +371,7 @@ situation the freeze exists to catch.
 | `types.ts` | A4, A6, A7, A11, A14, A15, A17 |
 | `plexus.ts` | A4, A5, A6, A9 |
 | `reverse-plexus.ts` | A4, A5 |
-| `brain.ts` | A7, A8, A9, A13, A14, A16, A17 |
+| `brain.ts` | A7, A8, A9, A13, A14, A16, A17, A18 |
 | `reverse-brain.ts` | A7, A13, A14, A15, A16, A17 |
 | `leg.ts` | A10 |
 | `reverse-leg.ts` | A10 |
@@ -366,5 +385,7 @@ situation the freeze exists to catch.
 | `reverse-posterior.ts` | A16 |
 | `midbrain.ts` | A17 |
 | `reverse-midbrain.ts` | A17 |
+| `nerves.ts` | A18 |
+| `reverse-nerves.ts` | A18 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

@@ -130,6 +130,15 @@ describe('the drawn brain keeps the sourced relations', () => {
     assert.ok(Math.abs(mid('pretectum').x) < Math.abs(mid('peduncle').x), 'near the midline');
   });
 
+  it('puts the trochlear nucleus beside the MLF below the pretectum, and the trigeminal motor nucleus medial to the sensory (S120, S122)', () => {
+    const mid = (c: Parameters<typeof partPoint>[2]) => partPoint(RENDER, 'midbrain', c, 'L', 'face');
+    assert.ok(mid('trochlear_nucleus').y < mid('pretectum').y, 'the inferior colliculus is below the superior');
+    assert.ok(Math.abs(mid('trochlear_nucleus').x - mid('mlf').x) < 0.1, 'near the midline along the MLF');
+    const pons = (c: Parameters<typeof partPoint>[2]) => partPoint(RENDER, 'pons', c, 'L', 'face');
+    assert.ok(Math.abs(pons('trigeminal_motor').x) < Math.abs(pons('trigeminal_sensory').x), 'the motor nucleus is medial');
+    assert.ok(pons('trigeminal_motor').z < pons('trigeminal_sensory').z, 'and anterior');
+  });
+
   it('draws every part a territory names', () => {
     for (const row of Object.values(KB.brain.territories)) {
       for (const c of row.compartments) assert.ok(partPoint(RENDER, row.level, c, 'R', 'face'), `${row.level} ${c}`);

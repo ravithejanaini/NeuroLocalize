@@ -33,7 +33,7 @@ export const PATHWAY_NAME: Record<Pathway, { readonly name: string; readonly wha
   peripheral_nerve: { name: 'Plexus and nerves', what: 'root against trunk against cord against nerve' },
   trigeminal: { name: 'Facial sensation', what: 'the ipsilateral trigeminal nucleus and the crossed route above it' },
   corticobulbar: { name: 'Face from above', what: 'lower-face weakness with the forehead spared' },
-  cranial_nuclei: { name: 'Cranial nerve nuclei', what: 'third nerve, abduction, tongue, palate, the whole face and hearing' },
+  cranial_nuclei: { name: 'Cranial nerve nuclei', what: 'third, fourth and sixth nerves, the jaw, tongue, palate, the whole face and hearing' },
   eye_movements: { name: 'Conjugate gaze', what: 'gaze palsy, internuclear ophthalmoplegia and one-and-a-half, and the dorsal midbrain: which eye fails to move, which way, and how the pupils react' },
   cerebellar_vestibular: { name: 'Ataxia and vertigo', what: 'the cerebellar hemispheres, vermis and peduncles, and the vestibular nuclei' },
   visual: { name: 'Visual fields', what: 'the optic nerve, chiasm, tract, radiations and occipital cortex, and the pupil' },
@@ -81,7 +81,9 @@ export function pathwaysOf(f: Findings, h: Hypothesis): Pathway[] {
       c.palate_weakness === 'present' ||
       c.ptosis === 'present' ||
       c.elevation_weakness === 'present' ||
-      c.hearing_loss === 'present'
+      c.hearing_loss === 'present' ||
+      c.superior_oblique_weakness === 'present' ||
+      c.jaw_deviation === 'present'
     ) {
       out.add('cranial_nuclei');
     }

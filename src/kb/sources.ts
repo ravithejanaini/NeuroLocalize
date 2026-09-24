@@ -15,6 +15,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S109', 'S110', 'S111', 'S112',
   'S113', 'S114', 'S115',
   'S116', 'S117', 'S118', 'S119',
+  'S120', 'S121', 'S122', 'S123', 'S124',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -139,4 +140,9 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S117', title: 'StatPearls — Pupillary Light Reflex', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537180/' },
   { id: 'S118', title: 'StatPearls — Neuroanatomy, Pupillary Light Reflexes and Pathway', url: 'https://www.ncbi.nlm.nih.gov/books/NBK553169/' },
   { id: 'S119', title: 'StatPearls — Neuroanatomy, Mesencephalon Midbrain', url: 'https://www.ncbi.nlm.nih.gov/books/NBK551509/' },
+  { id: 'S120', title: 'StatPearls — Neuroanatomy, Cranial Nerve 4 (Trochlear)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537244/' },
+  { id: 'S121', title: 'StatPearls — Neuroanatomy, Trigeminal Reflexes', url: 'https://www.ncbi.nlm.nih.gov/books/NBK551641/' },
+  { id: 'S122', title: 'StatPearls — Neuroanatomy, Cranial Nerve 5 (Trigeminal)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK482283/' },
+  { id: 'S123', title: 'Walker — Cranial Nerve V: The Trigeminal Nerve, in Clinical Methods, 3rd edition (1990)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK384/' },
+  { id: 'S124', title: 'StatPearls — Trochlear Nerve Palsy', url: 'https://www.ncbi.nlm.nih.gov/books/NBK565850/' },
 ];

@@ -221,8 +221,8 @@ export const RENDER: RenderKb = {
   brainLayout: {
     meta: {
       id: 'render.brain-layout',
-      claim: 'The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally, with the inferior frontal gyrus in front of the motor strip, the inferior parietal lobule behind the sensory strip and the superior temporal gyrus below them; the cerebellum lies behind the pons and medulla, its hemispheres lateral to the midline vermis; the pretectum is dorsal in the rostral midbrain. Positions are schematic.',
-      sources: ['S48', 'S58', 'S47', 'S54', 'S66', 'S59', 'S98', 'S99', 'S70', 'S104', 'S105', 'S107', 'S110', 'S116'],
+      claim: 'The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally, with the inferior frontal gyrus in front of the motor strip, the inferior parietal lobule behind the sensory strip and the superior temporal gyrus below them; the cerebellum lies behind the pons and medulla, its hemispheres lateral to the midline vermis; the pretectum is dorsal in the rostral midbrain, and the trochlear nucleus beside the MLF below it; the trigeminal motor nucleus lies medial and anterior to the principal sensory nucleus in the pons. Positions are schematic.',
+      sources: ['S48', 'S58', 'S47', 'S54', 'S66', 'S59', 'S98', 'S99', 'S70', 'S104', 'S105', 'S107', 'S110', 'S116', 'S120', 'S122'],
       tier: 'T1',
       bookRef: 'pending',
     },
@@ -261,12 +261,17 @@ export const RENDER: RenderKb = {
       'pons:vestibular': [-0.76, -0.5, 0.55],
       // P12: the cochlear nuclei, lateral to the vestibular nuclei (S65, S114).
       'pons:cochlear': [-1.05, -0.55, 0.45],
+      // P14: the trigeminal motor nucleus medial and anterior to the principal sensory nucleus (S122).
+      'pons:trigeminal_motor': [-0.72, 0.55, 0.05],
+      'pons:trigeminal_sensory': [-0.95, 0.6, 0.3],
       'midbrain:peduncle': [-0.55, 0, -0.62],
       'midbrain:oculomotor': [-0.2, 0.15, -0.3],
       'midbrain:oculomotor_nucleus': [-0.13, 0.35, 0.22],
       'midbrain:mlf': [-0.09, 0.1, 0.3],
       // P13: the pretectum, dorsal and near the midline at the superior colliculus (S116).
       'midbrain:pretectum': [-0.12, 0.5, 0.65],
+      // P14: the trochlear nucleus near the midline beside the MLF, caudal, at the inferior colliculus (S120).
+      'midbrain:trochlear_nucleus': [-0.11, -0.4, 0.35],
       'midbrain:medial_lemniscus': [-0.6, 0, 0.0],
       'midbrain:spinothalamic': [-0.76, 0.1, 0.2],
       'midbrain:sympathetic': [-0.66, -0.2, 0.32],

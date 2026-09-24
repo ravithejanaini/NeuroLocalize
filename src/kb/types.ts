@@ -169,6 +169,9 @@ export type Brain = {
   readonly elevationCrossed: BrainRoute;
   /** P12: the cochlear nuclei, on the side of the lesion. */
   readonly hearing: BrainRoute;
+  /** P14: the fourth nerve (its nucleus serves the other eye) and the fifth's motor nucleus. */
+  readonly trochlear: BrainRoute;
+  readonly jaw: BrainRoute;
   /** P13: the three dorsal midbrain signs, each read from either half of the pretectum. */
   readonly upgaze: Row<{ readonly steps: readonly BrainStep[] }>;
   readonly lightNear: Row<{ readonly steps: readonly BrainStep[] }>;

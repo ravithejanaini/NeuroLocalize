@@ -530,6 +530,8 @@ export const SITE_NAME: Record<Place, string> = {
   pica: 'posterior inferior cerebellar artery (lateral medulla and inferior cerebellum)',
   sca: 'superior cerebellar artery (superior cerebellum)',
   dorsal_midbrain: 'dorsal midbrain (pretectum, superior colliculus)',
+  trochlear_nucleus: 'trochlear nucleus, in the midbrain',
+  midpontine_tegmentum: 'mid-pontine tegmentum (trigeminal nuclei)',
   pontine_tegmentum: 'pontine tegmentum (abducens nucleus and MLF)',
   oculomotor_nucleus: 'oculomotor nucleus, in the midbrain',
   internal_capsule: 'internal capsule',
@@ -616,6 +618,9 @@ const PART_NAME: Record<BrainCompartment, string> = {
   vermis: 'half of the vermis',
   cochlear: 'cochlear nuclei',
   pretectum: 'half of the pretectum',
+  trochlear_nucleus: 'trochlear nucleus',
+  trigeminal_motor: 'trigeminal motor nucleus',
+  trigeminal_sensory: 'principal trigeminal sensory nucleus',
   mlf: 'medial longitudinal fasciculus',
   pprf: 'paramedian pontine reticular formation',
   basis: 'basis pontis',
@@ -737,6 +742,8 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
         : o.sign === 'ptosis' ? [b.ptosis]
         : o.sign === 'elevation_weakness' ? [b.elevation, b.elevationCrossed]
         : o.sign === 'hearing_loss' ? [b.hearing]
+        : o.sign === 'superior_oblique_weakness' ? [b.trochlear]
+        : o.sign === 'jaw_deviation' ? [b.jaw]
         : [b.ambiguus];
       const c = faceCuts(routes, o.side);
       if (o.sign === 'palate_weakness' && !c.length && f.cranial[o.side].palate_weakness === 'indeterminate') {

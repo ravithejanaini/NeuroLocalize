@@ -1102,3 +1102,46 @@ S118) be offered as a teaching preset, given that it is not a focal lesion?
 run**: all 38 mutants of each of the three sign rows, all 8 of the place, and the pretectum's
 entry in the parts-at table. The dorsal midbrain case lesions only the pretectum, so any mutant
 that moves a sign to another part leaves the case without it.
+
+## P14 — the fourth and fifth nerves, and the third nerve's pupil
+
+The analysis written before any P14 code is `docs/P14-analysis.md`; S120–S124 were read for it
+on 2026-09-23, and S62 was re-read for the pupil. NCBI's `/books/` path and PMC returned CAPTCHA
+pages and the Europe PMC copies of S70 refused the request; none was worked around. The two
+frozen cases were run red against the P13 engine first: the two new signs came back undefined
+and facial sensation intact.
+
+### Source conflicts and limits
+
+**C44 — The trochlear fascicle.** S120: "a fascicular lesion affects the ipsilateral nerve and
+muscle". The fibres cross inside the midbrain before they exit, so "fascicle" can name either
+side of the crossing. The model has the nucleus only.
+
+**C45 — The third nerve's pupil.** S62: a compressive palsy gives "a fixed and dilated pupil";
+"ischemic processes typically spare pupillary function"; the pupillary fibres lie "superficially
+within the nerve trunk". The pupil follows the cause in the nerve trunk, which the model does not
+have, and no source read says what a midbrain lesion of the fascicles or nucleus does to it. P9
+left the pupil out with a promise to look; it stays out, now for a stated reason.
+
+**C46 — One source for the trochlear crossing.** Only S120 states that the nucleus serves the
+opposite eye. S124 describes the sign but not the nucleus, and S70's text could not be read. The
+row is T2, and R41 asks a reviewer for a second source.
+
+### Decisions
+
+**D88 — A cranial nerve whose nucleus serves the other side.** The trochlear route is the first
+cranial route whose nucleus serves the contralateral eye; the examination teaches it the way it
+is asked — a right superior oblique palsy from the brainstem is the *left* nucleus.
+
+**D89 — Facial sensation gains the pons.** The principal sensory nucleus joins the spinal
+trigeminal nucleus on the ipsilateral route (S122, S115). No earlier place takes it, so no
+earlier finding moved. C39 (facial sensation in the AICA syndrome) is unchanged: the AICA place
+does not take the principal nucleus.
+
+### Reviewer questions
+
+**R41** — C46: can a reviewer give a second source for a trochlear nucleus lesion weakening the
+contralateral superior oblique?
+
+**R42** — C45: should the model add a peripheral third nerve, so that a compressive palsy can
+show the pupil and an ischaemic one spare it?
