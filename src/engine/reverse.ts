@@ -591,6 +591,9 @@ export const SITE_NAME: Record<Place, string> = {
   sciatic: 'sciatic nerve',
   tibial: 'tibial nerve',
   common_fibular: 'common fibular nerve at the fibular neck',
+  deep_fibular: 'deep fibular nerve, high in the leg',
+  anterior_tarsal: 'deep fibular nerve in the anterior tarsal tunnel',
+  superficial_fibular: 'superficial fibular nerve',
 };
 /** Plain names for the parts of the visual pathway, as the working speaks of them. */
 const PART_TEXT: Record<VisualPart, string> = {

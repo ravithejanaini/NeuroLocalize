@@ -64,7 +64,8 @@ export const LEG_CASES: readonly LimbCase[] = [
         reflex('achilles', ['normal'], { cite: ['S82'], basis: 'composed', note: 'the tibial nerve carries it' }),
         ...rightUntouched,
       ],
-      unasserted: ['separate deep and superficial fibular lesions: not modelled'],
+      // A23: the deep and superficial branches are places of their own since P19 (fibular.ts).
+      unasserted: [],
     }],
   },
   {

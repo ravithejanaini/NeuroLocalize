@@ -182,8 +182,20 @@ export const RENDER: RenderKb = {
       common_fibular: [
         { at: [-2.9, -36.4, 0.7] },
         { at: [-3.3, -37.8, 0.3], site: 'common_fibular' },
-        { at: [-3.3, -38.8, -0.2], branches: ['tibialis_anterior', 'toe_extensor', 'fibularis', 'lateral_leg'] },
-        { at: [-2.8, -45.6, -0.4], branches: ['dorsum_foot', 'first_web', 'lateral_foot'] },
+        { at: [-2.8, -45.6, -0.4], branches: ['lateral_foot'] },
+      ],
+      // P19: the two branches leave at the fibular neck; the deep one runs down the front to
+      // the anterior tarsal tunnel at the ankle, the superficial one down the lateral side.
+      deep_fibular: [
+        { at: [-3.2, -38.3, -0.1], site: 'deep_fibular' },
+        { at: [-3.0, -39.2, -0.5], branches: ['tibialis_anterior', 'toe_extensor'] },
+        { at: [-2.5, -46.4, -1.2], site: 'anterior_tarsal' },
+        { at: [-2.35, -47.2, -1.5], branches: ['first_web'] },
+      ],
+      superficial_fibular: [
+        { at: [-3.5, -38.3, 0.2], site: 'superficial_fibular' },
+        { at: [-3.5, -39.2, 0.1], branches: ['fibularis', 'lateral_leg'] },
+        { at: [-2.8, -46.2, -0.8], branches: ['dorsum_foot'] },
       ],
     },
     targets: {
@@ -333,6 +345,9 @@ export const RENDER: RenderKb = {
       sciatic: { roots: ['L4', 'S3'] },
       tibial: { roots: ['L4', 'S3'] },
       common_fibular: { roots: ['L4', 'S2'] },
+      // P19: the branches carry their parent's roots (C57).
+      deep_fibular: { roots: ['L4', 'S2'] },
+      superficial_fibular: { roots: ['L4', 'S2'] },
     },
   },
 

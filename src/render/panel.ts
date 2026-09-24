@@ -288,7 +288,7 @@ export class Panel {
           ? `${deformityChips(f, LEG)}<details class="arm-more" open><summary>Muscle by muscle</summary>${muscleTable(f, LEG)}</details>` +
             `<details class="arm-more"><summary>Nerve territories</summary>${skinTable(f, LEG)}</details>`
           : '<p class="quiet">Every leg muscle strong and every territory intact.</p>',
-        note: 'Uncertain marks a root no source settles, or a muscle with a second nerve still intact. Not modelled: the pudendal and posterior femoral cutaneous nerves, the tarsal tunnel, and deep and superficial fibular lesions apart.',
+        note: 'Uncertain marks a root no source settles, or a muscle with a second nerve still intact. The deep fibular nerve lifts the foot and feels the first web; the superficial everts it and feels the dorsum (S138, S139). Not modelled: the pudendal and posterior femoral cutaneous nerves, and the tibial nerve’s tarsal tunnel.',
       },
       {
         title: 'Reflexes',

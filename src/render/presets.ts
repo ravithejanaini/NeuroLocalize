@@ -105,6 +105,10 @@ export const PRESETS: readonly Preset[] = [
   { id: 'sciatic', kind: 'limb', leg: true, label: 'Sciatic nerve', pattern: 'Flail foot, gluteals spared', site: 'sciatic' },
   { id: 'tibial', kind: 'limb', leg: true, label: 'Tibial nerve', pattern: 'Weak plantar flexion, numb sole', site: 'tibial' },
   { id: 'common-fibular', kind: 'limb', leg: true, label: 'Common fibular, fibular neck', pattern: 'Foot drop, inversion spared', site: 'common_fibular' },
+  // P19: its two branches, and the deep one at the ankle.
+  { id: 'deep-fibular', kind: 'limb', leg: true, label: 'Deep fibular nerve', pattern: 'Foot drop, eversion spared', site: 'deep_fibular' },
+  { id: 'superficial-fibular', kind: 'limb', leg: true, label: 'Superficial fibular nerve', pattern: 'Weak eversion, dorsum numb', site: 'superficial_fibular' },
+  { id: 'anterior-tarsal', kind: 'limb', leg: true, label: 'Anterior tarsal tunnel', pattern: 'First web numb only', site: 'anterior_tarsal' },
   { id: 'lateral-medulla', kind: 'brain', label: 'Lateral medulla', pattern: 'Wallenberg, medulla only', territory: 'lateral_medullary' },
   { id: 'medial-medulla', kind: 'brain', label: 'Medial medulla', pattern: 'Dejerine', territory: 'medial_medullary' },
   { id: 'ventral-pons', kind: 'brain', label: 'Ventral pons', pattern: 'Millard-Gubler', territory: 'ventral_pons' },

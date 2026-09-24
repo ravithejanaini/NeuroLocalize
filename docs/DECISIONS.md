@@ -1366,3 +1366,55 @@ though S137 calls it extremely rare after stroke?
 
 **R49** — C55: is there a source that gives the top-of-the-basilar syndrome a fixed set of
 findings firm enough to teach as a place?
+
+## P19 — the deep and superficial fibular nerves
+
+The analysis written before any P19 code is `docs/P19-analysis.md`; S138–S139 were read for it
+on 2026-09-24. The three frozen cases and both examinations were run against the P18 engine
+first and all failed: each case on its new claims (the deep branch's foot drop, weak tibialis
+anterior and toe extensor and numb first web; the superficial branch's weak eversion and numb
+dorsum and lateral leg; the tunnel's numb first web), and each examination found no place at
+the branch. For the tunnel's picture the P18 engine ranked a small central cord lesion first
+with no conflict; the new place now ranks above it.
+
+### Source conflicts and limits
+
+**C57 — The common fibular nerve's roots.** S138: "The common peroneal nerve comprises fibers
+from spinal nerves L4 through S1". S139, and S76 since P7: L4 to S2. The model keeps L4–S2 and
+draws both branches with it; no finding in the leg depends on S2.
+
+**C58 — Toe extension in the anterior tarsal tunnel.** S139 gives "in some cases, weakness of
+toe extension". That is the short extensors on the foot, supplied below the ankle, which the
+model does not test. Its great-toe extensor is extensor hallucis longus, supplied in the leg, so
+it stays strong in the tunnel. The examination tests the first web alone.
+
+### Decisions
+
+**D106 — The branches carry the muscles and the skin.** Tibialis anterior, the great-toe
+extensor and the first web moved from the common fibular nerve to the deep branch; fibularis,
+the lateral leg and the dorsum of the foot to the superficial. A common fibular lesion reaches
+them through the branches, as a sciatic lesion reaches the tibial muscles. The P7 common
+fibular case and examination pass unchanged. The sural share of the lateral foot stays on the
+common fibular nerve.
+
+**D107 — The first web is past the tunnel.** Its supply is the deep branch after both of its
+places (`after: 2`), so a lesion high in the leg and one in the tunnel both take it. The
+anterior-compartment muscles are after the first place only.
+
+**D108 — Two tests changed because the anatomy did.** The drawn pulse to tibialis anterior now
+passes the deep fibular place as well (`test/plexus-geometry.test.ts`), and the leg has 13
+places a side instead of 10 (`test/reverse.test.ts`). Both were recomputed, not loosened.
+
+**D109 — What the P19 mutation runs showed.** The first run killed 97.2% of sourced mutants
+(5,239 of 5,391) and left two P19 survivors: moving the sural share of the lateral foot from the
+common fibular nerve onto either branch changed nothing any case looked at. The three branch
+cases now assert the lateral foot intact (the sural nerve forms from the tibial and common
+fibular nerves above the branches, S138, S87). Applied directly, each of the two mutants now
+fails two assertions. The second run killed 5,241 of 5,391 (97.2%). The survivors in the rows
+P19 touched are exactly those left after P18, all pre-dating this phase. All mutants of the two
+new nerves are killed (24 and 23).
+
+### Reviewer questions
+
+**R50** — C58: should the model add the short toe extensors on the foot, so that the anterior
+tarsal tunnel can show weakness as well as numbness?

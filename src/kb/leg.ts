@@ -110,13 +110,35 @@ export const LEG_NERVE_ROWS: Pick<Plexus['nerves'], LegNerve> = {
   common_fibular: {
     meta: {
       id: 'nerve.common-fibular',
-      claim: 'The common fibular nerve divides from the sciatic nerve before the popliteal fossa and divides again at the fibular neck, where the lesion place is, into its deep and superficial branches.',
-      sources: ['S75', 'S76', 'S77'],
+      claim: 'The common fibular nerve divides from the sciatic nerve before the popliteal fossa and divides again at the fibular neck, where the lesion place is, into its deep and superficial branches (P19), which carry its muscles and skin; its own branch to the sural nerve leaves above.',
+      sources: ['S75', 'S76', 'S77', 'S139'],
       tier: 'T1',
       bookRef: p,
     },
     origin: { from: 'nerve', nerve: 'sciatic' },
     sites: ['common_fibular'],
+  },
+  deep_fibular: {
+    meta: {
+      id: 'nerve.deep-fibular',
+      claim: 'The deep fibular nerve leaves the common fibular nerve between fibularis longus and the head of the fibula. It supplies the anterior compartment in the leg, then passes beneath the inferior extensor retinaculum at the ankle — the anterior tarsal tunnel — to the first web space. Its two lesion places are high in the leg, above its muscle branches, and in the tunnel, below them.',
+      sources: ['S139', 'S138'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    origin: { from: 'nerve', nerve: 'common_fibular' },
+    sites: ['deep_fibular', 'anterior_tarsal'],
+  },
+  superficial_fibular: {
+    meta: {
+      id: 'nerve.superficial-fibular',
+      claim: 'The superficial fibular nerve, the smaller branch of the common fibular nerve, runs through fibularis longus and supplies the lateral compartment and the skin of the anterolateral leg and the dorsum of the foot, except the first web space. Its lesion place is above its branches.',
+      sources: ['S138', 'S139'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    origin: { from: 'nerve', nerve: 'common_fibular' },
+    sites: ['superficial_fibular'],
   },
 };
 
@@ -205,7 +227,7 @@ export const LEG_MUSCLE_ROWS: Pick<Plexus['muscles'], LegMuscle> = {
       bookRef: p,
       conflict: 'C20',
     },
-    supply: [{ nerve: 'common_fibular', after: 1 }],
+    supply: [{ nerve: 'deep_fibular', after: 1 }],
     roots: ['L4', 'L5'],
     myotome: 'L4',
   },
@@ -213,11 +235,11 @@ export const LEG_MUSCLE_ROWS: Pick<Plexus['muscles'], LegMuscle> = {
     meta: {
       id: 'muscle.toe-extensor',
       claim: 'Extensor hallucis longus, the great toe extensor, is supplied by the deep branch of the common fibular nerve and is L5.',
-      sources: ['S76', 'S77', 'S31', 'S82'],
+      sources: ['S76', 'S77', 'S31', 'S82', 'S139'],
       tier: 'T1',
       bookRef: p,
     },
-    supply: [{ nerve: 'common_fibular', after: 1 }],
+    supply: [{ nerve: 'deep_fibular', after: 1 }],
     roots: ['L5', 'L5'],
     myotome: 'L5',
   },
@@ -225,11 +247,11 @@ export const LEG_MUSCLE_ROWS: Pick<Plexus['muscles'], LegMuscle> = {
     meta: {
       id: 'muscle.fibularis',
       claim: 'Fibularis longus, the ankle evertor, is supplied by the superficial branch of the common fibular nerve; L5 radiculopathy weakens the evertors.',
-      sources: ['S76', 'S77', 'S78'],
+      sources: ['S76', 'S77', 'S78', 'S138'],
       tier: 'T2',
       bookRef: p,
     },
-    supply: [{ nerve: 'common_fibular', after: 1 }],
+    supply: [{ nerve: 'superficial_fibular', after: 1 }],
     roots: ['L5', 'L5'],
   },
   tibialis_posterior: {
@@ -311,12 +333,12 @@ export const LEG_SKIN_ROWS: Pick<Plexus['skin'], LegSkinArea> = {
   lateral_leg: {
     meta: {
       id: 'skin.lateral-leg',
-      claim: 'The anterolateral leg is supplied by the common fibular nerve’s branches below the fibular neck; no source read gives its roots, so any of its roots may serve it.',
-      sources: ['S76', 'S77'],
+      claim: 'The anterolateral leg is supplied by the superficial fibular nerve, a branch of the common fibular nerve below the fibular neck; no source read gives its roots, so any of its roots may serve it.',
+      sources: ['S76', 'S77', 'S138'],
       tier: 'T2',
       bookRef: p,
     },
-    supply: [{ nerve: 'common_fibular', after: 1 }],
+    supply: [{ nerve: 'superficial_fibular', after: 1 }],
     roots: null,
     disputedRoots: ['L4', 'S2'],
   },
@@ -324,11 +346,11 @@ export const LEG_SKIN_ROWS: Pick<Plexus['skin'], LegSkinArea> = {
     meta: {
       id: 'skin.dorsum-foot',
       claim: 'The dorsum of the foot is the superficial fibular nerve and the L5 landmark.',
-      sources: ['S77', 'S76', 'S82'],
+      sources: ['S77', 'S76', 'S82', 'S138'],
       tier: 'T1',
       bookRef: p,
     },
-    supply: [{ nerve: 'common_fibular', after: 1 }],
+    supply: [{ nerve: 'superficial_fibular', after: 1 }],
     roots: ['L5', 'L5'],
     landmark: 'L5',
   },
@@ -336,11 +358,12 @@ export const LEG_SKIN_ROWS: Pick<Plexus['skin'], LegSkinArea> = {
     meta: {
       id: 'skin.first-web',
       claim: 'The first dorsal web space is the deep fibular nerve; L5 radiculopathy numbs it.',
-      sources: ['S77', 'S76', 'S78'],
+      sources: ['S77', 'S76', 'S78', 'S139'],
       tier: 'T2',
       bookRef: p,
     },
-    supply: [{ nerve: 'common_fibular', after: 1 }],
+    // P19: below the anterior tarsal tunnel, so a lesion at either deep place takes it.
+    supply: [{ nerve: 'deep_fibular', after: 2 }],
     roots: ['L5', 'L5'],
   },
   lateral_foot: {

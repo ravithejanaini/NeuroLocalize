@@ -427,6 +427,25 @@ situation the freeze exists to catch.
   candidate was one occipital lobe with four conflicts. The pupils' light reflex, Anton syndrome
   and the top of the basilar are never asserted (C55, C56).
 
+## A23 — The deep and superficial fibular nerves (P19, 2026-09-24)
+
+- **Changed:** two new files. `fibular.ts` holds three cases: the deep fibular nerve high in the
+  leg, the superficial fibular nerve, and the deep fibular nerve in the anterior tarsal tunnel.
+  `reverse-fibular.ts` holds two examinations: foot drop with eversion strong and only the first
+  web numb (the deep branch), and the first web numb with every leg muscle strong (the tunnel).
+- **Changed in `leg.ts`:** the common fibular case's note "separate deep and superficial
+  fibular lesions: not modelled" was removed, because it is no longer true. None of its
+  assertions changed, and it passes unchanged.
+- **Why:** P19 adds two nerves and three places; a row no frozen case observes is an untested
+  row (rule 5).
+- **How circularity was avoided:** every assertion is quoted from S138 or S139, read into
+  `docs/P19-analysis.md` before any code. All three cases and both examinations were **run red
+  against the P18 engine** first. Pain, the short toe extensors and fibularis brevis are never
+  asserted (C58).
+- **Added after the first P19 mutation run:** each of the three cases asserts the lateral foot
+  intact. Two mutants that moved the sural share onto a branch survived because no case looked
+  there (D109).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -440,7 +459,7 @@ situation the freeze exists to catch.
 | `reverse-plexus.ts` | A4, A5 |
 | `brain.ts` | A7, A8, A9, A13, A14, A16, A17, A18 |
 | `reverse-brain.ts` | A7, A13, A14, A15, A16, A17, A19, A20 |
-| `leg.ts` | A10 |
+| `leg.ts` | A10, A23 |
 | `reverse-leg.ts` | A10 |
 | `vision.ts` | A11 |
 | `reverse-vision.ts` | A11, A14 |
@@ -462,5 +481,7 @@ situation the freeze exists to catch.
 | `reverse-basilar.ts` | A21 |
 | `occipital.ts` | A22 |
 | `reverse-occipital.ts` | A22 |
+| `fibular.ts` | A23 |
+| `reverse-fibular.ts` | A23 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

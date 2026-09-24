@@ -32,10 +32,11 @@ teaching from a phone.
 | P16 | Gaze deviation and Gerstmann syndrome: the frontal eye field turns the eyes toward a hemisphere lesion for days only — the first brain sign that changes with time, so a gaze palsy that lasts points to the pons — and the dominant inferior parietal lobule gives Gerstmann signs |
 | P17 | Locked-in syndrome: the ventral pons on both sides, from the basilar artery — awake, cannot move or speak, answers by looking up; one lesion across both sides of the pons |
 | P18 | Both occipital lobes: cortical blindness with the centre kept and the pupils reacting. The top-of-the-basilar syndrome was planned and cut, because no source gives it a fixed set of parts |
+| P19 | The deep and superficial fibular nerves, and the deep one in the anterior tarsal tunnel: foot drop with eversion spared, weak eversion with the dorsum numb, a numb first web alone |
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 137 open-access sources that were
+- **Expected outputs are written first**, from 139 open-access sources that were
   actually read — one of them, S108, as its free abstract only (`docs/SOURCES.md`) — and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

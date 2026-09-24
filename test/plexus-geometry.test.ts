@@ -163,8 +163,9 @@ describe('plexus drawing matches the engine (D27)', () => {
     assert.ok(supply);
     const p = limbPath(KB, RENDER, supply, 'L5', 'tibialis_anterior', 'L');
     assert.ok(p);
-    assert.deepEqual(routeSites(p.route), ['sacral_plexus', 'sciatic', 'common_fibular']);
-    const order = ['sacral_plexus', 'sciatic', 'common_fibular'].map((s) => p.sitePoint.get(s as 'sciatic'));
+    // P19: tibialis anterior is the deep branch's, so its pulse passes the deep fibular place too.
+    assert.deepEqual(routeSites(p.route), ['sacral_plexus', 'sciatic', 'common_fibular', 'deep_fibular']);
+    const order = ['sacral_plexus', 'sciatic', 'common_fibular', 'deep_fibular'].map((s) => p.sitePoint.get(s as 'sciatic'));
     assert.ok(order.every((x, i) => x !== undefined && (i === 0 || x > (order[i - 1] ?? 0))), 'in order');
     assert.equal(limbPath(KB, RENDER, supply, 'L2', 'tibialis_anterior', 'L'), null, 'L2 does not reach the sacral plexus');
     const sciatic = mapPlexus([{ plexus: 'sciatic', sides: ['L'], severity: 'complete' }]);

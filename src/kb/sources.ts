@@ -17,7 +17,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S116', 'S117', 'S118', 'S119',
   'S120', 'S121', 'S122', 'S123', 'S124',
   'S125', 'S126', 'S127',
-  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137',
+  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137', 'S138', 'S139',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -160,4 +160,6 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S135', title: 'Caplan — "Top of the basilar" syndrome (Neurology, 1980)', url: 'https://pubmed.ncbi.nlm.nih.gov/7188637/' },
   { id: 'S136', title: 'Lieschke et al. — Symptoms, Imaging Features, Treatment Decisions, and Outcomes of Patients with Top of the Basilar Artery Syndrome (Neurocritical Care, 2025)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC12321678/' },
   { id: 'S137', title: 'StatPearls — Cortical Blindness', url: 'https://www.ncbi.nlm.nih.gov/books/NBK560626/' },
+  { id: 'S138', title: 'StatPearls — Anatomy, Bony Pelvis and Lower Limb: Superficial Peroneal Nerve (Superficial Fibular Nerve)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK534793/' },
+  { id: 'S139', title: 'StatPearls — Anatomy, Bony Pelvis and Lower Limb: Calf Deep Peroneal Nerve (Deep Fibular Nerve)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK526033/' },
 ];

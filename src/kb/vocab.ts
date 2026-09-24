@@ -142,6 +142,9 @@ export const LEG_NERVES = [
   'sciatic',
   'tibial',
   'common_fibular',
+  // P19: the two branches of the common fibular nerve.
+  'deep_fibular',
+  'superficial_fibular',
 ] as const;
 export type LegNerve = (typeof LEG_NERVES)[number];
 
@@ -183,6 +186,10 @@ export const PLEXUS_SITES = [
   'sciatic',
   'tibial',
   'common_fibular',
+  // P19: the deep branch high in the leg and at the ankle; the superficial branch.
+  'deep_fibular',
+  'anterior_tarsal',
+  'superficial_fibular',
 ] as const;
 export type PlexusSite = (typeof PLEXUS_SITES)[number];
 export const ARM_SITES = PLEXUS_SITES.slice(0, PLEXUS_SITES.indexOf('lumbar_plexus'));
