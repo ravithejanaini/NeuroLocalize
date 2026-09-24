@@ -7,7 +7,7 @@ practice mode in front of it.
 **Education only. Not clinical decision support. No patient data, ever.**
 
 Plan: `docs/plan.html` (published revision C); later phases are analysed before they are
-built (`docs/P7-analysis.md`, `docs/P8-analysis.md`, `docs/P9-analysis.md`, `docs/P10-analysis.md`, `docs/P11-analysis.md`, `docs/P12-analysis.md`, `docs/P13-analysis.md`, `docs/P14-analysis.md`, `docs/P15-analysis.md`, `docs/P16-analysis.md`, `docs/P17-analysis.md`, `docs/P18-analysis.md`, `docs/P19-analysis.md`, `docs/P20-analysis.md`, `docs/P21-analysis.md`). Sources: `docs/SOURCES.md`.
+built (`docs/P7-analysis.md`, `docs/P8-analysis.md`, `docs/P9-analysis.md`, `docs/P10-analysis.md`, `docs/P11-analysis.md`, `docs/P12-analysis.md`, `docs/P13-analysis.md`, `docs/P14-analysis.md`, `docs/P15-analysis.md`, `docs/P16-analysis.md`, `docs/P17-analysis.md`, `docs/P18-analysis.md`, `docs/P19-analysis.md`, `docs/P20-analysis.md`, `docs/P21-analysis.md`, `docs/P22-analysis.md`). Sources: `docs/SOURCES.md`.
 Deviations, conflicts and open reviewer questions: `docs/DECISIONS.md`.
 
 ## Commands

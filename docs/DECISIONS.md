@@ -1513,3 +1513,39 @@ border zone into repetition), and all 7 of each new place.
 
 **R52** — C62: how long does border-zone aphasia usually stay mixed before it settles into the
 motor or the sensory form?
+
+## P22 — anosognosia and apraxia, audited and not built
+
+The analysis is `docs/P22-analysis.md`; S143–S146 were read for it on 2026-09-25. No engine row,
+frozen case or examination changed.
+
+### Source conflicts and limits
+
+**C64 — Anosognosia is not a right-parietal sign.** S143 says it most often follows right
+parietal damage. S144, pooling the literature, finds it "equally frequent" after frontal,
+parietal or temporal damage and after subcortical lesions. S145 finds the insula decisive early,
+and the sign itself transient: 32% at three days, 18% at a week and 5% at six months, in
+right-hemisphere strokes with hemiplegia.
+
+**C65 — Apraxia is not one place.** S146: ideomotor apraxia after left premotor, supplementary
+motor, inferior parietal or callosal injury — three of the four not parts of this model — and
+limb apraxia in about 51% of left-hemisphere strokes.
+
+### Decisions
+
+**D117 — Neither is given a place.** A place in this model predicts its findings. For both signs
+the sources give several sites and an occurrence of a half or less, so a place would either say
+"uncertain" (and localize nothing) or say "present" (and be wrong most of the time). As in P15
+(D91) and P18 (D102), the phase is cut to what the sources support: the language panel now
+explains why the two are not localized, with the numbers and S144–S146, in place of "not
+modelled".
+
+**D118 — Panel notes cite only registered sources.** A note cites sources by id in its text, and
+nothing checked them. `test/panel-drivers.test.ts` now fails on a note citing an unregistered id,
+and checks that the language note carries P22's explanation. It was falsified by citing an
+unregistered id in a note (the test names it) before being kept.
+
+### Reviewer questions
+
+**R53** — C64: is there a lesion site after which anosognosia for hemiplegia is common enough, and
+lasting enough, to teach as a localizing sign?

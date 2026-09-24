@@ -7,9 +7,9 @@ claims are what it teaches. Mark each one; where a claim is wrong, a one-line co
 with a source is the most useful thing you can give.
 
 The same review can be filled in on screen and saved to a file: `review/review.html`.
-Worksheet version `f2a450cd6661`.
+Worksheet version `49fb01fbbe3e`.
 
-196 knowledge-base claims, 19 displayed facts, 52 open questions, 810 composed findings in 129 cases. Mutation score 97.3% over sourced rows, 96.9% over all rows.
+196 knowledge-base claims, 19 displayed facts, 53 open questions, 810 composed findings in 129 cases. Mutation score 97.3% over sourced rows, 96.9% over all rows.
 Claims are ordered by load-bearing weight: how many expected findings fail when the claim
 is corrupted. The first ten carry most of the engine.
 
@@ -1376,6 +1376,7 @@ Correction and source (a book and page is ideal): ____
 - **R50** — C58: should the model add the short toe extensors on the foot, so that the anterior tarsal tunnel can show weakness as well as numbness?
 - **R51** — C61: is there a source that gives the sole of the foot its roots (S1, or S1–S2), so that a root lesion can be told from the tarsal tunnel by the sole alone?
 - **R52** — C62: how long does border-zone aphasia usually stay mixed before it settles into the motor or the sensory form?
+- **R53** — C64: is there a lesion site after which anosognosia for hemiplegia is common enough, and lasting enough, to teach as a localizing sign?
 
 ## 3. Disputed mechanisms
 

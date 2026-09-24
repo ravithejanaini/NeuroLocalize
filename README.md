@@ -35,10 +35,11 @@ teaching from a phone.
 | P19 | The deep and superficial fibular nerves, and the deep one in the anterior tarsal tunnel: foot drop with eversion spared, weak eversion with the dorsum numb, a numb first web alone |
 | P20 | The tarsal tunnel: the tibial nerve at the ankle numbs the sole and keeps the calf and the ankle reflex |
 | P21 | The transcortical aphasias: border-zone lesions around Broca or Wernicke area that keep repetition — the one bedside test that tells them from Broca and Wernicke aphasia |
+| P22 | Anosognosia and apraxia, audited and **not built**: the sources give each several sites and an occurrence of a half or less, so the panel explains why neither localizes |
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 142 open-access sources that were
+- **Expected outputs are written first**, from 146 open-access sources that were
   actually read — one of them, S108, as its free abstract only (`docs/SOURCES.md`) — and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

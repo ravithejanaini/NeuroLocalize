@@ -17,7 +17,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S116', 'S117', 'S118', 'S119',
   'S120', 'S121', 'S122', 'S123', 'S124',
   'S125', 'S126', 'S127',
-  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137', 'S138', 'S139', 'S140', 'S141', 'S142',
+  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137', 'S138', 'S139', 'S140', 'S141', 'S142', 'S143', 'S144', 'S145', 'S146',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -165,4 +165,8 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S140', title: 'StatPearls — Tarsal Tunnel Syndrome', url: 'https://www.ncbi.nlm.nih.gov/books/NBK513273/' },
   { id: 'S141', title: 'StatPearls — Tibial Neuropathy', url: 'https://www.ncbi.nlm.nih.gov/books/NBK582151/' },
   { id: 'S142', title: 'Cauquil-Michon, Flamand-Roze, Denier — Borderzone strokes and transcortical aphasia (Curr Neurol Neurosci Rep, 2011)', url: 'https://pubmed.ncbi.nlm.nih.gov/21904919/' },
+  { id: 'S143', title: 'StatPearls — Anosognosia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK513361/' },
+  { id: 'S144', title: 'Pia, Neppi-Modona, Ricci, Berti — The anatomy of anosognosia for hemiplegia: a meta-analysis (Cortex, 2004)', url: 'https://pubmed.ncbi.nlm.nih.gov/15156794/' },
+  { id: 'S145', title: 'Vocat, Staub, Stroppini, Vuilleumier — Anosognosia for hemiplegia: a clinical-anatomical prospective study (Brain, 2010)', url: 'https://pubmed.ncbi.nlm.nih.gov/21126995/' },
+  { id: 'S146', title: 'Park — Apraxia: Review and Update (J Clin Neurol, 2017)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5653618/' },
 ];
