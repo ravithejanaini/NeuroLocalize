@@ -11,11 +11,12 @@ import { POSTERIOR_CASES } from '../spec/expectations/posterior.ts';
 import { MIDBRAIN_CASES } from '../spec/expectations/midbrain.ts';
 import { NERVE_CASES } from '../spec/expectations/nerves.ts';
 import { BASAL_CASES } from '../spec/expectations/basal.ts';
+import { CORTEX_CASES } from '../spec/expectations/cortex.ts';
 import { forward } from '../src/engine/forward.ts';
 import { KB as KB_FOR_TERRITORIES } from '../src/kb/kb.ts';
 import { check, territoryFailures, visionPlaceFailures } from './harness.ts';
 
-const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...BASAL_CASES];
+const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...BASAL_CASES, ...CORTEX_CASES];
 
 describe('frozen expectations', () => {
   for (const kase of CASES) {

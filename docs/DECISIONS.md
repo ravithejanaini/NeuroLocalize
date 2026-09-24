@@ -1208,3 +1208,53 @@ hemiballismus route and all 7 of the place.
 
 **R43** — C48: is there a focal lesion of the substantia nigra or striatum with a side stated
 well enough to be taught as a place?
+
+## P16 — gaze deviation and Gerstmann syndrome
+
+The analysis written before any P16 code is `docs/P16-analysis.md`; S128–S131 were read for it
+on 2026-09-24. The frozen cases were run red against the P15 engine first: eleven failing tests,
+ten evaluations each failing on a new claim and the whole-MCA place no longer matching its case.
+
+### Source conflicts and limits
+
+**C49 — "May cause".** S129: frontal eye field damage "may cause eye deviation towards the side
+of the lesion", and S131's figures are for patients who had the deviation. The model gives it as
+present on the first day — the sign the lesion is taught by — and the row is T2, not T1.
+
+**C50 — The prolonged exception.** S131: after earlier damage to the other frontal lobe the
+deviation was "remarkably prolonged, lasting from 13 to more than 43 days". The model has no
+history, so it says absent after a month and records the exception here and in the
+month-later examination's note.
+
+**C51 — The tetrad is rare.** S128: patients "commonly present with 2 to 3 symptoms", the
+complete tetrad rare. The finding means "Gerstmann signs, some or all" and never claims four.
+
+### Decisions
+
+**D94 — A brain sign with a course.** Every earlier brain sign was the same at every timepoint.
+The frontal eye field's gaze palsy is a data row with a state per timepoint, read from S131:
+present on the first day, unsettled from one day to a month (57% gone by 48 hours, 90% by five
+days, so neither present nor absent can be stated for a patient), absent after it. The pontine
+palsy keeps no course and wins when both are damaged: present from the pons is present.
+
+**D95 — The frontal eye field's gaze palsy is the existing sign.** A new sign "gaze deviation"
+would have been the same finding named from the other end: eyes deviated toward the left are
+eyes that cannot look to the right. The cortical route adds to "gaze palsy toward this side",
+serving the opposite side, so the examination table and the reverse engine needed no new slot.
+
+**D96 — The whole MCA takes the frontal eye field; the superior division does not.** S104 names
+forced gaze deviation for the large MCA stroke. No source read places it in a superior-division
+stroke, so that place is unchanged (P16-analysis §5).
+
+**D97 — What the P16 mutation run showed.** 97.1% of sourced mutants are killed (5,087 of
+5,237), 96.4% of all, and no P16 row has a survivor on the first run: all 52 mutants of the
+frontal eye field's gaze route and its course, all 43 of the Gerstmann route, all 7 of the new
+place and all 16 of the whole-MCA place that gained it.
+
+### Reviewer questions
+
+**R44** — C49: is "present on the first day" right to teach for a frontal eye field lesion, or
+should the first day also be unsettled?
+
+**R45** — D94: should the gaze palsy be unsettled rather than absent after a month, given C50's
+exception?

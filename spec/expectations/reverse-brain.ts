@@ -35,6 +35,8 @@ export type BrainObservation =
   | { readonly kind: 'eyes'; readonly sign: DorsalMidbrainSign; readonly value: SignObservation }
   // A14: one facet of language, about the patient; neglect, by the side of space.
   | { readonly kind: 'language'; readonly sign: LanguageSign; readonly value: SignObservation }
+  // A20: Gerstmann signs, some or all, about the patient.
+  | { readonly kind: 'gerstmann'; readonly value: SignObservation }
   | { readonly kind: 'neglect'; readonly side: Side; readonly value: SignObservation };
 
 export type BrainReverseExpectation = ReverseExpectation & {

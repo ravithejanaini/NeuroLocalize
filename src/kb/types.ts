@@ -170,6 +170,10 @@ export type Brain = {
   /** P12: the cochlear nuclei, on the side of the lesion. */
   readonly hearing: BrainRoute;
   /** P14: the fourth nerve (its nucleus serves the other eye) and the fifth's motor nucleus. */
+  /** P16: the frontal eye field loses gaze to the other side, for a time only (S131). */
+  readonly gazeCortex: Row<{ readonly steps: readonly BrainStep[]; readonly serves: Laterality; readonly course: Readonly<Record<Timepoint, SignState>> }>;
+  /** P16: Gerstmann syndrome, read from the dominant hemisphere as language is. */
+  readonly gerstmann: Row<{ readonly steps: readonly BrainStep[] }>;
   /** P15: the subthalamic nucleus, acting on the other side's limbs. */
   readonly ballismus: BrainRoute;
   readonly trochlear: BrainRoute;

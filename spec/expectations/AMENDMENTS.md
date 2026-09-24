@@ -372,6 +372,33 @@ situation the freeze exists to catch.
   `docs/P15-analysis.md` before any code, and the case was **run red against the P14 engine**
   first. Parkinsonism and chorea are never asserted (C48).
 
+## A20 — Gaze deviation and Gerstmann syndrome (P16, 2026-09-24)
+
+- **Changed:** two new files. `cortex.ts` holds one case, the left frontal eye field, evaluated
+  at all four timepoints: gaze to the right lost on the first day, unsettled from one day to a
+  month, recovered after it. `reverse-cortex.ts` holds two examinations: a first-day gaze palsy
+  with a right hemiparesis and aphasia (one lesion, the whole MCA, explains it — and after a
+  month no one lesion does), and a gaze palsy still present after a month with nothing else
+  (the pons, not the hemisphere). `types.ts` gains the `gerstmann` assertion and
+  `reverse-brain.ts` the observation.
+- **Changed in `language.ts`:** Gerstmann signs are asserted present on the two dominant
+  inferior parietal cases (`mca-inferior-left`, `supramarginal-left`) and absent on their
+  right-sided twins. The whole-MCA case gains the frontal eye field in its lesion — S104 names
+  forced gaze deviation in large MCA strokes — and a first-day evaluation; its chronic evaluation
+  asserts the deviation gone and Gerstmann signs present. Its note "forced gaze deviation is not
+  modelled", and two other notes saying Gerstmann was not modelled, were removed because they
+  are no longer true.
+- **Why:** P16 adds a part, a place and a finding, and makes one brain sign depend on time; a
+  row no frozen case observes is an untested row (rule 5).
+- **How circularity was avoided:** every assertion is quoted from S104, S107 or S128–S131, read
+  into `docs/P16-analysis.md` before any code. The forward cases were **run red against the P15
+  engine** first: eleven failing tests — ten evaluations, each failing on a new claim, and the
+  whole-MCA place no longer matching its case, because the case had gained the frontal eye field. The first-day examination was also run
+  against the P15 engine and failed (`unexplained is true: … mca_whole (1 conflicts)`); the
+  month-later examination **passed against P15 as well** — it guards the course rather than
+  testing new behaviour, and is kept for that. The four Gerstmann signs are never asserted apart
+  (C51), and nothing is asserted about the exception that lasts for weeks (C50).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -380,16 +407,16 @@ situation the freeze exists to catch.
 | `boundaries.ts` | A2 |
 | `index.ts` | A2 (exports the boundary cases) |
 | `reverse.ts` | A3 |
-| `types.ts` | A4, A6, A7, A11, A14, A15, A17, A19 |
+| `types.ts` | A4, A6, A7, A11, A14, A15, A17, A19, A20 |
 | `plexus.ts` | A4, A5, A6, A9 |
 | `reverse-plexus.ts` | A4, A5 |
 | `brain.ts` | A7, A8, A9, A13, A14, A16, A17, A18 |
-| `reverse-brain.ts` | A7, A13, A14, A15, A16, A17, A19 |
+| `reverse-brain.ts` | A7, A13, A14, A15, A16, A17, A19, A20 |
 | `leg.ts` | A10 |
 | `reverse-leg.ts` | A10 |
 | `vision.ts` | A11 |
 | `reverse-vision.ts` | A11, A14 |
-| `language.ts` | A14 |
+| `language.ts` | A14, A20 |
 | `reverse-language.ts` | A14 |
 | `cerebellum.ts` | A15 |
 | `reverse-cerebellum.ts` | A15, A16 |
@@ -401,5 +428,7 @@ situation the freeze exists to catch.
 | `reverse-nerves.ts` | A18 |
 | `basal.ts` | A19 |
 | `reverse-basal.ts` | A19 |
+| `cortex.ts` | A20 |
+| `reverse-cortex.ts` | A20 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

@@ -310,6 +310,28 @@ export const BRAIN: Brain = {
     },
     steps: [{ level: 'pons', compartment: 'vestibular' }, { level: 'medulla', compartment: 'vestibular' }],
   },
+  gazeCortex: {
+    meta: {
+      id: 'brain.gaze-cortex',
+      claim: 'A lesion of the frontal eye field (Brodmann area 8) loses gaze to the opposite side, so the eyes deviate toward the lesion; brainstem gaze palsies are instead on the side of the lesion. The deviation is brief: gone within 48 hours in 57% and within five days in 90% (C49, C50).',
+      sources: ['S129', 'S130', 'S131'],
+      tier: 'T2',
+      bookRef: p,
+    },
+    steps: [{ level: 'cortex', compartment: 'frontal_eye_field' }],
+    serves: 'contralateral',
+    course: { hyperacute: 'present', acute: 'indeterminate', subacute: 'indeterminate', chronic: 'absent' },
+  },
+  gerstmann: {
+    meta: {
+      id: 'brain.gerstmann',
+      claim: 'Damage to the dominant inferior parietal lobule, at the angular gyrus, gives Gerstmann syndrome — finger agnosia, acalculia, agraphia and left–right disorientation, usually two or three of them, the complete tetrad rare (C51) — and it often comes with aphasia.',
+      sources: ['S128', 'S129', 'S107'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'cortex', compartment: 'inferior_parietal' }],
+  },
   ballismus: {
     meta: {
       id: 'brain.ballismus',
@@ -467,13 +489,13 @@ export const BRAIN: Brain = {
   partsAt: {
     meta: {
       id: 'brain.parts-at',
-      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.',
-      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125'],
+      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.',
+      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125', 'S130'],
       tier: 'T1',
       bookRef: p,
     },
     parts: {
-      cortex: ['motor_cortex', 'sensory_cortex', 'inferior_frontal', 'superior_temporal', 'inferior_parietal'],
+      cortex: ['motor_cortex', 'sensory_cortex', 'inferior_frontal', 'superior_temporal', 'inferior_parietal', 'frontal_eye_field'],
       capsule: ['capsule_genu', 'capsule_posterior_motor', 'capsule_posterior_sensory'],
       thalamus: ['vpl', 'vpm', 'subthalamic'],
       midbrain: ['peduncle', 'oculomotor', 'oculomotor_nucleus', 'mlf', 'pretectum', 'trochlear_nucleus', 'medial_lemniscus', 'spinothalamic', 'sympathetic'],
@@ -647,14 +669,14 @@ export const BRAIN: Brain = {
     mca_whole: {
       meta: {
         id: 'territory.mca-whole',
-        claim: 'Both divisions of the MCA: the lateral motor and sensory cortex, the peri-Sylvian language cortex and the optic radiation — in the dominant hemisphere, global aphasia.',
-        sources: ['S103', 'S104', 'S105'],
+        claim: 'Both divisions of the MCA: the lateral motor and sensory cortex, the peri-Sylvian language cortex, the frontal eye field and the optic radiation — in the dominant hemisphere, global aphasia; on the first day, forced gaze deviation.',
+        sources: ['S103', 'S104', 'S105', 'S131'],
         tier: 'T3',
         bookRef: p,
         conflict: 'C31',
       },
       level: 'cortex',
-      compartments: ['motor_cortex', 'sensory_cortex', 'inferior_frontal', 'superior_temporal', 'inferior_parietal'],
+      compartments: ['motor_cortex', 'sensory_cortex', 'inferior_frontal', 'superior_temporal', 'inferior_parietal', 'frontal_eye_field'],
       regions: ['face', 'arm'],
       vision: ['meyer_loop', 'parietal_radiation'],
     },
@@ -807,6 +829,17 @@ export const BRAIN: Brain = {
       level: 'midbrain',
       compartments: ['pretectum'],
       midline: true,
+    },
+    frontal_eye_field: {
+      meta: {
+        id: 'territory.frontal-eye-field',
+        claim: 'A lesion of the frontal eye field alone: the eyes deviate toward it on the first day, and recover within days.',
+        sources: ['S129', 'S130', 'S131'],
+        tier: 'T2',
+        bookRef: p,
+      },
+      level: 'cortex',
+      compartments: ['frontal_eye_field'],
     },
     subthalamic_nucleus: {
       meta: {

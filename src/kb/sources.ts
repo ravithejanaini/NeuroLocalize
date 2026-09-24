@@ -17,6 +17,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S116', 'S117', 'S118', 'S119',
   'S120', 'S121', 'S122', 'S123', 'S124',
   'S125', 'S126', 'S127',
+  'S128', 'S129', 'S130', 'S131',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -149,4 +150,8 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S125', title: 'StatPearls — Neuroanatomy, Subthalamic Nucleus', url: 'https://www.ncbi.nlm.nih.gov/books/NBK559002/' },
   { id: 'S126', title: 'StatPearls — Neuroanatomy, Basal Ganglia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537141/' },
   { id: 'S127', title: 'StatPearls — Neuroanatomy, Substantia Nigra', url: 'https://www.ncbi.nlm.nih.gov/books/NBK536995/' },
+  { id: 'S128', title: 'StatPearls — Gerstmann Syndrome', url: 'https://www.ncbi.nlm.nih.gov/books/NBK519528/' },
+  { id: 'S129', title: 'StatPearls — Neuroanatomy, Cerebral Cortex', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537247/' },
+  { id: 'S130', title: 'Olaciregui Dague et al. — Gaze Palsy as a Manifestation of Todd’s Phenomenon (2020)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7287959/' },
+  { id: 'S131', title: 'Steiner, Melamed — Conjugate eye deviation after acute hemispheric stroke (Annals of Neurology, 1984)', url: 'https://pubmed.ncbi.nlm.nih.gov/6497357/' },
 ];

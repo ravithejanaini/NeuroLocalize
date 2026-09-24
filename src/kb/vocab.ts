@@ -315,6 +315,8 @@ export const BRAIN_COMPARTMENTS = [
   'trigeminal_sensory',
   // P15: the subthalamic nucleus, held at the diencephalic level the model calls `thalamus`.
   'subthalamic',
+  // P16: the frontal eye field, Brodmann area 8.
+  'frontal_eye_field',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 
@@ -394,6 +396,8 @@ export const TERRITORIES = [
   'midpontine_tegmentum',
   // P15.
   'subthalamic_nucleus',
+  // P16.
+  'frontal_eye_field',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

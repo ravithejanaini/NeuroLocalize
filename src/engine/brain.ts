@@ -23,6 +23,7 @@ import {
   type Severity,
   type Side,
   type SignState,
+  type Timepoint,
 } from '../kb/vocab.ts';
 import type { Damage } from './lesion.ts';
 
@@ -75,6 +76,8 @@ export function validateBrain(kb: Kb): void {
     b.elevation.steps,
     b.elevationCrossed.steps,
     b.hearing.steps,
+    b.gazeCortex.steps,
+    b.gerstmann.steps,
     b.ballismus.steps,
     b.trochlear.steps,
     b.jaw.steps,
@@ -181,6 +184,8 @@ export type BrainFindings = {
   readonly vertigo: SignState;
   /** P11: truncal ataxia, from the vermis; unsettled after a hemisphere lesion (C35). */
   readonly truncalAtaxia: SignState;
+  /** P16: Gerstmann syndrome — some or all of its four signs — from the dominant parietal lobe. */
+  readonly gerstmann: SignState;
   /** P13: signs of both eyes together, from either half of the pretectum (C43). */
   readonly eyes: Readonly<Record<DorsalMidbrainSign, SignState>>;
   /** P10: each facet of language, read from the dominant hemisphere only (D68). */
@@ -217,7 +222,7 @@ function lid(kb: Kb, map: BrainMap, x: Side): SignState {
   return cut.length > 0 ? 'indeterminate' : 'absent';
 }
 
-export function brainFindings(kb: Kb, map: BrainMap): BrainFindings {
+export function brainFindings(kb: Kb, map: BrainMap, timepoint: Timepoint = 'chronic'): BrainFindings {
   const faceSensation = {} as Record<Side, SensoryState>;
   const faceWeak = {} as Record<Side, FaceWeakness>;
   const cranial = {} as Record<Side, Record<CranialSign, SignState>>;
@@ -236,9 +241,13 @@ export function brainFindings(kb: Kb, map: BrainMap): BrainFindings {
         case 'abduction_weakness':
           signs[sign] = present(routeDamage(map, b.abduction, x, 'face'));
           break;
-        case 'gaze_palsy':
-          signs[sign] = present(routeDamage(map, b.gaze, x, 'face'));
+        case 'gaze_palsy': {
+          // The pontine palsy lasts; the frontal eye field's fades with time (P16, S131).
+          const pontine = present(routeDamage(map, b.gaze, x, 'face'));
+          const cortical = along(map, b.gazeCortex.steps, partSide(x, b.gazeCortex.serves), 'face') > 0 ? b.gazeCortex.course[timepoint] : 'absent';
+          signs[sign] = pontine === 'present' ? 'present' : cortical;
           break;
+        }
         case 'tongue_weakness':
           signs[sign] = present(worst([routeDamage(map, b.hypoglossal, x, 'face'), routeDamage(map, b.corticobulbarTongue, x, 'face')]));
           break;
@@ -295,6 +304,7 @@ export function brainFindings(kb: Kb, map: BrainMap): BrainFindings {
   };
   const language = {} as Record<LanguageSign, SignState>;
   for (const sign of LANGUAGE_SIGNS) language[sign] = present(along(map, facet[sign], dominant, 'face'));
+  const gerstmann = present(along(map, b.gerstmann.steps, dominant, 'face'));
   // Neglect of side x of space comes from the hemisphere opposite; from the dominant one it
   // is rarer, and the knowledge base says what to report (C32).
   const neglect = {} as Record<Side, SignState>;
@@ -302,7 +312,7 @@ export function brainFindings(kb: Kb, map: BrainMap): BrainFindings {
     const h = other(x);
     neglect[x] = along(map, b.neglect.steps, h, 'face') === 0 ? 'absent' : h === dominant ? b.neglect.afterDominant : 'present';
   }
-  return { faceSensation, faceWeakness: faceWeak, cranial, ataxia, hemiballismus, vertigo, truncalAtaxia, eyes, language, neglect };
+  return { faceSensation, faceWeakness: faceWeak, cranial, ataxia, hemiballismus, vertigo, truncalAtaxia, eyes, gerstmann, language, neglect };
 }
 
 /** The ipsilateral oculosympathetic pathway in the brainstem (S16). */

@@ -16,6 +16,7 @@ import { POSTERIOR_CASES } from '../spec/expectations/posterior.ts';
 import { MIDBRAIN_CASES } from '../spec/expectations/midbrain.ts';
 import { NERVE_CASES } from '../spec/expectations/nerves.ts';
 import { BASAL_CASES } from '../spec/expectations/basal.ts';
+import { CORTEX_CASES } from '../spec/expectations/cortex.ts';
 import { KB } from '../src/kb/kb.ts';
 import type { Kb } from '../src/kb/types.ts';
 import {
@@ -42,13 +43,14 @@ import { POSTERIOR_REVERSE_CASES } from '../spec/expectations/reverse-posterior.
 import { MIDBRAIN_REVERSE_CASES } from '../spec/expectations/reverse-midbrain.ts';
 import { NERVE_REVERSE_CASES } from '../spec/expectations/reverse-nerves.ts';
 import { BASAL_REVERSE_CASES } from '../spec/expectations/reverse-basal.ts';
+import { CORTEX_REVERSE_CASES } from '../spec/expectations/reverse-cortex.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { RENDER } from '../src/kb/render.ts';
 import { examSlots } from '../src/render/slots.ts';
 import { reverseFailures, runAll, territoryFailures, visionPlaceFailures } from '../test/harness.ts';
 import { locateRows } from '../test/rows.ts';
 
-const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...BASAL_CASES];
+const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...BASAL_CASES, ...CORTEX_CASES];
 const THRESHOLD = 0.9;
 const ROOT = resolve(import.meta.dirname, '..');
 
@@ -99,6 +101,8 @@ function poolFor(key: string, value: string): readonly string[] | undefined {
   if (key === 'from') return POOLS.from;
   // P10, P11: an answer the knowledge base gives as a sign state, never a tone word.
   if (key === 'afterDominant' || key === 'state') return POOLS.sign;
+  // P16: a course is keyed by timepoint, and its values are sign states, not reflexes.
+  if ((POOLS.timepoint ?? []).includes(key)) return POOLS.sign;
   return Object.values(POOLS).find((p) => p.includes(value));
 }
 
@@ -225,7 +229,7 @@ const mutants: Mutant[] = [];
 collect(KB, [], mutants);
 
 type Result = { row: string; describe: string; killed: boolean; failures: number; threw: boolean; byReverse: boolean };
-const REVERSE = [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES];
+const REVERSE = [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES];
 const SLOTS = examSlots(RENDER);
 const results: Result[] = mutants.map((m) => {
   const base = { row: rowOf(m.path), describe: m.describe };

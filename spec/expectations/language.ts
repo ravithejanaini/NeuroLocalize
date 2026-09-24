@@ -64,6 +64,7 @@ export const LANGUAGE_CASES: readonly LanguageCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'gerstmann', oneOf: ['present'], cite: ['S128', 'S104'], basis: 'stated', note: 'A20: the angular gyrus of the dominant hemisphere, in the inferior division' },
         lang('nonfluent_speech', false, { cite: ['S101', 'S103'], basis: 'stated', note: 'fluent, with a normal rate and prosody' }),
         lang('impaired_comprehension', true, { cite: ['S101'], basis: 'stated', note: 'markedly impaired auditory–verbal comprehension' }),
         lang('impaired_repetition', true, { cite: ['S101', 'S102'], basis: 'stated' }),
@@ -79,7 +80,7 @@ export const LANGUAGE_CASES: readonly LanguageCase[] = [
       ],
       unasserted: [
         'the centre of the field: S105 does not say whether the macula is spared',
-        'Gerstmann syndrome, reading and writing are not modelled',
+        'reading and writing are not modelled as findings of their own (A20: Gerstmann syndrome is)',
         'a smaller stroke confined to the temporal lobe takes only Meyer loop (C31)',
       ],
     }],
@@ -92,6 +93,7 @@ export const LANGUAGE_CASES: readonly LanguageCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'gerstmann', oneOf: ['absent'], cite: ['S129', 'S107'], basis: 'stated', note: 'A20: Gerstmann syndrome is a sign of the dominant parietal lobe' },
         ...speech(false, false, false, { cite: ['S107'], basis: 'composed', note: DOMINANCE }),
         neglect('L', true, { cite: ['S106', 'S107', 'S104'], basis: 'stated', note: 'the nondominant parietal lobe: the left side of the world' }),
         neglect('R', false, { cite: ['S106'], basis: 'composed' }),
@@ -109,12 +111,23 @@ export const LANGUAGE_CASES: readonly LanguageCase[] = [
     title: 'Left MCA cortex, both divisions',
     pattern: 'global aphasia with right face and arm weakness and a right hemianopia',
     lesion: [
-      cortex('L', ['motor_cortex', 'sensory_cortex', 'inferior_frontal', 'superior_temporal', 'inferior_parietal'], ['face', 'arm']),
+      // A20: large MCA strokes give forced gaze deviation (S104): the frontal eye field is in the lesion.
+      cortex('L', ['motor_cortex', 'sensory_cortex', 'inferior_frontal', 'superior_temporal', 'inferior_parietal', 'frontal_eye_field'], ['face', 'arm']),
       ...radiations('L'),
     ],
     evaluations: [{
+      // A20: on the first day the eyes deviate toward the lesion — gaze to the right is lost.
+      timepoint: 'hyperacute',
+      assertions: [
+        { kind: 'cranial', side: 'R', sign: 'gaze_palsy', oneOf: ['present'], cite: ['S104', 'S129', 'S130'], basis: 'stated', note: 'forced gaze deviation toward the lesion' },
+        { kind: 'cranial', side: 'L', sign: 'gaze_palsy', oneOf: ['absent'], cite: ['S129'], basis: 'composed' },
+      ],
+      unasserted: ['every other finding on the first day'],
+    }, {
       timepoint: 'chronic',
       assertions: [
+        { kind: 'cranial', side: 'R', sign: 'gaze_palsy', oneOf: ['absent'], cite: ['S131'], basis: 'stated', note: 'A20: gone within five days in 90% (C50: prolonged after earlier contralateral frontal damage)' },
+        { kind: 'gerstmann', oneOf: ['present'], cite: ['S128', 'S104'], basis: 'stated', note: 'A20: the dominant angular gyrus is in the inferior division' },
         ...speech(true, true, true, { cite: ['S103'], basis: 'stated', note: 'global: nonfluent, comprehension impaired, unable to repeat — the peri-Sylvian territory of the dominant MCA' }),
         motor('R', ARM, 'umn', { cite: ['S105', 'S54'], basis: 'stated' }),
         motor('R', LEG, 'none', { cite: ['S54', 'S66'], basis: 'composed', note: 'the leg area is medial, in the ACA territory' }),
@@ -124,7 +137,7 @@ export const LANGUAGE_CASES: readonly LanguageCase[] = [
         ...half('L', 'normal', { cite: ['S105'], basis: 'composed' }),
         neglect('R', 'open', { cite: ['S106'], basis: 'stated', note: 'C32' }),
       ],
-      unasserted: ['forced gaze deviation (S104) is not modelled', 'the lenticulostriate territory and the capsule are not in this lesion'],
+      unasserted: ['the lenticulostriate territory and the capsule are not in this lesion'],
     }],
   },
 
@@ -188,12 +201,13 @@ export const LANGUAGE_CASES: readonly LanguageCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'gerstmann', oneOf: ['present'], cite: ['S128', 'S129', 'S107'], basis: 'stated', note: 'A20: the dominant inferior parietal lobule; S128: it often co-occurs with aphasia' },
         ...speech(false, false, true, { cite: ['S102', 'S103'], basis: 'stated', note: 'fluent, comprehension intact, unable to repeat' }),
         motor('both', all, 'none', { cite: ['S102'], basis: 'composed' }),
         neglect('R', 'open', { cite: ['S106'], basis: 'stated', note: 'C32' }),
         neglect('L', false, { cite: ['S106'], basis: 'composed' }),
       ],
-      unasserted: ['Gerstmann syndrome and ideomotor apraxia (S102, S107) are not modelled'],
+      unasserted: ['ideomotor apraxia (S102) is not modelled; Gerstmann syndrome is, since A20'],
     }],
   },
   {
@@ -204,6 +218,7 @@ export const LANGUAGE_CASES: readonly LanguageCase[] = [
     evaluations: [{
       timepoint: 'chronic',
       assertions: [
+        { kind: 'gerstmann', oneOf: ['absent'], cite: ['S129', 'S107'], basis: 'stated', note: 'A20: the nondominant parietal lobe gives neglect, not Gerstmann' },
         neglect('L', true, { cite: ['S106', 'S107'], basis: 'stated', note: 'most often the right posterior parietal cortex' }),
         neglect('R', false, { cite: ['S106'], basis: 'composed' }),
         ...speech(false, false, false, { cite: ['S107'], basis: 'composed', note: DOMINANCE }),

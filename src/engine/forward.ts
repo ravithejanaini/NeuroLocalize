@@ -265,7 +265,7 @@ export function forward(lesion: readonly AnyRegion[], timepoint: Timepoint, opti
   );
   // S67: vestibular dysfunction can make the test positive, and cerebellar ataxia makes a
   // patient unsteady with the eyes open, so either leaves the test unreadable.
-  const brain = brainFindings(kb, bmap);
+  const brain = brainFindings(kb, bmap, timepoint);
   const unreadable =
     kb.observations.romberg.unreadableWithVertigoOrAtaxia &&
     (brain.vertigo !== 'absent' || brain.truncalAtaxia !== 'absent' || SIDES.some((x) => brain.ataxia[x] !== 'absent'));

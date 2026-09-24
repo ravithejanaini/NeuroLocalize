@@ -222,6 +222,8 @@ export type VisionCase = {
 export type LanguageAssertion = Evidence &
   (
     | { readonly kind: 'language'; readonly sign: LanguageSign; readonly oneOf: readonly SignState[] }
+    // A20: Gerstmann syndrome — some or all of its four signs — about the patient.
+    | { readonly kind: 'gerstmann'; readonly oneOf: readonly SignState[] }
     | (Sided & { readonly kind: 'neglect'; readonly oneOf: readonly SignState[] })
   );
 

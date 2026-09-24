@@ -64,6 +64,8 @@ export type Observation =
   | { readonly kind: 'vertigo'; readonly value: SignObservation }
   /** P11: truncal ataxia, about the patient. */
   | { readonly kind: 'truncal_ataxia'; readonly value: SignObservation }
+  /** P16: Gerstmann syndrome, some or all of its signs. */
+  | { readonly kind: 'gerstmann'; readonly value: SignObservation }
   /** P13: a sign of both eyes together. */
   | { readonly kind: 'eyes'; readonly sign: DorsalMidbrainSign; readonly value: SignObservation }
   /** P8: one sector of one eye's visual field, and the relative afferent pupillary defect. */
@@ -101,6 +103,7 @@ const DOMAIN: Record<Observation['kind'], readonly string[]> = {
   hemiballismus: ['present', 'absent'],
   vertigo: ['present', 'absent'],
   truncal_ataxia: ['present', 'absent'],
+  gerstmann: ['present', 'absent'],
   eyes: ['present', 'absent'],
   field: ['normal', 'abnormal'],
   rapd: ['present', 'absent'],
@@ -201,6 +204,8 @@ export function predict(f: Findings, s: Slot, kb: Kb = KB): Value | 'unknown' {
       return f.vertigo === 'indeterminate' ? 'unknown' : f.vertigo;
     case 'truncal_ataxia':
       return f.truncalAtaxia === 'indeterminate' ? 'unknown' : f.truncalAtaxia;
+    case 'gerstmann':
+      return f.gerstmann === 'indeterminate' ? 'unknown' : f.gerstmann;
     case 'eyes': {
       const v = f.eyes[s.sign];
       return v === 'indeterminate' ? 'unknown' : v;
@@ -548,6 +553,7 @@ export const SITE_NAME: Record<Place, string> = {
   dorsal_midbrain: 'dorsal midbrain (pretectum, superior colliculus)',
   trochlear_nucleus: 'trochlear nucleus, in the midbrain',
   subthalamic_nucleus: 'subthalamic nucleus',
+  frontal_eye_field: 'frontal eye field (Brodmann area 8)',
   midpontine_tegmentum: 'mid-pontine tegmentum (trigeminal nuclei)',
   pontine_tegmentum: 'pontine tegmentum (abducens nucleus and MLF)',
   oculomotor_nucleus: 'oculomotor nucleus, in the midbrain',
@@ -637,6 +643,7 @@ const PART_NAME: Record<BrainCompartment, string> = {
   pretectum: 'half of the pretectum',
   trochlear_nucleus: 'trochlear nucleus',
   subthalamic: 'subthalamic nucleus',
+  frontal_eye_field: 'frontal eye field',
   trigeminal_motor: 'trigeminal motor nucleus',
   trigeminal_sensory: 'principal trigeminal sensory nucleus',
   mlf: 'medial longitudinal fasciculus',
@@ -753,7 +760,7 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
       const routes =
         o.sign === 'oculomotor_palsy' ? [b.oculomotor]
         : o.sign === 'abduction_weakness' ? [b.abduction]
-        : o.sign === 'gaze_palsy' ? [b.gaze]
+        : o.sign === 'gaze_palsy' ? [b.gaze, b.gazeCortex]
         : o.sign === 'tongue_weakness' ? [b.hypoglossal, b.corticobulbarTongue]
         : o.sign === 'adduction_weakness' ? [b.adduction, b.adductionGaze]
         : o.sign === 'abducting_nystagmus' ? [b.abductingNystagmus]
@@ -796,6 +803,10 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
       const cut = (['L', 'R'] as const).map((s) => brainCut(bmap, steps, s, 'face')).find((x): x is string => x !== null);
       if (cut) return `${damaged(cut)}: the dorsal midbrain at the superior colliculus`;
       return 'the pretectum and the vertical gaze centres beside it are intact';
+    }
+    case 'gerstmann': {
+      const cut = brainCut(bmap, b.gerstmann.steps, b.dominance.language, 'face');
+      return cut ? `${damaged(cut)}, in the dominant hemisphere` : `the dominant (${SIDE[b.dominance.language]}) inferior parietal lobule is intact`;
     }
     case 'language': {
       // Read from the dominant hemisphere only (D68).

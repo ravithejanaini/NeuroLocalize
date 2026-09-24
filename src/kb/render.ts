@@ -221,8 +221,8 @@ export const RENDER: RenderKb = {
   brainLayout: {
     meta: {
       id: 'render.brain-layout',
-      claim: 'The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally, with the inferior frontal gyrus in front of the motor strip, the inferior parietal lobule behind the sensory strip and the superior temporal gyrus below them; the cerebellum lies behind the pons and medulla, its hemispheres lateral to the midline vermis; the pretectum is dorsal in the rostral midbrain, and the trochlear nucleus beside the MLF below it; the trigeminal motor nucleus lies medial and anterior to the principal sensory nucleus in the pons; the subthalamic nucleus lies below the thalamus, medial to the capsule. Positions are schematic.',
-      sources: ['S48', 'S58', 'S47', 'S54', 'S66', 'S59', 'S98', 'S99', 'S70', 'S104', 'S105', 'S107', 'S110', 'S116', 'S120', 'S122', 'S125'],
+      claim: 'The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally, with the inferior frontal gyrus in front of the motor strip and the frontal eye field (Brodmann area 8) in front of it and higher, the inferior parietal lobule behind the sensory strip and the superior temporal gyrus below them; the cerebellum lies behind the pons and medulla, its hemispheres lateral to the midline vermis; the pretectum is dorsal in the rostral midbrain, and the trochlear nucleus beside the MLF below it; the trigeminal motor nucleus lies medial and anterior to the principal sensory nucleus in the pons; the subthalamic nucleus lies below the thalamus, medial to the capsule. Positions are schematic.',
+      sources: ['S48', 'S58', 'S47', 'S54', 'S66', 'S59', 'S98', 'S99', 'S70', 'S104', 'S105', 'S107', 'S110', 'S116', 'S120', 'S122', 'S125', 'S130'],
       tier: 'T1',
       bookRef: 'pending',
     },
@@ -288,6 +288,8 @@ export const RENDER: RenderKb = {
       'cortex:inferior_frontal': [-3.3, -0.5, -1.2],
       'cortex:superior_temporal': [-3.4, -1.1, 0.55],
       'cortex:inferior_parietal': [-3.0, 0.4, 1.25],
+      // P16: Brodmann area 8, in front of the motor strip and above the inferior frontal gyrus (S130).
+      'cortex:frontal_eye_field': [-2.3, 0.5, -1.3],
       'cerebellum:cerebellar_hemisphere': [-1.7, 0, 2.3],
       'cerebellum:vermis': [-0.2, 0.1, 2.5],
     },

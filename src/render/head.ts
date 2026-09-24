@@ -91,11 +91,11 @@ export function aphasiaName(f: Findings): string | null {
 }
 
 export function languageAffected(f: Findings): boolean {
-  return LANGUAGE_SIGNS.some((s) => f.language[s] !== 'absent') || SIDES.some((x) => f.neglect[x] !== 'absent');
+  return LANGUAGE_SIGNS.some((s) => f.language[s] !== 'absent') || f.gerstmann !== 'absent' || SIDES.some((x) => f.neglect[x] !== 'absent');
 }
 
 export function languageHtml(f: Findings): string {
-  if (!languageAffected(f)) return '<p class="quiet">Speech fluent, comprehension and repetition intact; no neglect.</p>';
+  if (!languageAffected(f)) return '<p class="quiet">Speech fluent, comprehension and repetition intact; no Gerstmann signs; no neglect.</p>';
   const name = aphasiaName(f);
   const lead = name ? `<p class="pattern">${name.charAt(0).toUpperCase()}${name.slice(1)}.</p>` : '';
   const facets = LANGUAGE_SIGNS.map(
@@ -104,6 +104,7 @@ export function languageHtml(f: Findings): string {
   const neglect = SIDES.map(
     (x) => `<div class="kv"><span class="k">Neglect, ${SIDE_WORD[x]}</span><span class="v ${f.neglect[x] === 'absent' ? 'quiet' : 'st-sign-present'}">${SIGN_WORD[f.neglect[x]]}</span></div>`,
   ).join('');
-  return `${lead}${facets}${neglect}`;
+  const gerstmann = `<div class="kv"><span class="k">Gerstmann signs</span><span class="v ${f.gerstmann === 'absent' ? 'quiet' : 'st-sign-present'}">${f.gerstmann === 'absent' ? 'no' : `${SIGN_WORD[f.gerstmann]} — some or all four`}</span></div>`;
+  return `${lead}${facets}${gerstmann}${neglect}`;
 }
 

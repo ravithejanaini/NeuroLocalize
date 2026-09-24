@@ -31,6 +31,8 @@ export function examSlots(render: RenderKb): Slot[] {
   out.push({ kind: 'romberg' }, { kind: 'bladder' }, { kind: 'vertigo' }, { kind: 'truncal_ataxia' });
   // P10: the three facets of language, and neglect of each side of space.
   for (const sign of LANGUAGE_SIGNS) out.push({ kind: 'language', sign });
+  // P16: Gerstmann syndrome, one finding about the patient.
+  out.push({ kind: 'gerstmann' });
   // P13: signs of both eyes together.
   for (const sign of DORSAL_MIDBRAIN_SIGNS) out.push({ kind: 'eyes', sign });
   for (const side of SIDES) out.push({ kind: 'neglect', side });

@@ -29,10 +29,11 @@ teaching from a phone.
 | P13 | Vertical gaze and the pupils: the dorsal midbrain (Parinaud syndrome) — upgaze palsy, light–near dissociation and convergence–retraction nystagmus from the pretectum, a midline place; examination mode separates it from the horizontal-gaze places of P9 |
 | P14 | The fourth and fifth nerves: the trochlear nucleus, whose lesion weakens the superior oblique of the other eye, and the trigeminal motor and principal sensory nuclei in the mid-pontine tegmentum, with the jaw deviating to the side of the lesion; the third nerve's pupil recorded as a limit, not modelled, with the reason |
 | P15 | The basal ganglia: hemiballismus from the opposite subthalamic nucleus. Parkinsonism and chorea are recorded as degenerations the sources give no side for, not modelled as places |
+| P16 | Gaze deviation and Gerstmann syndrome: the frontal eye field turns the eyes toward a hemisphere lesion for days only — the first brain sign that changes with time, so a gaze palsy that lasts points to the pons — and the dominant inferior parietal lobule gives Gerstmann signs |
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 127 open-access sources that were
+- **Expected outputs are written first**, from 131 open-access sources that were
   actually read — one of them, S108, as its free abstract only (`docs/SOURCES.md`) — and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

@@ -66,6 +66,9 @@ export const EYES_NAME: Record<DorsalMidbrainSign, string> = {
   convergence_retraction_nystagmus: 'Convergence–retraction nystagmus on looking up',
 };
 
+/** P16: some or all of the four — the complete tetrad is rare (S128, C51). */
+export const GERSTMANN_NAME = 'Gerstmann signs (finger agnosia, acalculia, agraphia, left–right confusion)';
+
 /** P10: each facet of language, named for its abnormal state. */
 export const LANGUAGE_NAME: Record<LanguageSign, string> = {
   nonfluent_speech: 'Speech non-fluent (effortful, few words)',
@@ -141,6 +144,7 @@ export const CYCLE: Record<Slot['kind'], readonly string[]> = {
   field: ['normal', 'abnormal'],
   rapd: ['absent', 'present'],
   language: ['absent', 'present'],
+  gerstmann: ['absent', 'present'],
   neglect: ['absent', 'present'],
 };
 
@@ -202,6 +206,8 @@ export function slotLabel(render: RenderKb, s: Slot): string {
       return `${SIDE_WORD[s.side]} pupil, afferent defect`;
     case 'language':
       return LANGUAGE_NAME[s.sign];
+    case 'gerstmann':
+      return GERSTMANN_NAME;
     case 'neglect':
       return `Neglect of the ${SIDE_WORD[s.side].toLowerCase()} side of space`;
   }
@@ -324,7 +330,8 @@ export function examTables(render: RenderKb, findings: Findings): string {
   // P10: language belongs to the patient, not a side; neglect is recorded by the side of space.
   const language = LANGUAGE_SIGNS.map((sign) => single({ kind: 'language', sign }, LANGUAGE_NAME[sign])).join('');
   const neglect = headRow('Neglect of that side of space', (side) => ({ kind: 'neglect', side }));
-  return `<table class="extable"><thead><tr><th colspan="2">Language and attention</th><th colspan="2"></th></tr></thead><tbody>${language}${neglect}</tbody>
+  const gerstmann = single({ kind: 'gerstmann' }, 'Gerstmann signs');
+  return `<table class="extable"><thead><tr><th colspan="2">Language and attention</th><th colspan="2"></th></tr></thead><tbody>${language}${gerstmann}${neglect}</tbody>
     <thead><tr><th colspan="2">Head and eyes</th><th>Left</th><th>Right</th></tr></thead><tbody>${head}
     ${single({ kind: 'vertigo' }, 'Vertigo, nystagmus')}${single({ kind: 'truncal_ataxia' }, 'Truncal ataxia')}${DORSAL_MIDBRAIN_SIGNS.map((sign) => single({ kind: 'eyes', sign }, EYES_NAME[sign])).join('')}</tbody>
     <thead><tr><th colspan="2">Strength</th><th>Left</th><th>Right</th></tr></thead><tbody>${strength}</tbody>
