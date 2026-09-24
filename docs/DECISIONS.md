@@ -1145,3 +1145,10 @@ contralateral superior oblique?
 
 **R42** — C45: should the model add a peripheral third nerve, so that a compressive palsy can
 show the pupil and an ischaemic one spare it?
+
+**D90 — The last reviewer question was never asked.** The worksheet read each question up to
+the next blank line, so a question ending the file — no blank line after it — was dropped. No
+file had ended on a question until P14, when R42 did, and the P14 worksheet check caught it
+(41 questions where 42 were written). Questions now end at a blank line or the end of the file,
+and `test/review.test.ts` fails unless every R-number in this file reaches the page (falsified
+by restoring the old pattern: the test names R42).

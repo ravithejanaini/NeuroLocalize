@@ -109,7 +109,8 @@ export function buildWorksheet(): Worksheet {
   for (const m of metaRows(RENDER)) row(m, 'fact', false);
 
   let q = 0;
-  for (const m of read('docs/DECISIONS.md').matchAll(/^\*\*(R\d+)\*\* — ([\s\S]*?)(?=\n\n)/gm)) {
+  // A question ends at a blank line or at the end of the file: the last one has no blank line after it.
+  for (const m of read('docs/DECISIONS.md').matchAll(/^\*\*(R\d+)\*\* — ([\s\S]*?)(?=\n\n|\n*(?![\s\S]))/gm)) {
     const id = m[1] ?? '';
     const cited = [...new Set((m[2] ?? '').match(/\bS\d{2,3}\b/g) ?? [])];
     items.push({ id, section: 'question', n: ++q, title: (m[2] ?? '').replace(/\n/g, ' '), tags: [id], sources: sources(cited) });

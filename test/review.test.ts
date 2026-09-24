@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
 import { buildWorksheet } from '../scripts/review-data.ts';
 import { parseResponse, triage, type ReviewResponse } from '../scripts/review-lib.ts';
@@ -26,6 +28,15 @@ describe('the review worksheet', () => {
     assert.equal(new Set(findings).size, findings.length, 'two composed findings share an id');
     for (const s of ['claim', 'fact', 'question', 'case'] as const) assert.ok(ws.items.some((i) => i.section === s), s);
     assert.equal(buildWorksheet().version, ws.version, 'the version is deterministic');
+  });
+
+  it('asks every reviewer question in docs/DECISIONS.md, the last one too', () => {
+    // The last question ends the file with no blank line after it; until P14 that one was dropped.
+    const text = readFileSync(resolve(import.meta.dirname, '..', 'docs', 'DECISIONS.md'), 'utf8');
+    const inDoc = [...text.matchAll(/^\*\*(R\d+)\*\* — /gm)].map((m) => m[1]);
+    const asked = ws.items.filter((i) => i.section === 'question').map((i) => i.id);
+    assert.ok(inDoc.length > 40, `found ${inDoc.length} questions; the pattern no longer reads the file`);
+    assert.deepEqual(asked, inDoc);
   });
 
   it('cites only sources in the source list', () => {
