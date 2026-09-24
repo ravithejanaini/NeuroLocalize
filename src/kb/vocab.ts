@@ -398,6 +398,8 @@ export const TERRITORIES = [
   'subthalamic_nucleus',
   // P16.
   'frontal_eye_field',
+  // P17: the ventral pons on both sides — locked-in syndrome.
+  'ventral_pons_bilateral',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

@@ -1258,3 +1258,59 @@ should the first day also be unsettled?
 
 **R45** — D94: should the gaze palsy be unsettled rather than absent after a month, given C50's
 exception?
+
+## P17 — locked-in syndrome
+
+The analysis written before any P17 code is `docs/P17-analysis.md`; S132–S134 were read for it
+on 2026-09-24. Run against the P16 engine first, the frozen forward case **passed**. Every
+finding in it comes from routes that already existed, and only the place was new. The
+examination failed (`top is posterolateral … (4 conflicts)`, `unexplained is true`), because the
+engine had no candidate that takes both sides of the pons.
+
+### Source conflicts and limits
+
+**C52 — Sensation in locked-in syndrome.** S132 gives "whole-body sensory loss" and says the
+spinothalamic tract is in the ventral pons; S134 says the basilar occlusion spares the pontine
+tegmentum, where the model — like every earlier brainstem phase — puts the medial lemniscus and
+the spinothalamic tract. The model follows its anatomy and leaves sensation intact; the frozen
+case asserts nothing about it, and the place is T3.
+
+**C53 — Horizontal gaze in locked-in syndrome.** S133: "medial and lateral gaze palsies are
+typical". The model gives only the lateral half, from the abducens fascicles in the lesion; the
+gaze centre and the medial longitudinal fasciculus are in the spared tegmentum. Neither
+adduction nor the horizontal gaze palsy is asserted.
+
+**C54 — A second site.** S133: "extensive bilateral destruction of corticobulbar and
+corticospinal tracts in the cerebral peduncles may also be responsible". The model offers the
+pons only; the examination's note names the peduncles.
+
+### Decisions
+
+**D98 — Locked-in syndrome is a place, not new anatomy.** Both ventral halves of the pons hold
+the same parts as the one-sided ventral pons of P5. The new place is those parts, marked
+midline, so it is one candidate that takes both sides. No part, sign or route was added.
+
+**D99 — Midline brain places no longer read as one side.** The lesion readout said "Left
+dorsal midbrain" and "Left vermis", and showed the side picker, although both places take both
+sides (P11, P13). It now says "The …" and hides the picker for every midline brain place, as the
+chiasm already did for the visual pathway (P8). This was found while adding the ventral pons on
+both sides, which would otherwise have read "Left ventral pons, both sides".
+
+**D100 — "Speech fluent" was wrong for a patient who cannot speak.** The language panel's
+line for no aphasia read "Speech fluent, comprehension and repetition intact". Found in the P17
+browser check: the locked-in patient, who is anarthric, was shown as fluent. The three facets
+are about language, not articulation. The line now reads "No aphasia", and when the tongue and
+palate are weak on both sides the panel adds that speech is limited by that weakness —
+dysarthria or anarthria, not aphasia (S133). `test/head.test.ts` checks both; one side of the
+pons does not trigger it.
+
+**D101 — What the P17 mutation run showed.** 97.1% of sourced mutants are killed (5,097 of
+5,247), 96.7% of all, and the new place has no survivor: all 10 of its mutants are killed.
+
+### Reviewer questions
+
+**R46** — C52: in locked-in syndrome from a basilar occlusion, should the model show sensation
+as lost, intact, or unsettled?
+
+**R47** — C53: should the model's locked-in place take the medial longitudinal fasciculus or the
+gaze centre, so that medial gaze is lost too?

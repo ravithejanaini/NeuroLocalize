@@ -66,4 +66,12 @@ describe('language and attention in the findings panel (P10)', () => {
     assert.match(right, /Neglect, right<\/span><span class="v quiet">absent/);
     assert.match(languageHtml(on('supramarginal', 'L')), /Neglect, right<\/span><span class="v st-sign-present">uncertain/);
   });
+  it('never calls a locked-in patient fluent: anarthria is not aphasia (P17, S133)', () => {
+    const locked = languageHtml(on('ventral_pons_bilateral', 'L'));
+    assert.match(locked, /dysarthria or anarthria, not aphasia/);
+    assert.match(locked, /No aphasia/);
+    assert.doesNotMatch(locked, /Speech fluent/);
+    // One side of the pons leaves speech to the other side's muscles: no bulbar line.
+    assert.doesNotMatch(languageHtml(on('ventral_pons', 'L')), /anarthria/);
+  });
 });

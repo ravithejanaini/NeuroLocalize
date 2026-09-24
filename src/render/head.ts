@@ -94,8 +94,19 @@ export function languageAffected(f: Findings): boolean {
   return LANGUAGE_SIGNS.some((s) => f.language[s] !== 'absent') || f.gerstmann !== 'absent' || SIDES.some((x) => f.neglect[x] !== 'absent');
 }
 
+/**
+ * P17: the tongue and palate weak on both sides — the patient may not be able to speak at all
+ * (anarthria, S133), which is paralysis of the speech muscles and not aphasia.
+ */
+export function bulbarSpeech(f: Findings): boolean {
+  return SIDES.every((x) => f.cranial[x].tongue_weakness === 'present' && f.cranial[x].palate_weakness === 'present');
+}
+
 export function languageHtml(f: Findings): string {
-  if (!languageAffected(f)) return '<p class="quiet">Speech fluent, comprehension and repetition intact; no Gerstmann signs; no neglect.</p>';
+  const bulbar = bulbarSpeech(f)
+    ? '<p class="pattern">Speech limited by weakness of the tongue and palate on both sides — dysarthria or anarthria, not aphasia.</p>'
+    : '';
+  if (!languageAffected(f)) return `${bulbar}<p class="quiet">No aphasia: comprehension, repetition and the fluency of language intact; no Gerstmann signs; no neglect.</p>`;
   const name = aphasiaName(f);
   const lead = name ? `<p class="pattern">${name.charAt(0).toUpperCase()}${name.slice(1)}.</p>` : '';
   const facets = LANGUAGE_SIGNS.map(
@@ -105,6 +116,6 @@ export function languageHtml(f: Findings): string {
     (x) => `<div class="kv"><span class="k">Neglect, ${SIDE_WORD[x]}</span><span class="v ${f.neglect[x] === 'absent' ? 'quiet' : 'st-sign-present'}">${SIGN_WORD[f.neglect[x]]}</span></div>`,
   ).join('');
   const gerstmann = `<div class="kv"><span class="k">Gerstmann signs</span><span class="v ${f.gerstmann === 'absent' ? 'quiet' : 'st-sign-present'}">${f.gerstmann === 'absent' ? 'no' : `${SIGN_WORD[f.gerstmann]} — some or all four`}</span></div>`;
-  return `${lead}${facets}${gerstmann}${neglect}`;
+  return `${bulbar}${lead}${facets}${gerstmann}${neglect}`;
 }
 

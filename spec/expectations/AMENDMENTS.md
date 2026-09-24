@@ -399,6 +399,21 @@ situation the freeze exists to catch.
   testing new behaviour, and is kept for that. The four Gerstmann signs are never asserted apart
   (C51), and nothing is asserted about the exception that lasts for weeks (C50).
 
+## A21 — Locked-in syndrome (P17, 2026-09-24)
+
+- **Changed:** two new files. `basilar.ts` holds one case, the ventral pons on both sides:
+  quadriplegia with Babinski signs, the whole face, tongue and palate weak on both sides, neither
+  eye abducting, hearing, upgaze and comprehension intact. `reverse-basilar.ts` holds one
+  examination: that picture, answered by the midline ventral pons with no conflict. No earlier
+  case or examination changed.
+- **Why:** P17 adds a place; a row no frozen case observes is an untested row (rule 5).
+- **How circularity was avoided:** every assertion is quoted from S132–S134, read into
+  `docs/P17-analysis.md` before any code. Run against the P16 engine, the forward case
+  **passed**: it names its lesion part by part, and those parts and their routes all existed.
+  So what it tests is that the anatomy was already right, not that anything new was built. The
+  examination was **red** against P16: the best candidate was a cervical cord lesion with four
+  conflicts. Sensation and medial gaze are never asserted (C52, C53).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -430,5 +445,7 @@ situation the freeze exists to catch.
 | `reverse-basal.ts` | A19 |
 | `cortex.ts` | A20 |
 | `reverse-cortex.ts` | A20 |
+| `basilar.ts` | A21 |
+| `reverse-basilar.ts` | A21 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

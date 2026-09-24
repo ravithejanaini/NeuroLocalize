@@ -597,6 +597,19 @@ export const BRAIN: Brain = {
       level: 'pons',
       compartments: ['basis', 'facial', 'abducens_fascicle'],
     },
+    ventral_pons_bilateral: {
+      meta: {
+        id: 'territory.ventral-pons-bilateral',
+        claim: 'Occlusion of the proximal and middle basilar artery takes the ventral pons on both sides and spares the tegmentum: locked-in syndrome — quadriplegia and anarthria, the face, tongue and palate weak on both sides, lateral gaze lost, with consciousness, hearing, comprehension and vertical eye movement kept (C52, C53, C54).',
+        sources: ['S132', 'S133', 'S134'],
+        tier: 'T3',
+        bookRef: p,
+        conflict: 'C52',
+      },
+      level: 'pons',
+      compartments: ['basis', 'facial', 'abducens_fascicle'],
+      midline: true,
+    },
     dorsal_pons: {
       meta: {
         id: 'territory.dorsal-pons',

@@ -17,7 +17,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S116', 'S117', 'S118', 'S119',
   'S120', 'S121', 'S122', 'S123', 'S124',
   'S125', 'S126', 'S127',
-  'S128', 'S129', 'S130', 'S131',
+  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -154,4 +154,7 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S129', title: 'StatPearls — Neuroanatomy, Cerebral Cortex', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537247/' },
   { id: 'S130', title: 'Olaciregui Dague et al. — Gaze Palsy as a Manifestation of Todd’s Phenomenon (2020)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7287959/' },
   { id: 'S131', title: 'Steiner, Melamed — Conjugate eye deviation after acute hemispheric stroke (Annals of Neurology, 1984)', url: 'https://pubmed.ncbi.nlm.nih.gov/6497357/' },
+  { id: 'S132', title: 'StatPearls — Locked-in Syndrome', url: 'https://www.ncbi.nlm.nih.gov/books/NBK559026/' },
+  { id: 'S133', title: 'Smith, Delargy — Locked-in syndrome (BMJ, 2005)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC549115/' },
+  { id: 'S134', title: 'StatPearls — Anatomy, Head and Neck: Basilar Artery', url: 'https://www.ncbi.nlm.nih.gov/books/NBK459137/' },
 ];

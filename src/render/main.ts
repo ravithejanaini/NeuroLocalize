@@ -331,7 +331,11 @@ function placedLesion(): Shown {
 function levelReadout(): string {
   if (state.preset.kind === 'system') return 'Set by the pattern';
   if (state.preset.kind === 'limb') return `${state.limbSide === 'L' ? 'Left' : 'Right'} ${SITE_NAME[state.preset.site]} — beyond the roots`;
-  if (state.preset.kind === 'brain') return `${state.limbSide === 'L' ? 'Left' : 'Right'} ${SITE_NAME[state.preset.territory]} — above the cord`;
+  if (state.preset.kind === 'brain') {
+    // P17: a midline place takes both sides, so it has no side to name (the vermis, the dorsal midbrain too).
+    const midline = KB.brain.territories[state.preset.territory].midline === true;
+    return `${midline ? 'The' : state.limbSide === 'L' ? 'Left' : 'Right'} ${SITE_NAME[state.preset.territory]} — above the cord`;
+  }
   if (state.preset.kind === 'vision') {
     const midline = KB.vision.places[state.preset.place].midline === true;
     return `${midline ? 'The' : state.limbSide === 'L' ? 'Left' : 'Right'} ${SITE_NAME[state.preset.place]} — the visual pathway`;
@@ -360,7 +364,7 @@ function applyPlace(): void {
   for (const id of ['#level', '#extent', '#by-vertebra']) ($(id) as HTMLInputElement).disabled = !focal;
   $('#limb-side-row').hidden =
     state.preset.kind !== 'limb' &&
-    state.preset.kind !== 'brain' &&
+    !(state.preset.kind === 'brain' && KB.brain.territories[state.preset.territory].midline !== true) &&
     !(state.preset.kind === 'vision' && KB.vision.places[state.preset.place].midline !== true);
   const level = $<HTMLInputElement>('#level');
   level.max = String((state.byVertebra ? VERTEBRAE.length : SEGMENTS.length) - 1);

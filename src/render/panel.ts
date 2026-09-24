@@ -228,7 +228,7 @@ export class Panel {
           'brain.gaze-cortex',
         ],
         body: headHtml(f),
-        note: 'A gaze palsy from the pons is on the side of the lesion and lasts; one from the frontal eye field is toward the side away from the lesion — the eyes deviate toward it — and fades within days (S130, S131). Change the timepoint to see it go.',
+        note: 'A gaze palsy from the pons is on the side of the lesion and lasts; one from the frontal eye field is toward the side away from the lesion — the eyes deviate toward it — and fades within days (S130, S131). Change the timepoint to see it go. With the ventral pons on both sides (locked-in), sensation is left intact because the model spares the tegmentum; one source says it is lost (C52).',
       },
       {
         title: 'Language and attention',

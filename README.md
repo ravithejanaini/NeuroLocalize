@@ -30,10 +30,11 @@ teaching from a phone.
 | P14 | The fourth and fifth nerves: the trochlear nucleus, whose lesion weakens the superior oblique of the other eye, and the trigeminal motor and principal sensory nuclei in the mid-pontine tegmentum, with the jaw deviating to the side of the lesion; the third nerve's pupil recorded as a limit, not modelled, with the reason |
 | P15 | The basal ganglia: hemiballismus from the opposite subthalamic nucleus. Parkinsonism and chorea are recorded as degenerations the sources give no side for, not modelled as places |
 | P16 | Gaze deviation and Gerstmann syndrome: the frontal eye field turns the eyes toward a hemisphere lesion for days only — the first brain sign that changes with time, so a gaze palsy that lasts points to the pons — and the dominant inferior parietal lobule gives Gerstmann signs |
+| P17 | Locked-in syndrome: the ventral pons on both sides, from the basilar artery — awake, cannot move or speak, answers by looking up; one lesion across both sides of the pons |
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 131 open-access sources that were
+- **Expected outputs are written first**, from 134 open-access sources that were
   actually read — one of them, S108, as its free abstract only (`docs/SOURCES.md`) — and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

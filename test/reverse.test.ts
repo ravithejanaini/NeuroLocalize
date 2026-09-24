@@ -11,6 +11,7 @@ import { MIDBRAIN_REVERSE_CASES } from '../spec/expectations/reverse-midbrain.ts
 import { NERVE_REVERSE_CASES } from '../spec/expectations/reverse-nerves.ts';
 import { BASAL_REVERSE_CASES } from '../spec/expectations/reverse-basal.ts';
 import { CORTEX_REVERSE_CASES } from '../spec/expectations/reverse-cortex.ts';
+import { BASILAR_REVERSE_CASES } from '../spec/expectations/reverse-basilar.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
 import { hypotheses } from '../src/engine/hypotheses.ts';
@@ -25,7 +26,7 @@ import { examSlots } from '../src/render/slots.ts';
 const SLOTS = examSlots(RENDER);
 
 describe('frozen reverse expectations (A3, A4, A7)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES]) {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });
@@ -243,8 +244,8 @@ describe('reverse engine contract', () => {
     assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 56, 'D32, P7: 18 arm and 10 leg places on each side');
     assert.equal(
       places.filter((x) => x.family.startsWith('brainstem') || x.family.startsWith('hemisphere')).length,
-      47,
-      'D44, P9, P10, P12, P13, P14, P15, P16: 23 brainstem and cerebral territories on each side — nine from P5, three from P9, five from P10, AICA and PICA from P12, the trochlear nucleus and mid-pontine tegmentum from P14, the subthalamic nucleus from P15, the frontal eye field from P16 — and the one midline dorsal midbrain',
+      48,
+      'D44, P9, P10, P12, P13, P14, P15, P16, P17: 23 brainstem and cerebral territories on each side — nine from P5, three from P9, five from P10, AICA and PICA from P12, the trochlear nucleus and mid-pontine tegmentum from P14, the subthalamic nucleus from P15, the frontal eye field from P16 — and two midline places, the dorsal midbrain (P13) and the ventral pons on both sides (P17)',
     );
     // P11: a hemisphere on each side and one midline vermis, never counted twice.
     assert.equal(places.filter((x) => x.family.startsWith('cerebellum')).length, 5, 'P11, P12: two cerebellar hemispheres, one vermis and the SCA on each side');

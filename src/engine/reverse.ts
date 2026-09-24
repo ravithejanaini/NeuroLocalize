@@ -551,6 +551,7 @@ export const SITE_NAME: Record<Place, string> = {
   pica: 'posterior inferior cerebellar artery (lateral medulla and inferior cerebellum)',
   sca: 'superior cerebellar artery (superior cerebellum)',
   dorsal_midbrain: 'dorsal midbrain (pretectum, superior colliculus)',
+  ventral_pons_bilateral: 'ventral pons, both sides (basilar artery)',
   trochlear_nucleus: 'trochlear nucleus, in the midbrain',
   subthalamic_nucleus: 'subthalamic nucleus',
   frontal_eye_field: 'frontal eye field (Brodmann area 8)',
