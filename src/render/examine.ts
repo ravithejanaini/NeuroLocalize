@@ -377,8 +377,13 @@ export function suggestionHtml(render: RenderKb, result: ReverseResult, tested: 
       return `<li><b>${valueWord(o.value)}</b> <span class="quiet">(${(o.probability * 100).toFixed(0)}%)</span> → ${escape(lead)}</li>`;
     })
     .join('');
+  const why = s.confirmsLeader
+    ? 'Every result leaves the same candidate first: this would confirm, not change, the leading place.'
+    : s.separatesTopTwo
+      ? 'The two leading candidates predict different results here.'
+      : 'The most informative test left.';
   return `<p class="next"><button type="button" class="next-go" data-goto="${escape(slotKey(s.slot))}">${escape(slotLabel(render, s.slot))}</button></p>
-    <p class="grp-note">${s.separatesTopTwo ? 'The two leading candidates predict different results here.' : 'The most informative test left.'} Expected to teach ${s.informationBits.toFixed(2)} bits.</p>
+    <p class="grp-note">${why} Expected to teach ${s.informationBits.toFixed(2)} bits.</p>
     <ul class="outcomes">${outcomes}</ul>`;
 }
 

@@ -1103,6 +1103,23 @@ run**: all 38 mutants of each of the three sign rows, all 8 of the place, and th
 entry in the parts-at table. The dorsal midbrain case lesions only the pretectum, so any mutant
 that moves a sign to another part leaves the case without it.
 
+**D87 — A test that cannot move the leader is kept, and says so.** With upgaze palsy and
+light–near dissociation recorded, the dorsal midbrain leads at 93.0% and the runner-up (a
+peripheral nerve group) already has two conflicts. The engine suggested convergence–retraction
+nystagmus as a test the "two leading candidates" disagree on, and both of its results left the
+dorsal midbrain first. It is **kept**, not suppressed under D26, because D26's bar is expected
+information over every candidate, not a change of leader, and this test clears it at 0.22 bits:
+present takes the leader to 99.6%, absent drops it to 41.3% with a conflict. Saying the
+findings "already settle it" at 93%, or at 41% after the other result, would be the false
+statement. Suppressing it would also not have found a better test: none of the 73 slots that
+clear the bar here can change the leader, and 12 of the 55 frozen reverse expectations have a
+suggestion of this kind, none of them among the three that require one. So the suggestion now
+carries `confirmsLeader` — true only when every result leaves one and the same candidate most
+likely, and that candidate is in the first group — and the panel says "this would confirm, not
+change, the leading place" instead of claiming the leaders predict different results. The
+choice of test is unchanged; the three frozen cases that require a separating test are
+unaffected.
+
 ## P14 — the fourth and fifth nerves, and the third nerve's pupil
 
 The analysis written before any P14 code is `docs/P14-analysis.md`; S120–S124 were read for it

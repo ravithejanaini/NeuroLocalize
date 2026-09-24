@@ -343,6 +343,8 @@ export type Suggestion = {
   readonly slot: Slot;
   readonly informationBits: number;
   readonly separatesTopTwo: boolean;
+  /** Every result leaves the same candidate, from the first group, most likely (D87). */
+  readonly confirmsLeader: boolean;
   readonly outcomes: readonly Outcome[];
 };
 
@@ -437,6 +439,7 @@ export function reverse(
   const observed = new Set(observations.map((o) => slotKey(o)));
   const top = groups.slice(0, 2).map((g) => scored.find((s) => s.h.id === g.members[0]?.id));
   const h0 = entropy(post);
+  const first = new Set(groups[0]?.members.map((h) => h.id));
   let best: Suggestion | null = null;
 
   for (const slot of options.suggest === false ? [] : slots) {
@@ -445,6 +448,7 @@ export function reverse(
     const values = DOMAIN[slot.kind] as readonly Value[];
     let expected = 0;
     const outcomes: Outcome[] = [];
+    const leaders = new Set<string>();
     for (const v of values) {
       const joint = preds.map((p, i) => (post[i] ?? 0) * likelihood(slot.kind, p, v));
       const pv = joint.reduce((a, b) => a + b, 0);
@@ -456,6 +460,7 @@ export function reverse(
         if (x > (cond[lead] ?? 0)) lead = i;
       });
       const leader = scored[lead];
+      leaders.add(leader?.h.id ?? '');
       outcomes.push({
         value: v,
         probability: pv,
@@ -470,11 +475,14 @@ export function reverse(
     const pa = a ? predict(a.findings, slot, kb) : 'unknown';
     const pb = b ? predict(b.findings, slot, kb) : 'unknown';
     const separates = pa !== 'unknown' && pb !== 'unknown' && pa !== pb;
+    // Still worth suggesting under D26, but no result would move the leader: say so (D87).
+    const [only] = leaders;
+    const confirmsLeader = leaders.size === 1 && only !== undefined && first.has(only);
     const better =
       !best ||
       (separates && !best.separatesTopTwo) ||
       (separates === best.separatesTopTwo && gain > best.informationBits + 1e-12);
-    if (better) best = { slot, informationBits: gain, separatesTopTwo: separates, outcomes };
+    if (better) best = { slot, informationBits: gain, separatesTopTwo: separates, confirmsLeader, outcomes };
   }
 
   return { groups, unexplained, suggestion: best };

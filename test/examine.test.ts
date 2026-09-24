@@ -93,5 +93,17 @@ describe('examination results', () => {
     const html = suggestionHtml(RENDER, reverse([...f.values()], 'chronic', SLOTS), f.size);
     assert.match(html, /data-goto="sensory\|R\|pain_temperature\|T10-T10">Right pain · umbilicus \(T10\)</);
     assert.equal((html.match(/<li>/g) ?? []).length, 2, 'one line per possible result');
+    assert.doesNotMatch(html, /confirm, not change/);
+  });
+
+  it('says a test would confirm, not change, the leader when every result keeps it first (D87)', () => {
+    prepareSync('chronic');
+    const obs: Observation[] = [
+      { kind: 'eyes', sign: 'upgaze_palsy', value: 'present' },
+      { kind: 'eyes', sign: 'light_near_dissociation', value: 'present' },
+    ];
+    const html = suggestionHtml(RENDER, reverse(obs, 'chronic', SLOTS), obs.length);
+    assert.match(html, /would confirm, not change, the leading place/);
+    assert.doesNotMatch(html, /The two leading candidates predict different results/);
   });
 });

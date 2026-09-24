@@ -83,6 +83,36 @@ describe('reverse engine contract', () => {
     assert.equal(r.suggestion, null);
   });
 
+  it('says when every result of the suggested test leaves the same candidate first (D87)', () => {
+    prepareSync('chronic');
+    const r = reverse(
+      [
+        { kind: 'eyes', sign: 'upgaze_palsy', value: 'present' },
+        { kind: 'eyes', sign: 'light_near_dissociation', value: 'present' },
+      ],
+      'chronic',
+      SLOTS,
+    );
+    assert.deepEqual(r.groups[0]?.sites, ['dorsal_midbrain']);
+    assert.ok((r.groups[1]?.mismatches ?? 0) > 0, 'the runner-up already conflicts');
+    const s = r.suggestion;
+    assert.ok(s, 'the test still teaches more than the D26 bar');
+    assert.equal(slotKey(s.slot), 'eyes|convergence_retraction_nystagmus');
+    assert.equal(s.separatesTopTwo, true);
+    assert.deepEqual(s.outcomes.map((o) => o.leader?.site), ['dorsal_midbrain', 'dorsal_midbrain']);
+    assert.equal(s.confirmsLeader, true);
+  });
+
+  it('does not call a test confirmatory when a result could change the leader (D87)', () => {
+    prepareSync('chronic');
+    const kase = LIMB_REVERSE_CASES.find((c) => c.id === 'reverse-hand-weakness-open');
+    assert.ok(kase);
+    const s = reverse(kase.observations, 'chronic', SLOTS).suggestion;
+    assert.ok(s);
+    assert.ok(new Set(s.outcomes.map((o) => `${o.leader?.family}|${o.leader?.site ?? o.leader?.rostral}`)).size > 1);
+    assert.equal(s.confirmsLeader, false);
+  });
+
   it('every candidate reproduces its own findings with no conflicts', () => {
     prepareSync('chronic');
     for (const id of ['hemicord_left:T8-T8', 'anterior:T6-T6', 'roots_bilateral:L3-Co1', 'root_left:C6']) {
