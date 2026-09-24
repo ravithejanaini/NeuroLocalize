@@ -313,6 +313,8 @@ export const BRAIN_COMPARTMENTS = [
   'trochlear_nucleus',
   'trigeminal_motor',
   'trigeminal_sensory',
+  // P15: the subthalamic nucleus, held at the diencephalic level the model calls `thalamus`.
+  'subthalamic',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 
@@ -390,6 +392,8 @@ export const TERRITORIES = [
   // P14.
   'trochlear_nucleus',
   'midpontine_tegmentum',
+  // P15.
+  'subthalamic_nucleus',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

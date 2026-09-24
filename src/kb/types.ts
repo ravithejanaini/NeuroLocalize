@@ -170,6 +170,8 @@ export type Brain = {
   /** P12: the cochlear nuclei, on the side of the lesion. */
   readonly hearing: BrainRoute;
   /** P14: the fourth nerve (its nucleus serves the other eye) and the fifth's motor nucleus. */
+  /** P15: the subthalamic nucleus, acting on the other side's limbs. */
+  readonly ballismus: BrainRoute;
   readonly trochlear: BrainRoute;
   readonly jaw: BrainRoute;
   /** P13: the three dorsal midbrain signs, each read from either half of the pretectum. */

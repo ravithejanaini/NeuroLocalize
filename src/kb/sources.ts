@@ -16,6 +16,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S113', 'S114', 'S115',
   'S116', 'S117', 'S118', 'S119',
   'S120', 'S121', 'S122', 'S123', 'S124',
+  'S125', 'S126', 'S127',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -145,4 +146,7 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S122', title: 'StatPearls — Neuroanatomy, Cranial Nerve 5 (Trigeminal)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK482283/' },
   { id: 'S123', title: 'Walker — Cranial Nerve V: The Trigeminal Nerve, in Clinical Methods, 3rd edition (1990)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK384/' },
   { id: 'S124', title: 'StatPearls — Trochlear Nerve Palsy', url: 'https://www.ncbi.nlm.nih.gov/books/NBK565850/' },
+  { id: 'S125', title: 'StatPearls — Neuroanatomy, Subthalamic Nucleus', url: 'https://www.ncbi.nlm.nih.gov/books/NBK559002/' },
+  { id: 'S126', title: 'StatPearls — Neuroanatomy, Basal Ganglia', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537141/' },
+  { id: 'S127', title: 'StatPearls — Neuroanatomy, Substantia Nigra', url: 'https://www.ncbi.nlm.nih.gov/books/NBK536995/' },
 ];

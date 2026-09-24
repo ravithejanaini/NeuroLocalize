@@ -7,22 +7,22 @@ claims are what it teaches. Mark each one; where a claim is wrong, a one-line co
 with a source is the most useful thing you can give.
 
 The same review can be filled in on screen and saved to a file: `review/review.html`.
-Worksheet version `b19ccba7f92a`.
+Worksheet version `ffcce2733631`.
 
-185 knowledge-base claims, 19 displayed facts, 42 open questions, 764 composed findings in 118 cases. Mutation score 97.0% over sourced rows, 96.2% over all rows.
+187 knowledge-base claims, 19 displayed facts, 43 open questions, 768 composed findings in 119 cases. Mutation score 97.0% over sourced rows, 96.3% over all rows.
 Claims are ordered by load-bearing weight: how many expected findings fail when the claim
 is corrupted. The first ten carry most of the engine.
 
 ## 1. Knowledge-base claims
 
 **1. The spinothalamic tract, already crossed in the cord, runs laterally in the medulla and dorsolaterally in the pons and midbrain to VPL, and on to the cortex.**
-`brain.spinothalamic` · tier T1 · weight 3054 · sources [S58](https://www.ncbi.nlm.nih.gov/books/NBK507824/), [S56](https://www.ncbi.nlm.nih.gov/books/NBK542181/)
+`brain.spinothalamic` · tier T1 · weight 3096 · sources [S58](https://www.ncbi.nlm.nih.gov/books/NBK507824/), [S56](https://www.ncbi.nlm.nih.gov/books/NBK542181/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
 **2. After crossing in the caudal medulla the medial lemniscus ascends contralaterally to VPL, which projects through the posterior limb to the somatosensory cortex.**
-`brain.lemniscal` · tier T1 · weight 2589 · sources [S57](https://www.ncbi.nlm.nih.gov/books/NBK526040/), [S56](https://www.ncbi.nlm.nih.gov/books/NBK542181/)
+`brain.lemniscal` · tier T1 · weight 2631 · sources [S57](https://www.ncbi.nlm.nih.gov/books/NBK526040/), [S56](https://www.ncbi.nlm.nih.gov/books/NBK542181/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
@@ -581,20 +581,20 @@ Correction and source (a book and page is ideal): ____
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**95. A central lesion of the cervical cord weakens the arms more than the legs, most of all the hands.**
+**95. Above the medulla facial sensation reaches VPM and the face area of the cortex on the opposite side; S60 also describes an ipsilateral projection.**
+`brain.face-ascending` · tier T3 · weight 11 · conflict C16 · sources [S55](https://www.ncbi.nlm.nih.gov/books/NBK563216/), [S60](https://www.ncbi.nlm.nih.gov/books/NBK539729/), [S66](https://www.ncbi.nlm.nih.gov/books/NBK549841/)
+
+☐ right ☐ wrong ☐ unsure
+Correction and source (a book and page is ideal): ____
+
+**96. A central lesion of the cervical cord weakens the arms more than the legs, most of all the hands.**
 `observation.arm-predominance` · tier T2 · weight 11 · sources [S06](https://www.ncbi.nlm.nih.gov/books/NBK441932/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**96. The patellar reflex is served by L2–L4, predominantly L4.**
+**97. The patellar reflex is served by L2–L4, predominantly L4.**
 `reflex.patellar` · tier T2 · weight 10 · sources [S12](https://www.ncbi.nlm.nih.gov/books/NBK531502/)
-
-☐ right ☐ wrong ☐ unsure
-Correction and source (a book and page is ideal): ____
-
-**97. Above the medulla facial sensation reaches VPM and the face area of the cortex on the opposite side; S60 also describes an ipsilateral projection.**
-`brain.face-ascending` · tier T3 · weight 10 · conflict C16 · sources [S55](https://www.ncbi.nlm.nih.gov/books/NBK563216/), [S60](https://www.ncbi.nlm.nih.gov/books/NBK539729/), [S66](https://www.ncbi.nlm.nih.gov/books/NBK549841/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
@@ -780,354 +780,366 @@ Correction and source (a book and page is ideal): ____
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**128. The inferior MCA division supplies the lateral temporal lobe and the angular and supramarginal gyri; a stroke of it frequently gives a contralateral homonymous hemianopia (C31) and generally no weakness.**
+**128. A lesion of the subthalamic nucleus gives hemiballismus — flinging, involuntary movements of the arm and leg — on the opposite side; stroke is its commonest cause. Lesions elsewhere in the basal ganglia can also give it (C47).**
+`brain.ballismus` · tier T3 · weight 4 · conflict C47 · sources [S125](https://www.ncbi.nlm.nih.gov/books/NBK559002/), [S126](https://www.ncbi.nlm.nih.gov/books/NBK537141/)
+
+☐ right ☐ wrong ☐ unsure
+Correction and source (a book and page is ideal): ____
+
+**129. The inferior MCA division supplies the lateral temporal lobe and the angular and supramarginal gyri; a stroke of it frequently gives a contralateral homonymous hemianopia (C31) and generally no weakness.**
 `territory.mca-inferior` · tier T3 · weight 4 · conflict C31 · sources [S104](https://www.ncbi.nlm.nih.gov/books/NBK556132/), [S105](https://www.ncbi.nlm.nih.gov/books/NBK526002/), [S101](https://www.ncbi.nlm.nih.gov/books/NBK441951/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**129. The psoas is supplied by short branches of the lumbar plexus itself, not by a named nerve.**
+**130. The psoas is supplied by short branches of the lumbar plexus itself, not by a named nerve.**
 `nerve.psoas-branches` · tier T1 · weight 3 · sources [S85](https://www.ncbi.nlm.nih.gov/books/NBK531508/), [S89](https://www.ncbi.nlm.nih.gov/books/NBK556065/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**130. A lesion of the whole occipital visual cortex, the pole included, so the centre of the half-field goes with it.**
+**131. A lesion of the whole occipital visual cortex, the pole included, so the centre of the half-field goes with it.**
 `vision-place.occipital-cortex` · tier T2 · weight 3 · sources [S97](https://www.ncbi.nlm.nih.gov/books/NBK558929/), [S92](https://www.ncbi.nlm.nih.gov/books/NBK562262/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**131. A lesion of the vermis gives truncal and gait ataxia with the limbs spared: the vermis coordinates the trunk.**
+**132. A lesion of the vermis gives truncal and gait ataxia with the limbs spared: the vermis coordinates the trunk.**
 `brain.truncal-ataxia` · tier T1 · weight 3 · sources [S109](https://www.ncbi.nlm.nih.gov/books/NBK562284/), [S110](https://www.ncbi.nlm.nih.gov/books/NBK538167/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**132. Hemispheric cerebellar lesions give mainly incoordination and midline lesions imbalance, so after a hemisphere lesion truncal ataxia is left unsettled rather than absent (C35).**
+**133. Hemispheric cerebellar lesions give mainly incoordination and midline lesions imbalance, so after a hemisphere lesion truncal ataxia is left unsettled rather than absent (C35).**
 `brain.truncal-after-hemisphere` · tier T3 · weight 3 · conflict C35 · sources [S111](https://www.ncbi.nlm.nih.gov/books/NBK562317/), [S109](https://www.ncbi.nlm.nih.gov/books/NBK562284/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**133. The medial medulla holds the pyramid, the medial lemniscus and the hypoglossal nucleus and fascicles.**
+**134. The medial medulla holds the pyramid, the medial lemniscus and the hypoglossal nucleus and fascicles.**
 `territory.medial-medullary` · tier T1 · weight 3 · sources [S48](https://www.ncbi.nlm.nih.gov/books/NBK560590/), [S65](https://www.ncbi.nlm.nih.gov/books/NBK560896/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**134. The ventral pons holds the basis pontis and the facial and abducens fascicles.**
+**135. The ventral pons holds the basis pontis and the facial and abducens fascicles.**
 `territory.ventral-pons` · tier T3 · weight 3 · conflict C17 · sources [S49](https://www.ncbi.nlm.nih.gov/books/NBK532907/), [S61](https://www.ncbi.nlm.nih.gov/books/NBK544265/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**135. The ACA supplies the medial motor and sensory cortex: the leg.**
+**136. The ACA supplies the medial motor and sensory cortex: the leg.**
 `territory.aca-cortex` · tier T1 · weight 3 · sources [S54](https://www.ncbi.nlm.nih.gov/books/NBK544218/), [S66](https://www.ncbi.nlm.nih.gov/books/NBK549841/), [S53](https://www.ncbi.nlm.nih.gov/books/NBK537333/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**136. Descending bladder control survives a unilateral cord lesion; sphincter function is generally spared in hemisection.**
+**137. Descending bladder control survives a unilateral cord lesion; sphincter function is generally spared in hemisection.**
 `autonomic.bladder-control` · tier T2 · weight 2 · sources [S01](https://www.ncbi.nlm.nih.gov/books/NBK538135/)
 > ⚠ No source read supports all of this. R7: the pathway’s position in the lateral funiculus is not stated by any source read
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**137. The suprascapular nerve arises from the upper trunk.**
+**138. The suprascapular nerve arises from the upper trunk.**
 `nerve.suprascapular` · tier T1 · weight 2 · sources [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/), [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**138. A lesion of the chiasm, from below: a pituitary adenoma, a craniopharyngioma or a meningioma. It is midline, so it has no side.**
+**139. A lesion of the chiasm, from below: a pituitary adenoma, a craniopharyngioma or a meningioma. It is midline, so it has no side.**
 `vision-place.chiasm` · tier T1 · weight 2 · sources [S96](https://www.ncbi.nlm.nih.gov/books/NBK545213/), [S92](https://www.ncbi.nlm.nih.gov/books/NBK562262/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**139. An occipital infarct in the posterior cerebral artery territory: both calcarine banks, with the occipital pole spared by its supply from the middle cerebral artery.**
+**140. An occipital infarct in the posterior cerebral artery territory: both calcarine banks, with the occipital pole spared by its supply from the middle cerebral artery.**
 `vision-place.pca-occipital` · tier T1 · weight 2 · sources [S94](https://www.ncbi.nlm.nih.gov/books/NBK532296/), [S92](https://www.ncbi.nlm.nih.gov/books/NBK562262/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**140. The dorsal pons holds the abducens nucleus wrapped by the facial genu.**
+**141. The dorsal pons holds the abducens nucleus wrapped by the facial genu.**
 `territory.dorsal-pons` · tier T1 · weight 2 · sources [S61](https://www.ncbi.nlm.nih.gov/books/NBK544265/), [S59](https://www.ncbi.nlm.nih.gov/books/NBK544297/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**141. Weber syndrome takes the cerebral peduncle and the oculomotor fascicles.**
+**142. Weber syndrome takes the cerebral peduncle and the oculomotor fascicles.**
 `territory.midbrain-peduncle` · tier T1 · weight 2 · sources [S50](https://www.ncbi.nlm.nih.gov/books/NBK559158/), [S62](https://www.ncbi.nlm.nih.gov/books/NBK526112/), [S65](https://www.ncbi.nlm.nih.gov/books/NBK560896/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**142. A pure motor lacune takes the corticobulbar and corticospinal fibres of the genu and posterior limb.**
+**143. A pure motor lacune takes the corticobulbar and corticospinal fibres of the genu and posterior limb.**
 `territory.internal-capsule` · tier T1 · weight 2 · sources [S55](https://www.ncbi.nlm.nih.gov/books/NBK563216/), [S56](https://www.ncbi.nlm.nih.gov/books/NBK542181/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**143. A pure sensory lacune takes the lateral thalamus, VPL and VPM.**
+**144. A pure sensory lacune takes the lateral thalamus, VPL and VPM.**
 `territory.thalamus` · tier T1 · weight 2 · sources [S55](https://www.ncbi.nlm.nih.gov/books/NBK563216/), [S57](https://www.ncbi.nlm.nih.gov/books/NBK526040/), [S60](https://www.ncbi.nlm.nih.gov/books/NBK539729/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**144. The superior cerebellar artery supplies the superior vermis and the superior cortex of the hemisphere. Its midbrain branches are not modelled.**
+**145. The superior cerebellar artery supplies the superior vermis and the superior cortex of the hemisphere. Its midbrain branches are not modelled.**
 `territory.sca` · tier T1 · weight 2 · sources [S110](https://www.ncbi.nlm.nih.gov/books/NBK538167/), [S113](https://www.ncbi.nlm.nih.gov/books/NBK470416/), [S114](https://www.ncbi.nlm.nih.gov/books/NBK556084/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**145. A lesion of the pontine tegmentum taking the abducens nucleus (or the paramedian pontine reticular formation) and the neighbouring medial longitudinal fasciculus is one-and-a-half syndrome: a gaze palsy toward that side with an internuclear ophthalmoplegia, leaving only the other eye’s abduction.**
+**146. A lesion of the pontine tegmentum taking the abducens nucleus (or the paramedian pontine reticular formation) and the neighbouring medial longitudinal fasciculus is one-and-a-half syndrome: a gaze palsy toward that side with an internuclear ophthalmoplegia, leaving only the other eye’s abduction.**
 `territory.pontine-tegmentum` · tier T1 · weight 2 · sources [S99](https://pmc.ncbi.nlm.nih.gov/articles/PMC5756788/), [S61](https://www.ncbi.nlm.nih.gov/books/NBK544265/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**146. A lesion of one optic nerve.**
+**147. A lesion of one optic nerve.**
 `vision-place.optic-nerve` · tier T2 · weight 1 · sources [S92](https://www.ncbi.nlm.nih.gov/books/NBK562262/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**147. A lesion of one optic tract.**
+**148. A lesion of one optic tract.**
 `vision-place.optic-tract` · tier T1 · weight 1 · sources [S92](https://www.ncbi.nlm.nih.gov/books/NBK562262/), [S97](https://www.ncbi.nlm.nih.gov/books/NBK558929/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**148. A lesion of the temporal lobe taking Meyer loop.**
+**149. A lesion of the temporal lobe taking Meyer loop.**
 `vision-place.meyer-loop` · tier T1 · weight 1 · sources [S93](https://www.ncbi.nlm.nih.gov/books/NBK558982/), [S94](https://www.ncbi.nlm.nih.gov/books/NBK532296/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**149. A lesion of the parietal optic radiation.**
+**150. A lesion of the parietal optic radiation.**
 `vision-place.parietal-radiation` · tier T1 · weight 1 · sources [S93](https://www.ncbi.nlm.nih.gov/books/NBK558982/), [S94](https://www.ncbi.nlm.nih.gov/books/NBK532296/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**150. A lesion of the vermis, a midline structure, gives truncal and gait ataxia with the limbs spared.**
+**151. A lesion of the vermis, a midline structure, gives truncal and gait ataxia with the limbs spared.**
 `territory.vermis` · tier T1 · weight 1 · sources [S109](https://www.ncbi.nlm.nih.gov/books/NBK562284/), [S110](https://www.ncbi.nlm.nih.gov/books/NBK538167/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**151. A lesion of the medial longitudinal fasciculus alone, in the pons, is an internuclear ophthalmoplegia and nothing else.**
+**152. A lesion of the medial longitudinal fasciculus alone, in the pons, is an internuclear ophthalmoplegia and nothing else.**
 `territory.mlf-pons` · tier T2 · weight 1 · sources [S98](https://www.ncbi.nlm.nih.gov/books/NBK441970/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**152. Compression of the dorsal midbrain — the pretectum at the superior colliculus, as from a pineal tumour or hydrocephalus — gives Parinaud syndrome: upgaze palsy, convergence–retraction nystagmus and light–near dissociation. It takes both sides (C43).**
+**153. Compression of the dorsal midbrain — the pretectum at the superior colliculus, as from a pineal tumour or hydrocephalus — gives Parinaud syndrome: upgaze palsy, convergence–retraction nystagmus and light–near dissociation. It takes both sides (C43).**
 `territory.dorsal-midbrain` · tier T1 · weight 1 · sources [S116](https://www.ncbi.nlm.nih.gov/books/NBK441892/), [S119](https://www.ncbi.nlm.nih.gov/books/NBK551509/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**153. The bulbocavernosus reflex is served by S2–S4 through the pudendal nerve.**
+**154. The bulbocavernosus reflex is served by S2–S4 through the pudendal nerve.**
 `reflex.bulbocavernosus` · tier T2 · weight 0 · sources [S22](https://www.ncbi.nlm.nih.gov/books/NBK554736/), [S09](https://www.ncbi.nlm.nih.gov/books/NBK537200/)
 > ⚠ No source read supports all of this. R4: S22 gives the pudendal nerve’s S2–S4 origin but does not mention the reflex
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**154. The cervical cord is segments C1–C8.**
+**155. The cervical cord is segments C1–C8.**
 `region.cervical` · tier T1 · weight 0 · sources _definitional_
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**155. The lower limb is served by segments L2–S2.**
+**156. The lower limb is served by segments L2–S2.**
 `region.lower-limb` · tier T2 · weight 0 · sources _none_
 > ⚠ No source read supports all of this. R5: a modelling convention; no source read defines it
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**156. The plexus is formed by the ventral rami of C5–T1: the upper trunk by C5 and C6, the middle trunk by C7, and the lower trunk by C8 and T1.**
+**157. The plexus is formed by the ventral rami of C5–T1: the upper trunk by C5 and C6, the middle trunk by C7, and the lower trunk by C8 and T1.**
 `plexus.trunks` · tier T1 · weight 0 · sources [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/), [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**157. The lateral cord takes fibres from the upper and middle trunks, the medial cord from the lower trunk, and the posterior cord from all three.**
+**158. The lateral cord takes fibres from the upper and middle trunks, the medial cord from the lower trunk, and the posterior cord from all three.**
 `plexus.cords` · tier T2 · weight 0 · sources [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**158. The lumbar plexus is formed by L1–L4. The sacral plexus is formed by S1–S4, with L4 and L5 joining it through the lumbosacral trunk, so L4 serves both.**
+**159. The lumbar plexus is formed by L1–L4. The sacral plexus is formed by S1–S4, with L4 and L5 joining it through the lumbosacral trunk, so L4 serves both.**
 `plexus.leg-parts` · tier T3 · weight 0 · conflict C19 · sources [S72](https://www.ncbi.nlm.nih.gov/books/NBK556030/), [S80](https://www.ncbi.nlm.nih.gov/books/NBK535408/), [S75](https://www.ncbi.nlm.nih.gov/books/NBK482431/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**159. The dorsal scapular nerve arises from the roots, before the trunks form.**
+**160. The dorsal scapular nerve arises from the roots, before the trunks form.**
 `nerve.dorsal-scapular` · tier T1 · weight 0 · sources [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**160. The long thoracic nerve arises from the roots (S34, S37), although S44 also calls it a branch of the upper trunk.**
+**161. The long thoracic nerve arises from the roots (S34, S37), although S44 also calls it a branch of the upper trunk.**
 `nerve.long-thoracic` · tier T3 · weight 0 · conflict C10 · sources [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/), [S44](https://www.ncbi.nlm.nih.gov/books/NBK535396/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**161. The femoral nerve leaves the lumbar plexus. The lesion place is in the pelvis, above its branch to the iliacus; its anterior cutaneous branches, the quadriceps branches and the saphenous nerve all leave below it.**
+**162. The femoral nerve leaves the lumbar plexus. The lesion place is in the pelvis, above its branch to the iliacus; its anterior cutaneous branches, the quadriceps branches and the saphenous nerve all leave below it.**
 `nerve.femoral` · tier T3 · weight 0 · conflict C24 · sources [S89](https://www.ncbi.nlm.nih.gov/books/NBK556065/), [S73](https://www.ncbi.nlm.nih.gov/books/NBK482225/), [S71](https://www.ncbi.nlm.nih.gov/books/NBK545137/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**162. The superior gluteal nerve leaves the sacral plexus.**
+**163. The superior gluteal nerve leaves the sacral plexus.**
 `nerve.superior-gluteal` · tier T2 · weight 0 · sources [S80](https://www.ncbi.nlm.nih.gov/books/NBK535408/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**163. The sciatic nerve leaves the sacral plexus; the lesion place is in the buttock, above its branches to the hamstrings.**
+**164. The sciatic nerve leaves the sacral plexus; the lesion place is in the buttock, above its branches to the hamstrings.**
 `nerve.sciatic` · tier T1 · weight 0 · sources [S75](https://www.ncbi.nlm.nih.gov/books/NBK482431/), [S72](https://www.ncbi.nlm.nih.gov/books/NBK556030/), [S78](https://www.ncbi.nlm.nih.gov/books/NBK554393/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**164. Weakness of serratus anterior lets the scapula wing medially.**
+**165. Weakness of serratus anterior lets the scapula wing medially.**
 `deformity.winged-scapula` · tier T1 · weight 0 · sources [S44](https://www.ncbi.nlm.nih.gov/books/NBK535396/), [S35](https://www.ncbi.nlm.nih.gov/books/NBK513260/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**165. Loss of the axillary, suprascapular and musculocutaneous muscles leaves the arm adducted, internally rotated, extended at the elbow and pronated: the waiter’s tip.**
+**166. Loss of the axillary, suprascapular and musculocutaneous muscles leaves the arm adducted, internally rotated, extended at the elbow and pronated: the waiter’s tip.**
 `deformity.waiters-tip` · tier T1 · weight 0 · sources [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/), [S35](https://www.ncbi.nlm.nih.gov/books/NBK513260/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**166. Weakness of the radial wrist extensors gives wrist drop.**
+**167. Weakness of the radial wrist extensors gives wrist drop.**
 `deformity.wrist-drop` · tier T1 · weight 0 · sources [S39](https://www.ncbi.nlm.nih.gov/books/NBK532993/), [S40](https://www.ncbi.nlm.nih.gov/books/NBK537304/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**167. Weakness of the intrinsic hand muscles, represented here by the interossei, gives a claw hand.**
+**168. Weakness of the intrinsic hand muscles, represented here by the interossei, gives a claw hand.**
 `deformity.claw-hand` · tier T2 · weight 0 · sources [S38](https://www.ncbi.nlm.nih.gov/books/NBK555929/), [S36](https://www.ncbi.nlm.nih.gov/books/NBK531500/), [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**168. Weakness of the median thenar muscles, represented by abductor pollicis brevis, flattens the thenar eminence: the ape hand.**
+**169. Weakness of the median thenar muscles, represented by abductor pollicis brevis, flattens the thenar eminence: the ape hand.**
 `deformity.ape-hand` · tier T1 · weight 0 · sources [S41](https://www.ncbi.nlm.nih.gov/books/NBK448084/), [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**169. Weakness of ankle dorsiflexion, represented by tibialis anterior, gives foot drop.**
+**170. Weakness of ankle dorsiflexion, represented by tibialis anterior, gives foot drop.**
 `deformity.foot-drop` · tier T1 · weight 0 · sources [S77](https://www.ncbi.nlm.nih.gov/books/NBK549859/), [S78](https://www.ncbi.nlm.nih.gov/books/NBK554393/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**170. Weakness of gluteus medius weakens hip abduction and gives the Trendelenburg gait.**
+**171. Weakness of gluteus medius weakens hip abduction and gives the Trendelenburg gait.**
 `deformity.trendelenburg` · tier T2 · weight 0 · sources [S80](https://www.ncbi.nlm.nih.gov/books/NBK535408/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**171. The optic nerve carries every fibre of its own eye, so a lesion of it loses vision in that eye alone and gives an afferent pupillary defect on the same side.**
+**172. The optic nerve carries every fibre of its own eye, so a lesion of it loses vision in that eye alone and gives an afferent pupillary defect on the same side.**
 `vision.optic-nerve` · tier T1 · weight 0 · sources [S91](https://www.ncbi.nlm.nih.gov/books/NBK553189/), [S92](https://www.ncbi.nlm.nih.gov/books/NBK562262/), [S95](https://www.ncbi.nlm.nih.gov/books/NBK557675/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**172. The chiasm carries the crossing nasal fibres of both eyes, which serve the temporal half-fields, so a lesion of it gives a bitemporal hemianopia. Whether it gives an afferent pupillary defect is left open: S95 says it may, when one eye loses more fibres.**
+**173. The chiasm carries the crossing nasal fibres of both eyes, which serve the temporal half-fields, so a lesion of it gives a bitemporal hemianopia. Whether it gives an afferent pupillary defect is left open: S95 says it may, when one eye loses more fibres.**
 `vision.chiasm` · tier T3 · weight 0 · conflict C27 · sources [S91](https://www.ncbi.nlm.nih.gov/books/NBK553189/), [S92](https://www.ncbi.nlm.nih.gov/books/NBK562262/), [S96](https://www.ncbi.nlm.nih.gov/books/NBK545213/), [S95](https://www.ncbi.nlm.nih.gov/books/NBK557675/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**173. Each optic tract carries the opposite half-field of both eyes, centre included, and the afferent pupillary fibres with it, so a lesion gives a homonymous hemianopia with a pupillary defect on the side opposite the lesion.**
+**174. Each optic tract carries the opposite half-field of both eyes, centre included, and the afferent pupillary fibres with it, so a lesion gives a homonymous hemianopia with a pupillary defect on the side opposite the lesion.**
 `vision.optic-tract` · tier T1 · weight 0 · sources [S91](https://www.ncbi.nlm.nih.gov/books/NBK553189/), [S92](https://www.ncbi.nlm.nih.gov/books/NBK562262/), [S95](https://www.ncbi.nlm.nih.gov/books/NBK557675/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**174. The occipital pole holds the centre of the opposite half-field — the macula — and keeps a supply from the middle cerebral artery, which is why a posterior cerebral artery stroke spares it.**
+**175. The occipital pole holds the centre of the opposite half-field — the macula — and keeps a supply from the middle cerebral artery, which is why a posterior cerebral artery stroke spares it.**
 `vision.occipital-pole` · tier T2 · weight 0 · sources [S92](https://www.ncbi.nlm.nih.gov/books/NBK562262/), [S94](https://www.ncbi.nlm.nih.gov/books/NBK532296/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**175. A relative afferent pupillary defect compares the two eyes, so it is reported only when one side is affected more than the other; when both are equally affected it is left unsettled.**
+**176. A relative afferent pupillary defect compares the two eyes, so it is reported only when one side is affected more than the other; when both are equally affected it is left unsettled.**
 `vision.rapd-symmetry` · tier T2 · weight 0 · sources [S95](https://www.ncbi.nlm.nih.gov/books/NBK557675/)
 > ⚠ No source read supports all of this. no source read says what a relative defect shows when both sides lose the same; the model leaves it unsettled
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**176. The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure; the genu and posterior limb of the capsule; VPL and VPM; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.**
-`brain.parts-at` · tier T1 · weight 0 · sources [S54](https://www.ncbi.nlm.nih.gov/books/NBK544218/), [S56](https://www.ncbi.nlm.nih.gov/books/NBK542181/), [S57](https://www.ncbi.nlm.nih.gov/books/NBK526040/), [S58](https://www.ncbi.nlm.nih.gov/books/NBK507824/), [S59](https://www.ncbi.nlm.nih.gov/books/NBK544297/), [S16](https://www.ncbi.nlm.nih.gov/books/NBK500000/), [S47](https://www.ncbi.nlm.nih.gov/books/NBK551670/), [S48](https://www.ncbi.nlm.nih.gov/books/NBK560590/), [S98](https://www.ncbi.nlm.nih.gov/books/NBK441970/), [S99](https://pmc.ncbi.nlm.nih.gov/articles/PMC5756788/), [S70](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/), [S104](https://www.ncbi.nlm.nih.gov/books/NBK556132/), [S105](https://www.ncbi.nlm.nih.gov/books/NBK526002/), [S110](https://www.ncbi.nlm.nih.gov/books/NBK538167/), [S114](https://www.ncbi.nlm.nih.gov/books/NBK556084/), [S116](https://www.ncbi.nlm.nih.gov/books/NBK441892/), [S120](https://www.ncbi.nlm.nih.gov/books/NBK537244/), [S122](https://www.ncbi.nlm.nih.gov/books/NBK482283/)
+**177. The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.**
+`brain.parts-at` · tier T1 · weight 0 · sources [S54](https://www.ncbi.nlm.nih.gov/books/NBK544218/), [S56](https://www.ncbi.nlm.nih.gov/books/NBK542181/), [S57](https://www.ncbi.nlm.nih.gov/books/NBK526040/), [S58](https://www.ncbi.nlm.nih.gov/books/NBK507824/), [S59](https://www.ncbi.nlm.nih.gov/books/NBK544297/), [S16](https://www.ncbi.nlm.nih.gov/books/NBK500000/), [S47](https://www.ncbi.nlm.nih.gov/books/NBK551670/), [S48](https://www.ncbi.nlm.nih.gov/books/NBK560590/), [S98](https://www.ncbi.nlm.nih.gov/books/NBK441970/), [S99](https://pmc.ncbi.nlm.nih.gov/articles/PMC5756788/), [S70](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/), [S104](https://www.ncbi.nlm.nih.gov/books/NBK556132/), [S105](https://www.ncbi.nlm.nih.gov/books/NBK526002/), [S110](https://www.ncbi.nlm.nih.gov/books/NBK538167/), [S114](https://www.ncbi.nlm.nih.gov/books/NBK556084/), [S116](https://www.ncbi.nlm.nih.gov/books/NBK441892/), [S120](https://www.ncbi.nlm.nih.gov/books/NBK537244/), [S122](https://www.ncbi.nlm.nih.gov/books/NBK482283/), [S125](https://www.ncbi.nlm.nih.gov/books/NBK559002/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**177. The arm is C5–T1 and the leg L2 downward, the genitals and perineum represented with the leg.**
+**178. The arm is C5–T1 and the leg L2 downward, the genitals and perineum represented with the leg.**
 `brain.limb-regions` · tier T2 · weight 0 · sources [S66](https://www.ncbi.nlm.nih.gov/books/NBK549841/), [S31](https://www.ncbi.nlm.nih.gov/books/NBK544267/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**178. The neck is C1–C4 and the trunk T2–L1, represented between arm and leg.**
+**179. The neck is C1–C4 and the trunk T2–L1, represented between arm and leg.**
 `brain.axial-regions` · tier T2 · weight 0 · sources [S66](https://www.ncbi.nlm.nih.gov/books/NBK549841/)
 > ⚠ No source read supports all of this. R20: the segment boundaries of neck and trunk are a convention
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**179. The inferior frontal gyrus alone: in the dominant hemisphere, pure Broca aphasia.**
+**180. The inferior frontal gyrus alone: in the dominant hemisphere, pure Broca aphasia.**
 `territory.broca-area` · tier T1 · weight 0 · sources [S100](https://www.ncbi.nlm.nih.gov/books/NBK436010/), [S107](https://www.ncbi.nlm.nih.gov/books/NBK549789/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**180. The posterior superior temporal gyrus alone: in the dominant hemisphere, Wernicke aphasia (C34).**
+**181. The posterior superior temporal gyrus alone: in the dominant hemisphere, Wernicke aphasia (C34).**
 `territory.wernicke-area` · tier T3 · weight 0 · conflict C34 · sources [S101](https://www.ncbi.nlm.nih.gov/books/NBK441951/), [S107](https://www.ncbi.nlm.nih.gov/books/NBK549789/), [S102](https://www.ncbi.nlm.nih.gov/books/NBK537006/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**181. The inferior parietal lobule (supramarginal and angular gyri): conduction aphasia in the dominant hemisphere, neglect of the other side of space in the nondominant one.**
+**182. The inferior parietal lobule (supramarginal and angular gyri): conduction aphasia in the dominant hemisphere, neglect of the other side of space in the nondominant one.**
 `territory.supramarginal` · tier T1 · weight 0 · sources [S102](https://www.ncbi.nlm.nih.gov/books/NBK537006/), [S106](https://www.ncbi.nlm.nih.gov/books/NBK562184/), [S107](https://www.ncbi.nlm.nih.gov/books/NBK549789/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**182. A lesion of one cerebellar hemisphere gives limb ataxia on the same side.**
+**183. A lesion of one cerebellar hemisphere gives limb ataxia on the same side.**
 `territory.cerebellar-hemisphere` · tier T1 · weight 0 · sources [S109](https://www.ncbi.nlm.nih.gov/books/NBK562284/), [S110](https://www.ncbi.nlm.nih.gov/books/NBK538167/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**183. A lesion of the oculomotor nucleus itself gives a third nerve palsy on its own side with the other eye’s superior rectus weak, and ptosis on both sides or on neither.**
+**184. A lesion of the oculomotor nucleus itself gives a third nerve palsy on its own side with the other eye’s superior rectus weak, and ptosis on both sides or on neither.**
 `territory.oculomotor-nucleus` · tier T2 · weight 0 · sources [S70](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**184. A lesion of one trochlear nucleus, near the midline beside the MLF at the inferior colliculus, weakens the superior oblique of the other eye.**
+**185. A lesion of one subthalamic nucleus, medial to the internal capsule and below the thalamus, gives hemiballismus of the opposite arm and leg.**
+`territory.subthalamic-nucleus` · tier T1 · weight 0 · sources [S125](https://www.ncbi.nlm.nih.gov/books/NBK559002/), [S126](https://www.ncbi.nlm.nih.gov/books/NBK537141/)
+
+☐ right ☐ wrong ☐ unsure
+Correction and source (a book and page is ideal): ____
+
+**186. A lesion of one trochlear nucleus, near the midline beside the MLF at the inferior colliculus, weakens the superior oblique of the other eye.**
 `territory.trochlear-nucleus` · tier T2 · weight 0 · sources [S120](https://www.ncbi.nlm.nih.gov/books/NBK537244/), [S124](https://www.ncbi.nlm.nih.gov/books/NBK565850/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**185. A Babinski sign requires corticospinal interruption rostral to the lumbosacral segments.**
+**187. A Babinski sign requires corticospinal interruption rostral to the lumbosacral segments.**
 `observation.babinski-level` · tier T2 · weight 0 · sources [S12](https://www.ncbi.nlm.nih.gov/books/NBK531502/)
 > ⚠ No source read supports all of this. R6: no source read gives the plantar reflex’s segments; L5 is a modelling choice
 
@@ -1139,118 +1151,118 @@ Correction and source (a book and page is ideal): ____
 These do not change any computed finding, but they are drawn or printed: segment and
 vertebra positions, myotomes, dermatome landmarks, fibre speeds and tract arrangement.
 
-**186. Each trunk divides beneath the clavicle; the three posterior divisions form the posterior cord and the anterior divisions form the lateral and medial cords.**
+**188. Each trunk divides beneath the clavicle; the three posterior divisions form the posterior cord and the anterior divisions form the lateral and medial cords.**
 `render.plexus-divisions` · tier T1 · sources [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**187. The roots pass between the anterior and middle scalenes; the trunks cross the first rib; the divisions pass beneath and behind the clavicle; the cords are named by where they lie around the axillary artery. Positions are schematic and the arm is drawn shortened.**
+**189. The roots pass between the anterior and middle scalenes; the trunks cross the first rib; the divisions pass beneath and behind the clavicle; the cords are named by where they lie around the axillary artery. Positions are schematic and the arm is drawn shortened.**
 `render.limb-layout` · tier T1 · sources [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/), [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**188. The lumbar plexus lies in front of the sacral plexus; the femoral nerve passes beneath the inguinal ligament to the front of the thigh and the obturator nerve to its medial side; the gluteal nerves leave the pelvis behind; the sciatic nerve runs down the back of the thigh and divides above the knee into the tibial nerve behind the leg and the common fibular nerve, which winds round the fibular neck to the front. Positions are schematic.**
+**190. The lumbar plexus lies in front of the sacral plexus; the femoral nerve passes beneath the inguinal ligament to the front of the thigh and the obturator nerve to its medial side; the gluteal nerves leave the pelvis behind; the sciatic nerve runs down the back of the thigh and divides above the knee into the tibial nerve behind the leg and the common fibular nerve, which winds round the fibular neck to the front. Positions are schematic.**
 `render.leg-layout` · tier T1 · sources [S71](https://www.ncbi.nlm.nih.gov/books/NBK545137/), [S72](https://www.ncbi.nlm.nih.gov/books/NBK556030/), [S73](https://www.ncbi.nlm.nih.gov/books/NBK482225/), [S75](https://www.ncbi.nlm.nih.gov/books/NBK482431/), [S76](https://www.ncbi.nlm.nih.gov/books/NBK532968/), [S79](https://www.ncbi.nlm.nih.gov/books/NBK537028/), [S80](https://www.ncbi.nlm.nih.gov/books/NBK535408/), [S81](https://www.ncbi.nlm.nih.gov/books/NBK532884/), [S89](https://www.ncbi.nlm.nih.gov/books/NBK556065/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**189. The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally, with the inferior frontal gyrus in front of the motor strip, the inferior parietal lobule behind the sensory strip and the superior temporal gyrus below them; the cerebellum lies behind the pons and medulla, its hemispheres lateral to the midline vermis; the pretectum is dorsal in the rostral midbrain, and the trochlear nucleus beside the MLF below it; the trigeminal motor nucleus lies medial and anterior to the principal sensory nucleus in the pons. Positions are schematic.**
-`render.brain-layout` · tier T1 · sources [S48](https://www.ncbi.nlm.nih.gov/books/NBK560590/), [S58](https://www.ncbi.nlm.nih.gov/books/NBK507824/), [S47](https://www.ncbi.nlm.nih.gov/books/NBK551670/), [S54](https://www.ncbi.nlm.nih.gov/books/NBK544218/), [S66](https://www.ncbi.nlm.nih.gov/books/NBK549841/), [S59](https://www.ncbi.nlm.nih.gov/books/NBK544297/), [S98](https://www.ncbi.nlm.nih.gov/books/NBK441970/), [S99](https://pmc.ncbi.nlm.nih.gov/articles/PMC5756788/), [S70](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/), [S104](https://www.ncbi.nlm.nih.gov/books/NBK556132/), [S105](https://www.ncbi.nlm.nih.gov/books/NBK526002/), [S107](https://www.ncbi.nlm.nih.gov/books/NBK549789/), [S110](https://www.ncbi.nlm.nih.gov/books/NBK538167/), [S116](https://www.ncbi.nlm.nih.gov/books/NBK441892/), [S120](https://www.ncbi.nlm.nih.gov/books/NBK537244/), [S122](https://www.ncbi.nlm.nih.gov/books/NBK482283/)
+**191. The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally, with the inferior frontal gyrus in front of the motor strip, the inferior parietal lobule behind the sensory strip and the superior temporal gyrus below them; the cerebellum lies behind the pons and medulla, its hemispheres lateral to the midline vermis; the pretectum is dorsal in the rostral midbrain, and the trochlear nucleus beside the MLF below it; the trigeminal motor nucleus lies medial and anterior to the principal sensory nucleus in the pons; the subthalamic nucleus lies below the thalamus, medial to the capsule. Positions are schematic.**
+`render.brain-layout` · tier T1 · sources [S48](https://www.ncbi.nlm.nih.gov/books/NBK560590/), [S58](https://www.ncbi.nlm.nih.gov/books/NBK507824/), [S47](https://www.ncbi.nlm.nih.gov/books/NBK551670/), [S54](https://www.ncbi.nlm.nih.gov/books/NBK544218/), [S66](https://www.ncbi.nlm.nih.gov/books/NBK549841/), [S59](https://www.ncbi.nlm.nih.gov/books/NBK544297/), [S98](https://www.ncbi.nlm.nih.gov/books/NBK441970/), [S99](https://pmc.ncbi.nlm.nih.gov/articles/PMC5756788/), [S70](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/), [S104](https://www.ncbi.nlm.nih.gov/books/NBK556132/), [S105](https://www.ncbi.nlm.nih.gov/books/NBK526002/), [S107](https://www.ncbi.nlm.nih.gov/books/NBK549789/), [S110](https://www.ncbi.nlm.nih.gov/books/NBK538167/), [S116](https://www.ncbi.nlm.nih.gov/books/NBK441892/), [S120](https://www.ncbi.nlm.nih.gov/books/NBK537244/), [S122](https://www.ncbi.nlm.nih.gov/books/NBK482283/), [S125](https://www.ncbi.nlm.nih.gov/books/NBK559002/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**190. Dorsal scapular C5; long thoracic C5–C6, C7 disputed; suprascapular C5–C6; axillary C5–C6; musculocutaneous C5–C6, C7 disputed; radial C5–T1; median C6–T1, C5 disputed; ulnar and medial antebrachial cutaneous C8–T1. In the leg: psoas branches L1–L3; femoral and obturator L2–L4; lateral femoral cutaneous L2–L3; superior gluteal L4–S1; inferior gluteal L5–S2; sciatic and tibial L4–S3; common fibular L4–S2.**
+**192. Dorsal scapular C5; long thoracic C5–C6, C7 disputed; suprascapular C5–C6; axillary C5–C6; musculocutaneous C5–C6, C7 disputed; radial C5–T1; median C6–T1, C5 disputed; ulnar and medial antebrachial cutaneous C8–T1. In the leg: psoas branches L1–L3; femoral and obturator L2–L4; lateral femoral cutaneous L2–L3; superior gluteal L4–S1; inferior gluteal L5–S2; sciatic and tibial L4–S3; common fibular L4–S2.**
 `render.nerve-roots` · tier T3 · conflict C12 · sources [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/), [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/), [S41](https://www.ncbi.nlm.nih.gov/books/NBK448084/), [S42](https://www.ncbi.nlm.nih.gov/books/NBK493212/), [S43](https://www.ncbi.nlm.nih.gov/books/NBK534199/), [S44](https://www.ncbi.nlm.nih.gov/books/NBK535396/), [S45](https://www.ncbi.nlm.nih.gov/books/NBK551638/), [S46](https://www.ncbi.nlm.nih.gov/books/NBK545249/), [S85](https://www.ncbi.nlm.nih.gov/books/NBK531508/), [S89](https://www.ncbi.nlm.nih.gov/books/NBK556065/), [S71](https://www.ncbi.nlm.nih.gov/books/NBK545137/), [S74](https://www.ncbi.nlm.nih.gov/books/NBK532301/), [S80](https://www.ncbi.nlm.nih.gov/books/NBK535408/), [S81](https://www.ncbi.nlm.nih.gov/books/NBK532884/), [S75](https://www.ncbi.nlm.nih.gov/books/NBK482431/), [S79](https://www.ncbi.nlm.nih.gov/books/NBK537028/), [S76](https://www.ncbi.nlm.nih.gov/books/NBK532968/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**191. C6 thumb; C7 middle finger; C8 little finger; T1 anteromedial forearm and arm; T2 medial arm to the axilla; T4 nipple; T6 xiphoid; T10 umbilicus; L3 medial knee; L4 anterior knee and medial malleolus; L5 dorsum of the foot and first three toes; S1 lateral malleolus. Body positions are schematic.**
+**193. C6 thumb; C7 middle finger; C8 little finger; T1 anteromedial forearm and arm; T2 medial arm to the axilla; T4 nipple; T6 xiphoid; T10 umbilicus; L3 medial knee; L4 anterior knee and medial malleolus; L5 dorsum of the foot and first three toes; S1 lateral malleolus. Body positions are schematic.**
 `render.dermatome-landmarks` · tier T2 · sources [S21](https://www.ncbi.nlm.nih.gov/books/NBK535401/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**192. Loss around the anus and perineum — saddle anaesthesia — marks conus and cauda equina lesions; it is drawn for S3–S5.**
+**194. Loss around the anus and perineum — saddle anaesthesia — marks conus and cauda equina lesions; it is drawn for S3–S5.**
 `render.saddle` · tier T2 · sources [S05](https://www.msdmanuals.com/professional/multimedia/table/spinal-cord-syndromes), [S09](https://www.ncbi.nlm.nih.gov/books/NBK537200/), [S14](https://www.ncbi.nlm.nih.gov/books/NBK545227/)
 > ⚠ No source read supports all of this. R5: no source read assigns the saddle to particular segments
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**193. The regimental badge lies over the lower lateral deltoid; the musculocutaneous nerve supplies the lateral forearm; the superficial radial nerve the back of the hand at the first web space. In the leg: the anterior, medial and lateral thigh; the anterolateral leg; the first dorsal web space of the foot; and the sole, drawn at the edge of the foot because the map is a front view. Body positions are schematic.**
+**195. The regimental badge lies over the lower lateral deltoid; the musculocutaneous nerve supplies the lateral forearm; the superficial radial nerve the back of the hand at the first web space. In the leg: the anterior, medial and lateral thigh; the anterolateral leg; the first dorsal web space of the foot; and the sole, drawn at the edge of the foot because the map is a front view. Body positions are schematic.**
 `render.skin-patches` · tier T2 · sources [S42](https://www.ncbi.nlm.nih.gov/books/NBK493212/), [S43](https://www.ncbi.nlm.nih.gov/books/NBK534199/), [S39](https://www.ncbi.nlm.nih.gov/books/NBK532993/), [S71](https://www.ncbi.nlm.nih.gov/books/NBK545137/), [S73](https://www.ncbi.nlm.nih.gov/books/NBK482225/), [S74](https://www.ncbi.nlm.nih.gov/books/NBK532301/), [S77](https://www.ncbi.nlm.nih.gov/books/NBK549859/), [S79](https://www.ncbi.nlm.nih.gov/books/NBK537028/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**194. C5 shoulder abduction; C6 elbow flexion and wrist extension; C7 elbow extension; C8 wrist flexion and thumb extension (S31) or finger flexion (S32); T1 finger abduction; T2–L1 chest wall and abdominal muscles; L2 hip flexion; L3 knee extension; L4 ankle dorsiflexion; L5 great toe extension; S1 ankle plantar flexion; S2 knee flexion.**
+**196. C5 shoulder abduction; C6 elbow flexion and wrist extension; C7 elbow extension; C8 wrist flexion and thumb extension (S31) or finger flexion (S32); T1 finger abduction; T2–L1 chest wall and abdominal muscles; L2 hip flexion; L3 knee extension; L4 ankle dorsiflexion; L5 great toe extension; S1 ankle plantar flexion; S2 knee flexion.**
 `render.myotomes` · tier T3 · conflict C9 · sources [S31](https://www.ncbi.nlm.nih.gov/books/NBK544267/), [S32](https://www.ncbi.nlm.nih.gov/books/NBK448146/), [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**195. The adult cord is 42–45 cm long; about 0.64–0.83 cm wide in the thoracic region and 1.27–1.33 cm in the cervical and lumbar regions.**
+**197. The adult cord is 42–45 cm long; about 0.64–0.83 cm wide in the thoracic region and 1.27–1.33 cm in the cervical and lumbar regions.**
 `render.cord-dimensions` · tier T2 · sources [S30](https://radiopaedia.org/articles/spinal-cord), [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**196. The cervical enlargement spans C5–T1 (S24) or C3–T1 (S26); the lumbar enlargement L2–S3 (S24) or L1–S2 (S26). Drawn over the union.**
+**198. The cervical enlargement spans C5–T1 (S24) or C3–T1 (S26); the lumbar enlargement L2–S3 (S24) or L1–S2 (S26). Drawn over the union.**
 `render.enlargements` · tier T3 · conflict C6 · sources [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S26](https://nba.uth.tmc.edu/neuroscience/m/s2/chapter03.html)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**197. C1 begins at the foramen magnum and C8 lies at the C7 vertebra; the lower thoracic cord runs three segments ahead of the vertebrae; the conus (S2–Co1) lies at L1 and the cord ends at L1–L2. Positions between these anchors are interpolated.**
+**199. C1 begins at the foramen magnum and C8 lies at the C7 vertebra; the lower thoracic cord runs three segments ahead of the vertebrae; the conus (S2–Co1) lies at L1 and the cord ends at L1–L2. Positions between these anchors are interpolated.**
 `render.segment-ruler` · tier T2 · sources [S26](https://nba.uth.tmc.edu/neuroscience/m/s2/chapter03.html), [S14](https://www.ncbi.nlm.nih.gov/books/NBK545227/), [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S30](https://radiopaedia.org/articles/spinal-cord)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**198. The lateral horn is present only from T1 to L2.**
+**200. The lateral horn is present only from T1 to L2.**
 `render.lateral-horn` · tier T1 · sources [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S07](https://www.ncbi.nlm.nih.gov/books/NBK560731/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**199. The fasciculus gracilis lies medially and carries the lower body; the fasciculus cuneatus lies laterally, exists at T6 and above, and carries the upper body.**
+**201. The fasciculus gracilis lies medially and carries the lower body; the fasciculus cuneatus lies laterally, exists at T6 and above, and carries the upper body.**
 `render.posterior-column-somatotopy` · tier T2 · sources [S27](https://www.ncbi.nlm.nih.gov/books/NBK507888/), [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**200. Posterior columns lie dorsally with gracilis medial; the lateral corticospinal tract in the lateral funiculus; the spinothalamic tract anterolaterally; grey matter forms an H around the central canal. Coordinates are a schematic, not measurements.**
+**202. Posterior columns lie dorsally with gracilis medial; the lateral corticospinal tract in the lateral funiculus; the spinothalamic tract anterolaterally; grey matter forms an H around the central canal. Coordinates are a schematic, not measurements.**
 `render.cross-section-layout` · tier T2 · sources [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S27](https://www.ncbi.nlm.nih.gov/books/NBK507888/)
 > ⚠ No source read supports all of this. the positions of the descending autonomic pathway and the roots are schematic (R7)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**201. Aβ fibres conduct at 16–100 m/s, Aδ at 5–30 (about 15), C at 0.2–2 (about 1); the corticospinal tract at about 67 m/s.**
+**203. Aβ fibres conduct at 16–100 m/s, Aδ at 5–30 (about 15), C at 0.2–2 (about 1); the corticospinal tract at about 67 m/s.**
 `render.conduction-velocity` · tier T2 · sources [S25](https://www.ncbi.nlm.nih.gov/books/NBK547731/), [S28](https://www.ncbi.nlm.nih.gov/books/NBK554461/), [S29](https://pmc.ncbi.nlm.nih.gov/articles/PMC1028573/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**202. Posterior-column and spinothalamic axons inside the cord are drawn at one illustrative speed.**
+**204. Posterior-column and spinothalamic axons inside the cord are drawn at one illustrative speed.**
 `render.intraspinal-speed` · tier T2 · sources _none_
 > ⚠ No source read supports all of this. D14: no source read gives their conduction velocity
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**203. Classical: lumbar and sacral fibres dorsolateral, cervical ventromedial. Revised (cordotomy mapping): lower-limb fibres superficial and posterior, shifting ventrally on ascent; upper-limb fibres deep and anterior, some posterior. Positions schematic.**
+**205. Classical: lumbar and sacral fibres dorsolateral, cervical ventromedial. Revised (cordotomy mapping): lower-limb fibres superficial and posterior, shifting ventrally on ascent; upper-limb fibres deep and anterior, some posterior. Positions schematic.**
 `render.lamination-spinothalamic` · tier T3 · conflict C7 · sources [S23](https://academic.oup.com/braincomms/article/7/3/fcaf237/8165923)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**204. Historical: arm fibres medial in the lateral corticospinal tract. Current: arm and leg fibres diffusely distributed. Positions schematic.**
+**206. Historical: arm fibres medial in the lateral corticospinal tract. Current: arm and leg fibres diffusely distributed. Positions schematic.**
 `render.lamination-corticospinal` · tier T3 · conflict C8 · sources [S06](https://www.ncbi.nlm.nih.gov/books/NBK441932/)
 
 ☐ right ☐ wrong ☐ unsure
@@ -1300,6 +1312,7 @@ Correction and source (a book and page is ideal): ____
 - **R40** — Should the Argyll Robertson pupil (bilateral pretectal damage in neurosyphilis, S117, S118) be offered as a teaching preset, given that it is not a focal lesion?
 - **R41** — C46: can a reviewer give a second source for a trochlear nucleus lesion weakening the contralateral superior oblique?
 - **R42** — C45: should the model add a peripheral third nerve, so that a compressive palsy can show the pupil and an ischaemic one spare it?
+- **R43** — C48: is there a focal lesion of the substantia nigra or striatum with a side stated well enough to be taught as a place?
 
 ## 3. Disputed mechanisms
 
@@ -1318,7 +1331,7 @@ For context. The engine never uses these; they drive only the teaching layer.
 
 ## 4. Composed expectations
 
-764 expected findings are not stated by any single source; they follow from
+768 expected findings are not stated by any single source; they follow from
 several stated facts. They are the most likely place for a reasoning error. Each line is
 what the tool will teach for that lesion.
 
@@ -2439,4 +2452,11 @@ what the tool will teach for that lesion.
 
 - ☐ chronic · left · face sensation → lost or impaired — [S122](https://www.ncbi.nlm.nih.gov/books/NBK482283/), [S115](https://www.ncbi.nlm.nih.gov/books/NBK554418/)
 - ☐ chronic · left · jaw deviation → absent — [S122](https://www.ncbi.nlm.nih.gov/books/NBK482283/) — _the motor nucleus is a separate part, medial to the sensory nucleus_
+
+### Left subthalamic nucleus — _hemiballismus of the right arm and leg_
+
+- ☐ chronic · both sides · motor · C1–Co1 → none — [S125](https://www.ncbi.nlm.nih.gov/books/NBK559002/), [S54](https://www.ncbi.nlm.nih.gov/books/NBK544218/) — _the corticospinal tract runs in the capsule, lateral to the nucleus_
+- ☐ chronic · both sides · all sensation · C1–Co1 → intact — [S125](https://www.ncbi.nlm.nih.gov/books/NBK559002/), [S57](https://www.ncbi.nlm.nih.gov/books/NBK526040/) — _the sensory relays are in the thalamus above it_
+- ☐ chronic · right · face weakness → none — [S54](https://www.ncbi.nlm.nih.gov/books/NBK544218/)
+- ☐ chronic · both sides · ataxia → absent — [S110](https://www.ncbi.nlm.nih.gov/books/NBK538167/) — _flinging is not incoordination_
 

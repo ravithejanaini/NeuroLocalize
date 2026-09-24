@@ -28,10 +28,11 @@ teaching from a phone.
 | P12 | The posterior circulation: the AICA (lateral pons, with hearing loss on the side of the lesion), the PICA (the lateral medulla and inferior cerebellum, so Wallenberg syndrome with truncal ataxia) and the SCA (the superior cerebellum); a territory may now span levels; examination mode separates the AICA from the other pontine places, the PICA from the lateral medulla alone, and the SCA from a cerebellar hemisphere alone |
 | P13 | Vertical gaze and the pupils: the dorsal midbrain (Parinaud syndrome) — upgaze palsy, light–near dissociation and convergence–retraction nystagmus from the pretectum, a midline place; examination mode separates it from the horizontal-gaze places of P9 |
 | P14 | The fourth and fifth nerves: the trochlear nucleus, whose lesion weakens the superior oblique of the other eye, and the trigeminal motor and principal sensory nuclei in the mid-pontine tegmentum, with the jaw deviating to the side of the lesion; the third nerve's pupil recorded as a limit, not modelled, with the reason |
+| P15 | The basal ganglia: hemiballismus from the opposite subthalamic nucleus. Parkinsonism and chorea are recorded as degenerations the sources give no side for, not modelled as places |
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 124 open-access sources that were
+- **Expected outputs are written first**, from 127 open-access sources that were
   actually read — one of them, S108, as its free abstract only (`docs/SOURCES.md`) — and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

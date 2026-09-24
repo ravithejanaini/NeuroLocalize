@@ -221,6 +221,8 @@ export class Panel {
           'brain.convergence-retraction',
           // P14.
           'brain.trochlear',
+          // P15.
+          'brain.ballismus',
           'brain.jaw',
         ],
         body: headHtml(f),

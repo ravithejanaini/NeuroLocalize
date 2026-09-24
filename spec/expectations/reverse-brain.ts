@@ -26,6 +26,8 @@ export type BrainObservation =
   | { readonly kind: 'face_weakness'; readonly side: Side; readonly value: FaceWeaknessObservation }
   | { readonly kind: 'cranial'; readonly side: Side; readonly sign: CranialSign; readonly value: SignObservation }
   | { readonly kind: 'ataxia'; readonly side: Side; readonly value: SignObservation }
+  // A19.
+  | { readonly kind: 'hemiballismus'; readonly side: Side; readonly value: SignObservation }
   | { readonly kind: 'vertigo'; readonly value: SignObservation }
   // A15.
   | { readonly kind: 'truncal_ataxia'; readonly value: SignObservation }

@@ -21,6 +21,7 @@ export const PATHWAYS = [
   'cerebellar_vestibular',
   'visual',
   'language',
+  'movement',
 ] as const;
 export type Pathway = (typeof PATHWAYS)[number];
 
@@ -38,6 +39,7 @@ export const PATHWAY_NAME: Record<Pathway, { readonly name: string; readonly wha
   cerebellar_vestibular: { name: 'Ataxia and vertigo', what: 'the cerebellar hemispheres, vermis and peduncles, and the vestibular nuclei' },
   visual: { name: 'Visual fields', what: 'the optic nerve, chiasm, tract, radiations and occipital cortex, and the pupil' },
   language: { name: 'Language and attention', what: 'fluency, comprehension and repetition in the dominant hemisphere; neglect in the other' },
+  movement: { name: 'Involuntary movements', what: 'hemiballismus: the subthalamic nucleus of the opposite side' },
 };
 
 const hurt = (s: string): boolean => s === 'lost' || s === 'impaired';
@@ -94,6 +96,7 @@ export function pathwaysOf(f: Findings, h: Hypothesis): Pathway[] {
   }
   if (f.vertigo === 'present' || f.truncalAtaxia === 'present') out.add('cerebellar_vestibular');
   if (SIDES.some((x) => FIELD_SECTORS.some((s) => f.fields[x][s] === 'lost')) || SIDES.some((x) => f.rapd[x] === 'present')) out.add('visual');
+  if (SIDES.some((x) => f.hemiballismus[x] === 'present')) out.add('movement');
   // P13: the dorsal midbrain's signs are read across both eyes, as conjugate gaze is.
   if (DORSAL_MIDBRAIN_SIGNS.some((s) => f.eyes[s] === 'present')) out.add('eye_movements');
   if (LANGUAGE_SIGNS.some((s) => f.language[s] === 'present') || SIDES.some((x) => f.neglect[x] === 'present')) out.add('language');
@@ -186,6 +189,9 @@ export function pathwaysShown(observations: readonly Observation[], f: Findings,
         break;
       case 'eyes':
         if (o.value === 'present') out.add('eye_movements');
+        break;
+      case 'hemiballismus':
+        if (o.value === 'present') out.add('movement');
         break;
       case 'language':
       case 'neglect':

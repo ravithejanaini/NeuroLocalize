@@ -360,6 +360,18 @@ situation the freeze exists to catch.
   `docs/P14-analysis.md` before any code; both cases were **run red against the P13 engine**
   first. The pupil is never asserted (C45), and the one-source crossing is marked T2 (C46).
 
+## A19 — The basal ganglia (P15, 2026-09-24)
+
+- **Changed:** two new files. `basal.ts` holds one case, the left subthalamic nucleus, and
+  `reverse-basal.ts` one examination: right-sided hemiballismus with nothing else, answered by
+  the left nucleus. `types.ts` gains the `hemiballismus` assertion and `reverse-brain.ts` the
+  observation. No earlier case or examination changed.
+- **Why:** P15 adds a part, a sign and a place; a row no frozen case observes is an untested
+  row (rule 5).
+- **How circularity was avoided:** every assertion is quoted from S125–S126, read into
+  `docs/P15-analysis.md` before any code, and the case was **run red against the P14 engine**
+  first. Parkinsonism and chorea are never asserted (C48).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -368,11 +380,11 @@ situation the freeze exists to catch.
 | `boundaries.ts` | A2 |
 | `index.ts` | A2 (exports the boundary cases) |
 | `reverse.ts` | A3 |
-| `types.ts` | A4, A6, A7, A11, A14, A15, A17 |
+| `types.ts` | A4, A6, A7, A11, A14, A15, A17, A19 |
 | `plexus.ts` | A4, A5, A6, A9 |
 | `reverse-plexus.ts` | A4, A5 |
 | `brain.ts` | A7, A8, A9, A13, A14, A16, A17, A18 |
-| `reverse-brain.ts` | A7, A13, A14, A15, A16, A17 |
+| `reverse-brain.ts` | A7, A13, A14, A15, A16, A17, A19 |
 | `leg.ts` | A10 |
 | `reverse-leg.ts` | A10 |
 | `vision.ts` | A11 |
@@ -387,5 +399,7 @@ situation the freeze exists to catch.
 | `reverse-midbrain.ts` | A17 |
 | `nerves.ts` | A18 |
 | `reverse-nerves.ts` | A18 |
+| `basal.ts` | A19 |
+| `reverse-basal.ts` | A19 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

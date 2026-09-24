@@ -139,6 +139,13 @@ describe('the drawn brain keeps the sourced relations', () => {
     assert.ok(pons('trigeminal_motor').z < pons('trigeminal_sensory').z, 'and anterior');
   });
 
+  it('puts the subthalamic nucleus below the thalamus and medial to the capsule (S125)', () => {
+    const stn = partPoint(RENDER, 'thalamus', 'subthalamic', 'L', 'face');
+    assert.ok(stn.y < partPoint(RENDER, 'thalamus', 'vpl', 'L', 'face').y, 'below the thalamic nuclei');
+    assert.ok(Math.abs(stn.x) < Math.abs(partPoint(RENDER, 'capsule', 'capsule_posterior_motor', 'L', 'arm').x), 'medial to the capsule');
+    assert.ok(stn.y > L.levels.midbrain.y, 'above the midbrain');
+  });
+
   it('draws every part a territory names', () => {
     for (const row of Object.values(KB.brain.territories)) {
       for (const c of row.compartments) assert.ok(partPoint(RENDER, row.level, c, 'R', 'face'), `${row.level} ${c}`);

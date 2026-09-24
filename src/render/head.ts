@@ -41,6 +41,7 @@ export function headAffected(f: Findings): boolean {
       f.faceWeakness[x] !== 'none' ||
       f.faceSensation[x] !== 'intact' ||
       f.ataxia[x] !== 'absent' ||
+      f.hemiballismus[x] !== 'absent' ||
       CRANIAL_SIGNS.some((s) => f.cranial[x][s] !== 'absent'),
   ) || f.vertigo !== 'absent' || f.truncalAtaxia !== 'absent' || DORSAL_MIDBRAIN_SIGNS.some((s) => f.eyes[s] !== 'absent');
 }
@@ -60,6 +61,7 @@ export function headHtml(f: Findings): string {
     row('Face, strength', (x) => ({ word: FACE_WORD[f.faceWeakness[x]], quiet: f.faceWeakness[x] === 'none' })),
     ...CRANIAL_SIGNS.map((s) => row(CRANIAL_NAME[s], (x) => ({ word: SIGN_WORD[f.cranial[x][s]], quiet: f.cranial[x][s] === 'absent' }))),
     row('Limb ataxia', (x) => ({ word: SIGN_WORD[f.ataxia[x]], quiet: f.ataxia[x] === 'absent' })),
+    row('Hemiballismus', (x) => ({ word: SIGN_WORD[f.hemiballismus[x]], quiet: f.hemiballismus[x] === 'absent' })),
   ].join('');
   return `${lead}<table class="head"><thead><tr><th></th><th>Left</th><th>Right</th></tr></thead><tbody>${rows}</tbody></table>
     <div class="kv"><span class="k">Vertigo</span><span class="v">${SIGN_WORD[f.vertigo]}</span></div>

@@ -134,6 +134,7 @@ export const CYCLE: Record<Slot['kind'], readonly string[]> = {
   face_weakness: ['normal', 'lower', 'whole'],
   cranial: ['absent', 'present'],
   ataxia: ['absent', 'present'],
+  hemiballismus: ['absent', 'present'],
   vertigo: ['absent', 'present'],
   truncal_ataxia: ['absent', 'present'],
   eyes: ['absent', 'present'],
@@ -187,6 +188,8 @@ export function slotLabel(render: RenderKb, s: Slot): string {
       return `${SIDE_WORD[s.side]} ${CRANIAL_NAME[s.sign]}`;
     case 'ataxia':
       return `${SIDE_WORD[s.side]} limb ataxia`;
+    case 'hemiballismus':
+      return `${SIDE_WORD[s.side]} arm and leg fling involuntarily (hemiballismus)`;
     case 'vertigo':
       return 'Vertigo and nystagmus';
     case 'truncal_ataxia':
@@ -316,6 +319,7 @@ export function examTables(render: RenderKb, findings: Findings): string {
     headRow('Face, strength', (side) => ({ kind: 'face_weakness', side })),
     ...CRANIAL_SIGNS.map((sign) => headRow(CRANIAL_NAME[sign], (side) => ({ kind: 'cranial', side, sign }))),
     headRow('Limb ataxia', (side) => ({ kind: 'ataxia', side })),
+    headRow('Hemiballismus', (side) => ({ kind: 'hemiballismus', side })),
   ].join('');
   // P10: language belongs to the patient, not a side; neglect is recorded by the side of space.
   const language = LANGUAGE_SIGNS.map((sign) => single({ kind: 'language', sign }, LANGUAGE_NAME[sign])).join('');

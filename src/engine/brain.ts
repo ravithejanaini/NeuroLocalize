@@ -75,6 +75,7 @@ export function validateBrain(kb: Kb): void {
     b.elevation.steps,
     b.elevationCrossed.steps,
     b.hearing.steps,
+    b.ballismus.steps,
     b.trochlear.steps,
     b.jaw.steps,
     b.upgaze.steps,
@@ -175,6 +176,8 @@ export type BrainFindings = {
   readonly faceWeakness: Readonly<Record<Side, FaceWeakness>>;
   readonly cranial: Readonly<Record<Side, Readonly<Record<CranialSign, SignState>>>>;
   readonly ataxia: Readonly<Record<Side, SignState>>;
+  /** P15: flinging involuntary movements of that side's limbs. */
+  readonly hemiballismus: Readonly<Record<Side, SignState>>;
   readonly vertigo: SignState;
   /** P11: truncal ataxia, from the vermis; unsettled after a hemisphere lesion (C35). */
   readonly truncalAtaxia: SignState;
@@ -219,6 +222,7 @@ export function brainFindings(kb: Kb, map: BrainMap): BrainFindings {
   const faceWeak = {} as Record<Side, FaceWeakness>;
   const cranial = {} as Record<Side, Record<CranialSign, SignState>>;
   const ataxia = {} as Record<Side, SignState>;
+  const hemiballismus = {} as Record<Side, SignState>;
   const b = kb.brain;
   for (const x of SIDES) {
     faceSensation[x] = STATE[worst([routeDamage(map, b.faceNucleus, x, 'face'), routeDamage(map, b.faceAscending, x, 'face')])];
@@ -266,6 +270,7 @@ export function brainFindings(kb: Kb, map: BrainMap): BrainFindings {
     }
     cranial[x] = signs;
     ataxia[x] = present(routeDamage(map, b.ataxia, x, 'face'));
+    hemiballismus[x] = present(routeDamage(map, b.ballismus, x, 'face'));
   }
   const vertigo = present(worst(SIDES.map((h) => along(map, b.vertigo.steps, h, 'face'))));
   // The vermis is midline: a lesion of either half gives truncal ataxia (S109, S110).
@@ -297,7 +302,7 @@ export function brainFindings(kb: Kb, map: BrainMap): BrainFindings {
     const h = other(x);
     neglect[x] = along(map, b.neglect.steps, h, 'face') === 0 ? 'absent' : h === dominant ? b.neglect.afterDominant : 'present';
   }
-  return { faceSensation, faceWeakness: faceWeak, cranial, ataxia, vertigo, truncalAtaxia, eyes, language, neglect };
+  return { faceSensation, faceWeakness: faceWeak, cranial, ataxia, hemiballismus, vertigo, truncalAtaxia, eyes, language, neglect };
 }
 
 /** The ipsilateral oculosympathetic pathway in the brainstem (S16). */

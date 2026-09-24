@@ -22,7 +22,7 @@ export function examSlots(render: RenderKb): Slot[] {
     out.push({ kind: 'babinski', side }, { kind: 'horner', side });
     for (const muscle of MUSCLES) out.push({ kind: 'muscle', side, muscle });
     for (const area of OWN_AREAS) out.push({ kind: 'skin', side, area });
-    out.push({ kind: 'face_sensation', side }, { kind: 'face_weakness', side }, { kind: 'ataxia', side });
+    out.push({ kind: 'face_sensation', side }, { kind: 'face_weakness', side }, { kind: 'ataxia', side }, { kind: 'hemiballismus', side });
     for (const sign of CRANIAL_SIGNS) out.push({ kind: 'cranial', side, sign });
     // P8: each eye's field, sector by sector, and its pupil.
     for (const sector of FIELD_SECTORS) out.push({ kind: 'field', eye: side, sector });

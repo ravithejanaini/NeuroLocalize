@@ -310,6 +310,18 @@ export const BRAIN: Brain = {
     },
     steps: [{ level: 'pons', compartment: 'vestibular' }, { level: 'medulla', compartment: 'vestibular' }],
   },
+  ballismus: {
+    meta: {
+      id: 'brain.ballismus',
+      claim: 'A lesion of the subthalamic nucleus gives hemiballismus — flinging, involuntary movements of the arm and leg — on the opposite side; stroke is its commonest cause. Lesions elsewhere in the basal ganglia can also give it (C47).',
+      sources: ['S125', 'S126'],
+      tier: 'T3',
+      bookRef: p,
+      conflict: 'C47',
+    },
+    steps: [{ level: 'thalamus', compartment: 'subthalamic' }],
+    serves: 'contralateral',
+  },
   trochlear: {
     meta: {
       id: 'brain.trochlear',
@@ -455,15 +467,15 @@ export const BRAIN: Brain = {
   partsAt: {
     meta: {
       id: 'brain.parts-at',
-      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure; the genu and posterior limb of the capsule; VPL and VPM; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.',
-      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122'],
+      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.',
+      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125'],
       tier: 'T1',
       bookRef: p,
     },
     parts: {
       cortex: ['motor_cortex', 'sensory_cortex', 'inferior_frontal', 'superior_temporal', 'inferior_parietal'],
       capsule: ['capsule_genu', 'capsule_posterior_motor', 'capsule_posterior_sensory'],
-      thalamus: ['vpl', 'vpm'],
+      thalamus: ['vpl', 'vpm', 'subthalamic'],
       midbrain: ['peduncle', 'oculomotor', 'oculomotor_nucleus', 'mlf', 'pretectum', 'trochlear_nucleus', 'medial_lemniscus', 'spinothalamic', 'sympathetic'],
       pons: [
         'basis',
@@ -795,6 +807,17 @@ export const BRAIN: Brain = {
       level: 'midbrain',
       compartments: ['pretectum'],
       midline: true,
+    },
+    subthalamic_nucleus: {
+      meta: {
+        id: 'territory.subthalamic-nucleus',
+        claim: 'A lesion of one subthalamic nucleus, medial to the internal capsule and below the thalamus, gives hemiballismus of the opposite arm and leg.',
+        sources: ['S125', 'S126'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'thalamus',
+      compartments: ['subthalamic'],
     },
     trochlear_nucleus: {
       meta: {

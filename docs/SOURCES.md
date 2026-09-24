@@ -10,7 +10,7 @@ content could only be queried for paraphrase; its raw table text was not obtaine
 
 Accessed 2026-09-16 unless noted. S33–S46 were read on 2026-09-17 for P4 and S47–S66 the same day for P5; S16 and S19 were
 read again that day for the facts added to their rows. S67–S70 were read on 2026-09-17 for
-the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.md`); S91–S97 for P8 (`docs/P8-analysis.md`); S98–S99 on 2026-09-18 for P9 (`docs/P9-analysis.md`); S100–S108 the same day for P10 (`docs/P10-analysis.md`); S109–S112 the same day for P11 (`docs/P11-analysis.md`); S113–S115 on 2026-09-23 for P12 (`docs/P12-analysis.md`), when S65 was also re-read for the lateral pontine syndrome; S116–S119 the same day for P13 (`docs/P13-analysis.md`); S120–S124 the same day for P14 (`docs/P14-analysis.md`), when S62 was re-read for the pupil.
+the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.md`); S91–S97 for P8 (`docs/P8-analysis.md`); S98–S99 on 2026-09-18 for P9 (`docs/P9-analysis.md`); S100–S108 the same day for P10 (`docs/P10-analysis.md`); S109–S112 the same day for P11 (`docs/P11-analysis.md`); S113–S115 on 2026-09-23 for P12 (`docs/P12-analysis.md`), when S65 was also re-read for the lateral pontine syndrome; S116–S119 the same day for P13 (`docs/P13-analysis.md`); S120–S124 the same day for P14 (`docs/P14-analysis.md`), when S62 was re-read for the pupil; S125–S127 on 2026-09-24 for P15 (`docs/P15-analysis.md`).
 
 | Id | Source | Authors | Last updated | Used for |
 |---|---|---|---|---|
@@ -138,6 +138,9 @@ the clinical audit (A9, D53); S71–S90 the same day for P7 (`docs/P7-analysis.m
 | S122 | [StatPearls — Neuroanatomy, Cranial Nerve 5 (Trigeminal)](https://www.ncbi.nlm.nih.gov/books/NBK482283/) | Huff, Weisbrod, Daly | 2024-04-20 | the motor nucleus medial to the principal sensory nucleus in the lateral pontine tegmentum; it supplies the muscles of mastication |
 | S123 | [Walker — Cranial Nerve V: The Trigeminal Nerve, in Clinical Methods, 3rd edition (1990)](https://www.ncbi.nlm.nih.gov/books/NBK384/) | Walker | 1990 | the mandible deviates toward the paralysed side on opening, from the unopposed opposite pterygoid |
 | S124 | [StatPearls — Trochlear Nerve Palsy](https://www.ncbi.nlm.nih.gov/books/NBK565850/) | Khanam, Sood | 2024-09-08 | the hypertropia of the paretic eye; it does not discuss the nucleus (C46) |
+| S125 | [StatPearls — Neuroanatomy, Subthalamic Nucleus](https://www.ncbi.nlm.nih.gov/books/NBK559002/) | Basinger, Joseph | 2022-10-31 | hemiballismus contralateral to the injured subthalamic nucleus, most often from stroke; lesions sparing it can also cause it (C47); its place medial to the capsule, below the thalamus |
+| S126 | [StatPearls — Neuroanatomy, Basal Ganglia](https://www.ncbi.nlm.nih.gov/books/NBK537141/) | Young, Reddy, Sonne | 2023-07-24 | a contralateral subthalamic lesion causes hemiballism; parkinsonism from nigral degeneration and chorea from caudate and putamen loss (C48) |
+| S127 | [StatPearls — Neuroanatomy, Substantia Nigra](https://www.ncbi.nlm.nih.gov/books/NBK536995/) | Sonne, Reddy, Beato | 2024-09-10 | the substantia nigra behind the crus cerebri; vascular parkinsonism after stroke, with no site or side given (C48) |
 
 ## Not used, and why
 

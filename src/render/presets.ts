@@ -130,6 +130,8 @@ export const PRESETS: readonly Preset[] = [
   // P9: the eye movements.
   // P13: the dorsal midbrain is midline, so the side does not change it.
   { id: 'dorsal-midbrain', kind: 'brain', label: 'Dorsal midbrain', pattern: 'Parinaud: cannot look up', territory: 'dorsal_midbrain' },
+  // P15: the basal ganglia.
+  { id: 'subthalamic', kind: 'brain', label: 'Subthalamic nucleus', pattern: 'Hemiballismus of the OTHER side', territory: 'subthalamic_nucleus' },
   // P14: the fourth and fifth nerves.
   { id: 'trochlear-nucleus', kind: 'brain', label: 'Trochlear nucleus', pattern: 'The OTHER eye rides high', territory: 'trochlear_nucleus' },
   { id: 'midpontine', kind: 'brain', label: 'Mid-pontine tegmentum', pattern: 'Jaw and face one side, body the other', territory: 'midpontine_tegmentum' },

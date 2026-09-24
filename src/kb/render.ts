@@ -221,8 +221,8 @@ export const RENDER: RenderKb = {
   brainLayout: {
     meta: {
       id: 'render.brain-layout',
-      claim: 'The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally, with the inferior frontal gyrus in front of the motor strip, the inferior parietal lobule behind the sensory strip and the superior temporal gyrus below them; the cerebellum lies behind the pons and medulla, its hemispheres lateral to the midline vermis; the pretectum is dorsal in the rostral midbrain, and the trochlear nucleus beside the MLF below it; the trigeminal motor nucleus lies medial and anterior to the principal sensory nucleus in the pons. Positions are schematic.',
-      sources: ['S48', 'S58', 'S47', 'S54', 'S66', 'S59', 'S98', 'S99', 'S70', 'S104', 'S105', 'S107', 'S110', 'S116', 'S120', 'S122'],
+      claim: 'The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally, with the inferior frontal gyrus in front of the motor strip, the inferior parietal lobule behind the sensory strip and the superior temporal gyrus below them; the cerebellum lies behind the pons and medulla, its hemispheres lateral to the midline vermis; the pretectum is dorsal in the rostral midbrain, and the trochlear nucleus beside the MLF below it; the trigeminal motor nucleus lies medial and anterior to the principal sensory nucleus in the pons; the subthalamic nucleus lies below the thalamus, medial to the capsule. Positions are schematic.',
+      sources: ['S48', 'S58', 'S47', 'S54', 'S66', 'S59', 'S98', 'S99', 'S70', 'S104', 'S105', 'S107', 'S110', 'S116', 'S120', 'S122', 'S125'],
       tier: 'T1',
       bookRef: 'pending',
     },
@@ -277,6 +277,8 @@ export const RENDER: RenderKb = {
       'midbrain:sympathetic': [-0.66, -0.2, 0.32],
       'thalamus:vpl': [-1.0, 0, 0.1],
       'thalamus:vpm': [-0.72, 0, 0.1],
+      // P15: below the thalamus, medial to the capsule, at the top of the midbrain (S125).
+      'thalamus:subthalamic': [-0.6, -0.55, -0.1],
       'capsule:capsule_genu': [-1.4, 0, -0.35],
       'capsule:capsule_posterior_motor': [-1.55, 0, 0.15],
       'capsule:capsule_posterior_sensory': [-1.62, 0, 0.6],

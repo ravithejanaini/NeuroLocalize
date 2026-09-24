@@ -59,6 +59,8 @@ export type Observation =
   | { readonly kind: 'face_weakness'; readonly side: Side; readonly value: FaceWeaknessObservation }
   | { readonly kind: 'cranial'; readonly side: Side; readonly sign: CranialSign; readonly value: SignObservation }
   | { readonly kind: 'ataxia'; readonly side: Side; readonly value: SignObservation }
+  /** P15: flinging involuntary movements of that side's limbs. */
+  | { readonly kind: 'hemiballismus'; readonly side: Side; readonly value: SignObservation }
   | { readonly kind: 'vertigo'; readonly value: SignObservation }
   /** P11: truncal ataxia, about the patient. */
   | { readonly kind: 'truncal_ataxia'; readonly value: SignObservation }
@@ -96,6 +98,7 @@ const DOMAIN: Record<Observation['kind'], readonly string[]> = {
   face_weakness: ['normal', 'lower', 'whole'],
   cranial: ['present', 'absent'],
   ataxia: ['present', 'absent'],
+  hemiballismus: ['present', 'absent'],
   vertigo: ['present', 'absent'],
   truncal_ataxia: ['present', 'absent'],
   eyes: ['present', 'absent'],
@@ -126,6 +129,7 @@ export const slotKey = (s: Slot): string => {
     case 'face_sensation':
     case 'face_weakness':
     case 'ataxia':
+    case 'hemiballismus':
       return `${s.kind}|${s.side}`;
     case 'cranial':
       return `cranial|${s.side}|${s.sign}`;
@@ -187,6 +191,10 @@ export function predict(f: Findings, s: Slot, kb: Kb = KB): Value | 'unknown' {
     }
     case 'ataxia': {
       const v = f.ataxia[s.side];
+      return v === 'indeterminate' ? 'unknown' : v;
+    }
+    case 'hemiballismus': {
+      const v = f.hemiballismus[s.side];
       return v === 'indeterminate' ? 'unknown' : v;
     }
     case 'vertigo':
@@ -539,6 +547,7 @@ export const SITE_NAME: Record<Place, string> = {
   sca: 'superior cerebellar artery (superior cerebellum)',
   dorsal_midbrain: 'dorsal midbrain (pretectum, superior colliculus)',
   trochlear_nucleus: 'trochlear nucleus, in the midbrain',
+  subthalamic_nucleus: 'subthalamic nucleus',
   midpontine_tegmentum: 'mid-pontine tegmentum (trigeminal nuclei)',
   pontine_tegmentum: 'pontine tegmentum (abducens nucleus and MLF)',
   oculomotor_nucleus: 'oculomotor nucleus, in the midbrain',
@@ -627,6 +636,7 @@ const PART_NAME: Record<BrainCompartment, string> = {
   cochlear: 'cochlear nuclei',
   pretectum: 'half of the pretectum',
   trochlear_nucleus: 'trochlear nucleus',
+  subthalamic: 'subthalamic nucleus',
   trigeminal_motor: 'trigeminal motor nucleus',
   trigeminal_sensory: 'principal trigeminal sensory nucleus',
   mlf: 'medial longitudinal fasciculus',
@@ -765,6 +775,10 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
     case 'ataxia': {
       const c = faceCuts([b.ataxia], o.side);
       return c.length ? c.join('; ') : 'the cerebellar peduncles on that side are intact';
+    }
+    case 'hemiballismus': {
+      const c = faceCuts([b.ballismus], o.side);
+      return c.length ? `${c.join('; ')}: it acts on the opposite limbs` : 'the opposite subthalamic nucleus is intact';
     }
     case 'vertigo': {
       const c = (['L', 'R'] as const).map((s) => brainCut(bmap, b.vertigo.steps, s, 'face')).filter((x): x is string => x !== null);

@@ -1169,3 +1169,42 @@ file had ended on a question until P14, when R42 did, and the P14 worksheet chec
 (41 questions where 42 were written). Questions now end at a blank line or the end of the file,
 and `test/review.test.ts` fails unless every R-number in this file reaches the page (falsified
 by restoring the old pattern: the test names R42).
+
+## P15 — the basal ganglia
+
+The analysis written before any P15 code is `docs/P15-analysis.md`; S125–S127 were read for it
+on 2026-09-24. The frozen case was run red against the P14 engine first: hemiballismus came back
+undefined, nothing else failed.
+
+### Source conflicts and limits
+
+**C47 — Hemiballismus from elsewhere.** S125: "lesions within the basal ganglia that do not
+involve the subthalamic nucleus can still produce hemiballismus". The model places it in the
+subthalamic nucleus only, so the examination teaches the classic site; the row is T3 and the
+examination's note says the nucleus is not the only cause.
+
+**C48 — Parkinsonism and chorea are not places.** S126 and S127 describe parkinsonism as
+"neurodegeneration of the SNpc dopaminergic neurons" and chorea as neuronal death in the caudate
+and putamen; S127 names vascular parkinsonism after stroke without its site or side. A place
+would need a side no source read gives, so neither is modelled.
+
+### Decisions
+
+**D91 — P15 is one sign, on purpose.** The phase was planned as the basal ganglia entire. Read
+against the sources, only hemiballismus is a focal sign with a stated side; building the other
+two would have meant inventing their laterality. The phase was cut to what the sources support
+rather than widened to what the plan named.
+
+**D92 — The subthalamic nucleus sits at the model's `thalamus` level.** That level holds the
+diencephalon between the midbrain and the capsule; S125 puts the nucleus at the junction of the
+midbrain and diencephalon, below the thalamus and medial to the capsule. No new level was made
+for one part.
+
+**D93 — What the P15 mutation run showed.** 97.0% of sourced mutants are killed (4,907 of
+5,057), 96.3% of all, and no P15 row has a survivor on the first run: all 43 mutants of the
+hemiballismus route and all 7 of the place.
+
+### Reviewer questions
+
+**R43** — C48: is there a focal lesion of the substantia nigra or striatum with a side stated
+well enough to be taught as a place?

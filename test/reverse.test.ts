@@ -9,6 +9,7 @@ import { CEREBELLUM_REVERSE_CASES } from '../spec/expectations/reverse-cerebellu
 import { POSTERIOR_REVERSE_CASES } from '../spec/expectations/reverse-posterior.ts';
 import { MIDBRAIN_REVERSE_CASES } from '../spec/expectations/reverse-midbrain.ts';
 import { NERVE_REVERSE_CASES } from '../spec/expectations/reverse-nerves.ts';
+import { BASAL_REVERSE_CASES } from '../spec/expectations/reverse-basal.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
 import { hypotheses } from '../src/engine/hypotheses.ts';
@@ -23,7 +24,7 @@ import { examSlots } from '../src/render/slots.ts';
 const SLOTS = examSlots(RENDER);
 
 describe('frozen reverse expectations (A3, A4, A7)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES]) {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });
@@ -46,7 +47,8 @@ describe('reverse engine contract', () => {
     // cranial sign on each side, so that term becomes 2 * 13.
     // P13 adds three signs of both eyes together, about the patient: + 3. P14 adds the superior
     // oblique and the jaw, two more cranial signs on each side, so that term becomes 2 * 15.
-    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 15 + 1 + 2 * 7 + 3 + 2 + 1 + 3);
+    // P15 adds hemiballismus, one on each side: + 2.
+    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 15 + 1 + 2 * 7 + 3 + 2 + 1 + 3 + 2);
   });
 
   it('with no findings, prefers nothing in particular and still suggests a test', () => {
@@ -240,8 +242,8 @@ describe('reverse engine contract', () => {
     assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 56, 'D32, P7: 18 arm and 10 leg places on each side');
     assert.equal(
       places.filter((x) => x.family.startsWith('brainstem') || x.family.startsWith('hemisphere')).length,
-      43,
-      'D44, P9, P10, P12, P13, P14: 21 brainstem and cerebral territories on each side — nine from P5, three from P9, five from P10, AICA and PICA from P12, the trochlear nucleus and mid-pontine tegmentum from P14 — and the one midline dorsal midbrain',
+      45,
+      'D44, P9, P10, P12, P13, P14, P15: 22 brainstem and cerebral territories on each side — nine from P5, three from P9, five from P10, AICA and PICA from P12, the trochlear nucleus and mid-pontine tegmentum from P14, the subthalamic nucleus from P15 — and the one midline dorsal midbrain',
     );
     // P11: a hemisphere on each side and one midline vermis, never counted twice.
     assert.equal(places.filter((x) => x.family.startsWith('cerebellum')).length, 5, 'P11, P12: two cerebellar hemispheres, one vermis and the SCA on each side');
@@ -424,5 +426,23 @@ describe('the working for the fourth and fifth nerves (P14)', () => {
     assert.match(eye?.because ?? '', /left trochlear nucleus in the midbrain is damaged/);
     const [jaw] = explain(mp, [{ kind: 'cranial', side: 'L', sign: 'jaw_deviation', value: 'present' }], 'chronic');
     assert.match(jaw?.because ?? '', /left trigeminal motor nucleus in the pons is damaged/);
+  });
+});
+
+describe('the working for the basal ganglia (P15)', () => {
+  it('traces right-sided hemiballismus to the left subthalamic nucleus', () => {
+    prepareSync('chronic');
+    const stn = hypotheses().find((x) => x.id === 'hemisphere_left:subthalamic_nucleus');
+    assert.ok(stn);
+    const [right, left] = explain(
+      stn,
+      [
+        { kind: 'hemiballismus', side: 'R', value: 'present' },
+        { kind: 'hemiballismus', side: 'L', value: 'absent' },
+      ],
+      'chronic',
+    );
+    assert.match(right?.because ?? '', /left subthalamic nucleus is damaged: it acts on the opposite limbs/);
+    assert.match(left?.because ?? '', /the opposite subthalamic nucleus is intact/);
   });
 });
