@@ -1621,3 +1621,71 @@ are now killed by the pudendal nerve's cases.
 
 **R54** — C66: which segments should the saddle be taught as — S3–S5, or S2–S5 as the pudendal
 nerve's roots and the anal verge together suggest?
+
+## P24 — the lateral geniculate nucleus
+
+The analysis written before any P24 code is `docs/P24-analysis.md`; S147 was read for it, and S91
+and S137 re-read, on 2026-09-25. Run against the P23 engine first, the frozen case failed (the
+engine refused `lgn` as an unknown part). The examination **passed** against P23, because it
+accepts the whole occipital cortex in the lead (C70); it guards "not the optic tract" rather than
+testing new behaviour.
+
+### Source conflicts and limits
+
+**C69 — Partial lesions of the nucleus.** S147 gives quadrantanopias as well as hemianopias, and
+cites sector-shaped and incongruous defects from one choroidal artery or the other. The field
+here has four quadrants and a centre per eye; the model shows only the whole nucleus.
+
+**C70 — The nucleus and the whole occipital cortex look alike here.** Both give a complete
+homonymous hemianopia, centre included, with no pupillary defect. Congruity would separate them,
+and the model does not show congruity (C26).
+
+### Decisions
+
+**D126 — The nucleus is a part with no pupillary defect.** Each visual part already declares its
+field and its pupil effect (P8), so the nucleus is data only: the opposite half-field with the
+centre, and `rapd: 'none'`, because the pupil's fibres leave the tract just before it (S137) for
+the pretectal nuclei (S91).
+
+**D127 — One P8 expectation was true only because the nucleus was missing.** The
+`reverse-occipital-cortex` examination expected the whole occipital cortex alone in the lead for
+a complete hemianopia with normal pupils. Its reasoning — normal pupils exclude the tract, a lost
+centre excludes a spared pole — never excluded the nucleus, which gives the same (S147, S137). It
+now expects the occipital cortex or the nucleus. The snapshot of every examination's leader
+(`scripts/top-snapshot.ts`) shows this is the only one of the 69 earlier leaders that moved.
+
+**D128 — One count recomputed.** The nucleus is a seventh one-sided visual place
+(`test/vision.test.ts`).
+
+**D129 — The visual parts' fields had never been mutated.** P24's first mutation run gave the
+lateral geniculate part no mutants at all: the mutator had no pools for a visual part's `eye`,
+`field`, `quadrants`, `centre` and `rapd`, so since P8 none of them — including the nucleus's "no
+pupillary defect", the fact this phase rests on — had been tested. Pools were added. Of the 108
+visual-part mutants, 94 fail the forward cases at once; the nucleus's pupil mutants among them.
+Of the 14 that did not:
+
+- **equivalent by construction (8):** a centre of `with` and of `only` behave alike (the
+  difference lies in `quadrants`), for five parts; the chiasm is always lesioned on both sides, so
+  its `eye` makes no difference; and its `rapd` of `same` or `opposite` ends unsettled through the
+  both-sides rule, as `open` does;
+- **real, now pinned (3):** a calcarine bank's quadrant (each bank alone had no case) and the
+  chiasm's pupil when set to `none`. Three cases were added to `geniculate.ts`: below the fissure
+  a superior quadrantanopia, above it an inferior one (S93), and at the chiasm a defect possible
+  but not certain (S95, re-read, 2026-04-30). Applied directly, each mutant now fails two
+  assertions;
+- **real, left open (3):** the occipital pole's own `quadrants`. No case lesions the pole alone,
+  and S137's wording for a pole lesion — a hemianopia "involving the contralateral half of
+  macular vision" — does not settle the periphery, so no case was invented.
+
+The full run afterwards: 97.3% of sourced mutants killed (5,687 of 5,846), 96.5% of all, with the
+visual parts now counted. Their survivors are exactly the eight equivalent and the three pole
+mutants listed above; every mutant of the nucleus's pupil and field is killed.
+
+S95, re-read, also states the fact P24 rests on — "just before fibers reach the lateral
+geniculate body …, a few fibers (pupillary reflex) branch off to the pretectum" — and is now a
+source of the nucleus's row.
+
+### Reviewer questions
+
+**R55** — C69: should the field chart be refined enough to show the nucleus's sector-shaped
+defects, from the anterior and the lateral posterior choroidal arteries?

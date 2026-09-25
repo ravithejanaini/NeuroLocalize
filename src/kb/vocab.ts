@@ -447,6 +447,8 @@ export const VISUAL_PARTS = [
   'optic_nerve',
   'chiasm',
   'optic_tract',
+  // P24: the lateral geniculate nucleus, between the tract and the radiation.
+  'lgn',
   'meyer_loop',
   'parietal_radiation',
   'calcarine_lower',
@@ -466,6 +468,8 @@ export const VISION_PLACES = [
   'occipital_cortex',
   // P18: both occipital lobes.
   'pca_bilateral',
+  // P24: the lateral geniculate nucleus.
+  'lgn',
 ] as const;
 export type VisionPlace = (typeof VISION_PLACES)[number];
 

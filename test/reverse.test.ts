@@ -17,6 +17,7 @@ import { FIBULAR_REVERSE_CASES } from '../spec/expectations/reverse-fibular.ts';
 import { TARSAL_REVERSE_CASES } from '../spec/expectations/reverse-tarsal.ts';
 import { TRANSCORTICAL_REVERSE_CASES } from '../spec/expectations/reverse-transcortical.ts';
 import { PUDENDAL_REVERSE_CASES } from '../spec/expectations/reverse-pudendal.ts';
+import { GENICULATE_REVERSE_CASES } from '../spec/expectations/reverse-geniculate.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
 import { hypotheses } from '../src/engine/hypotheses.ts';
@@ -31,7 +32,7 @@ import { examSlots } from '../src/render/slots.ts';
 const SLOTS = examSlots(RENDER);
 
 describe('frozen reverse expectations (A3, A4, A7)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES]) {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });

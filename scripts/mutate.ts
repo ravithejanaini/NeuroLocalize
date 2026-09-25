@@ -11,6 +11,7 @@ import { PLEXUS_CASES } from '../spec/expectations/plexus.ts';
 import { LEG_CASES } from '../spec/expectations/leg.ts';
 import { VISION_CASES } from '../spec/expectations/vision.ts';
 import { OCCIPITAL_CASES } from '../spec/expectations/occipital.ts';
+import { GENICULATE_CASES } from '../spec/expectations/geniculate.ts';
 import { FIBULAR_CASES } from '../spec/expectations/fibular.ts';
 import { TARSAL_CASES } from '../spec/expectations/tarsal.ts';
 import { TRANSCORTICAL_CASES } from '../spec/expectations/transcortical.ts';
@@ -56,13 +57,14 @@ import { FIBULAR_REVERSE_CASES } from '../spec/expectations/reverse-fibular.ts';
 import { TARSAL_REVERSE_CASES } from '../spec/expectations/reverse-tarsal.ts';
 import { TRANSCORTICAL_REVERSE_CASES } from '../spec/expectations/reverse-transcortical.ts';
 import { PUDENDAL_REVERSE_CASES } from '../spec/expectations/reverse-pudendal.ts';
+import { GENICULATE_REVERSE_CASES } from '../spec/expectations/reverse-geniculate.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { RENDER } from '../src/kb/render.ts';
 import { examSlots } from '../src/render/slots.ts';
 import { reverseFailures, runAll, territoryFailures, visionPlaceFailures } from '../test/harness.ts';
 import { locateRows } from '../test/rows.ts';
 
-const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...BASAL_CASES, ...CORTEX_CASES, ...BASILAR_CASES, ...OCCIPITAL_CASES, ...FIBULAR_CASES, ...TARSAL_CASES, ...TRANSCORTICAL_CASES, ...PUDENDAL_CASES];
+const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...BASAL_CASES, ...CORTEX_CASES, ...BASILAR_CASES, ...OCCIPITAL_CASES, ...FIBULAR_CASES, ...TARSAL_CASES, ...TRANSCORTICAL_CASES, ...PUDENDAL_CASES, ...GENICULATE_CASES];
 const THRESHOLD = 0.9;
 const ROOT = resolve(import.meta.dirname, '..');
 
@@ -93,6 +95,14 @@ const POOLS: Record<string, readonly string[]> = {
   // answer after a dominant lesion was mutated with tone words.
   side: ['L', 'R'],
   sign: ['present', 'absent', 'indeterminate'],
+  // P24: a visual part's field and pupil. Until these existed no visual part's pupil effect or
+  // centre was ever mutated — including the lateral geniculate nucleus's 'no defect', the fact
+  // P24 rests on (D129).
+  eye: ['same', 'both'],
+  field: ['whole', 'temporal', 'opposite'],
+  quadrants: ['both', 'upper', 'lower', 'none'],
+  centre: ['with', 'half', 'only', 'none'],
+  rapd: ['same', 'opposite', 'none', 'open'],
 };
 
 const seg = (s: unknown): number => SEGMENTS.indexOf(s as (typeof SEGMENTS)[number]);
@@ -111,6 +121,8 @@ function poolFor(key: string, value: string): readonly string[] | undefined {
   if (key === 'trunk') return POOLS.trunk;
   if (key === 'division') return POOLS.division;
   if (key === 'from') return POOLS.from;
+  // P24 (D129): the visual parts' own vocabularies, by key, so 'none' and 'both' are not read as other words.
+  if (key === 'eye' || key === 'field' || key === 'quadrants' || key === 'centre' || key === 'rapd') return POOLS[key];
   // P10, P11: an answer the knowledge base gives as a sign state, never a tone word.
   if (key === 'afterDominant' || key === 'state') return POOLS.sign;
   // P16: a course is keyed by timepoint, and its values are sign states, not reflexes.
@@ -241,7 +253,7 @@ const mutants: Mutant[] = [];
 collect(KB, [], mutants);
 
 type Result = { row: string; describe: string; killed: boolean; failures: number; threw: boolean; byReverse: boolean };
-const REVERSE = [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES];
+const REVERSE = [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES];
 const SLOTS = examSlots(RENDER);
 const results: Result[] = mutants.map((m) => {
   const base = { row: rowOf(m.path), describe: m.describe };

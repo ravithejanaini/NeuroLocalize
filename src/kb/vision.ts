@@ -49,6 +49,20 @@ export const VISION: Vision = {
       centre: 'with',
       rapd: 'opposite',
     },
+    lgn: {
+      meta: {
+        id: 'vision.lgn',
+        claim: 'The lateral geniculate nucleus relays the opposite half-field of both eyes, centre included, to the optic radiation. The pupil’s afferent fibres leave the tract just before it, for the pretectum, so a lesion of the nucleus gives no afferent pupillary defect.',
+        sources: ['S147', 'S137', 'S91', 'S95'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      eye: 'both',
+      field: 'opposite',
+      quadrants: 'both',
+      centre: 'with',
+      rapd: 'none',
+    },
     meyer_loop: {
       meta: {
         id: 'vision.meyer-loop',
@@ -204,6 +218,16 @@ export const VISION: Vision = {
       },
       parts: ['calcarine_lower', 'calcarine_upper'],
       midline: true,
+    },
+    lgn: {
+      meta: {
+        id: 'vision-place.lgn',
+        claim: 'A lesion of the whole lateral geniculate nucleus: a complete homonymous hemianopia on the other side, centre included, with no afferent pupillary defect — the optic tract’s field without its pupil. Partial lesions give quadrantanopias and sector defects the model does not draw (C69); the whole occipital cortex looks the same here (C70).',
+        sources: ['S147', 'S137'],
+        tier: 'T2',
+        bookRef: p,
+      },
+      parts: ['lgn'],
     },
   },
 

@@ -89,7 +89,8 @@ describe('the visual field chart (P8)', () => {
     const vision = hypotheses().filter((h) => h.family.startsWith('visual'));
     assert.equal(vision.filter((h) => h.family === 'visual_chiasm').length, 1, 'the chiasm is midline');
     assert.equal(vision.filter((h) => h.family === 'visual_both').length, 1, 'both PCAs are one candidate (P18)');
-    assert.equal(vision.length, 6 * 2 + 2);
+    // P24 adds the lateral geniculate nucleus, a seventh place on each side.
+    assert.equal(vision.length, 7 * 2 + 2);
   });
 });
 

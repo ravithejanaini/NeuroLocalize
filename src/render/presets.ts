@@ -157,6 +157,8 @@ export const PRESETS: readonly Preset[] = [
   { id: 'optic-nerve', kind: 'vision', label: 'Optic nerve', pattern: 'One eye blind, pupil defect', place: 'optic_nerve' },
   { id: 'chiasm', kind: 'vision', label: 'Optic chiasm', pattern: 'Bitemporal hemianopia', place: 'chiasm' },
   { id: 'optic-tract', kind: 'vision', label: 'Optic tract', pattern: 'Hemianopia with a pupil defect', place: 'optic_tract' },
+  // P24: the same field, no pupil defect.
+  { id: 'lgn', kind: 'vision', label: 'Lateral geniculate nucleus', pattern: 'Hemianopia, pupils equal', place: 'lgn' },
   { id: 'meyer-loop', kind: 'vision', label: 'Meyer loop (temporal)', pattern: 'Superior quadrantanopia', place: 'meyer_loop' },
   { id: 'parietal-radiation', kind: 'vision', label: 'Parietal radiation', pattern: 'Inferior quadrantanopia', place: 'parietal_radiation' },
   { id: 'pca-occipital', kind: 'vision', label: 'Occipital cortex (PCA)', pattern: 'Hemianopia, macula spared', place: 'pca_occipital' },

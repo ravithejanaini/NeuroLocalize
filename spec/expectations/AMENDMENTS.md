@@ -490,6 +490,24 @@ situation the freeze exists to catch.
 - **Added after the first P23 mutation run:** three single-root cases — S2 and S4 reduce the
   perineum, S1 spares it — because four mutants of its roots survived (D125).
 
+## A27 — The lateral geniculate nucleus (P24, 2026-09-25)
+
+- **Changed:** two new files. `geniculate.ts` holds one case, the left nucleus: a complete right
+  hemianopia with no pupillary defect. `reverse-geniculate.ts` holds one examination: that
+  picture, with the nucleus or the whole occipital cortex in the lead (C70).
+- **Changed in `reverse-vision.ts`:** `reverse-occipital-cortex` now expects the occipital cortex
+  **or** the nucleus in the lead, where it expected the cortex alone. Its reasoning never excluded
+  the nucleus, which gives the same field with the same normal pupils (S147, S137); the old
+  expectation held only because the model lacked it (D127). Its observations did not change.
+- **Why:** P24 adds a part and a place; a row no frozen case observes is an untested row (rule 5).
+- **How circularity was avoided:** every assertion is quoted from S147, S137 or S91, read into
+  `docs/P24-analysis.md` before any code. The case was **run red against the P23 engine**; the
+  examination passed against it and is kept as a guard. Partial lesions and congruity are never
+  asserted (C69, C70).
+- **Added after the mutation run was given pools for the visual parts (D129):** three cases in
+  `geniculate.ts` for P8 facts nothing had pinned — each calcarine bank alone (S93) and the
+  chiasm's pupil (S95).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -506,7 +524,7 @@ situation the freeze exists to catch.
 | `leg.ts` | A10, A23, A24 |
 | `reverse-leg.ts` | A10 |
 | `vision.ts` | A11 |
-| `reverse-vision.ts` | A11, A14 |
+| `reverse-vision.ts` | A11, A14, A27 |
 | `language.ts` | A14, A20 |
 | `reverse-language.ts` | A14 |
 | `cerebellum.ts` | A15 |
@@ -533,5 +551,7 @@ situation the freeze exists to catch.
 | `reverse-transcortical.ts` | A25 |
 | `pudendal.ts` | A26 |
 | `reverse-pudendal.ts` | A26 |
+| `geniculate.ts` | A27 |
+| `reverse-geniculate.ts` | A27 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.
