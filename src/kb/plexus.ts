@@ -195,27 +195,27 @@ export const PLEXUS: Plexus = {
     triceps: {
       meta: {
         id: 'muscle.triceps',
-        claim: 'The triceps is the C7 key muscle and is supplied by the radial nerve above the spiral groove, so a groove lesion spares it.',
-        sources: ['S19', 'S31', 'S39'],
+        claim: 'The triceps is the C7 key muscle and is supplied by the radial nerve above the spiral groove, so a groove lesion spares it. Its radial supply comes from C6, C7 and C8 (S152), so a C6 or C8 root lesion leaves its strength unsettled (R14, D137).',
+        sources: ['S19', 'S31', 'S39', 'S152'],
         tier: 'T1',
         bookRef: p,
       },
       supply: [{ nerve: 'radial', after: 1 }],
       roots: ['C7', 'C7'],
+      disputedRoots: ['C6', 'C8'],
       myotome: 'C7',
     },
     brachioradialis: {
       meta: {
         id: 'muscle.brachioradialis',
-        claim: 'Brachioradialis is supplied by the radial nerve below the spiral groove and above the posterior interosseous branch; its roots are taken from its reflex (C6, C5 disputed).',
-        sources: ['S39', 'S40', 'S12', 'S19'],
-        tier: 'T3',
+        claim: 'Brachioradialis is supplied by the radial nerve below the spiral groove and above the posterior interosseous branch. Most of its input comes from C5 and C6, with a contribution from C7 (R18, D137).',
+        sources: ['S153', 'S39', 'S40'],
+        tier: 'T2',
         bookRef: p,
-        conflict: 'C3',
       },
       supply: [{ nerve: 'radial', after: 2 }],
-      roots: ['C6', 'C6'],
-      disputedRoots: ['C5', 'C5'],
+      roots: ['C5', 'C6'],
+      disputedRoots: ['C7', 'C7'],
     },
     wrist_extensors: {
       meta: {

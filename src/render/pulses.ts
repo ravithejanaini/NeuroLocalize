@@ -16,7 +16,7 @@ import {
   type PathOptions,
 } from '../geometry/paths.ts';
 import { mapBrain, type BrainMap } from '../engine/brain.ts';
-import { mapPlexus, type PlexusMap } from '../engine/limb.ts';
+import { disputedSegments, mapPlexus, type PlexusMap } from '../engine/limb.ts';
 import { faceMotorPath, faceSensoryPath } from '../geometry/brain.ts';
 import { limbFate, limbPath, suppliesOf, TARGETS, type LimbPath, type Target } from '../geometry/plexus.ts';
 import type { Kb, RenderKb, Span } from '../kb/types.ts';
@@ -236,7 +236,7 @@ export class PulseField {
     const row = (MUSCLES as readonly string[]).includes(target)
       ? this.kb.plexus.muscles[target as Muscle]
       : this.kb.plexus.skin[target as SkinArea];
-    const roots = [...spanSegs(row.roots), ...spanSegs(row.disputedRoots)];
+    const roots = [...spanSegs(row.roots), ...disputedSegments(row)];
     const root = roots[Math.floor(pick() * roots.length)];
     const supplies = suppliesOf(this.kb, target);
     const supplyIndex = Math.floor(pick() * supplies.length);

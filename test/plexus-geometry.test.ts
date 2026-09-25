@@ -22,8 +22,9 @@ const L = RENDER.limb;
 const idx = (s: Segment): number => SEGMENTS.indexOf(s);
 const rootsOf = (t: (typeof TARGETS)[number]): Segment[] => {
   const row = (MUSCLES as readonly string[]).includes(t) ? KB.plexus.muscles[t as (typeof MUSCLES)[number]] : KB.plexus.skin[t as (typeof SKIN_AREAS)[number]];
+  // P25 (D138): a disputed root that is also certain is one root, not two.
   const spans = [row.roots, row.disputedRoots].filter((s) => s !== null && s !== undefined);
-  return spans.flatMap(([a, b]) => SEGMENTS.slice(idx(a), idx(b) + 1));
+  return [...new Set(spans.flatMap(([a, b]) => SEGMENTS.slice(idx(a), idx(b) + 1)))];
 };
 /** Linear interpolation of a polyline's coordinate at a given y. */
 const along = (line: readonly LimbPoint[], y: number, axis: 0 | 2): number => {
@@ -87,8 +88,9 @@ describe('plexus drawing matches the engine (D27)', () => {
     // tibialis posterior and gastrocnemius = 23; skin 3 anterior thigh + 3×2 medial thigh +
     // 2 lateral thigh + 2 medial leg + 4 lateral leg + 1 dorsum + 1 web + 2×2 lateral foot +
     // 5 sole = 28. P23 adds the perineum through the pudendal nerve, one path each from S2, S3
-    // and S4: 31.
-    assert.equal(paths, 37 + 23 + 31);
+    // and S4: 31. P25 gives the triceps C6 and C8 beside C7 (+2) and the brachioradialis C5, C6
+    // and C7 in place of C5 and C6 (+1): arm muscles 24.
+    assert.equal(paths, 40 + 23 + 31);
   });
 
   it('draws each branch after exactly as many named places as the knowledge base says', () => {

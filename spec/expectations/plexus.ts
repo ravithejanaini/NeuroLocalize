@@ -20,6 +20,8 @@ const at = (site: PlexusRegion['plexus']): PlexusRegion => ({ plexus: site, side
 type Cite = Pick<LimbAssertion, 'cite' | 'basis'> & { readonly note?: string };
 const weak = (muscles: readonly Muscle[], e: Cite): LimbAssertion => ({ kind: 'muscle', side: 'L', muscles, oneOf: ['weak'], ...e });
 const spared = (muscles: readonly Muscle[], e: Cite): LimbAssertion => ({ kind: 'muscle', side: 'L', muscles, oneOf: ['normal'], ...e });
+// A30: a muscle one of whose contributing roots is cut, when no source says what that does.
+const unsettled = (muscles: readonly Muscle[], e: Cite): LimbAssertion => ({ kind: 'muscle', side: 'L', muscles, oneOf: ['indeterminate'], ...e });
 const numb = (areas: readonly SkinArea[], e: Cite): LimbAssertion => ({ kind: 'skin', side: 'L', modality: 'all', areas, oneOf: ['lost'], ...e });
 const felt = (areas: readonly SkinArea[], e: Cite): LimbAssertion => ({ kind: 'skin', side: 'L', modality: 'all', areas, oneOf: ['intact'], ...e });
 const except = <T>(all: readonly T[], ...out: T[]): T[] => all.filter((x) => !out.includes(x));
@@ -51,7 +53,7 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
         weak(['wrist_extensors'], { cite: ['S35', 'S19'], basis: 'composed', note: 'the waiter’s tip wrist is flexed; wrist extension is C6' }),
         weak(['brachioradialis'], { cite: ['S12', 'S33'], basis: 'composed', note: 'a C5–C6 muscle whose fibres all pass the upper trunk' }),
         spared(['rhomboids', 'serratus_anterior'], { cite: ['S35', 'S37'], basis: 'stated', note: 'winging means the injury reaches beyond the upper trunk' }),
-        spared(['triceps'], { cite: ['S35', 'S19'], basis: 'composed', note: 'C7 is involved only in extended Erb palsy' }),
+        unsettled(['triceps'], { cite: ['S152'], basis: 'composed', note: 'A30: C6 contributes to the triceps (S152); C7 is its key root' }),
         spared(HAND, { cite: ['S35'], basis: 'stated', note: 'grasp is intact because C8–T1 function is preserved' }),
         { kind: 'reflex', side: 'L', reflex: 'biceps', oneOf: ['absent'], cite: ['S35'], basis: 'stated' },
         { kind: 'reflex', side: 'L', reflex: 'brachioradialis', oneOf: ['reduced', 'absent'], cite: ['S12', 'S33'], basis: 'composed' },
@@ -86,7 +88,7 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
         weak(['thumb_extensor'], { cite: ['S31', 'S34', 'S40'], basis: 'composed',
           note: 'thumb extension is C8 (S31) and reaches the radial nerve through the posterior division of the lower trunk (S34)' }),
         spared(['deltoid', 'biceps', 'supraspinatus', 'rhomboids', 'serratus_anterior', 'brachioradialis', 'wrist_extensors'], { cite: ['S19', 'S34'], basis: 'composed' }),
-        spared(['triceps'], { cite: ['S19'], basis: 'composed', note: 'triceps is C7' }),
+        unsettled(['triceps'], { cite: ['S152'], basis: 'composed', note: 'A30: C8 contributes to the triceps (S152); C7 is its key root' }),
         numb(['little_finger', 'medial_forearm'], { cite: ['S36', 'S45'], basis: 'stated', note: 'medial distal limb, C8–T1' }),
         felt(['thumb', 'middle_finger', 'lateral_forearm', 'shoulder_badge'], { cite: ['S21', 'S33'], basis: 'composed' }),
         { kind: 'reflex', side: 'L', reflex: 'biceps', oneOf: ['normal'], cite: ['S12'], basis: 'composed' },
@@ -112,7 +114,8 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
         { kind: 'deformity', side: 'L', deformity: 'ape_hand', oneOf: ['present'], cite: ['S33'], basis: 'stated', note: 'A6' },
         weak(HAND, { cite: ['S33', 'S36'], basis: 'stated' }),
         weak(['finger_flexor_superficial', 'wrist_flexor_ulnar', 'thumb_extensor'], { cite: ['S19', 'S31'], basis: 'composed' }),
-        spared(['triceps', 'deltoid', 'biceps', 'rhomboids'], { cite: ['S19', 'S37'], basis: 'composed' }),
+        spared(['deltoid', 'biceps', 'rhomboids'], { cite: ['S19', 'S37'], basis: 'composed' }),
+        unsettled(['triceps'], { cite: ['S152'], basis: 'composed', note: 'A30: C8 contributes to the triceps (S152); C7 is its key root' }),
         { kind: 'skin', side: 'L', modality: 'all', areas: ['little_finger', 'medial_forearm'], oneOf: ['impaired', 'lost'],
           cite: ['S36', 'S45'], basis: 'stated', note: 'overlap from neighbouring roots may leave some sensation (S21)' },
         { kind: 'horner', side: 'L', oneOf: ['present'], cite: ['S36', 'S16'], basis: 'stated', note: 'the T1 root carries the second-order sympathetic neurons' },
@@ -137,7 +140,8 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
         weak(['wrist_flexor_ulnar', 'thumb_extensor'], { cite: ['S31'], basis: 'stated', note: 'S31: C8 is wrist flexion and thumb extension' }),
         weak(['thumb_abductor'], { cite: ['S33', 'S36'], basis: 'composed',
           note: 'the ape sign follows C8–T1 injury; that either root alone weakens the thumb abductor is R15' }),
-        spared(['triceps', 'deltoid', 'biceps', 'wrist_extensors'], { cite: ['S19'], basis: 'composed' }),
+        spared(['deltoid', 'biceps', 'wrist_extensors'], { cite: ['S19'], basis: 'composed' }),
+        unsettled(['triceps'], { cite: ['S152'], basis: 'composed', note: 'A30: C8 contributes to the triceps (S152); C7 is its key root' }),
         { kind: 'skin', side: 'L', modality: 'all', areas: ['little_finger', 'medial_forearm'], oneOf: ['impaired', 'lost'],
           cite: ['S45', 'S21'], basis: 'stated', note: 'the C8 dermatome includes the whole little finger and the medial forearm (S45)' },
         felt(['thumb', 'middle_finger'], { cite: ['S21'], basis: 'composed' }),
@@ -194,7 +198,8 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
         weak(['deltoid', 'supraspinatus', 'biceps', 'wrist_extensors', 'brachioradialis'], { cite: ['S35', 'S19'], basis: 'composed' }),
         weak(['rhomboids', 'serratus_anterior'], { cite: ['S35', 'S37'], basis: 'stated',
           note: 'winging and rhomboid weakness are what separate the roots from the upper trunk' }),
-        spared(['triceps', ...HAND], { cite: ['S19', 'S35'], basis: 'composed' }),
+        spared([...HAND], { cite: ['S19', 'S35'], basis: 'composed' }),
+        unsettled(['triceps'], { cite: ['S152'], basis: 'composed', note: 'A30: C6 contributes to the triceps (S152); C7 is its key root' }),
         { kind: 'horner', side: 'L', oneOf: ['absent'], cite: ['S16'], basis: 'composed' },
       ],
       unasserted: [],
@@ -219,7 +224,8 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
           note: 'S33 gives the musculocutaneous nerve C5–C6, S43 C5–C7 (C11)' },
         felt(['thumb', 'little_finger'], { cite: ['S21'], basis: 'composed' }),
         // A5
-        spared(['wrist_extensors', 'brachioradialis'], { cite: ['S19'], basis: 'composed', note: 'A5: both are C6' }),
+        spared(['wrist_extensors'], { cite: ['S19'], basis: 'composed', note: 'A5: C6' }),
+        unsettled(['brachioradialis'], { cite: ['S153'], basis: 'composed', note: 'A30: C7 contributes to the brachioradialis (S153); most of its input is C5 and C6' }),
         spared(['thumb_extensor'], { cite: ['S31'], basis: 'composed', note: 'A5: thumb extension is C8' }),
       ],
       unasserted: ['wrist flexion: S32 gives it to C7, S31 to C8 (C9)'],
@@ -241,7 +247,8 @@ export const PLEXUS_CASES: readonly LimbCase[] = [
         weak(['supraspinatus', 'serratus_anterior'], { cite: ['S34'], basis: 'composed', note: 'both nerves carry C6' }),
         spared(['deltoid'], { cite: ['S19', 'S31'], basis: 'composed', note: 'the deltoid is the C5 key muscle (D29)' }),
         spared(['rhomboids'], { cite: ['S37', 'S34'], basis: 'composed', note: 'the dorsal scapular nerve is C5' }),
-        spared(['triceps', ...HAND, 'thumb_extensor'], { cite: ['S19', 'S31'], basis: 'composed' }),
+        spared([...HAND, 'thumb_extensor'], { cite: ['S19', 'S31'], basis: 'composed' }),
+        unsettled(['triceps'], { cite: ['S152'], basis: 'composed', note: 'A30: C6 contributes to the triceps (S152); C7 is its key root' }),
         { kind: 'reflex', side: 'L', reflex: 'biceps', oneOf: ['reduced', 'absent'], cite: ['S12', 'S19'], basis: 'composed' },
         { kind: 'reflex', side: 'L', reflex: 'brachioradialis', oneOf: ['reduced', 'absent'], cite: ['S19'], basis: 'stated' },
         { kind: 'reflex', side: 'L', reflex: 'triceps', oneOf: ['normal'], cite: ['S12', 'S19'], basis: 'composed' },

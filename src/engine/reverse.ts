@@ -39,7 +39,7 @@ import { mapBrain, regionOf, type BrainMap } from './brain.ts';
 import { forward, isBrain, isCord, isPlexus, isSacral, isVision, type Findings } from './forward.ts';
 import { hypotheses, type Hypothesis } from './hypotheses.ts';
 import { mapLesion, type LesionMap } from './lesion.ts';
-import { limbRoute, mapPlexus, routeDamage, routeSites, routesTo, type PlexusMap } from './limb.ts';
+import { disputedSegments, limbRoute, mapPlexus, routeDamage, routeSites, routesTo, type PlexusMap } from './limb.ts';
 import { mapVision, sideOfSector, type VisionMap } from './vision.ts';
 import { crossingOffsets, damageAlong, motorRoute, sensoryRoute, type Element } from './routes.ts';
 
@@ -711,7 +711,7 @@ const partSideOf = (x: Side, serves: 'ipsilateral' | 'contralateral'): Side => (
 
 function muscleReason(map: LesionMap, kb: Kb, pmap: PlexusMap, side: Side, muscle: Muscle): string[] {
   const row = kb.plexus.muscles[muscle];
-  const roots = [...rootsOf(row.roots), ...rootsOf(row.disputedRoots)];
+  const roots = [...rootsOf(row.roots), ...disputedSegments(row)];
   const causes = new Set<string>();
   for (const r of roots) {
     const cut = firstCut(map, kb, motorRoute(kb, side, idx(r)).elements, false);
@@ -723,7 +723,7 @@ function muscleReason(map: LesionMap, kb: Kb, pmap: PlexusMap, side: Side, muscl
   if (cuts.length && roots.some((r) => routesTo(kb, row.supply, r, null).some((route) => routeDamage(pmap, route, side) === 0))) {
     causes.add('another of its nerves is intact, so the weakness is partial');
   }
-  const disputed = rootsOf(row.disputedRoots);
+  const disputed = disputedSegments(row);
   if (causes.size && disputed.length && row.roots === null) {
     causes.add(`no source read gives its roots; any of ${disputed[0]}–${disputed[disputed.length - 1]} may serve it`);
   } else if (causes.size && disputed.length && !rootsOf(row.roots).some((r) => [...causes].some((c) => c.includes(r)))) {
@@ -879,7 +879,7 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
     }
     case 'skin': {
       const row = kb.plexus.skin[o.area];
-      const causes = limbCuts(kb, pmap, o.side, row.supply, [...rootsOf(row.roots), ...rootsOf(row.disputedRoots)]);
+      const causes = limbCuts(kb, pmap, o.side, row.supply, [...rootsOf(row.roots), ...disputedSegments(row)]);
       return causes.length ? causes.join('; ') : 'the nerves to this patch are intact beyond the roots';
     }
     case 'sensory': {

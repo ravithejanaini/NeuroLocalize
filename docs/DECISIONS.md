@@ -333,13 +333,13 @@ not (R13).
 
 **R12** — S19 and S31 give the interossei to T1 alone. Does a C8 root lesion weaken them?
 The model says no, which is what lets it separate a C8 root lesion from a lower trunk
-lesion.
+lesion. **Answered from sources, 2026-09-25 (D137).**
 
 **R13** — Confirm D33: a lower trunk lesion, distal to where the T1 sympathetic fibres
 leave for the chain, spares the oculosympathetic pathway.
 
 **R14** — The triceps is modelled on C7 alone (S19, S31, S32). Its C6 and C8 contributions
-are not given by any source read.
+are not given by any source read. **Answered from sources, 2026-09-25 (D137).**
 
 **R15** — Abductor pollicis brevis is modelled on C8 and T1, each alone sufficient to weaken
 it. The sources say only that C8–T1 injury produces an ape sign (S33) and that the median
@@ -353,7 +353,7 @@ tunnel lesion weakens it. It is widely taught that the FCU branch can arise abov
 tunnel and be spared; no source read says so either way.
 
 **R18** — The brachioradialis takes its roots from its reflex (C6 certain, C5 disputed, C3):
-no source read gives the muscle's roots directly.
+no source read gives the muscle's roots directly. **Answered from sources, 2026-09-25 (D137).**
 
 **D34 — What the first plexus mutation run changed, besides the expectations (A5).**
 It scored 73.9% on sourced rows. Beyond the untested roots and branches that A5 covers:
@@ -702,7 +702,7 @@ dorsiflexion at L4, S82 puts tibialis anterior at L5.
 depends on where the lateral sural cutaneous branch leaves, which no source read gives.
 
 **R28** — The hip adductors are modelled with no sourced roots, so an L3 or L4 root lesion
-leaves adduction uncertain. Which roots should be given, and from which source?
+leaves adduction uncertain. Which roots should be given, and from which source? *Partly answered (D137): S154 confirms L2–L4 as the obturator nerve’s roots; which one carries adduction is still unsourced.*
 
 ## P8 — the visual pathway
 
@@ -1748,3 +1748,37 @@ killed.
 **D135 — R2: one root reduces sensation.** S82 (now archived by StatPearls): after one root
 "decreased sensation is often noted along specific dermatomes". With S21's overlap, the row that
 reports a single root as reduced, not lost, is sourced and unchanged.
+
+## P25 — muscle roots from their own anatomy articles
+
+The analysis is `docs/P25-analysis.md`; S152–S154 were read for it on 2026-09-25. The three new
+frozen cases (`answered.ts`, A30) failed against the committed code first, each on its one new
+claim.
+
+### Decisions
+
+**D137 — The triceps and brachioradialis take their roots from their own articles.** The
+triceps keeps C7 certain and gains C6 and C8 as disputed (S152: "root C6, C7, and C8"); the
+brachioradialis becomes C5–C6 certain with C7 disputed (S153: most of its input "from C5 and C6",
+contributions "from the C5 to C7 spinal roots"). This answers R14 and R18. R12 was already answered
+by A9, which made C8 a disputed root of the interossei. R28 is partly answered: S154 confirms the
+adductors' supply as the obturator nerve's L2–L4, which the model already uses; no source read
+says which root carries adduction, so the adductors keep no certain root. S152 also gives the
+triceps reflex as "C6 and C7, predominately C7" — the teaching C2 said no source gave; C2 now has
+a source on each side and stays open on the reflex's row.
+
+**D138 — A disputed root that is also certain is one root.** The triceps is the first row whose
+disputed span (C6–C8) contains its certain root (C7). Four places read a row's roots by joining
+its two spans, which would have counted C7 twice — and the working would have said "the sources
+disagree whether C6–C7–C8 serves it". A shared helper, `disputedSegments`, reads a disputed span
+less its certain roots, and every such place uses it. The drawing already de-duplicated.
+
+**D139 — Seven composed assertions amended, none stated.** See `docs/P25-analysis.md` §4 and A30.
+The drawn fibre paths rise from 91 to 94 (the triceps +2, the brachioradialis +1;
+`test/plexus-geometry.test.ts`). The best-ranked group of all 70 examination-timepoints is unchanged.
+
+**D140 — What the P25 mutation run showed.** 97.3% of sourced mutants killed (5,730 of 5,887).
+In the rows P25 touched, three survivors of the previous run are gone (the brachioradialis's old
+C5 and C6 spans) and one is new — the brachioradialis's disputed C7 widened to C6–C7 — which is
+equivalent by construction: C6 is already certain, and D138 counts a certain root once. The
+triceps's myotome mutants and the reflex-span mutants survived before P25 as well.

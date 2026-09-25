@@ -17,7 +17,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S116', 'S117', 'S118', 'S119',
   'S120', 'S121', 'S122', 'S123', 'S124',
   'S125', 'S126', 'S127',
-  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137', 'S138', 'S139', 'S140', 'S141', 'S142', 'S143', 'S144', 'S145', 'S146', 'S147', 'S148', 'S149', 'S150', 'S151',
+  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137', 'S138', 'S139', 'S140', 'S141', 'S142', 'S143', 'S144', 'S145', 'S146', 'S147', 'S148', 'S149', 'S150', 'S151', 'S152', 'S153', 'S154',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -174,4 +174,7 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S149', title: 'Niu et al. — Bulbocavernosus reflex and pudendal nerve somatosensory evoked potential are valuable for the diagnosis of cauda equina syndrome in male patients (Int J Clin Exp Med, 2015)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4358563/' },
   { id: 'S150', title: 'Alexandrou et al. — Trochlear Nerve Palsy: A Systematic Review of Etiologies and Diagnostic Insights (Diagnostics, 2025)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC12691472/' },
   { id: 'S151', title: 'StatPearls — Babinski Reflex', url: 'https://www.ncbi.nlm.nih.gov/books/NBK519009/' },
+  { id: 'S152', title: 'StatPearls — Anatomy, Shoulder and Upper Limb, Triceps Muscle', url: 'https://www.ncbi.nlm.nih.gov/books/NBK536996/' },
+  { id: 'S153', title: 'StatPearls — Anatomy, Shoulder and Upper Limb, Forearm Brachioradialis Muscle', url: 'https://www.ncbi.nlm.nih.gov/books/NBK526110/' },
+  { id: 'S154', title: 'StatPearls — Anatomy, Bony Pelvis and Lower Limb: Thigh Adductor Magnus Muscle', url: 'https://www.ncbi.nlm.nih.gov/books/NBK534842/' },
 ];

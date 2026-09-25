@@ -65,6 +65,15 @@ const idx = (s: Segment): number => SEGMENTS.indexOf(s);
 const spanSegments = (span: Span | null | undefined): Segment[] =>
   span ? SEGMENTS.slice(idx(span[0]), idx(span[1]) + 1) : [];
 
+/**
+ * P25 (D138): the roots a row gives as disputed, less any it already gives as certain. The
+ * triceps is certain at C7 and disputed across C6–C8; C7 must not be read twice.
+ */
+export const disputedSegments = (row: { readonly roots: Span | null; readonly disputedRoots?: Span }): Segment[] => {
+  const certain = spanSegments(row.roots);
+  return spanSegments(row.disputedRoots).filter((r) => !certain.includes(r));
+};
+
 /** The path one root's fibres take to a branch. Null when that root cannot reach it. */
 export type LimbRoute = {
   readonly root: Segment;
@@ -181,7 +190,7 @@ export function muscleFinding(kb: Kb, pmap: PlexusMap, cord: CordView, side: Sid
   };
   const full = (h: string): boolean => h === 'upper' || h === 'lower';
   const definite = spanSegments(row.roots).map((r) => hit(r, routesTo(kb, row.supply, r, muscle)));
-  const disputed = spanSegments(row.disputedRoots).map((r) => hit(r, routesTo(kb, row.supply, r, null)));
+  const disputed = disputedSegments(row).map((r) => hit(r, routesTo(kb, row.supply, r, null)));
   const lowerMotor = [...definite, ...disputed].some((h) => h === 'lower' || h === 'partial');
   if (row.roots === null) {
     // No source gives the roots (P7): weak only when every root that could serve it is lost.
@@ -229,7 +238,7 @@ export function skinState(kb: Kb, pmap: PlexusMap, cord: CordView, side: Side, m
   };
 
   const definite = spanSegments(row.roots).map((r) => perRoot(r, true));
-  const disputed = spanSegments(row.disputedRoots).map((r) => perRoot(r, false));
+  const disputed = disputedSegments(row).map((r) => perRoot(r, false));
   if (definite.length > 0) {
     if (definite.every((d) => d === 2)) return 'lost';
     if (definite.some((d) => d !== 'open' && d > 0)) return 'impaired';

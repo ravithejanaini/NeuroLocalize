@@ -527,6 +527,18 @@ situation the freeze exists to catch.
   the engine changed; the reflex's segments and the pupils' symmetry were answered in D131 and
   D132, not tuned here.
 
+## A30 — Muscle roots from their own anatomy articles (P25, 2026-09-25)
+
+- **Changed in `answered.ts`:** three root cases — C5 weakens the brachioradialis and spares the
+  triceps; C6 weakens the brachioradialis and leaves the triceps unsettled; C8 leaves the triceps
+  unsettled and spares the brachioradialis (S152, S153). Run red against the committed code first.
+- **Changed in `plexus.ts`:** seven assertions that said the triceps (after the upper trunk, the
+  lower trunk, the C8–T1 roots, the C8 root, the C5–C6 roots and the C6 root) or the brachioradialis
+  (after the C7 root) was strong now say unsettled. All seven were composed from the key-muscle
+  tables (S19, S31), which name one key root per movement; S152 and S153 give the muscles' other
+  roots. None was stated by a source for its lesion.
+- **Why:** R14 and R18 asked for these roots; P25 found them.
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -536,7 +548,7 @@ situation the freeze exists to catch.
 | `index.ts` | A2 (exports the boundary cases) |
 | `reverse.ts` | A3 |
 | `types.ts` | A4, A6, A7, A11, A14, A15, A17, A19, A20 |
-| `plexus.ts` | A4, A5, A6, A9 |
+| `plexus.ts` | A4, A5, A6, A9, A30 |
 | `reverse-plexus.ts` | A4, A5 |
 | `brain.ts` | A7, A8, A9, A13, A14, A16, A17, A18 |
 | `reverse-brain.ts` | A7, A13, A14, A15, A16, A17, A19, A20 |
@@ -572,6 +584,6 @@ situation the freeze exists to catch.
 | `reverse-pudendal.ts` | A26 |
 | `geniculate.ts` | A27 |
 | `reverse-geniculate.ts` | A27 |
-| `answered.ts` | A29 |
+| `answered.ts` | A29, A30 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

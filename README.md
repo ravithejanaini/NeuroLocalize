@@ -38,10 +38,11 @@ teaching from a phone.
 | P22 | Anosognosia and apraxia, audited and **not built**: the sources give each several sites and an occurrence of a half or less, so the panel explains why neither localizes |
 | P23 | The saddle and the pudendal nerve: the saddle now reads the perineum, which the pudendal nerve carries from S2–S4, so one side numb with normal legs points to that nerve or a sacral root, not cauda equina |
 | P24 | The lateral geniculate nucleus: the optic tract's hemianopia without its pupillary defect, because the pupil's fibres leave the tract just before the nucleus |
+| P25 | Muscle roots from each muscle's own anatomy article: the triceps C6–C8 (C7 key), the brachioradialis C5–C6 (C7 contributing), answering R14 and R18 |
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 151 open-access sources that were
+- **Expected outputs are written first**, from 154 open-access sources that were
   actually read — one of them, S108, as its free abstract only (`docs/SOURCES.md`) — and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

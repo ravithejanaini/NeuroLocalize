@@ -169,8 +169,8 @@ export const LEG_MUSCLE_ROWS: Pick<Plexus['muscles'], LegMuscle> = {
   hip_adductors: {
     meta: {
       id: 'muscle.hip-adductors',
-      claim: 'The hip adductors are supplied by the obturator nerve; no source read gives their roots, so any obturator root may serve them.',
-      sources: ['S73', 'S71'],
+      claim: 'The hip adductors are supplied by the obturator nerve (L2–L4); no source read gives which of those roots each carries, so any of them may serve them (R28).',
+      sources: ['S73', 'S71', 'S154'],
       tier: 'T2',
       bookRef: p,
     },
