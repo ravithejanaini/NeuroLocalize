@@ -394,14 +394,14 @@ export const LEG_SKIN_ROWS: Pick<Plexus['skin'], LegSkinArea> = {
   sole: {
     meta: {
       id: 'skin.sole',
-      claim: 'The sole is supplied by the medial and lateral plantar branches of the tibial nerve, which divide in the tarsal tunnel; no source read gives its roots.',
-      sources: ['S79', 'S140'],
+      claim: 'The sole is supplied by the medial and lateral plantar branches of the tibial nerve, which divide in the tarsal tunnel. Its lateral plantar aspect is the S1 dermatome, and Foerster’s S1 covers the heel and the posterior side of the foot, so S1 is its certain root; no source read gives the others, so the tibial nerve’s other roots may serve it (R51, D141).',
+      sources: ['S79', 'S140', 'S151', 'S155'],
       tier: 'T2',
       bookRef: p,
     },
     // P20: past the tarsal tunnel, so a tibial lesion in the leg or at the ankle takes it.
     supply: [{ nerve: 'tibial', after: 2 }],
-    roots: null,
+    roots: ['S1', 'S1'],
     disputedRoots: ['L4', 'S3'],
   },
   perineum: {

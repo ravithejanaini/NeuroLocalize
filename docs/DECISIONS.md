@@ -1463,7 +1463,7 @@ mutations of its unsourced roots (C61, R51) and predate this phase.
 ### Reviewer questions
 
 **R51** — C61: is there a source that gives the sole of the foot its roots (S1, or S1–S2), so that
-a root lesion can be told from the tarsal tunnel by the sole alone?
+a root lesion can be told from the tarsal tunnel by the sole alone? *Partly answered (D141): S1 is the sole’s certain root (S151, S155); no source gives S2 or the others, so C61 stands.*
 
 ## P21 — the transcortical aphasias
 
@@ -1782,3 +1782,32 @@ In the rows P25 touched, three survivors of the previous run are gone (the brach
 C5 and C6 spans) and one is new — the brachioradialis's disputed C7 widened to C6–C7 — which is
 equivalent by construction: C6 is already certain, and D138 counts a certain root once. The
 triceps's myotome mutants and the reflex-span mutants survived before P25 as well.
+
+## P26 — the sole's roots
+
+S155 was read, and S151 re-read, on 2026-09-25 for reviewer question R51.
+
+**D141 — S1 is the sole's certain root.** S151: "Stimulation of the lateral plantar aspect of
+the foot (S1 dermatome)"; S155, after Foerster: "the S1 dermatome covers the heel and posterior side
+of the foot". The sole, which had no certain root (C61), now has S1; the tibial nerve's other roots
+stay possible. The frozen case for an S1 root (`answered.ts`, A31) failed against the committed code
+first — the sole came back unsettled — and one for S2 passes before and after, as a guard. R51 is
+only partly answered: no source gives S2 to the sole, so a lesion of both S2 roots still does not
+conflict with a numb sole, and the tarsal tunnel's lead over it is unchanged (0.038 against 0.029).
+C61 stands.
+
+**D142 — One P7 observation removed, because a source now contradicts it.** The P7 examination
+`reverse-lateral-foot` — S1 radiculopathy — observed the sole as normal, and its note used that to
+separate the root from the tibial nerve. The observation was composed in P7, when no source gave
+the sole roots; S151 and S155 now put the sole in S1, and with it the S1 root came back with a
+conflict and "unexplained". The observation was removed (A31). The root still leads, with no
+conflict; the tibial nerve drops out on strong inversion, the separation S83 states; and a left
+hemicord lesion at S1 is close behind (posterior 0.479 against 0.461), both with no conflict — the
+expectation, a left root at S1, still holds. The note was rewritten to teach inversion as the
+separating sign. This is the one examination whose result the phase changed; every other leader of
+the 70 is the same.
+
+**D143 — What the P26 mutation run showed.** 97.3% of sourced mutants killed (5,733 of 5,891).
+The sole's row keeps four survivors, all mutations of its possible roots (L4–S3) — the part R51
+leaves unsourced. Three survived P20 too; the fourth, widening the span to L3, was killed before
+only through the rule for a patch with no certain root, which the sole no longer is.

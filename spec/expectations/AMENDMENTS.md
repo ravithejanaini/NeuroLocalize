@@ -539,6 +539,16 @@ situation the freeze exists to catch.
   roots. None was stated by a source for its lesion.
 - **Why:** R14 and R18 asked for these roots; P25 found them.
 
+## A31 — The sole's roots (P26, 2026-09-25)
+
+- **Changed in `answered.ts`:** two root cases — S1 reduces the sole; S2 leaves it unsettled
+  (S151, S155). The S1 case failed against the committed code first; the S2 case is a guard.
+- **Changed in `reverse-leg.ts`:** `reverse-lateral-foot` no longer observes the sole as normal.
+  That observation was composed in P7, before any source gave the sole roots; S151 and S155 now put
+  it in S1, so an S1 radiculopathy does not leave it normal. Its expectation did not change and
+  still holds; its note now names inversion as what separates the root from the tibial nerve
+  (D142).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -553,7 +563,7 @@ situation the freeze exists to catch.
 | `brain.ts` | A7, A8, A9, A13, A14, A16, A17, A18 |
 | `reverse-brain.ts` | A7, A13, A14, A15, A16, A17, A19, A20 |
 | `leg.ts` | A10, A23, A24 |
-| `reverse-leg.ts` | A10 |
+| `reverse-leg.ts` | A10, A31 |
 | `vision.ts` | A11 |
 | `reverse-vision.ts` | A11, A14, A27 |
 | `language.ts` | A14, A20 |
@@ -584,6 +594,6 @@ situation the freeze exists to catch.
 | `reverse-pudendal.ts` | A26 |
 | `geniculate.ts` | A27 |
 | `reverse-geniculate.ts` | A27 |
-| `answered.ts` | A29, A30 |
+| `answered.ts` | A29, A30, A31 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

@@ -8,7 +8,7 @@
 import type { FieldSector, Muscle } from '../../src/kb/vocab.ts';
 import type { LesionRegion, LimbCase, VisionCase } from './types.ts';
 
-const root = (s: 'S1' | 'S2' | 'S4' | 'C5' | 'C6' | 'C8'): LesionRegion => ({
+const root = (s: 'S1' | 'S2' | 'S4' | 'C5' | 'C6' | 'C8' | 'L5'): LesionRegion => ({
   at: { segments: [s, s] }, sides: ['L'], compartments: ['dorsal_root', 'ventral_root'], severity: 'complete', portion: 'whole',
 });
 const ALL: readonly FieldSector[] = ['temporal_superior', 'temporal_inferior', 'nasal_superior', 'nasal_inferior', 'central_left', 'central_right'];
@@ -98,5 +98,28 @@ export const ROOT_MUSCLE_CASES: readonly LimbCase[] = [
       ],
       unasserted: ['every other finding of the root'],
     }],
+  },
+];
+
+// A31 (P26): the sole's roots, answered in part for R51. The lateral plantar aspect of the foot is
+// the S1 dermatome (S151); Foerster's S1 covers the heel and the posterior side of the foot (S155).
+// S1 becomes the sole's certain root; the others the tibial nerve carries stay possible.
+const sole = (state: 'impaired' | 'indeterminate', note: string): LimbCase['evaluations'][number]['assertions'][number] =>
+  ({ kind: 'skin', side: 'L', modality: 'all', areas: ['sole'], oneOf: [state], cite: ['S151', 'S155'], basis: 'composed', note });
+
+export const SOLE_ROOT_CASES: readonly LimbCase[] = [
+  {
+    id: 'root-S1-sole-left',
+    title: 'Left S1 root, examined at the sole',
+    pattern: 'the sole reduced',
+    lesion: [root('S1')],
+    evaluations: [{ timepoint: 'chronic', assertions: [sole('impaired', 'the lateral plantar aspect is the S1 dermatome; one root reduces (D135)')], unasserted: ['every other finding of the root'] }],
+  },
+  {
+    id: 'root-S2-sole-left',
+    title: 'Left S2 root, examined at the sole',
+    pattern: 'the sole unsettled',
+    lesion: [root('S2')],
+    evaluations: [{ timepoint: 'chronic', assertions: [sole('indeterminate', 'S2 may serve it; no source read says so either way')], unasserted: ['every other finding of the root'] }],
   },
 ];

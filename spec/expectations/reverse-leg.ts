@@ -176,7 +176,8 @@ export const LEG_REVERSE_CASES: readonly LimbReverseCase[] = [
       m('gastrocnemius', 'weak'),
       m('tibialis_anterior', 'normal'),
       m('tibialis_posterior', 'normal'),
-      s('sole', 'normal'),
+      // A31: "sole normal" was removed. It was composed in P7, when no source gave the sole roots;
+      // S151 and S155 now put the sole in S1, so an S1 root does not leave it normal (D142).
       m('quadriceps', 'normal'),
       r('achilles', 'reduced'),
       r('patellar', 'normal'),
@@ -188,7 +189,7 @@ export const LEG_REVERSE_CASES: readonly LimbReverseCase[] = [
     expectations: [{ timepoint: 'chronic', topFamily: 'root_left', rostralEndWithin: ['S1', 'S1'] }],
     cite: ['S82', 'S87', 'S83', 'S79'],
     basis: 'stated',
-    note: 'S82 gives the lateral malleolus and lateral foot, plantar flexion and the Achilles reflex to S1; the landmark is tested through the sural territory (S87). Strong inversion and a normal sole separate the root from the tibial nerve, which carries both (S83, S79).',
+    note: 'S82 gives the lateral malleolus and lateral foot, plantar flexion and the Achilles reflex to S1; the landmark is tested through the sural territory (S87). Strong inversion separates the root from the tibial nerve, which supplies tibialis posterior (S83, S79); A31 removed the normal sole, which S151 and S155 put in S1.',
   },
   {
     id: 'reverse-foot-drop-open',
