@@ -12,6 +12,7 @@ import { LEG_CASES } from '../spec/expectations/leg.ts';
 import { VISION_CASES } from '../spec/expectations/vision.ts';
 import { OCCIPITAL_CASES } from '../spec/expectations/occipital.ts';
 import { GENICULATE_CASES } from '../spec/expectations/geniculate.ts';
+import { ANSWERED_LIMB_CASES, ANSWERED_VISION_CASES } from '../spec/expectations/answered.ts';
 import { FIBULAR_CASES } from '../spec/expectations/fibular.ts';
 import { TARSAL_CASES } from '../spec/expectations/tarsal.ts';
 import { TRANSCORTICAL_CASES } from '../spec/expectations/transcortical.ts';
@@ -64,7 +65,7 @@ import { examSlots } from '../src/render/slots.ts';
 import { reverseFailures, runAll, territoryFailures, visionPlaceFailures } from '../test/harness.ts';
 import { locateRows } from '../test/rows.ts';
 
-const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...BASAL_CASES, ...CORTEX_CASES, ...BASILAR_CASES, ...OCCIPITAL_CASES, ...FIBULAR_CASES, ...TARSAL_CASES, ...TRANSCORTICAL_CASES, ...PUDENDAL_CASES, ...GENICULATE_CASES];
+const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...BASAL_CASES, ...CORTEX_CASES, ...BASILAR_CASES, ...OCCIPITAL_CASES, ...FIBULAR_CASES, ...TARSAL_CASES, ...TRANSCORTICAL_CASES, ...PUDENDAL_CASES, ...GENICULATE_CASES, ...ANSWERED_LIMB_CASES, ...ANSWERED_VISION_CASES];
 const THRESHOLD = 0.9;
 const ROOT = resolve(import.meta.dirname, '..');
 
@@ -124,7 +125,7 @@ function poolFor(key: string, value: string): readonly string[] | undefined {
   // P24 (D129): the visual parts' own vocabularies, by key, so 'none' and 'both' are not read as other words.
   if (key === 'eye' || key === 'field' || key === 'quadrants' || key === 'centre' || key === 'rapd') return POOLS[key];
   // P10, P11: an answer the knowledge base gives as a sign state, never a tone word.
-  if (key === 'afterDominant' || key === 'state') return POOLS.sign;
+  if (key === 'afterDominant' || key === 'state' || key === 'whenEqual') return POOLS.sign;
   // P16: a course is keyed by timepoint, and its values are sign states, not reflexes.
   if ((POOLS.timepoint ?? []).includes(key)) return POOLS.sign;
   return Object.values(POOLS).find((p) => p.includes(value));

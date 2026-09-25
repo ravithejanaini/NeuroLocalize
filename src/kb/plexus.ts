@@ -461,11 +461,10 @@ export const PLEXUS: Plexus = {
   reflexNerves: {
     meta: {
       id: 'plexus.reflex-nerves',
-      claim: 'The bulbocavernosus reflex runs through the pudendal nerve, which carries both the sensation of the penis or clitoris and the motor supply of bulbospongiosus (S22). No source read names the reflex, so a pudendal lesion leaves it unsettled rather than lost (D123, R4).',
-      sources: ['S22'],
-      tier: 'T2',
+      claim: 'The bulbocavernosus reflex runs through the pudendal nerve: its afferent limb from the penis or clitoris and its efferent limb to bulbospongiosus and the anal sphincter are both pudendal, over the S2–S4 arc (S148, S149, S22). A pudendal lesion takes it (R4, D132).',
+      sources: ['S148', 'S149', 'S22'],
+      tier: 'T1',
       bookRef: p,
-      pendingSource: 'R4: no source read describes the bulbocavernosus reflex after a pudendal nerve lesion',
     },
     nerves: { bulbocavernosus: 'pudendal' },
   },

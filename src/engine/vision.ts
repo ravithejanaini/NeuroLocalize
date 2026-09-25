@@ -116,9 +116,9 @@ export function visionFindings(kb: Kb, map: VisionMap): VisionFindings {
     }
   }
   for (const side of SIDES) if (open[side] && rapd[side] === 'absent') rapd[side] = 'indeterminate';
-  // A relative defect needs one side to be worse than the other.
-  if (kb.vision.rapd.bothSidesUnsettled && SIDES.every((s) => rapd[s] === 'present')) {
-    for (const side of SIDES) rapd[side] = 'indeterminate';
+  // A relative defect needs one side to be worse than the other (S95, D131).
+  if (SIDES.every((s) => rapd[s] === 'present')) {
+    for (const side of SIDES) rapd[side] = kb.vision.rapd.whenEqual;
   }
   return { fields, rapd };
 }

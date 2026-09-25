@@ -244,19 +244,11 @@ export function skinState(kb: Kb, pmap: PlexusMap, cord: CordView, side: Side, m
 /** A reflex judged by the cord, then by the nerve that carries its arc beyond the roots. */
 export function limbReflex(kb: Kb, pmap: PlexusMap, side: Side, reflex: Reflex, cordState: ReflexState): ReflexState {
   const muscle = kb.plexus.reflexMuscles.muscles[reflex];
-  // P23 (D123): a reflex with no tested muscle whose arc runs through a nerve — the
-  // bulbocavernosus through the pudendal. A cut there leaves a normal reflex unsettled.
+  // A reflex with no tested muscle whose arc runs through a nerve — the bulbocavernosus through
+  // the pudendal (S148, S149; D132, which replaced P23's D123). Judged as a muscle's reflex is.
   const nerve = kb.plexus.reflexNerves.nerves[reflex];
-  if (!muscle && nerve && !pmap.empty) {
-    const through = { nerve, after: kb.plexus.nerves[nerve].sites.length };
-    const cut = spanSegments(kb.reflexes[reflex].span).some((r) => {
-      const route = limbRoute(kb, through, r);
-      return route !== null && routeDamage(pmap, route, side) > 0;
-    });
-    return cut && cordState === 'normal' ? 'indeterminate' : cordState;
-  }
-  if (!muscle || pmap.empty) return cordState;
-  const supplies = kb.plexus.muscles[muscle].supply;
+  const supplies = muscle ? kb.plexus.muscles[muscle].supply : nerve ? [{ nerve, after: kb.plexus.nerves[nerve].sites.length }] : [];
+  if (supplies.length === 0 || pmap.empty) return cordState;
   const roots = spanSegments(kb.reflexes[reflex].span);
   // One root's arc beyond the cord: lost when every supply carrying it is cut.
   const ds = roots.map((r): Damage => {

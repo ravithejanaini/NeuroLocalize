@@ -31,10 +31,12 @@ export const PUDENDAL_CASES: readonly LimbCase[] = [
         muscles(LEG_MUSCLES, { cite: ['S22', 'S75'], basis: 'composed', note: 'the pudendal nerve supplies no leg muscle' }),
         skin('L', ['sole', 'lateral_foot', 'dorsum_foot', 'anterior_thigh'], ['intact'], { cite: ['S22'], basis: 'composed' }),
         { kind: 'reflex', side: 'L', reflex: 'achilles', oneOf: ['normal'], cite: ['S22', 'S79'], basis: 'composed' },
+        // A28: R4 answered — the reflex's arc is the pudendal nerve, afferent and efferent (S149, S148).
+        { kind: 'reflex', side: 'L', reflex: 'bulbocavernosus', oneOf: ['absent'], cite: ['S149', 'S148'], basis: 'stated', note: 'pudendal afferent, pudendal efferent and the S2–S4 arc' },
+        { kind: 'reflex', side: 'R', reflex: 'bulbocavernosus', oneOf: ['normal'], cite: ['S149'], basis: 'composed', note: 'the right pudendal nerve is intact' },
       ],
       unasserted: [
         'the sphincters and the bladder: S22 gives incontinence; the model has no sphincter (C67)',
-        'the bulbocavernosus reflex through the nerve: R4 is unsourced',
         'pain (pudendal neuralgia): not modelled',
       ],
     }],

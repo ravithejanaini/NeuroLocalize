@@ -347,9 +347,9 @@ export const BRAIN: Brain = {
   trochlear: {
     meta: {
       id: 'brain.trochlear',
-      claim: 'The trochlear fibres cross before they leave the dorsal midbrain, so a lesion of one trochlear nucleus weakens the superior oblique of the other eye: it rides high, worse looking down. One source states the crossing (C46).',
-      sources: ['S120', 'S124'],
-      tier: 'T2',
+      claim: 'The trochlear fibres cross before they leave the dorsal midbrain, so a lesion of one trochlear nucleus weakens the superior oblique of the other eye: it rides high, worse looking down. A second source, read for R41, states the crossing too (D133).',
+      sources: ['S120', 'S150', 'S124'],
+      tier: 'T1',
       bookRef: p,
     },
     steps: [{ level: 'midbrain', compartment: 'trochlear_nucleus' }],

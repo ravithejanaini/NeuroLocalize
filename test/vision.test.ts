@@ -69,10 +69,10 @@ describe('the visual field chart (P8)', () => {
     assert.equal(at('optic_tract').rapd.L, 'absent');
     assert.equal(at('chiasm').rapd.L, 'indeterminate', 'C27');
     assert.equal(at('pca_occipital').rapd.L, 'absent', 'behind the geniculate');
-    // Both nerves equally cut: no relative defect can be read (D61).
+    // Both nerves equally cut: no relative defect (S95; D61, corrected by D131 for R30).
     const both = forward([...placeRegions(KB, 'optic_nerve', 'L'), ...placeRegions(KB, 'optic_nerve', 'R')], 'chronic');
-    assert.equal(both.rapd.L, 'indeterminate');
-    assert.equal(both.rapd.R, 'indeterminate');
+    assert.equal(both.rapd.L, 'absent');
+    assert.equal(both.rapd.R, 'absent');
   });
 
   it('offers a pressable control for every field slot the engine can suggest', () => {

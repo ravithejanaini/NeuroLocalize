@@ -242,7 +242,8 @@ export type VisionPartRow = Row<{
 export type Vision = {
   readonly parts: Readonly<Record<VisualPart, VisionPartRow>>;
   readonly places: Readonly<Record<VisionPlace, Row<{ readonly parts: readonly VisualPart[]; readonly midline?: boolean }>>>;
-  readonly rapd: Row<{ readonly bothSidesUnsettled: boolean }>;
+  /** R30 (D131): what a relative defect shows when both sides are equally affected. */
+  readonly rapd: Row<{ readonly whenEqual: SignState }>;
 };
 
 export type Kb = {

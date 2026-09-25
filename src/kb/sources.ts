@@ -17,7 +17,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S116', 'S117', 'S118', 'S119',
   'S120', 'S121', 'S122', 'S123', 'S124',
   'S125', 'S126', 'S127',
-  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137', 'S138', 'S139', 'S140', 'S141', 'S142', 'S143', 'S144', 'S145', 'S146', 'S147',
+  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137', 'S138', 'S139', 'S140', 'S141', 'S142', 'S143', 'S144', 'S145', 'S146', 'S147', 'S148', 'S149', 'S150', 'S151',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -170,4 +170,8 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S145', title: 'Vocat, Staub, Stroppini, Vuilleumier — Anosognosia for hemiplegia: a clinical-anatomical prospective study (Brain, 2010)', url: 'https://pubmed.ncbi.nlm.nih.gov/21126995/' },
   { id: 'S146', title: 'Park — Apraxia: Review and Update (J Clin Neurol, 2017)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5653618/' },
   { id: 'S147', title: 'StatPearls — Neuroanatomy, Nucleus Lateral Geniculate', url: 'https://www.ncbi.nlm.nih.gov/books/NBK541137/' },
+  { id: 'S148', title: 'Panicker et al. — Applications of pelvic neurophysiology testing in clinical practice (Clin Neurophysiol Pract, 2026)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC13080399/' },
+  { id: 'S149', title: 'Niu et al. — Bulbocavernosus reflex and pudendal nerve somatosensory evoked potential are valuable for the diagnosis of cauda equina syndrome in male patients (Int J Clin Exp Med, 2015)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4358563/' },
+  { id: 'S150', title: 'Alexandrou et al. — Trochlear Nerve Palsy: A Systematic Review of Etiologies and Diagnostic Insights (Diagnostics, 2025)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC12691472/' },
+  { id: 'S151', title: 'StatPearls — Babinski Reflex', url: 'https://www.ncbi.nlm.nih.gov/books/NBK519009/' },
 ];

@@ -104,18 +104,18 @@ lower-limb reflexes. Reviewer question R3.
 temperature begins 1–3 segments *below* the lesion.
 
 **R2** — Is a single-root lesion better modelled as reduced sensation (because of dermatomal
-overlap, S21) than as absent sensation? The engine reports `impaired` for an isolated root.
+overlap, S21) than as absent sensation? The engine reports `impaired` for an isolated root. **Answered from sources, 2026-09-25 (D135).**
 
 **R3** — Confirm C5: are UMN signs in conus syndrome explained by involvement above S2?
 
 **R4** — The bulbocavernosus reflex is modelled on S2–S4 from the pudendal nerve's origin
-(S22). No source read states the reflex's level directly. Please supply one.
+(S22). No source read states the reflex's level directly. Please supply one. **Answered from sources, 2026-09-25 (D132).**
 
 **R5** — Limb regions (upper limb C5–T1, lower limb L2–S2) and the saddle (S3–S5) are
 modelling conventions with no source read. Please confirm or correct.
 
 **R6** — The Babinski rule treats any corticospinal interruption rostral to L5 as
-sufficient. No source read gives the plantar reflex's segments.
+sufficient. No source read gives the plantar reflex's segments. **Answered from sources, 2026-09-25 (D134).**
 
 **R7** — Descending bladder and sympathetic control is modelled as a lateral-funiculus
 compartment that a unilateral lesion does not disable (S01: sphincter function generally
@@ -754,7 +754,7 @@ hemianopia, homonymous hemianopia, both quadrantanopias and macular sparing, and
 (C28). A part that carries only half of the centre — Meyer loop, the parietal radiation, one
 calcarine bank — leaves the central sector unsettled rather than lost.
 
-**D61 — The pupil is the sign that crosses the geniculate.** An optic nerve lesion gives a
+**D61 — The pupil is the sign that crosses the geniculate.** *(Its last sentence is corrected by D131.)* An optic nerve lesion gives a
 defect on its own side, an optic tract lesion on the opposite side, and nothing behind the
 lateral geniculate nucleus gives one (S95, S97). When both sides are equally affected the
 model reports the pupils unsettled, because a relative defect compares the two eyes; no
@@ -766,7 +766,7 @@ source read states this, so the row is marked pending.
 leaving it unsettled?
 
 **R30** — D61: with both optic nerves equally damaged, is "no relative defect" the better
-teaching than "unsettled"?
+teaching than "unsettled"? **Answered from sources, 2026-09-25 (D131).**
 
 **R31** — The posterior cerebral artery also supplies the thalamus and midbrain (S94). Should
 the occipital place be offered as a whole-territory lesion, with the thalamic and midbrain
@@ -1140,7 +1140,7 @@ within the nerve trunk". The pupil follows the cause in the nerve trunk, which t
 have, and no source read says what a midbrain lesion of the fascicles or nucleus does to it. P9
 left the pupil out with a promise to look; it stays out, now for a stated reason.
 
-**C46 — One source for the trochlear crossing.** Only S120 states that the nucleus serves the
+**C46 — One source for the trochlear crossing.** *(Resolved by S150; D133.)* Only S120 states that the nucleus serves the
 opposite eye. S124 describes the sign but not the nucleus, and S70's text could not be read. The
 row is T2, and R41 asks a reviewer for a second source.
 
@@ -1158,7 +1158,7 @@ does not take the principal nucleus.
 ### Reviewer questions
 
 **R41** — C46: can a reviewer give a second source for a trochlear nucleus lesion weakening the
-contralateral superior oblique?
+contralateral superior oblique? **Answered from sources, 2026-09-25 (D133).**
 
 **R42** — C45: should the model add a peripheral third nerve, so that a compressive palsy can
 show the pupil and an ischaemic one spare it?
@@ -1588,7 +1588,7 @@ every one of the 68 earlier examination-timepoints is the same as before any P23
 examination the leader is a left S4–S5 root (posterior 0.059) and the pudendal nerve is second
 (0.037), both with no conflict — what C68 expected.
 
-**D123 — The bulbocavernosus reflex is left unsettled after a pudendal lesion.** The first P23
+**D123 — The bulbocavernosus reflex is left unsettled after a pudendal lesion.** *(Replaced by D132 once R4 was answered.)* The first P23
 engine's suggested next test for the pudendal examination was the bulbocavernosus reflex, as if it
 would separate a sacral root (reflex lost) from the pudendal nerve (reflex kept). That was false
 teaching: the model routed the reflex through the cord only, while S22 gives the pudendal nerve
@@ -1689,3 +1689,62 @@ source of the nucleus's row.
 
 **R55** — C69: should the field chart be refined enough to show the nucleus's sector-shaped
 defects, from the anterior and the lateral posterior choroidal arteries?
+
+## Reviewer questions answered from sources
+
+Asked on 2026-09-25 which of the 55 open questions could be answered, the questions were split in
+two. Most ask a clinician for a teaching judgement — "should the model…", "is it better taught
+as…" — and are left for one. The rest ask for a source the model lacked; five of those were
+answered, each by a source stating the answer verbatim, read that day (S82 and S95 re-read,
+S148–S151 new). Where the answer agreed with the model the row only gained its source; where it
+did not, the model changed, with the new expectation run red against the committed code first.
+The best-ranked group of every one of the 70 examination-timepoints is the same before and after.
+
+**D130 — What was not answered, and why.** A question is closed here only by a source that states
+the answer. Judgement questions (R1, R3, R29, R31–R40, R42–R50, R53–R55 among them) stay with a
+clinician. Source questions searched for without a verbatim answer stay open: the saddle's
+segments (R5, R54), the bladder pathway's place (R7), the neck and trunk boundaries (R20), the
+tongue's corticobulbar fibres (R25), the sole's roots (R51) and others.
+
+**D131 — R30: equal damage to both sides gives no relative defect.** S95, re-read (2026-04-30),
+calls the defect "a hallmark sign of unilateral or asymmetric visual pathway dysfunction" and says
+in glaucoma it "is observed only when glaucomatous damage is asymmetrically severe". The model had
+left both pupils unsettled when both optic nerves are equally cut (D61, `vision.rapd-symmetry`,
+pending); it now reports no defect, and the row is sourced. The unit test that pinned the old
+answer (`test/vision.test.ts`) failed against the committed code before it was changed. The
+chiasm, whose defect S95 says "may" follow, stays unsettled (C27); two of D129's "equivalent"
+chiasm mutants now differ and should be killed.
+
+**D132 — R4: the bulbocavernosus reflex is the pudendal nerve and S2–S4.** S148: the reflex
+evaluates "the integrity of the S2-S4 sacral segment of the spinal cord, including afferent input
+from the penis or clitoris and efferent output to the bulbocavernosus muscle or anal sphincter".
+S149: it "reflects the conduction function of pudendal afferent nerve, pudendal efferent nerve and
+S2-4 reflex arc". Both reflex rows are now sourced and T1, and a pudendal lesion abolishes the
+reflex, as a nerve lesion abolishes a tendon reflex through its muscle. This replaces P23's D123,
+which left the reflex unsettled only because no source had been read. The pudendal case now
+asserts the reflex lost on its side and normal on the other (A28); against the committed code it
+came back unsettled. A sacral root abolishes it too, so it still does not separate the nerve from
+the root (C68), and the engine does not offer it as if it did.
+
+**D133 — R41: a second source for the trochlear crossing.** S150, a 2025 systematic review: the
+nerve "is unique among cranial nerves (CNs) in that it completely decussates and exits dorsally",
+and "innervates the contralateral superior oblique muscle". With S120 the row is T1, and C46 — one
+source for the crossing — is resolved. No behaviour changed.
+
+**D134 — R6: the plantar reflex's segments.** S151: the stimulus reaches "the S1 region of the
+spine"; with corticospinal damage "nociceptive input spreads beyond S1 anterior horn cells. This
+leads to the L5/L4 anterior horn cells firing". The model's rule — corticospinal interruption
+rostral to L5, the S1 arc intact — is what that describes, so the row is sourced and unchanged.
+
+**D136 — What the mutation run showed.** 97.2% of sourced mutants killed (5,714 of 5,879) — the
+denominator grew because five rows now count as sourced. Among them, six survivors nothing had
+pinned while the rows were unsourced: the pupils' symmetry (2) and the bulbocavernosus reflex's
+segments (4). Four cases in `answered.ts` pin them (A29); applied directly, each of the six now
+fails. Two more — the Babinski threshold moved to L4 or to S1 — are left: S151 names "the L5/L4
+anterior horn cells" and does not settle the exact level, so no case was invented. The two chiasm
+pupil mutants D131 said would change are now killed. All 20 mutants of the pudendal reflex row are
+killed.
+
+**D135 — R2: one root reduces sensation.** S82 (now archived by StatPearls): after one root
+"decreased sensation is often noted along specific dermatomes". With S21's overlap, the row that
+reports a single root as reduced, not lost, is sourced and unchanged.

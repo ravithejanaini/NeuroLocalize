@@ -508,6 +508,25 @@ situation the freeze exists to catch.
   `geniculate.ts` for P8 facts nothing had pinned — each calcarine bank alone (S93) and the
   chiasm's pupil (S95).
 
+## A28 — Reviewer question R4 answered (2026-09-25)
+
+- **Changed in `pudendal.ts`:** the pudendal case asserts the bulbocavernosus reflex lost on its
+  side and normal on the other, where it had left the reflex out because R4 was unsourced. S148
+  and S149 now state that the reflex's arc is the pudendal nerve, afferent and efferent, over
+  S2–S4 (D132).
+- **How circularity was avoided:** the sources were read before the engine changed, and the
+  assertion was run against the committed code first: it came back unsettled, not lost.
+
+## A29 — Answered questions pinned (2026-09-25)
+
+- **Changed:** one new file, `answered.ts`. Three single-root cases for the bulbocavernosus
+  reflex (S1 keeps it; S2 and S4 reduce it) and one case of both optic nerves equally cut (no
+  relative defect). Once R4 and R30 were answered their rows counted as sourced, and the mutation
+  run found six of their mutants surviving because nothing pinned them (D136).
+- **How circularity was avoided:** each assertion follows from S148, S149 or S95, read before
+  the engine changed; the reflex's segments and the pupils' symmetry were answered in D131 and
+  D132, not tuned here.
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -549,9 +568,10 @@ situation the freeze exists to catch.
 | `reverse-tarsal.ts` | A24 |
 | `transcortical.ts` | A25 |
 | `reverse-transcortical.ts` | A25 |
-| `pudendal.ts` | A26 |
+| `pudendal.ts` | A26, A28 |
 | `reverse-pudendal.ts` | A26 |
 | `geniculate.ts` | A27 |
 | `reverse-geniculate.ts` | A27 |
+| `answered.ts` | A29 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

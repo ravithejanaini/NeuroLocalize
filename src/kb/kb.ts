@@ -167,11 +167,10 @@ export const KB: Kb = {
     bulbocavernosus: {
       meta: {
         id: 'reflex.bulbocavernosus',
-        claim: 'The bulbocavernosus reflex is served by S2–S4 through the pudendal nerve.',
-        sources: ['S22', 'S09'],
-        tier: 'T2',
+        claim: 'The bulbocavernosus reflex is served by the S2–S4 segments through the pudendal nerve, afferent and efferent (R4, D132).',
+        sources: ['S148', 'S149', 'S22', 'S09'],
+        tier: 'T1',
         bookRef: 'pending',
-        pendingSource: 'R4: S22 gives the pudendal nerve’s S2–S4 origin but does not mention the reflex',
       },
       span: ['S2', 'S4'],
     },
@@ -271,11 +270,10 @@ export const KB: Kb = {
     babinski: {
       meta: {
         id: 'observation.babinski-level',
-        claim: 'A Babinski sign requires corticospinal interruption rostral to the lumbosacral segments.',
-        sources: ['S12'],
+        claim: 'The plantar reflex runs from the S1 dermatome to the S1 segment; when the corticospinal tract is damaged the input spreads to the L5 and L4 anterior horn cells and the great toe extends. So a Babinski sign needs corticospinal interruption rostral to L5 with the S1 arc intact (R6, D134).',
+        sources: ['S151', 'S12'],
         tier: 'T2',
         bookRef: 'pending',
-        pendingSource: 'R6: no source read gives the plantar reflex’s segments; L5 is a modelling choice',
       },
       corticospinalRostralTo: 'L5',
     },
@@ -328,11 +326,10 @@ export const KB: Kb = {
     overlap: {
       meta: {
         id: 'observation.dermatomal-overlap',
-        claim: 'Because dermatomes overlap, losing a single segment’s input reduces sensation there rather than abolishing it.',
-        sources: ['S21'],
+        claim: 'Because dermatomes overlap, losing a single segment’s input reduces sensation there rather than abolishing it: after one root, decreased sensation is noted along its dermatome (R2, D135).',
+        sources: ['S21', 'S82'],
         tier: 'T2',
         bookRef: 'pending',
-        pendingSource: 'R2: S21 states the overlap but not its consequence for a single root',
       },
       isolatedLossReadsAs: 'impaired',
     },

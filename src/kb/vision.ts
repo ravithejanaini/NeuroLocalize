@@ -234,12 +234,11 @@ export const VISION: Vision = {
   rapd: {
     meta: {
       id: 'vision.rapd-symmetry',
-      claim: 'A relative afferent pupillary defect compares the two eyes, so it is reported only when one side is affected more than the other; when both are equally affected it is left unsettled.',
+      claim: 'A relative afferent pupillary defect is a sign of unilateral or asymmetric dysfunction of the afferent pathway, so it is reported only when one side is affected more than the other; when both are equally affected there is no relative defect (R30, D131).',
       sources: ['S95'],
       tier: 'T2',
       bookRef: p,
-      pendingSource: 'no source read says what a relative defect shows when both sides lose the same; the model leaves it unsettled',
     },
-    bothSidesUnsettled: true,
+    whenEqual: 'absent',
   },
 };
