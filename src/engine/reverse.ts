@@ -154,6 +154,12 @@ export const slotKey = (s: Slot): string => {
 /** The patch of skin a dermatome landmark also tests (D30). */
 export const landmarkArea = (kb: Kb, s: Segment): SkinArea | undefined =>
   SKIN_AREAS.find((a) => kb.plexus.skin[a].landmark === s);
+/** P23: the patch a multi-segment test also reads — the saddle reads the perineum. */
+export const spanArea = (kb: Kb, span: readonly [Segment, Segment]): SkinArea | undefined =>
+  SKIN_AREAS.find((a) => {
+    const l = kb.plexus.skin[a].landmarkSpan;
+    return l !== undefined && l[0] === span[0] && l[1] === span[1];
+  });
 /** The muscles a single-segment strength test also asks about (D31). */
 export const myotomeMuscles = (kb: Kb, s: Segment): Muscle[] => MUSCLES.filter((m) => kb.plexus.muscles[m].myotome === s);
 
@@ -169,7 +175,11 @@ export function predict(f: Findings, s: Slot, kb: Kb = KB): Value | 'unknown' {
       const segs = segsOf(s.span);
       const [only] = segs;
       const area = segs.length === 1 && only ? landmarkArea(kb, only) : undefined;
-      return sensed(area ? [f.skin[s.side][s.modality][area]] : segs.map((k) => f.sensory[s.side][s.modality][k]));
+      if (area) return sensed([f.skin[s.side][s.modality][area]]);
+      // P23: the saddle reads its span and the perineum, which the pudendal nerve carries.
+      const patch = spanArea(kb, s.span);
+      const states = segs.map((k) => f.sensory[s.side][s.modality][k]);
+      return sensed(patch ? [...states, f.skin[s.side][s.modality][patch]] : states);
     }
     case 'strength': {
       const segs = segsOf(s.span);
@@ -597,6 +607,7 @@ export const SITE_NAME: Record<Place, string> = {
   anterior_tarsal: 'deep fibular nerve in the anterior tarsal tunnel',
   superficial_fibular: 'superficial fibular nerve',
   tarsal_tunnel: 'tibial nerve in the tarsal tunnel',
+  pudendal_canal: 'pudendal nerve in Alcock’s canal',
 };
 /** Plain names for the parts of the visual pathway, as the working speaks of them. */
 const PART_TEXT: Record<VisualPart, string> = {
@@ -876,7 +887,7 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
         if (c) causes.add(c);
       }
       const [only] = segsOf(o.span);
-      const area = segsOf(o.span).length === 1 && only ? landmarkArea(kb, only) : undefined;
+      const area = (segsOf(o.span).length === 1 && only ? landmarkArea(kb, only) : undefined) ?? spanArea(kb, o.span);
       if (area) {
         const row = kb.plexus.skin[area];
         for (const c of limbCuts(kb, pmap, o.side, row.supply, rootsOf(row.roots))) causes.add(c);

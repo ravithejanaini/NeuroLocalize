@@ -118,6 +118,7 @@ export const AREA_NAME: Record<SkinArea, string> = {
   first_web: 'first web space of the foot',
   lateral_foot: 'lateral foot (sural)',
   sole: 'sole of the foot',
+  perineum: 'perineum (the saddle)',
 };
 const escape = (s: string): string =>
   s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] ?? c);

@@ -140,6 +140,17 @@ export const LEG_NERVE_ROWS: Pick<Plexus['nerves'], LegNerve> = {
     origin: { from: 'nerve', nerve: 'common_fibular' },
     sites: ['superficial_fibular'],
   },
+  pudendal: {
+    meta: {
+      id: 'nerve.pudendal',
+      claim: 'The pudendal nerve is formed from the ventral rami of S2–S4 in the sacral plexus, leaves the pelvis below piriformis, and runs through the pudendal (Alcock’s) canal on obturator internus — its lesion place — to the anus, perineum and external genitalia.',
+      sources: ['S22', 'S09'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    origin: { from: 'plexus', part: 'sacral' },
+    sites: ['pudendal_canal'],
+  },
 };
 
 export const LEG_MUSCLE_ROWS: Pick<Plexus['muscles'], LegMuscle> = {
@@ -392,6 +403,19 @@ export const LEG_SKIN_ROWS: Pick<Plexus['skin'], LegSkinArea> = {
     supply: [{ nerve: 'tibial', after: 2 }],
     roots: null,
     disputedRoots: ['L4', 'S3'],
+  },
+  perineum: {
+    meta: {
+      id: 'skin.perineum',
+      claim: 'The skin of the perineum and around the anus is the pudendal nerve’s, from S2–S4; the anal verge itself is the S5 dermatome. The saddle test examines it together with the S3–S5 span it has always drawn (C66).',
+      sources: ['S22', 'S09'],
+      tier: 'T3',
+      bookRef: p,
+      conflict: 'C66',
+    },
+    supply: [{ nerve: 'pudendal', after: 1 }],
+    roots: ['S2', 'S4'],
+    landmarkSpan: ['S3', 'S5'],
   },
 };
 

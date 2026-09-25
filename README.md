@@ -36,6 +36,7 @@ teaching from a phone.
 | P20 | The tarsal tunnel: the tibial nerve at the ankle numbs the sole and keeps the calf and the ankle reflex |
 | P21 | The transcortical aphasias: border-zone lesions around Broca or Wernicke area that keep repetition — the one bedside test that tells them from Broca and Wernicke aphasia |
 | P22 | Anosognosia and apraxia, audited and **not built**: the sources give each several sites and an occurrence of a half or less, so the panel explains why neither localizes |
+| P23 | The saddle and the pudendal nerve: the saddle now reads the perineum, which the pudendal nerve carries from S2–S4, so one side numb with normal legs points to that nerve or a sacral root, not cauda equina |
 
 ## How accuracy is enforced
 

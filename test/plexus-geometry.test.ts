@@ -86,8 +86,9 @@ describe('plexus drawing matches the engine (D27)', () => {
     // maximus + 3 hamstrings + 2 tibialis anterior + 1 each for the toe extensor, fibularis,
     // tibialis posterior and gastrocnemius = 23; skin 3 anterior thigh + 3×2 medial thigh +
     // 2 lateral thigh + 2 medial leg + 4 lateral leg + 1 dorsum + 1 web + 2×2 lateral foot +
-    // 5 sole = 28.
-    assert.equal(paths, 37 + 23 + 28);
+    // 5 sole = 28. P23 adds the perineum through the pudendal nerve, one path each from S2, S3
+    // and S4: 31.
+    assert.equal(paths, 37 + 23 + 31);
   });
 
   it('draws each branch after exactly as many named places as the knowledge base says', () => {

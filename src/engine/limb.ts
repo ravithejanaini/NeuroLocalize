@@ -244,6 +244,17 @@ export function skinState(kb: Kb, pmap: PlexusMap, cord: CordView, side: Side, m
 /** A reflex judged by the cord, then by the nerve that carries its arc beyond the roots. */
 export function limbReflex(kb: Kb, pmap: PlexusMap, side: Side, reflex: Reflex, cordState: ReflexState): ReflexState {
   const muscle = kb.plexus.reflexMuscles.muscles[reflex];
+  // P23 (D123): a reflex with no tested muscle whose arc runs through a nerve — the
+  // bulbocavernosus through the pudendal. A cut there leaves a normal reflex unsettled.
+  const nerve = kb.plexus.reflexNerves.nerves[reflex];
+  if (!muscle && nerve && !pmap.empty) {
+    const through = { nerve, after: kb.plexus.nerves[nerve].sites.length };
+    const cut = spanSegments(kb.reflexes[reflex].span).some((r) => {
+      const route = limbRoute(kb, through, r);
+      return route !== null && routeDamage(pmap, route, side) > 0;
+    });
+    return cut && cordState === 'normal' ? 'indeterminate' : cordState;
+  }
   if (!muscle || pmap.empty) return cordState;
   const supplies = kb.plexus.muscles[muscle].supply;
   const roots = spanSegments(kb.reflexes[reflex].span);

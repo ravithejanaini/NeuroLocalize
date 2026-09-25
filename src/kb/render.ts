@@ -199,6 +199,12 @@ export const RENDER: RenderKb = {
         { at: [-3.5, -39.2, 0.1], branches: ['fibularis', 'lateral_leg'] },
         { at: [-2.8, -46.2, -0.8], branches: ['dorsum_foot'] },
       ],
+      // P23: below piriformis, round the sacrospinous ligament, then forward in Alcock's canal.
+      pudendal: [
+        { at: [-1.6, -26.9, 1.0] },
+        { at: [-1.2, -27.6, 0.8], site: 'pudendal_canal' },
+        { at: [-0.5, -28.0, 0.3], branches: ['perineum'] },
+      ],
     },
     targets: {
       iliopsoas: [-2.0, -27.0, -0.6],
@@ -221,6 +227,8 @@ export const RENDER: RenderKb = {
       first_web: [-2.3, -47.6, -1.6],
       lateral_foot: [-3.2, -47.0, 0.2],
       sole: [-2.6, -47.8, 0.3],
+      // P23: between the thighs, below the pelvis.
+      perineum: [-0.3, -28.2, 0.2],
     },
     inguinalLigament: [[-1.0, -26.2, -1.2], [-2.4, -25.8, -1.0], [-3.3, -25.0, -0.7]],
     bones: [
@@ -353,6 +361,7 @@ export const RENDER: RenderKb = {
       // P19: the branches carry their parent's roots (C57).
       deep_fibular: { roots: ['L4', 'S2'] },
       superficial_fibular: { roots: ['L4', 'S2'] },
+      pudendal: { roots: ['S2', 'S4'] },
     },
   },
 
@@ -384,7 +393,7 @@ export const RENDER: RenderKb = {
   saddle: {
     meta: {
       id: 'render.saddle',
-      claim: 'Loss around the anus and perineum — saddle anaesthesia — marks conus and cauda equina lesions; it is drawn for S3–S5.',
+      claim: 'Loss around the anus and perineum — saddle anaesthesia — marks conus and cauda equina lesions; it is drawn for S3–S5, and since P23 the test also reads the perineum, which the pudendal nerve carries from S2–S4 (C66).',
       sources: ['S05', 'S09', 'S14'],
       tier: 'T2',
       bookRef: 'pending',

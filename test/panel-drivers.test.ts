@@ -9,6 +9,12 @@ import { RENDER } from '../src/kb/render.ts';
 import { SOURCE_IDS } from '../src/kb/sources.ts';
 import { metaRows } from './rows.ts';
 
+describe('the saddle reads the perineum (P23)', () => {
+  it('the drawn saddle span is the span the perineum patch answers to', () => {
+    assert.deepEqual(KB.plexus.skin.perineum.landmarkSpan, RENDER.saddle.span);
+  });
+});
+
 describe('the findings panel cites only rows that exist', () => {
   it('every driver id names a knowledge-base or render row', () => {
     const src = readFileSync(resolve(import.meta.dirname, '..', 'src', 'render', 'panel.ts'), 'utf8');

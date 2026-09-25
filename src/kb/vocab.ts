@@ -145,6 +145,8 @@ export const LEG_NERVES = [
   // P19: the two branches of the common fibular nerve.
   'deep_fibular',
   'superficial_fibular',
+  // P23: the nerve of the saddle.
+  'pudendal',
 ] as const;
 export type LegNerve = (typeof LEG_NERVES)[number];
 
@@ -192,6 +194,8 @@ export const PLEXUS_SITES = [
   'superficial_fibular',
   // P20: the tibial nerve at the ankle.
   'tarsal_tunnel',
+  // P23: the pudendal nerve in Alcock's canal.
+  'pudendal_canal',
 ] as const;
 export type PlexusSite = (typeof PLEXUS_SITES)[number];
 export const ARM_SITES = PLEXUS_SITES.slice(0, PLEXUS_SITES.indexOf('lumbar_plexus'));
@@ -260,6 +264,8 @@ export const LEG_SKIN = [
   'first_web',
   'lateral_foot',
   'sole',
+  // P23: the skin the saddle test examines.
+  'perineum',
 ] as const;
 
 export type LegSkinArea = (typeof LEG_SKIN)[number];

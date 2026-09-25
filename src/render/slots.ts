@@ -6,7 +6,7 @@ import type { RenderKb } from '../kb/types.ts';
 import { CRANIAL_SIGNS, DORSAL_MIDBRAIN_SIGNS, FIELD_SECTORS, LANGUAGE_SIGNS, MUSCLES, REFLEXES, SENSORY_MODALITIES, SIDES, SKIN_AREAS } from '../kb/vocab.ts';
 
 /** Patches examined on their own: those that are not already a dermatome landmark (D30). */
-export const OWN_AREAS = SKIN_AREAS.filter((a) => KB.plexus.skin[a].landmark === undefined);
+export const OWN_AREAS = SKIN_AREAS.filter((a) => KB.plexus.skin[a].landmark === undefined && KB.plexus.skin[a].landmarkSpan === undefined);
 
 export function examSlots(render: RenderKb): Slot[] {
   const out: Slot[] = [];

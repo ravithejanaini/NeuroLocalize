@@ -475,6 +475,21 @@ situation the freeze exists to catch.
   nondominant hemisphere changed, and are kept as guards. The early mixed form is never asserted
   (C62).
 
+## A26 — The pudendal nerve (P23, 2026-09-25)
+
+- **Changed:** two new files. `pudendal.ts` holds one case, the left pudendal nerve in Alcock's
+  canal: the left perineum lost, the right intact, the leg untouched. `reverse-pudendal.ts` holds
+  one examination: the left saddle numb and the legs normal, with the pudendal nerve and a left
+  sacral root expected among the two leading groups (C68). No earlier case or examination changed.
+- **Why:** P23 adds a nerve, a place and a patch of skin, and changes what the saddle test reads;
+  a row no frozen case observes is an untested row (rule 5).
+- **How circularity was avoided:** every assertion is quoted from S22 or S09, read into
+  `docs/P23-analysis.md` before any code; the case and the examination were **run red against
+  the P22 engine** first. The sphincters, the bladder and the bulbocavernosus reflex are never
+  asserted (C67).
+- **Added after the first P23 mutation run:** three single-root cases — S2 and S4 reduce the
+  perineum, S1 spares it — because four mutants of its roots survived (D125).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -516,5 +531,7 @@ situation the freeze exists to catch.
 | `reverse-tarsal.ts` | A24 |
 | `transcortical.ts` | A25 |
 | `reverse-transcortical.ts` | A25 |
+| `pudendal.ts` | A26 |
+| `reverse-pudendal.ts` | A26 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

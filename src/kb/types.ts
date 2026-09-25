@@ -124,10 +124,14 @@ export type Plexus = {
         readonly disputedRoots?: Span;
         /** The dermatome landmark this patch is (D30). */
         readonly landmark?: Segment;
+        /** P23: a multi-segment sensory test that also reads this patch — the saddle reads the perineum. */
+        readonly landmarkSpan?: Span;
       }>
     >
   >;
   readonly reflexMuscles: Row<{ readonly muscles: Readonly<Partial<Record<Reflex, Muscle>>> }>;
+  /** P23: a reflex with no tested muscle whose arc still runs through a nerve (D123). */
+  readonly reflexNerves: Row<{ readonly nerves: Readonly<Partial<Record<Reflex, Nerve>>> }>;
   /** A deformity follows when every listed muscle has lower-motor-neuron weakness (D36). */
   readonly deformities: Readonly<Record<Deformity, Row<{ readonly muscles: readonly Muscle[] }>>>;
 };

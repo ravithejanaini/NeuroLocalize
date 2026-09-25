@@ -121,11 +121,16 @@ export function bodyDots(render: RenderKb, f: Findings, modality: SensoryModalit
       out.push({ side, segment: 'nerve', place: area.replace(/_/g, ' '), state: f.skin[side][modality][area], x: x(p.x), y: p.y, convention: false, patch: area });
     }
     const s = render.saddle;
+    // P23 (D119): the saddle is its span and the perineum patch, as the examination reads it.
+    const perineum = (Object.keys(KB.plexus.skin) as SkinArea[]).find((a) => {
+      const l = KB.plexus.skin[a].landmarkSpan;
+      return l !== undefined && l[0] === s.span[0] && l[1] === s.span[1];
+    });
     out.push({
       side,
       segment: `${s.span[0]}–${s.span[1]}`,
       place: s.place,
-      state: worstSensory(segs(s.span).map((seg) => f.sensory[side][modality][seg])),
+      state: worstSensory([...segs(s.span).map((seg) => f.sensory[side][modality][seg]), ...(perineum ? [f.skin[side][modality][perineum]] : [])]),
       x: x(s.at.x),
       y: s.at.y,
       convention: true,

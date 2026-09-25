@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
+import { hypotheses } from '../src/engine/hypotheses.ts';
 import { ALL_CASES } from '../spec/expectations/index.ts';
 import { forward } from '../src/engine/forward.ts';
 import { SHAPES } from '../src/geometry/lesion3d.ts';
@@ -46,6 +47,12 @@ describe('body map (D21)', () => {
     const svg = bodyMapSvg(RENDER, findingsFor('cauda-L3-Co1'), 'pain_temperature');
     assert.match(svg, /S3–S5 — perianal: lost \(segment assignment is a convention\)/);
     assert.equal((svg.match(/<title>/g) ?? []).length, bodyDots(RENDER, findingsFor('cauda-L3-Co1'), 'pain_temperature').length);
+  });
+
+  it('draws the saddle as the examination reads it: the perineum too (P23, D119)', () => {
+    const pudendal = forward(hypothesesFor('nerve_left:pudendal_canal'), 'chronic');
+    const dots = bodyDots(RENDER, pudendal, 'pain_temperature').filter((d) => d.convention);
+    assert.deepEqual(dots.map((d) => `${d.side} ${d.state}`).sort(), ['L lost', 'R intact']);
   });
 
   it('states the sensory level against the landmarks', () => {
@@ -103,3 +110,9 @@ describe('slice (D23)', () => {
     assert.notEqual(at('classical'), at('revised'), 'the disputed lamination must be visible in the slice');
   });
 });
+
+function hypothesesFor(id: string) {
+  const h = hypotheses().find((x) => x.id === id);
+  if (!h) throw new Error(`no candidate ${id}`);
+  return h.regions;
+}

@@ -1549,3 +1549,75 @@ unregistered id in a note (the test names it) before being kept.
 
 **R53** — C64: is there a lesion site after which anosognosia for hemiplegia is common enough, and
 lasting enough, to teach as a localizing sign?
+
+## P23 — the saddle and the pudendal nerve
+
+The analysis written before any P23 code is `docs/P23-analysis.md`; S22, S09 and S21 were re-read
+for it on 2026-09-25. Chosen by the user over three other options. Run against the P22 engine
+first, the frozen case failed (the perineum did not exist) and so did the examination (no nerve
+among the leaders).
+
+### Source conflicts and limits
+
+**C66 — The saddle's segments.** No source read gives the saddle segments (R5). S22 gives the
+skin under it a nerve, the pudendal, from S2–S4, and the anal verge the S5 dermatome. The drawn
+span stays S3–S5, because six frozen cases and examinations name it; the test now also reads the
+perineum patch, so S2 reaches it through the nerve. The patch is T3.
+
+**C67 — The sphincters.** S22 gives pudendal injury fecal and urinary incontinence. The model's
+bladder finding is the reflex bladder of a cord lesion, with no sphincter, so a pudendal lesion
+leaves it normal; nothing asserts it.
+
+**C68 — The pudendal nerve against one sacral root.** With the tests this model has, a lesion of
+one left sacral root also numbs the left saddle and leaves the leg normal. The examination
+expects both among the two leading groups, not the nerve alone.
+
+### Decisions
+
+**D119 — The saddle reads its span and the perineum.** A skin patch can name a multi-segment
+test it answers to (`landmarkSpan`); the saddle's sensory test is abnormal when its S3–S5 span or
+the perineum is. The perineum has no test of its own, as the dorsum of the foot has none apart from
+L5 (D30). `test/panel-drivers.test.ts` checks that the drawn saddle span and the patch agree.
+
+**D120 — Every ranking the redesign could move was checked.** Before any P23 code,
+`scripts/top-snapshot.ts` recorded the best-ranked group of every frozen examination at each of
+its timepoints (68 lines). The same script after P23 is compared line by line below (D121).
+
+**D121 — No earlier ranking moved.** After P23, and again after D123, the best-ranked group of
+every one of the 68 earlier examination-timepoints is the same as before any P23 code. For the new
+examination the leader is a left S4–S5 root (posterior 0.059) and the pudendal nerve is second
+(0.037), both with no conflict — what C68 expected.
+
+**D123 — The bulbocavernosus reflex is left unsettled after a pudendal lesion.** The first P23
+engine's suggested next test for the pudendal examination was the bulbocavernosus reflex, as if it
+would separate a sacral root (reflex lost) from the pudendal nerve (reflex kept). That was false
+teaching: the model routed the reflex through the cord only, while S22 gives the pudendal nerve
+both the sensation and the bulbospongiosus muscle its arc uses. No source read names the reflex
+(R4), so a new row, `plexus.reflex-nerves`, sends the reflex through the pudendal nerve and a cut
+there leaves a normal reflex unsettled rather than lost. The engine no longer offers the reflex as
+a test that separates the two, and no ranking moved (D121).
+
+**D124 — The drawn saddle read the old way; found in the browser.** The body map drew the saddle
+dot from its S3–S5 span alone, so for a pudendal lesion it showed "intact" while the examination
+read "abnormal". The dot now reads the span and the perineum, as the test does. A new test in
+`test/svg.test.ts` checks the pudendal lesion's two saddle dots (left lost, right intact); it fails
+with the drawing fix stashed and passes with it.
+
+**D122 — Two counts recomputed.** The pudendal nerve adds three drawn fibre paths (S2, S3, S4)
+to the perineum (`test/plexus-geometry.test.ts`) and one place a side
+(`test/reverse.test.ts`).
+
+**D125 — What the P23 mutation run showed.** 97.4% of sourced mutants are killed (5,593 of
+5,745), 96.6% of all; the pudendal nerve's 7 mutants are all killed. Four mutants of the
+perineum's roots (S2–S4) survived, because no case cut a single sacral root and looked at the
+perineum; three single-root cases were added (S2 and S4 reduce it, S1 spares it), and each of the
+four, applied directly, now fails two to four assertions. The full run, which took about an hour
+with P23's examinations, was not repeated for them. The 20 mutants of `plexus.reflex-nerves`
+survive and are left: the row is unsourced (R4), and freezing its behaviour as an expectation
+would pin a claim no source makes. Two mutants of the sacral plexus's roots that survived P21's run
+are now killed by the pudendal nerve's cases.
+
+### Reviewer questions
+
+**R54** — C66: which segments should the saddle be taught as — S3–S5, or S2–S5 as the pudendal
+nerve's roots and the anal verge together suggest?
