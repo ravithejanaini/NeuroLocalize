@@ -3,7 +3,7 @@
 import type { Slot } from '../engine/reverse.ts';
 import { KB } from '../kb/kb.ts';
 import type { RenderKb } from '../kb/types.ts';
-import { CRANIAL_SIGNS, DORSAL_MIDBRAIN_SIGNS, FIELD_CELLS, LANGUAGE_SIGNS, MUSCLES, REFLEXES, SENSORY_MODALITIES, SIDES, SKIN_AREAS } from '../kb/vocab.ts';
+import { TRIGEMINAL_DIVISIONS, CRANIAL_SIGNS, DORSAL_MIDBRAIN_SIGNS, FIELD_CELLS, LANGUAGE_SIGNS, MUSCLES, REFLEXES, SENSORY_MODALITIES, SIDES, SKIN_AREAS } from '../kb/vocab.ts';
 
 /** Patches examined on their own: those that are not already a dermatome landmark (D30). */
 export const OWN_AREAS = SKIN_AREAS.filter((a) => KB.plexus.skin[a].landmark === undefined && KB.plexus.skin[a].landmarkSpan === undefined);
@@ -23,6 +23,8 @@ export function examSlots(render: RenderKb): Slot[] {
     for (const muscle of MUSCLES) out.push({ kind: 'muscle', side, muscle });
     for (const area of OWN_AREAS) out.push({ kind: 'skin', side, area });
     out.push({ kind: 'face_sensation', side }, { kind: 'face_weakness', side }, { kind: 'ataxia', side }, { kind: 'hemiballismus', side });
+    // P30: each trigeminal division.
+    for (const division of TRIGEMINAL_DIVISIONS) out.push({ kind: 'face_division', side, division });
     for (const sign of CRANIAL_SIGNS) out.push({ kind: 'cranial', side, sign });
     // P8: each eye's field, sector by sector, and its pupil.
     // P28: the finer chart's ten cells, not the six coarse sectors (D149).

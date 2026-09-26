@@ -37,6 +37,8 @@ export const CRANIAL_NERVE_CASES: readonly BrainCase[] = [
         sign('L', 'adduction_weakness', true, { cite: ['S70'], basis: 'stated', note: 'the medial rectus (third nerve) adducts the eye' }),
         sign('R', 'oculomotor_palsy', false, { cite: ['S62'], basis: 'composed' }),
         sign('L', 'abduction_weakness', false, { cite: ['S70'], basis: 'composed', note: 'the sixth nerve is a separate nerve' }),
+        // A36: the carotid's sympathetic plexus is a structure of its own (S165).
+        { kind: 'horner', side: 'L', oneOf: ['absent'], cite: ['S165'], basis: 'composed' },
         noLimbs,
       ],
       unasserted: ['the pupil: involved when compressed, often spared when ischaemic (C45, C74)'],
@@ -54,6 +56,8 @@ export const CRANIAL_NERVE_CASES: readonly BrainCase[] = [
         sign('R', 'superior_oblique_weakness', false, { cite: ['S120', 'S70'], basis: 'stated', note: 'only the nucleus serves the other eye' }),
         sign('L', 'oculomotor_palsy', false, { cite: ['S70'], basis: 'composed' }),
         sign('L', 'abduction_weakness', false, { cite: ['S70'], basis: 'composed' }),
+        // A36.
+        { kind: 'horner', side: 'L', oneOf: ['absent'], cite: ['S165'], basis: 'composed' },
         noLimbs,
       ],
       unasserted: ['head tilt (S120); not modelled as a finding'],

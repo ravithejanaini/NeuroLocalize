@@ -343,10 +343,29 @@ export const BRAIN_COMPARTMENTS = [
   'abducens_nerve',
   'facial_nerve',
   'hypoglossal_nerve',
+  // P30: the cavernous sinus — the ophthalmic and maxillary divisions in its wall, and the
+  // sympathetic plexus on the carotid within it.
+  'ophthalmic_maxillary',
+  'carotid_sympathetic',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
-/** P29: the parts that are cranial nerves outside the brainstem; a place of these alone is a nerve. */
-export const CRANIAL_NERVES: readonly BrainCompartment[] = ['oculomotor_nerve', 'trochlear_nerve', 'abducens_nerve', 'facial_nerve', 'hypoglossal_nerve'];
+/**
+ * P29, P30: the parts that lie outside the brainstem — five cranial nerves, and the trigeminal
+ * divisions and sympathetic plexus in the cavernous sinus. A place of these alone ranks with the nerves.
+ */
+export const OUTSIDE_BRAINSTEM: readonly BrainCompartment[] = [
+  'oculomotor_nerve',
+  'trochlear_nerve',
+  'abducens_nerve',
+  'facial_nerve',
+  'hypoglossal_nerve',
+  'ophthalmic_maxillary',
+  'carotid_sympathetic',
+];
+
+/** P30: the three divisions of the trigeminal nerve, by the skin each feels — forehead, cheek, jaw. */
+export const TRIGEMINAL_DIVISIONS = ['V1', 'V2', 'V3'] as const;
+export type TrigeminalDivision = (typeof TRIGEMINAL_DIVISIONS)[number];
 
 /** Parts of the body as the cortex and its projections map them. */
 export const BODY_REGIONS = ['face', 'neck', 'arm', 'trunk', 'leg'] as const;
@@ -437,6 +456,8 @@ export const TERRITORIES = [
   'abducens_nerve',
   'facial_nerve',
   'hypoglossal_nerve',
+  // P30.
+  'cavernous_sinus',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

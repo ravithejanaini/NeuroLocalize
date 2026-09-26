@@ -15,6 +15,7 @@ type Heading = 'Head and eyes' | 'Sensation' | 'Strength' | 'Reflexes and signs'
 const heading = (o: Observation): Heading => {
   switch (o.kind) {
     case 'face_sensation':
+    case 'face_division':
     case 'face_weakness':
     case 'cranial':
     case 'ataxia':

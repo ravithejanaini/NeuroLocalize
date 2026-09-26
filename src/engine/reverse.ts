@@ -19,7 +19,7 @@ import {
   type DorsalMidbrainSign,
   type FieldRegion,
   VISUAL_PARTS,
-  CRANIAL_NERVES,
+  OUTSIDE_BRAINSTEM,
   type VisualPart,
   type FaceWeaknessObservation,
   type LesionFamily,
@@ -35,6 +35,7 @@ import {
   type SkinArea,
   type StrengthObservation,
   type Timepoint,
+  type TrigeminalDivision,
 } from '../kb/vocab.ts';
 import { mapBrain, regionOf, type BrainMap } from './brain.ts';
 import { forward, isBrain, isCord, isPlexus, isSacral, isVision, type Findings } from './forward.ts';
@@ -57,6 +58,8 @@ export type Observation =
   /** Any modality at a patch without a dermatome landmark (D30). */
   | { readonly kind: 'skin'; readonly side: Side; readonly area: SkinArea; readonly value: SensoryObservation }
   | { readonly kind: 'face_sensation'; readonly side: Side; readonly value: SensoryObservation }
+  /** P30: the skin of one trigeminal division — V1 forehead, V2 cheek, V3 jaw. */
+  | { readonly kind: 'face_division'; readonly side: Side; readonly division: TrigeminalDivision; readonly value: SensoryObservation }
   | { readonly kind: 'face_weakness'; readonly side: Side; readonly value: FaceWeaknessObservation }
   | { readonly kind: 'cranial'; readonly side: Side; readonly sign: CranialSign; readonly value: SignObservation }
   | { readonly kind: 'ataxia'; readonly side: Side; readonly value: SignObservation }
@@ -98,6 +101,7 @@ const DOMAIN: Record<Observation['kind'], readonly string[]> = {
   muscle: ['normal', 'weak'],
   skin: ['normal', 'abnormal'],
   face_sensation: ['normal', 'abnormal'],
+  face_division: ['normal', 'abnormal'],
   face_weakness: ['normal', 'lower', 'whole'],
   cranial: ['present', 'absent'],
   ataxia: ['present', 'absent'],
@@ -137,6 +141,8 @@ export const slotKey = (s: Slot): string => {
       return `${s.kind}|${s.side}`;
     case 'cranial':
       return `cranial|${s.side}|${s.sign}`;
+    case 'face_division':
+      return `face_division|${s.side}|${s.division}`;
     case 'field':
       return `field|${s.eye}|${s.sector}`;
     case 'rapd':
@@ -195,6 +201,8 @@ export function predict(f: Findings, s: Slot, kb: Kb = KB): Value | 'unknown' {
       return sensed([f.skin[s.side].pain_temperature[s.area], f.skin[s.side].posterior_column[s.area]]);
     case 'face_sensation':
       return sensed([f.faceSensation[s.side]]);
+    case 'face_division':
+      return sensed([f.faceDivision[s.side][s.division]]);
     case 'face_weakness': {
       const w = f.faceWeakness[s.side];
       return w === 'indeterminate' ? 'unknown' : w === 'none' ? 'normal' : w;
@@ -574,6 +582,8 @@ export const SITE_NAME: Record<Place, string> = {
   abducens_nerve: 'abducens nerve (along the clivus)',
   facial_nerve: 'facial nerve (at the stylomastoid foramen)',
   hypoglossal_nerve: 'hypoglossal nerve (in the hypoglossal canal)',
+  // P30.
+  cavernous_sinus: 'cavernous sinus (III, IV, VI, V1, V2 and the carotid sympathetic plexus)',
   subthalamic_nucleus: 'subthalamic nucleus',
   frontal_eye_field: 'frontal eye field (Brodmann area 8)',
   borderzone_anterior: 'anterior border zone (ACA–MCA), around Broca area',
@@ -700,6 +710,8 @@ const PART_NAME: Record<BrainCompartment, string> = {
   abducens_nerve: 'abducens nerve',
   facial_nerve: 'facial nerve',
   hypoglossal_nerve: 'hypoglossal nerve',
+  ophthalmic_maxillary: 'ophthalmic and maxillary divisions in the cavernous sinus',
+  carotid_sympathetic: 'sympathetic plexus on the carotid, in the cavernous sinus',
 };
 const LEVEL_NAME: Record<BrainLevel, string> = {
   cortex: 'cortex',
@@ -711,7 +723,7 @@ const LEVEL_NAME: Record<BrainLevel, string> = {
   cerebellum: 'cerebellum',
 };
 
-const PLURAL = /(fibres|nuclei|fascicles)( in the [a-z]+)?$/;
+const PLURAL = /(fibres|nuclei|fascicles|divisions)( in the [a-z ]+)?$/;
 /** "is damaged" or "are damaged", to agree with the part named at the end of `phrase`. */
 const damaged = (phrase: string): string => `${phrase} ${PLURAL.test(phrase) ? 'are' : 'is'} damaged`;
 
@@ -720,7 +732,7 @@ function brainCut(bmap: BrainMap, steps: readonly { level: BrainLevel; compartme
   const s = steps.find((x) => bmap.damage(x.level, x.compartment, side, region) > 0);
   if (!s) return null;
   // A nerve outside the brainstem is not "in" the level it leaves (P29).
-  const outside = ['cortex', 'capsule', 'thalamus', 'cerebellum'].includes(s.level) || CRANIAL_NERVES.includes(s.compartment);
+  const outside = ['cortex', 'capsule', 'thalamus', 'cerebellum'].includes(s.level) || OUTSIDE_BRAINSTEM.includes(s.compartment);
   const at = outside ? '' : ` in the ${LEVEL_NAME[s.level]}`;
   return `the ${SIDE[side]} ${PART_NAME[s.compartment]}${at}`;
 }
@@ -788,8 +800,16 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
     });
   switch (o.kind) {
     case 'face_sensation': {
-      const c = faceCuts([b.faceNucleus, b.faceAscending], o.side);
+      const c = faceCuts([b.faceNucleus, b.faceAscending, b.faceDivisions], o.side);
       return c.length ? c.join('; ') : 'the trigeminal routes are intact';
+    }
+    case 'face_division': {
+      // P30: the cavernous sinus carries V1 and V2 only; every other route carries all three.
+      const some = b.faceDivisions.divisions.includes(o.division) ? faceCuts([b.faceDivisions], o.side) : [];
+      const c = [...faceCuts([b.faceNucleus, b.faceAscending], o.side), ...some];
+      if (c.length) return c.join('; ');
+      if (faceCuts([b.faceDivisions], o.side).length) return `${o.division} leaves the skull by the foramen ovale, outside the cavernous sinus`;
+      return 'the trigeminal routes are intact';
     }
     case 'face_weakness': {
       const w = f.faceWeakness[o.side];
@@ -821,7 +841,7 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
         return 'the oculomotor nucleus is cut, and one central caudal nucleus raises both lids: ptosis on both sides or on neither (C29)';
       }
       // P29: the signs whose nerve outside the brainstem the model has name it too.
-      const withNerve = routes.some((r) => r.steps.some((x) => CRANIAL_NERVES.includes(x.compartment)));
+      const withNerve = routes.some((r) => r.steps.some((x) => OUTSIDE_BRAINSTEM.includes(x.compartment)));
       return c.length ? c.join('; ') : withNerve ? 'its nucleus, fascicle, nerve and supranuclear supply are intact' : 'its nucleus, fascicle and supranuclear supply are intact';
     }
     case 'ataxia': {

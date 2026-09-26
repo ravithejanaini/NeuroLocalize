@@ -14,6 +14,7 @@ import {
   REFLEXES,
   SEGMENTS,
   SIDES,
+  TRIGEMINAL_DIVISIONS,
   type CranialSign,
   type DorsalMidbrainSign,
   type FieldRegion,
@@ -22,6 +23,7 @@ import {
   type SensoryModality,
   type Side,
   type SkinArea,
+  type TrigeminalDivision,
 } from '../kb/vocab.ts';
 
 export type Findings = ReadonlyMap<string, Observation>;
@@ -129,6 +131,8 @@ export const AREA_NAME: Record<SkinArea, string> = {
   sole: 'sole of the foot',
   perineum: 'perineum (the saddle)',
 };
+/** P30: the skin each trigeminal division feels. */
+export const DIVISION_NAME: Record<TrigeminalDivision, string> = { V1: 'forehead (V1)', V2: 'cheek (V2)', V3: 'jaw (V3)' };
 const escape = (s: string): string =>
   s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] ?? c);
 
@@ -144,6 +148,7 @@ export const CYCLE: Record<Slot['kind'], readonly string[]> = {
   muscle: ['normal', 'weak'],
   skin: ['normal', 'abnormal'],
   face_sensation: ['normal', 'abnormal'],
+  face_division: ['normal', 'abnormal'],
   face_weakness: ['normal', 'lower', 'whole'],
   cranial: ['absent', 'present'],
   ataxia: ['absent', 'present'],
@@ -196,6 +201,8 @@ export function slotLabel(render: RenderKb, s: Slot): string {
       return `${SIDE_WORD[s.side]} ${AREA_NAME[s.area]}`;
     case 'face_sensation':
       return `${SIDE_WORD[s.side]} face, sensation`;
+    case 'face_division':
+      return `${SIDE_WORD[s.side]} ${DIVISION_NAME[s.division]}, sensation`;
     case 'face_weakness':
       return `${SIDE_WORD[s.side]} face, strength`;
     case 'cranial':
@@ -332,6 +339,8 @@ export function examTables(render: RenderKb, findings: Findings): string {
     }).join('')}</tr>`;
   const head = [
     headRow('Face, sensation', (side) => ({ kind: 'face_sensation', side })),
+    // P30: each trigeminal division on its own — the cavernous sinus spares the jaw.
+    ...TRIGEMINAL_DIVISIONS.map((division) => headRow(`&nbsp;&nbsp;${DIVISION_NAME[division]}`, (side) => ({ kind: 'face_division', side, division }))),
     headRow('Face, strength', (side) => ({ kind: 'face_weakness', side })),
     ...CRANIAL_SIGNS.map((sign) => headRow(CRANIAL_NAME[sign], (side) => ({ kind: 'cranial', side, sign }))),
     headRow('Limb ataxia', (side) => ({ kind: 'ataxia', side })),

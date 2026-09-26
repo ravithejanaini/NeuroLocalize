@@ -159,6 +159,7 @@ export function pathwaysShown(observations: readonly Observation[], f: Findings,
         if (o.value !== 'normal') out.add('autonomic');
         break;
       case 'face_sensation':
+      case 'face_division':
         if (o.value === 'abnormal') out.add('trigeminal');
         break;
       case 'face_weakness':

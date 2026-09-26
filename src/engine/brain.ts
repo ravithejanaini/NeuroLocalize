@@ -10,6 +10,7 @@ import {
   DORSAL_MIDBRAIN_SIGNS,
   SEGMENTS,
   SIDES,
+  TRIGEMINAL_DIVISIONS,
   type BodyRegion,
   type BrainCompartment,
   type BrainLevel,
@@ -24,6 +25,7 @@ import {
   type Side,
   type SignState,
   type Timepoint,
+  type TrigeminalDivision,
 } from '../kb/vocab.ts';
 import type { Damage } from './lesion.ts';
 
@@ -81,6 +83,7 @@ export function validateBrain(kb: Kb): void {
     b.ballismus.steps,
     b.trochlear.steps,
     b.trochlearNerve.steps,
+    b.faceDivisions.steps,
     b.jaw.steps,
     b.upgaze.steps,
     b.lightNear.steps,
@@ -177,6 +180,8 @@ const present = (d: Damage): SignState => (d > 0 ? 'present' : 'absent');
 
 export type BrainFindings = {
   readonly faceSensation: Readonly<Record<Side, SensoryState>>;
+  /** P30: the face by trigeminal division; the whole-face finding is the worst of the three. */
+  readonly faceDivision: Readonly<Record<Side, Readonly<Record<TrigeminalDivision, SensoryState>>>>;
   readonly faceWeakness: Readonly<Record<Side, FaceWeakness>>;
   readonly cranial: Readonly<Record<Side, Readonly<Record<CranialSign, SignState>>>>;
   readonly ataxia: Readonly<Record<Side, SignState>>;
@@ -225,13 +230,20 @@ function lid(kb: Kb, map: BrainMap, x: Side): SignState {
 
 export function brainFindings(kb: Kb, map: BrainMap, timepoint: Timepoint = 'chronic'): BrainFindings {
   const faceSensation = {} as Record<Side, SensoryState>;
+  const faceDivision = {} as Record<Side, Record<TrigeminalDivision, SensoryState>>;
   const faceWeak = {} as Record<Side, FaceWeakness>;
   const cranial = {} as Record<Side, Record<CranialSign, SignState>>;
   const ataxia = {} as Record<Side, SignState>;
   const hemiballismus = {} as Record<Side, SignState>;
   const b = kb.brain;
   for (const x of SIDES) {
-    faceSensation[x] = STATE[worst([routeDamage(map, b.faceNucleus, x, 'face'), routeDamage(map, b.faceAscending, x, 'face')])];
+    // Every route to the face carries all three divisions; the sinus carries V1 and V2 (P30).
+    const whole = worst([routeDamage(map, b.faceNucleus, x, 'face'), routeDamage(map, b.faceAscending, x, 'face')]);
+    const some = routeDamage(map, b.faceDivisions, x, 'face');
+    const divisions = {} as Record<TrigeminalDivision, SensoryState>;
+    for (const d of TRIGEMINAL_DIVISIONS) divisions[d] = STATE[b.faceDivisions.divisions.includes(d) ? worst([whole, some]) : whole];
+    faceDivision[x] = divisions;
+    faceSensation[x] = STATE[worst([whole, some])];
     faceWeak[x] = faceWeakness(kb, map, x);
     const signs = {} as Record<CranialSign, SignState>;
     for (const sign of CRANIAL_SIGNS) {
@@ -314,7 +326,7 @@ export function brainFindings(kb: Kb, map: BrainMap, timepoint: Timepoint = 'chr
     const h = other(x);
     neglect[x] = along(map, b.neglect.steps, h, 'face') === 0 ? 'absent' : h === dominant ? b.neglect.afterDominant : 'present';
   }
-  return { faceSensation, faceWeakness: faceWeak, cranial, ataxia, hemiballismus, vertigo, truncalAtaxia, eyes, gerstmann, language, neglect };
+  return { faceSensation, faceDivision, faceWeakness: faceWeak, cranial, ataxia, hemiballismus, vertigo, truncalAtaxia, eyes, gerstmann, language, neglect };
 }
 
 /** The ipsilateral oculosympathetic pathway in the brainstem (S16). */

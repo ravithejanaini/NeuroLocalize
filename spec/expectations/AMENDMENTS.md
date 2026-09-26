@@ -590,6 +590,23 @@ situation the freeze exists to catch.
   order ties are listed in — which is why it was amended: it claimed a leader the model cannot pick.
   The pupil is never asserted (C45, C74).
 
+## A36 — The cavernous sinus and the trigeminal divisions (P30, 2026-09-27)
+
+- **Changed:** two new files. `cavernous.ts` holds the whole left cavernous sinus, V1 and V2 in its
+  wall alone, and the principal sensory nucleus by division; `reverse-cavernous.ts` holds one
+  examination. `types.ts` and `reverse-brain.ts` gain a finding and an observation for one
+  trigeminal division. In `reverse-cranial-nerves.ts` the isolated third and sixth nerve palsies now
+  record the other contents of the sinus as examined and normal (D161): without them a whole-sinus
+  lesion fitted as well, which the model cannot tell apart from an isolated palsy.
+- **How circularity was avoided:** every assertion is quoted from S122, S165, S166 and S70, read
+  into `docs/P30-analysis.md` before any code; all four new expectations were run red against the
+  P29 engine. The two amended examinations were amended only by adding findings their titles
+  already claimed ("nothing else"); both keep their leaders. The pupil's size is never asserted
+  (C45, C77).
+- **Changed after the mutation run:** in `cranial-nerves.ts` the isolated third and fourth nerve
+  cases also assert no Horner syndrome, so that the carotid plexus cannot be read as either nerve
+  (D162).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -598,11 +615,11 @@ situation the freeze exists to catch.
 | `boundaries.ts` | A2 |
 | `index.ts` | A2 (exports the boundary cases) |
 | `reverse.ts` | A3 |
-| `types.ts` | A4, A6, A7, A11, A14, A15, A17, A19, A20, A34 |
+| `types.ts` | A4, A6, A7, A11, A14, A15, A17, A19, A20, A34, A36 |
 | `plexus.ts` | A4, A5, A6, A9, A30 |
 | `reverse-plexus.ts` | A4, A5 |
 | `brain.ts` | A7, A8, A9, A13, A14, A16, A17, A18, A32 |
-| `reverse-brain.ts` | A7, A13, A14, A15, A16, A17, A19, A20 |
+| `reverse-brain.ts` | A7, A13, A14, A15, A16, A17, A19, A20, A36 |
 | `leg.ts` | A10, A23, A24 |
 | `reverse-leg.ts` | A10, A31 |
 | `vision.ts` | A11 |
@@ -638,7 +655,9 @@ situation the freeze exists to catch.
 | `answered.ts` | A29, A30, A31, A33 |
 | `sectoranopia.ts` | A34 |
 | `reverse-sectoranopia.ts` | A34 |
-| `cranial-nerves.ts` | A35 |
-| `reverse-cranial-nerves.ts` | A35 |
+| `cranial-nerves.ts` | A35, A36 |
+| `reverse-cranial-nerves.ts` | A35, A36 |
+| `cavernous.ts` | A36 |
+| `reverse-cavernous.ts` | A36 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

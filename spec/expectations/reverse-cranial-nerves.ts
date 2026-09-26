@@ -11,13 +11,19 @@ const strong: BrainObservation[] = [power('L', 'C6', 'normal'), power('R', 'C6',
 export const CRANIAL_NERVE_REVERSE_CASES: readonly BrainReverseCase[] = [
   {
     id: 'reverse-oculomotor-nerve',
-    title: 'Left eye down and out with a drooping lid; right lid and right eye normal; limbs strong',
+    title: 'Left eye down and out with a drooping lid; the left eye abducts and intorts, no Horner syndrome, forehead feels; right lid and right eye normal; limbs strong',
     observations: [
       cn('L', 'oculomotor_palsy', 'present'),
       cn('L', 'ptosis', 'present'),
       cn('R', 'ptosis', 'absent'),
       cn('R', 'elevation_weakness', 'absent'),
       cn('R', 'oculomotor_palsy', 'absent'),
+      // A36: an ISOLATED third nerve palsy — the other nerves the cavernous sinus holds were
+      // examined and are normal. Without these a whole-sinus lesion fits as well (D161).
+      cn('L', 'abduction_weakness', 'absent'),
+      cn('L', 'superior_oblique_weakness', 'absent'),
+      { kind: 'horner', side: 'L', value: 'absent' },
+      { kind: 'face_division', side: 'L', division: 'V1', value: 'normal' },
       ...strong,
     ],
     expectations: [{ timepoint: 'chronic', topFamily: 'nerve_left', topPlaces: ['oculomotor_nerve'] }],
@@ -27,12 +33,17 @@ export const CRANIAL_NERVE_REVERSE_CASES: readonly BrainReverseCase[] = [
   },
   {
     id: 'reverse-abducens-nerve',
-    title: 'The left eye will not abduct; gaze to the left otherwise full; face and limbs strong',
+    title: 'The left eye will not abduct; gaze to the left otherwise full; the left eye otherwise moves fully, no Horner syndrome, forehead feels; face and limbs strong',
     observations: [
       cn('L', 'abduction_weakness', 'present'),
       cn('L', 'gaze_palsy', 'absent'),
       cn('R', 'adduction_weakness', 'absent'),
       { kind: 'face_weakness', side: 'L', value: 'normal' },
+      // A36: isolated — the cavernous sinus's other contents examined and normal (D161).
+      cn('L', 'oculomotor_palsy', 'absent'),
+      cn('L', 'superior_oblique_weakness', 'absent'),
+      { kind: 'horner', side: 'L', value: 'absent' },
+      { kind: 'face_division', side: 'L', division: 'V1', value: 'normal' },
       ...strong,
     ],
     expectations: [{ timepoint: 'chronic', topFamily: 'nerve_left', topPlaces: ['abducens_nerve'] }],

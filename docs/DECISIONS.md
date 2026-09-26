@@ -1923,7 +1923,7 @@ often spares it (S62, S70). The model still has no pupil sign for the third nerv
 the facial canal. The model has face strength only, so its facial nerve place is the stylomastoid
 foramen, below the chorda tympani, where S51 lists "Ipsilateral facial plegia" alone.
 
-**C76 — The cavernous sinus.** S70: cavernous sinus lesions combine the third, fourth and sixth
+**C76 — The cavernous sinus.** *(Answered by P30; D160.)* S70: cavernous sinus lesions combine the third, fourth and sixth
 nerves with V1 and V2, and a Horner syndrome with a sixth nerve palsy "localizes to the cavernous
 sinus". Drawing it needs sensation by trigeminal division and the third-order sympathetic fibres;
 the model has neither. Deferred to P30.
@@ -1965,5 +1965,60 @@ D140, D143, D152).
 
 ### Reviewer questions
 
-**R57** — C76: is a cavernous sinus place worth adding once the face can be split by trigeminal
+**R57** — *(Answered by P30, D158–D160: the sinus is a place, asserting III, IV, VI, V1, V2 and the Horner syndrome, the jaw spared.)* C76: is a cavernous sinus place worth adding once the face can be split by trigeminal
 division, and should it assert all of III, IV, VI, V1, V2 and Horner syndrome, or leave each open?
+
+## P30 — The cavernous sinus, and the face by trigeminal division
+
+The analysis written before any P30 code is `docs/P30-analysis.md`; S165–S166 were read for it on
+2026-09-27, with S122 re-read in full. Run against the P29 engine first, all three new cases and
+the new examination failed. This answers C76 and R57.
+
+### Source conflicts and limits
+
+**C77 — The pupil in a whole-sinus lesion.** S165 gives total ophthalmoplegia "accompanied by fixed
+and dilated pupils"; the same lesion takes the carotid's sympathetic plexus, which gives a Horner
+syndrome. The model has no pupil size (C45, C74), asserts neither pupil, and reports the Horner
+syndrome from the plexus.
+
+**C78 — Partial sinus lesions.** S70 and S166 say the sinus "can produce" the palsies in any
+combination. The model's place is the whole sinus on one side; a partial lesion is not a place.
+
+**C79 — The onion skin.** The spinal trigeminal nucleus is laid out in concentric rings, not by
+division; the model reads a nuclear lesion as all three divisions.
+
+### Decisions
+
+**D158 — The face is felt in three divisions.** Each side's face is V1 (forehead), V2 (cheek) and V3
+(jaw). Every earlier route to the face — the nuclei, VPM, the cortex — carries all three, so no
+earlier case changed; the whole-face finding is the worst of the three. One new part, V1 and V2 in
+the lateral wall of the sinus, carries those two only (S122, S165). The examination offers each
+division on each side; the findings table lists them only where they differ.
+
+**D159 — The sympathetic plexus in the sinus.** The oculosympathetic route gains the plexus on the
+internal carotid inside the sinus, so a sinus lesion gives a Horner syndrome (S165, S70).
+
+**D160 — The cavernous sinus is a place.** It takes the third, fourth and sixth nerves, V1 and V2
+and the plexus on one side, and ranks with the nerves. That the jaw is spared is composed: S165 and
+S166 list the sinus's nerves without V3, and S122 sends V3 out through the foramen ovale. The
+working says so when the jaw is examined. The P29 list of nerve parts becomes `OUTSIDE_BRAINSTEM`,
+since it now holds the sinus's parts too.
+
+**D161 — An isolated palsy must be examined as isolated.** With the sinus in the model, the P29
+examinations for the third and sixth nerves were tied with it: they never recorded the other nerves
+the sinus holds, so a whole-sinus lesion fitted as well. An isolated palsy means those were tested
+and found normal, so both examinations now record them — the other two ocular nerves, no Horner
+syndrome and a forehead that feels (A36). Their leaders are unchanged; none of the 77 earlier
+examination leaders moved.
+
+**D162 — The P30 mutation run.** 7424 mutants, 97.6% raw; sourced rows 97.8%. Two new survivors,
+both on the new sympathetic step: replacing the carotid plexus with the third or fourth nerve
+survived, because the only case lesioning the plexus lesions those nerves too. The P29 cases for the
+isolated third and fourth nerves now assert no Horner syndrome — the plexus is a structure of its
+own (S165) — and both mutants were checked killed by hand (A36). The five P29 `nerve` flag survivors
+are gone with the flag (D157). The remaining survivors are the ones already recorded.
+
+### Reviewer questions
+
+**R58** — C78: should partial sinus syndromes — the third and sixth nerves with a Horner syndrome,
+say — be places of their own, and if so, which combinations are common enough to teach?

@@ -303,6 +303,10 @@ export const RENDER: RenderKb = {
       // the interpeduncular fossa, the fourth lateral around the midbrain (S62, S120).
       'midbrain:oculomotor_nerve': [-0.35, -0.1, -1.3],
       'midbrain:trochlear_nerve': [-1.25, -0.5, 0.2],
+      // P30: the cavernous sinus, forward and lateral beside the sella — its trigeminal divisions in
+      // the lateral wall, the sympathetic plexus on the carotid medial to them (S122, S165).
+      'midbrain:ophthalmic_maxillary': [-1.45, 0.3, -1.4],
+      'midbrain:carotid_sympathetic': [-1.1, 0.35, -1.5],
       'midbrain:medial_lemniscus': [-0.6, 0, 0.0],
       'midbrain:spinothalamic': [-0.76, 0.1, 0.2],
       'midbrain:sympathetic': [-0.66, -0.2, 0.32],

@@ -146,6 +146,9 @@ describe('the drawn brain keeps the sourced relations', () => {
       ['pons', 'abducens_nerve'],
       ['pons', 'facial_nerve'],
       ['medulla', 'hypoglossal_nerve'],
+      // P30: the cavernous sinus's own parts.
+      ['midbrain', 'ophthalmic_maxillary'],
+      ['midbrain', 'carotid_sympathetic'],
     ] as const;
     for (const [level, c] of nerves) {
       const r = L.levels[level].radius;

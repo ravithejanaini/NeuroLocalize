@@ -15,6 +15,7 @@ import type {
   StrengthObservation,
   Territory,
   Timepoint,
+  TrigeminalDivision,
 } from '../../src/kb/vocab.ts';
 import type { ReverseExpectation } from './reverse.ts';
 import type { LimbObservation } from './reverse-plexus.ts';
@@ -23,6 +24,8 @@ import type { Span } from './types.ts';
 export type BrainObservation =
   | LimbObservation
   | { readonly kind: 'face_sensation'; readonly side: Side; readonly value: SensoryObservation }
+  // A36.
+  | { readonly kind: 'face_division'; readonly side: Side; readonly division: TrigeminalDivision; readonly value: SensoryObservation }
   | { readonly kind: 'face_weakness'; readonly side: Side; readonly value: FaceWeaknessObservation }
   | { readonly kind: 'cranial'; readonly side: Side; readonly sign: CranialSign; readonly value: SignObservation }
   | { readonly kind: 'ataxia'; readonly side: Side; readonly value: SignObservation }

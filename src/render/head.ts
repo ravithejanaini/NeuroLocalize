@@ -1,7 +1,7 @@
 // The head and brainstem findings, as HTML strings. No DOM, so it is tested under Node.
 import type { Findings } from '../engine/forward.ts';
-import { CRANIAL_SIGNS, DORSAL_MIDBRAIN_SIGNS, LANGUAGE_SIGNS, SEGMENTS, SIDES, type FaceWeakness, type SensoryState, type Side, type SignState } from '../kb/vocab.ts';
-import { CRANIAL_NAME, EYES_NAME, LANGUAGE_NAME } from './examine.ts';
+import { CRANIAL_SIGNS, DORSAL_MIDBRAIN_SIGNS, LANGUAGE_SIGNS, SEGMENTS, SIDES, TRIGEMINAL_DIVISIONS, type FaceWeakness, type SensoryState, type Side, type SignState } from '../kb/vocab.ts';
+import { CRANIAL_NAME, DIVISION_NAME, EYES_NAME, LANGUAGE_NAME } from './examine.ts';
 
 const FACE_WORD: Record<FaceWeakness, string> = {
   none: 'strong',
@@ -58,6 +58,10 @@ export function headHtml(f: Findings): string {
   };
   const rows = [
     row('Face, sensation', (x) => ({ word: SENSE_WORD[f.faceSensation[x]], quiet: f.faceSensation[x] === 'intact' })),
+    // P30: the divisions, listed only when they differ on a side — the cavernous sinus spares the jaw.
+    ...(SIDES.some((x) => new Set(TRIGEMINAL_DIVISIONS.map((d) => f.faceDivision[x][d])).size > 1)
+      ? TRIGEMINAL_DIVISIONS.map((d) => row(`&nbsp;&nbsp;${DIVISION_NAME[d]}`, (x) => ({ word: SENSE_WORD[f.faceDivision[x][d]], quiet: f.faceDivision[x][d] === 'intact' })))
+      : []),
     row('Face, strength', (x) => ({ word: FACE_WORD[f.faceWeakness[x]], quiet: f.faceWeakness[x] === 'none' })),
     ...CRANIAL_SIGNS.map((s) => row(CRANIAL_NAME[s], (x) => ({ word: SIGN_WORD[f.cranial[x][s]], quiet: f.cranial[x][s] === 'absent' }))),
     row('Limb ataxia', (x) => ({ word: SIGN_WORD[f.ataxia[x]], quiet: f.ataxia[x] === 'absent' })),

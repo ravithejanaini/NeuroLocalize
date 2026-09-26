@@ -159,6 +159,8 @@ export const PRESETS: readonly Preset[] = [
   { id: 'abducens-nerve', kind: 'brain', label: 'Abducens nerve', pattern: 'Will not abduct; no gaze palsy', territory: 'abducens_nerve' },
   { id: 'facial-nerve', kind: 'brain', label: 'Facial nerve (Bell)', pattern: 'Whole face, forehead too', territory: 'facial_nerve' },
   { id: 'hypoglossal-nerve', kind: 'brain', label: 'Hypoglossal nerve', pattern: 'Tongue deviates to the lesion', territory: 'hypoglossal_nerve' },
+  // P30.
+  { id: 'cavernous-sinus', kind: 'brain', label: 'Cavernous sinus', pattern: 'III, IV, VI, Horner; forehead numb, jaw spared', territory: 'cavernous_sinus' },
   // P8: the visual pathway.
   { id: 'optic-nerve', kind: 'vision', label: 'Optic nerve', pattern: 'One eye blind, pupil defect', place: 'optic_nerve' },
   { id: 'chiasm', kind: 'vision', label: 'Optic chiasm', pattern: 'Bitemporal hemianopia', place: 'chiasm' },

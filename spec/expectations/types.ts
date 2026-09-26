@@ -28,6 +28,7 @@ import type {
   Segment,
   Severity,
   Side,
+  TrigeminalDivision,
   SignState,
   SkinArea,
   SourceId,
@@ -150,6 +151,8 @@ export type BrainRegion = {
 export type BrainAssertion = Evidence &
   (
     | (Sided & { readonly kind: 'face_sensation'; readonly oneOf: readonly SensoryState[] })
+    // A36: the face by trigeminal division — V1 forehead, V2 cheek, V3 jaw.
+    | (Sided & { readonly kind: 'face_division'; readonly division: TrigeminalDivision; readonly oneOf: readonly SensoryState[] })
     | (Sided & { readonly kind: 'face_weakness'; readonly oneOf: readonly FaceWeakness[] })
     | (Sided & { readonly kind: 'cranial'; readonly sign: CranialSign; readonly oneOf: readonly SignState[] })
     | (Sided & { readonly kind: 'ataxia'; readonly oneOf: readonly SignState[] })

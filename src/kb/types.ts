@@ -31,6 +31,7 @@ import type {
   VisionPlace,
   VisualPart,
   Territory,
+  TrigeminalDivision,
   Trunk,
   Vertebra,
 } from './vocab.ts';
@@ -183,6 +184,8 @@ export type Brain = {
   readonly trochlear: BrainRoute;
   /** P29: the fourth nerve past its decussation serves its own eye. */
   readonly trochlearNerve: BrainRoute;
+  /** P30: parts that carry only some trigeminal divisions — V1 and V2 in the cavernous sinus. */
+  readonly faceDivisions: Row<{ readonly steps: readonly BrainStep[]; readonly serves: Laterality; readonly divisions: readonly TrigeminalDivision[] }>;
   readonly jaw: BrainRoute;
   /** P13: the three dorsal midbrain signs, each read from either half of the pretectum. */
   readonly upgaze: Row<{ readonly steps: readonly BrainStep[] }>;

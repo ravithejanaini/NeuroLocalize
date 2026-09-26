@@ -20,6 +20,7 @@ import { PUDENDAL_REVERSE_CASES } from '../spec/expectations/reverse-pudendal.ts
 import { GENICULATE_REVERSE_CASES } from '../spec/expectations/reverse-geniculate.ts';
 import { SECTORANOPIA_REVERSE_CASES } from '../spec/expectations/reverse-sectoranopia.ts';
 import { CRANIAL_NERVE_REVERSE_CASES } from '../spec/expectations/reverse-cranial-nerves.ts';
+import { CAVERNOUS_REVERSE_CASES } from '../spec/expectations/reverse-cavernous.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
 import { hypotheses } from '../src/engine/hypotheses.ts';
@@ -34,7 +35,7 @@ import { examSlots } from '../src/render/slots.ts';
 const SLOTS = examSlots(RENDER);
 
 describe('frozen reverse expectations (A3, A4, A7)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES, ...SECTORANOPIA_REVERSE_CASES, ...CRANIAL_NERVE_REVERSE_CASES]) {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES, ...SECTORANOPIA_REVERSE_CASES, ...CRANIAL_NERVE_REVERSE_CASES, ...CAVERNOUS_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });
@@ -59,7 +60,8 @@ describe('reverse engine contract', () => {
     // oblique and the jaw, two more cranial signs on each side, so that term becomes 2 * 15.
     // P15 adds hemiballismus, one on each side: + 2. P16 adds Gerstmann signs, about the patient: + 1.
     // P28: each eye's field is ten cells instead of six sectors: + 4 an eye.
-    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 15 + 1 + 2 * 7 + 3 + 2 + 1 + 3 + 2 + 1 + 2 * 4);
+    // P30: each trigeminal division on each side: + 3 a side.
+    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 15 + 1 + 2 * 7 + 3 + 2 + 1 + 3 + 2 + 1 + 2 * 4 + 2 * 3);
   });
 
   it('with no findings, prefers nothing in particular and still suggests a test', () => {
@@ -250,7 +252,7 @@ describe('reverse engine contract', () => {
     assert.ok(nerve);
     assert.deepEqual(nerve.sites, ['long_thoracic'], 'the only nerve place that weakens serratus');
     const places = hypotheses().filter((x) => x.site);
-    assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 66 + 10, 'D32, P7, P19, P20, P23: 18 arm and 15 leg places on each side — P19 adds the deep fibular nerve at two places and the superficial at one, P20 the tarsal tunnel, P23 the pudendal nerve; P29 five cranial nerves outside the brainstem on each side');
+    assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 66 + 10 + 2, 'D32, P7, P19, P20, P23: 18 arm and 15 leg places on each side — P19 adds the deep fibular nerve at two places and the superficial at one, P20 the tarsal tunnel, P23 the pudendal nerve; P29 five cranial nerves outside the brainstem on each side; P30 the cavernous sinus on each side');
     assert.equal(
       places.filter((x) => x.family.startsWith('brainstem') || x.family.startsWith('hemisphere')).length,
       52,
@@ -460,6 +462,28 @@ describe('the working for the cranial nerves outside the brainstem (P29)', () =>
     assert.match(other?.because ?? '', /nerve and supranuclear supply are intact/);
     const [face] = explain(vii, [{ kind: 'face_weakness', side: 'L', value: 'whole' }], 'chronic');
     assert.match(face?.because ?? '', /^the left facial nerve is damaged/);
+  });
+});
+
+describe('the working for the cavernous sinus (P30)', () => {
+  it('names the divisions in the sinus, and says why the jaw is spared', () => {
+    prepareSync('chronic');
+    const cs = hypotheses().find((x) => x.id === 'nerve_left:cavernous_sinus');
+    assert.ok(cs);
+    const [v1, v3, horner] = explain(
+      cs,
+      [
+        { kind: 'face_division', side: 'L', division: 'V1', value: 'abnormal' },
+        { kind: 'face_division', side: 'L', division: 'V3', value: 'normal' },
+        { kind: 'horner', side: 'L', value: 'present' },
+      ],
+      'chronic',
+    );
+    assert.equal(v1?.verdict, 'fits');
+    assert.match(v1?.because ?? '', /^the left ophthalmic and maxillary divisions in the cavernous sinus are damaged$/);
+    assert.equal(v3?.verdict, 'fits');
+    assert.match(v3?.because ?? '', /V3 leaves the skull by the foramen ovale/);
+    assert.equal(horner?.verdict, 'fits');
   });
 });
 

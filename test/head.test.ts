@@ -25,6 +25,16 @@ describe('the head and brainstem in the findings panel', () => {
     assert.equal(crossedSide(hemicord), null, 'a cord lesion has no head sign');
   });
 
+  it('lists the trigeminal divisions only where they differ: the cavernous sinus spares the jaw (P30)', () => {
+    const sinus = headHtml(at('cavernous_sinus'));
+    assert.match(sinus, /forehead \(V1\)<\/th><td class="st st-lost">lost/);
+    assert.match(sinus, /cheek \(V2\)<\/th><td class="st st-lost">lost/);
+    assert.match(sinus, /jaw \(V3\)<\/th><td class="quiet">intact/);
+    // A nuclear lesion takes the whole face, so the divisions are not listed.
+    assert.doesNotMatch(headHtml(at('lateral_medullary')), /jaw \(V3\)/);
+    assert.equal(crossedSide(at('cavernous_sinus')), null, 'no body deficit');
+  });
+
   it('writes the forehead rule into the facial findings', () => {
     assert.match(headHtml(at('internal_capsule')), /<td class="st st-lost">lower face weak, forehead spared/);
     assert.match(headHtml(at('ventral_pons')), /<td class="st st-lost">whole face weak, forehead too/);
