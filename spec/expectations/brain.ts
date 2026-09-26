@@ -102,6 +102,9 @@ export const BRAIN_CASES: readonly BrainCase[] = [
         sense('R', 'pain_temperature', all, ['intact'], { cite: ['S48'], basis: 'stated' }),
         sense('L', 'pain_temperature', all, ['intact'], { cite: ['S48'], basis: 'stated' }),
         sign('L', 'tongue_weakness', true, { cite: ['S48', 'S63'], basis: 'stated', note: 'the tongue deviates toward the lesion' }),
+        // A32: R25 answered — the fibres bound for the other hypoglossal nucleus crossed at the
+        // pontomedullary junction, above this lesion (S156, S157).
+        sign('R', 'tongue_weakness', false, { cite: ['S156', 'S157'], basis: 'stated', note: 'medullary lesions impair only the ipsilateral projections' }),
         face('L', 'none', { cite: ['S48'], basis: 'stated', note: 'facial musculature typically spared' }),
         face('R', 'none', { cite: ['S48'], basis: 'stated' }),
         feel('L', ['intact'], { cite: ['S60'], basis: 'composed' }),
@@ -114,7 +117,6 @@ export const BRAIN_CASES: readonly BrainCase[] = [
         { kind: 'vertigo', oneOf: ['absent'], cite: ['S47'], basis: 'composed' },
       ],
       unasserted: [
-        'right tongue: whether the lesion also catches corticobulbar fibres bound for the other hypoglossal nucleus is not stated',
         'palate: where the corticobulbar fibres to the nucleus ambiguus leave the pyramid is not stated',
       ],
     }],

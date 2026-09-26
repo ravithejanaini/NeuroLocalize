@@ -100,13 +100,14 @@ export const BRAIN: Brain = {
   corticobulbarTongue: {
     meta: {
       id: 'brain.corticobulbar-tongue',
-      claim: 'Supranuclear control of the hypoglossal nucleus is predominantly crossed, so a supranuclear lesion weakens the opposite half of the tongue.',
-      sources: ['S63', 'S54'],
-      tier: 'T2',
+      claim: 'Supranuclear control of the hypoglossal nucleus is predominantly crossed, so a supranuclear lesion weakens the opposite half of the tongue. The fibres run with the pyramidal tract through the capsule, the peduncle and the base of the pons, branch off it, and cross at the pontomedullary junction; a medullary lesion reaches only the projections to its own side’s nucleus, so a medial medullary lesion does not weaken the opposite half (R25, D144).',
+      sources: ['S156', 'S157', 'S63', 'S54'],
+      tier: 'T1',
       bookRef: p,
-      pendingSource: 'R25: no source read says the tongue fibres run in the pyramid to the medulla; they are drawn with the corticobulbar tract',
     },
-    steps: [{ level: 'cortex', compartment: 'motor_cortex' }, { level: 'capsule', compartment: 'capsule_genu' }, { level: 'midbrain', compartment: 'peduncle' }, { level: 'pons', compartment: 'basis' }, { level: 'medulla', compartment: 'pyramid' }],
+    // P27 (D144): the route ends at the pontine base; the fibres leave the pyramid and cross at the
+    // pontomedullary junction, so the medullary pyramid is not on it.
+    steps: [{ level: 'cortex', compartment: 'motor_cortex' }, { level: 'capsule', compartment: 'capsule_genu' }, { level: 'midbrain', compartment: 'peduncle' }, { level: 'pons', compartment: 'basis' }],
     serves: 'contralateral',
   },
   corticobulbarPalate: {

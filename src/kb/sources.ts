@@ -17,7 +17,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S116', 'S117', 'S118', 'S119',
   'S120', 'S121', 'S122', 'S123', 'S124',
   'S125', 'S126', 'S127',
-  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137', 'S138', 'S139', 'S140', 'S141', 'S142', 'S143', 'S144', 'S145', 'S146', 'S147', 'S148', 'S149', 'S150', 'S151', 'S152', 'S153', 'S154', 'S155',
+  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137', 'S138', 'S139', 'S140', 'S141', 'S142', 'S143', 'S144', 'S145', 'S146', 'S147', 'S148', 'S149', 'S150', 'S151', 'S152', 'S153', 'S154', 'S155', 'S156', 'S157', 'S158', 'S159',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -178,4 +178,8 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S153', title: 'StatPearls — Anatomy, Shoulder and Upper Limb, Forearm Brachioradialis Muscle', url: 'https://www.ncbi.nlm.nih.gov/books/NBK526110/' },
   { id: 'S154', title: 'StatPearls — Anatomy, Bony Pelvis and Lower Limb: Thigh Adductor Magnus Muscle', url: 'https://www.ncbi.nlm.nih.gov/books/NBK534842/' },
   { id: 'S155', title: 'StatPearls — Foot Drop in Obstetrics', url: 'https://www.ncbi.nlm.nih.gov/books/NBK582140/' },
+  { id: 'S156', title: 'Urban et al. — The course of cortico-hypoglossal projections in the human brainstem. Functional testing using transcranial magnetic stimulation (Brain, 1996)', url: 'https://pubmed.ncbi.nlm.nih.gov/8673480/' },
+  { id: 'S157', title: 'Zhou, Cheng — Contralateral Tongue Deviation Due to Paramedian Pontine Infarction: A Brief Review of Cortico-Hypoglossal Projections (Am J Case Rep, 2022)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC9190772/' },
+  { id: 'S158', title: 'Inatomi et al. — The spinal cord descending pathway for micturition: analysis in patients with spinal cord infarction (J Neurol Sci, 1998)', url: 'https://pubmed.ncbi.nlm.nih.gov/9619638/' },
+  { id: 'S159', title: 'London et al. — A broad and variable lumbosacral myotome map uncovered by foraminal nerve root stimulation (J Neurosurg Spine, 2022)', url: 'https://pubmed.ncbi.nlm.nih.gov/35561698/' },
 ];

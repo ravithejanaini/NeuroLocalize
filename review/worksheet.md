@@ -7,9 +7,9 @@ claims are what it teaches. Mark each one; where a claim is wrong, a one-line co
 with a source is the most useful thing you can give.
 
 The same review can be filled in on screen and saved to a file: `review/review.html`.
-Worksheet version `d68f37b70adb`.
+Worksheet version `3e1848ceb70b`.
 
-201 knowledge-base claims, 19 displayed facts, 55 open questions, 846 composed findings in 145 cases. Mutation score 97.3% over sourced rows, 97.0% over all rows.
+201 knowledge-base claims, 19 displayed facts, 55 open questions, 853 composed findings in 149 cases. Mutation score 97.3% over sourced rows, 97.0% over all rows.
 Claims are ordered by load-bearing weight: how many expected findings fail when the claim
 is corrupted. The first ten carry most of the engine.
 
@@ -285,57 +285,56 @@ Correction and source (a book and page is ideal): ____
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**46. Supranuclear control of the hypoglossal nucleus is predominantly crossed, so a supranuclear lesion weakens the opposite half of the tongue.**
-`brain.corticobulbar-tongue` · tier T2 · weight 50 · sources [S63](https://www.ncbi.nlm.nih.gov/books/NBK532869/), [S54](https://www.ncbi.nlm.nih.gov/books/NBK544218/)
-> ⚠ No source read supports all of this. R25: no source read says the tongue fibres run in the pyramid to the medulla; they are drawn with the corticobulbar tract
-
-☐ right ☐ wrong ☐ unsure
-Correction and source (a book and page is ideal): ____
-
-**47. The spinal trigeminal nucleus and tract in the lateral medulla, and the principal sensory nucleus in the pontine tegmentum above it, carry sensation from the ipsilateral face.**
+**46. The spinal trigeminal nucleus and tract in the lateral medulla, and the principal sensory nucleus in the pontine tegmentum above it, carry sensation from the ipsilateral face.**
 `brain.face-nucleus` · tier T1 · weight 49 · sources [S60](https://www.ncbi.nlm.nih.gov/books/NBK539729/), [S47](https://www.ncbi.nlm.nih.gov/books/NBK551670/), [S58](https://www.ncbi.nlm.nih.gov/books/NBK507824/), [S122](https://www.ncbi.nlm.nih.gov/books/NBK482283/), [S115](https://www.ncbi.nlm.nih.gov/books/NBK554418/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**48. Gluteus maximus, the hip extensor, is supplied by the inferior gluteal nerve; no source read gives its roots, so any of L5–S2 may serve it.**
+**47. Gluteus maximus, the hip extensor, is supplied by the inferior gluteal nerve; no source read gives its roots, so any of L5–S2 may serve it.**
 `muscle.gluteus-maximus` · tier T2 · weight 48 · sources [S81](https://www.ncbi.nlm.nih.gov/books/NBK532884/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**49. The abducens nucleus holds the interneurons for the other eye’s medial rectus, so a gaze palsy from the nucleus or the paramedian pontine reticular formation also loses adduction of the eye on the far side: the gaze is conjugate.**
+**48. The abducens nucleus holds the interneurons for the other eye’s medial rectus, so a gaze palsy from the nucleus or the paramedian pontine reticular formation also loses adduction of the eye on the far side: the gaze is conjugate.**
 `brain.adduction-gaze` · tier T1 · weight 47 · sources [S61](https://www.ncbi.nlm.nih.gov/books/NBK544265/), [S99](https://pmc.ncbi.nlm.nih.gov/articles/PMC5756788/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**50. In an internuclear ophthalmoplegia the abducting eye — the one opposite the lesion — may show a dissociated horizontal nystagmus.**
+**49. In an internuclear ophthalmoplegia the abducting eye — the one opposite the lesion — may show a dissociated horizontal nystagmus.**
 `brain.abducting-nystagmus` · tier T2 · weight 47 · sources [S98](https://www.ncbi.nlm.nih.gov/books/NBK441970/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**51. Hip flexion is the iliopsoas: the psoas from the lumbar plexus directly, the iliacus from the femoral nerve. S31 gives hip flexion to L1 and L2. A femoral lesion weakens it only in part.**
+**50. Hip flexion is the iliopsoas: the psoas from the lumbar plexus directly, the iliacus from the femoral nerve. S31 gives hip flexion to L1 and L2. A femoral lesion weakens it only in part.**
 `muscle.iliopsoas` · tier T2 · weight 45 · sources [S85](https://www.ncbi.nlm.nih.gov/books/NBK531508/), [S89](https://www.ncbi.nlm.nih.gov/books/NBK556065/), [S31](https://www.ncbi.nlm.nih.gov/books/NBK544267/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**52. Gluteus medius, the hip abductor, is supplied by the superior gluteal nerve and has L5 innervation.**
+**51. Gluteus medius, the hip abductor, is supplied by the superior gluteal nerve and has L5 innervation.**
 `muscle.gluteus-medius` · tier T2 · weight 45 · sources [S80](https://www.ncbi.nlm.nih.gov/books/NBK535408/), [S83](https://www.ncbi.nlm.nih.gov/books/NBK563251/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**53. A lesion of the facial nucleus or its fascicle in the pons paralyses the whole face on the same side.**
+**52. A lesion of the facial nucleus or its fascicle in the pons paralyses the whole face on the same side.**
 `brain.facial-nucleus` · tier T1 · weight 45 · sources [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/), [S49](https://www.ncbi.nlm.nih.gov/books/NBK532907/), [S59](https://www.ncbi.nlm.nih.gov/books/NBK544297/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**54. Gastrocnemius, the ankle plantar flexor, is supplied by the tibial nerve and is the S1 muscle.**
+**53. Gastrocnemius, the ankle plantar flexor, is supplied by the tibial nerve and is the S1 muscle.**
 `muscle.gastrocnemius` · tier T1 · weight 44 · sources [S79](https://www.ncbi.nlm.nih.gov/books/NBK537028/), [S31](https://www.ncbi.nlm.nih.gov/books/NBK544267/), [S82](https://www.ncbi.nlm.nih.gov/books/NBK430837/)
+
+☐ right ☐ wrong ☐ unsure
+Correction and source (a book and page is ideal): ____
+
+**54. Supranuclear control of the hypoglossal nucleus is predominantly crossed, so a supranuclear lesion weakens the opposite half of the tongue. The fibres run with the pyramidal tract through the capsule, the peduncle and the base of the pons, branch off it, and cross at the pontomedullary junction; a medullary lesion reaches only the projections to its own side’s nucleus, so a medial medullary lesion does not weaken the opposite half (R25, D144).**
+`brain.corticobulbar-tongue` · tier T1 · weight 44 · sources [S156](https://pubmed.ncbi.nlm.nih.gov/8673480/), [S157](https://pmc.ncbi.nlm.nih.gov/articles/PMC9190772/), [S63](https://www.ncbi.nlm.nih.gov/books/NBK532869/), [S54](https://www.ncbi.nlm.nih.gov/books/NBK544218/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
@@ -622,14 +621,14 @@ Correction and source (a book and page is ideal): ____
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**102. The Achilles reflex is served by S1.**
-`reflex.achilles` · tier T2 · weight 13 · sources [S12](https://www.ncbi.nlm.nih.gov/books/NBK531502/)
+**102. A lesion of the hypoglossal nucleus or fascicles in the medulla weakens the same side of the tongue.**
+`brain.hypoglossal` · tier T1 · weight 14 · sources [S63](https://www.ncbi.nlm.nih.gov/books/NBK532869/), [S48](https://www.ncbi.nlm.nih.gov/books/NBK560590/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**103. A lesion of the hypoglossal nucleus or fascicles in the medulla weakens the same side of the tongue.**
-`brain.hypoglossal` · tier T1 · weight 13 · sources [S63](https://www.ncbi.nlm.nih.gov/books/NBK532869/), [S48](https://www.ncbi.nlm.nih.gov/books/NBK560590/)
+**103. The Achilles reflex is served by S1.**
+`reflex.achilles` · tier T2 · weight 13 · sources [S12](https://www.ncbi.nlm.nih.gov/books/NBK531502/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
@@ -923,9 +922,9 @@ Correction and source (a book and page is ideal): ____
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**152. Descending bladder control survives a unilateral cord lesion; sphincter function is generally spared in hemisection.**
-`autonomic.bladder-control` · tier T2 · weight 2 · sources [S01](https://www.ncbi.nlm.nih.gov/books/NBK538135/)
-> ⚠ No source read supports all of this. R7: the pathway’s position in the lateral funiculus is not stated by any source read
+**152. Descending bladder control survives a unilateral cord lesion; sphincter function is generally spared in hemisection. Retention follows bilateral infarction of the deep white matter within the ventral and lateral columns, where the descending pathway is taken to lie (S158).**
+`autonomic.bladder-control` · tier T2 · weight 2 · sources [S01](https://www.ncbi.nlm.nih.gov/books/NBK538135/), [S158](https://pubmed.ncbi.nlm.nih.gov/9619638/)
+> ⚠ No source read supports all of this. R7, partly answered (D145): S158 places the pathway in the ventral and lateral columns; the model draws it in the lateral funiculus only
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
@@ -1354,9 +1353,9 @@ Correction and source (a book and page is ideal): ____
 - **R2** — Is a single-root lesion better modelled as reduced sensation (because of dermatomal overlap, S21) than as absent sensation? The engine reports `impaired` for an isolated root. **Answered from sources, 2026-09-25 (D135).**
 - **R3** — Confirm C5: are UMN signs in conus syndrome explained by involvement above S2?
 - **R4** — The bulbocavernosus reflex is modelled on S2–S4 from the pudendal nerve's origin (S22). No source read states the reflex's level directly. Please supply one. **Answered from sources, 2026-09-25 (D132).**
-- **R5** — Limb regions (upper limb C5–T1, lower limb L2–S2) and the saddle (S3–S5) are modelling conventions with no source read. Please confirm or correct.
+- **R5** — Limb regions (upper limb C5–T1, lower limb L2–S2) and the saddle (S3–S5) are modelling conventions with no source read. Please confirm or correct. *Searched again in the primary literature (D147): not answered.*
 - **R6** — The Babinski rule treats any corticospinal interruption rostral to L5 as sufficient. No source read gives the plantar reflex's segments. **Answered from sources, 2026-09-25 (D134).**
-- **R7** — Descending bladder and sympathetic control is modelled as a lateral-funiculus compartment that a unilateral lesion does not disable (S01: sphincter function generally spared in hemisection). Its position in the cord is not stated by any source read.
+- **R7** — Descending bladder and sympathetic control is modelled as a lateral-funiculus compartment that a unilateral lesion does not disable (S01: sphincter function generally spared in hemisection). Its position in the cord is not stated by any source read. *Partly answered (D145): S158 places the pathway in the ventral and lateral columns.*
 - **R8** — Muscle tone during spinal shock is reported `indeterminate`. It is widely taught as flaccid, but S02 as read describes reflexes by phase and says nothing about tone.
 - **R9** — Neurogenic shock is evaluated only in the first three days (hyperacute, acute) and reported `not_applicable` after. S03 describes it in acute injury without giving a window.
 - **R10** — The engine reports a Horner syndrome when *any* part of the ciliospinal centre (C8–T2) is damaged. Does loss of a single segment of the centre produce one? S16 gives the centre's extent, not the effect of partial loss. (Two surviving mutants.)
@@ -1374,10 +1373,10 @@ Correction and source (a book and page is ideal): ____
 - **R22** — The trigeminothalamic fibres are not placed in the pons or midbrain, so a lesion there does not change facial sensation in this model. Where do they run?
 - **R23** — Limb ataxia is taken only from the cerebellar peduncles; ataxic hemiparesis (S55) is not modelled.
 - **R24** — A unilateral supranuclear lesion is modelled as leaving *both* sides of the palate indeterminate (S64 says "milder" without a side).
-- **R25** — The corticobulbar fibres to the hypoglossal nucleus are drawn running with the pyramid to the medulla. No source read says where they leave the corticospinal tract.
+- **R25** — The corticobulbar fibres to the hypoglossal nucleus are drawn running with the pyramid to the medulla. No source read says where they leave the corticospinal tract. **Answered from sources, 2026-09-26 (D144).**
 - **R26** — C20: should an isolated L4 root lesion be taught with foot drop? S31 puts ankle dorsiflexion at L4, S82 puts tibialis anterior at L5.
 - **R27** — C23: is the lateral foot spared in a common fibular palsy at the fibular neck? It depends on where the lateral sural cutaneous branch leaves, which no source read gives.
-- **R28** — The hip adductors are modelled with no sourced roots, so an L3 or L4 root lesion leaves adduction uncertain. Which roots should be given, and from which source? *Partly answered (D137): S154 confirms L2–L4 as the obturator nerve’s roots; which one carries adduction is still unsourced.*
+- **R28** — The hip adductors are modelled with no sourced roots, so an L3 or L4 root lesion leaves adduction uncertain. Which roots should be given, and from which source? *Partly answered (D137): S154 confirms L2–L4 as the obturator nerve’s roots; which one carries adduction is still unsourced.* *Searched again in the primary literature (D146): not answered.*
 - **R29** — C27: should a chiasmal lesion be taught as giving no pupillary defect, rather than leaving it unsettled?
 - **R30** — D61: with both optic nerves equally damaged, is "no relative defect" the better teaching than "unsettled"? **Answered from sources, 2026-09-25 (D131).**
 - **R31** — The posterior cerebral artery also supplies the thalamus and midbrain (S94). Should the occipital place be offered as a whole-territory lesion, with the thalamic and midbrain findings the brain model already has?
@@ -1403,7 +1402,7 @@ Correction and source (a book and page is ideal): ____
 - **R51** — C61: is there a source that gives the sole of the foot its roots (S1, or S1–S2), so that a root lesion can be told from the tarsal tunnel by the sole alone? *Partly answered (D141): S1 is the sole’s certain root (S151, S155); no source gives S2 or the others, so C61 stands.*
 - **R52** — C62: how long does border-zone aphasia usually stay mixed before it settles into the motor or the sensory form?
 - **R53** — C64: is there a lesion site after which anosognosia for hemiplegia is common enough, and lasting enough, to teach as a localizing sign?
-- **R54** — C66: which segments should the saddle be taught as — S3–S5, or S2–S5 as the pudendal nerve's roots and the anal verge together suggest?
+- **R54** — C66: which segments should the saddle be taught as — S3–S5, or S2–S5 as the pudendal nerve's roots and the anal verge together suggest? *Searched again in the primary literature (D147): not answered.*
 - **R55** — C69: should the field chart be refined enough to show the nucleus's sector-shaped defects, from the anterior and the lateral posterior choroidal arteries?
 
 ## 3. Disputed mechanisms
@@ -1423,7 +1422,7 @@ For context. The engine never uses these; they drive only the teaching layer.
 
 ## 4. Composed expectations
 
-846 expected findings are not stated by any single source; they follow from
+853 expected findings are not stated by any single source; they follow from
 several stated facts. They are the most likely place for a reasoning error. Each line is
 what the tool will teach for that lesion.
 
@@ -2707,4 +2706,23 @@ what the tool will teach for that lesion.
 ### Left S2 root, examined at the sole — _the sole unsettled_
 
 - ☐ chronic · left · all sensation · sole → indeterminate — [S151](https://www.ncbi.nlm.nih.gov/books/NBK519009/), [S155](https://www.ncbi.nlm.nih.gov/books/NBK582140/) — _S2 may serve it; no source read says so either way_
+
+### Left base of the pons alone — _the tongue deviates to the other side_
+
+- ☐ chronic · left · tongue weakness → absent — [S157](https://pmc.ncbi.nlm.nih.gov/articles/PMC9190772/), [S156](https://pubmed.ncbi.nlm.nih.gov/8673480/) — _the fibres to the left nucleus come from the other hemisphere_
+
+### Left cerebral peduncle alone — _the other half of the tongue weak_
+
+- ☐ chronic · right · tongue weakness → present — [S157](https://pmc.ncbi.nlm.nih.gov/articles/PMC9190772/), [S156](https://pubmed.ncbi.nlm.nih.gov/8673480/) — _the fibres run through the cerebral peduncle_
+- ☐ chronic · left · tongue weakness → absent — [S157](https://pmc.ncbi.nlm.nih.gov/articles/PMC9190772/), [S156](https://pubmed.ncbi.nlm.nih.gov/8673480/) — _the fibres to the left nucleus come from the other hemisphere_
+
+### Left genu of the internal capsule alone — _the other half of the tongue weak_
+
+- ☐ chronic · right · tongue weakness → present — [S157](https://pmc.ncbi.nlm.nih.gov/articles/PMC9190772/), [S156](https://pubmed.ncbi.nlm.nih.gov/8673480/) — _the fibres run through the internal capsule_
+- ☐ chronic · left · tongue weakness → absent — [S157](https://pmc.ncbi.nlm.nih.gov/articles/PMC9190772/), [S156](https://pubmed.ncbi.nlm.nih.gov/8673480/) — _the fibres to the left nucleus come from the other hemisphere_
+
+### Left motor cortex, face area alone — _the other half of the tongue weak_
+
+- ☐ chronic · right · tongue weakness → present — [S157](https://pmc.ncbi.nlm.nih.gov/articles/PMC9190772/), [S156](https://pubmed.ncbi.nlm.nih.gov/8673480/) — _the fibres begin in the motor cortex_
+- ☐ chronic · left · tongue weakness → absent — [S157](https://pmc.ncbi.nlm.nih.gov/articles/PMC9190772/), [S156](https://pubmed.ncbi.nlm.nih.gov/8673480/) — _the fibres to the left nucleus come from the other hemisphere_
 

@@ -549,6 +549,22 @@ situation the freeze exists to catch.
   still holds; its note now names inversion as what separates the root from the tibial nerve
   (D142).
 
+## A32 — The tongue in medial medullary syndrome (P27, 2026-09-26)
+
+- **Changed in `brain.ts`:** the medial medullary case asserts the other half of the tongue
+  spared, where it had left it unasserted because no source said whether the lesion caught the
+  fibres bound for the other hypoglossal nucleus. S156 and S157 now say those fibres crossed at the
+  pontomedullary junction, above this lesion (D144).
+- **How circularity was avoided:** the sources were read before the route changed; the assertion
+  was run against the committed code first and failed (the other half came back weak).
+
+## A33 — The tongue's route, one part at a time (P27, 2026-09-26)
+
+- **Changed in `answered.ts`:** four cases, each lesioning one part of the tongue's cortical
+  route on the left — the pontine base, the peduncle, the capsule's genu, the motor cortex's face
+  area — and each asserting the right half of the tongue weak and the left spared. Added after the
+  mutation run found six mutants of the newly sourced route surviving (D148).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -560,7 +576,7 @@ situation the freeze exists to catch.
 | `types.ts` | A4, A6, A7, A11, A14, A15, A17, A19, A20 |
 | `plexus.ts` | A4, A5, A6, A9, A30 |
 | `reverse-plexus.ts` | A4, A5 |
-| `brain.ts` | A7, A8, A9, A13, A14, A16, A17, A18 |
+| `brain.ts` | A7, A8, A9, A13, A14, A16, A17, A18, A32 |
 | `reverse-brain.ts` | A7, A13, A14, A15, A16, A17, A19, A20 |
 | `leg.ts` | A10, A23, A24 |
 | `reverse-leg.ts` | A10, A31 |
@@ -594,6 +610,6 @@ situation the freeze exists to catch.
 | `reverse-pudendal.ts` | A26 |
 | `geniculate.ts` | A27 |
 | `reverse-geniculate.ts` | A27 |
-| `answered.ts` | A29, A30, A31 |
+| `answered.ts` | A29, A30, A31, A33 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

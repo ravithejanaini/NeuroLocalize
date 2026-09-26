@@ -100,11 +100,11 @@ export const KB: Kb = {
     bladderControl: {
       meta: {
         id: 'autonomic.bladder-control',
-        claim: 'Descending bladder control survives a unilateral cord lesion; sphincter function is generally spared in hemisection.',
-        sources: ['S01'],
+        claim: 'Descending bladder control survives a unilateral cord lesion; sphincter function is generally spared in hemisection. Retention follows bilateral infarction of the deep white matter within the ventral and lateral columns, where the descending pathway is taken to lie (S158).',
+        sources: ['S01', 'S158'],
         tier: 'T2',
         bookRef: 'pending',
-        pendingSource: 'R7: the pathway’s position in the lateral funiculus is not stated by any source read',
+        pendingSource: 'R7, partly answered (D145): S158 places the pathway in the ventral and lateral columns; the model draws it in the lateral funiculus only',
       },
       requiresBilateralLesion: true,
     },

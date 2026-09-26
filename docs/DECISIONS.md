@@ -112,14 +112,14 @@ overlap, S21) than as absent sensation? The engine reports `impaired` for an iso
 (S22). No source read states the reflex's level directly. Please supply one. **Answered from sources, 2026-09-25 (D132).**
 
 **R5** — Limb regions (upper limb C5–T1, lower limb L2–S2) and the saddle (S3–S5) are
-modelling conventions with no source read. Please confirm or correct.
+modelling conventions with no source read. Please confirm or correct. *Searched again in the primary literature (D147): not answered.*
 
 **R6** — The Babinski rule treats any corticospinal interruption rostral to L5 as
 sufficient. No source read gives the plantar reflex's segments. **Answered from sources, 2026-09-25 (D134).**
 
 **R7** — Descending bladder and sympathetic control is modelled as a lateral-funiculus
 compartment that a unilateral lesion does not disable (S01: sphincter function generally
-spared in hemisection). Its position in the cord is not stated by any source read.
+spared in hemisection). Its position in the cord is not stated by any source read. *Partly answered (D145): S158 places the pathway in the ventral and lateral columns.*
 
 **R8** — Muscle tone during spinal shock is reported `indeterminate`. It is widely taught as
 flaccid, but S02 as read describes reflexes by phase and says nothing about tone.
@@ -486,7 +486,7 @@ is not modelled.
 indeterminate (S64 says "milder" without a side).
 
 **R25** — The corticobulbar fibres to the hypoglossal nucleus are drawn running with the
-pyramid to the medulla. No source read says where they leave the corticospinal tract.
+pyramid to the medulla. No source read says where they leave the corticospinal tract. **Answered from sources, 2026-09-26 (D144).**
 
 **D45 — Pulses run the whole neuraxis.** Motor pulses now start in the motor cortex at their
 segment's homunculus region and descend through the capsule, peduncle, basis and pyramid,
@@ -702,7 +702,7 @@ dorsiflexion at L4, S82 puts tibialis anterior at L5.
 depends on where the lateral sural cutaneous branch leaves, which no source read gives.
 
 **R28** — The hip adductors are modelled with no sourced roots, so an L3 or L4 root lesion
-leaves adduction uncertain. Which roots should be given, and from which source? *Partly answered (D137): S154 confirms L2–L4 as the obturator nerve’s roots; which one carries adduction is still unsourced.*
+leaves adduction uncertain. Which roots should be given, and from which source? *Partly answered (D137): S154 confirms L2–L4 as the obturator nerve’s roots; which one carries adduction is still unsourced.* *Searched again in the primary literature (D146): not answered.*
 
 ## P8 — the visual pathway
 
@@ -1620,7 +1620,7 @@ are now killed by the pudendal nerve's cases.
 ### Reviewer questions
 
 **R54** — C66: which segments should the saddle be taught as — S3–S5, or S2–S5 as the pudendal
-nerve's roots and the anal verge together suggest?
+nerve's roots and the anal verge together suggest? *Searched again in the primary literature (D147): not answered.*
 
 ## P24 — the lateral geniculate nucleus
 
@@ -1811,3 +1811,40 @@ the 70 is the same.
 The sole's row keeps four survivors, all mutations of its possible roots (L4–S3) — the part R51
 leaves unsourced. Three survived P20 too; the fourth, widening the span to L3, was killed before
 only through the rule for a patch with no certain root, which the sole no longer is.
+
+## P27 — four facts, searched in the primary literature
+
+The analysis is `docs/P27-analysis.md`; S156–S159 were read for it on 2026-09-26.
+
+**D144 — R25: the tongue's cortical fibres leave the pyramid and cross at the pontomedullary
+junction.** S156 (abstract only): the fibres "branch off the main ventral pyramidal tract", the
+contralateral projections "cross the midline at the pontomedullary junction", and medullary
+lesions "impair only the ipsilateral projections". S157 agrees on the crossing. The route
+`brain.corticobulbar-tongue` now ends at the pontine base, and the row is sourced and T1. The
+medial medullary lesion no longer weakens the other half of the tongue — the model had shown a
+weak tongue on both sides in Dejerine syndrome, where its sources (S48) and now S156 give only
+the lesion's side. The Dejerine case asserts the other half spared (A32); run against the committed
+code first, it came back weak. No examination's leader moved (70 of 70).
+
+**D145 — R7: partly answered.** S158: retention after bilateral infarction of the deep white
+matter "within the ventral and lateral columns". It supports the model's bilateral pathway, which
+a hemisection does not disable; the model draws the pathway in the lateral funiculus only, and the
+row stays pending on that point.
+
+**D146 — R28: not answered.** S159 shows L3 stimulation activating the adductors together with the
+quadriceps and stresses that the lumbosacral myotome varies widely between patients. That is
+evidence that L3 reaches the adductors, not a statement of which root carries adduction, so the
+adductors keep no certain root.
+
+**D147 — R5 and R54: not answered.** The evidence-based dermatome review found (Lee, McPhee and
+Stringer, 2008) gives no sacral segment in its abstract, and its full text is not open; it was not
+cited.
+
+**D148 — What the P27 mutation run showed.** 97.3% of sourced mutants killed (5,908 of 6,072).
+Once R25 was answered the tongue's route counted as sourced, and six mutants moving one of its
+steps onto a neighbouring part — the sensory cortex, the inferior frontal gyrus, the posterior
+limb, the oculomotor fascicle, the facial or the abducens fascicle — survived, because no case
+lesioned a single part of the route. As an unsourced row it had left 21. Four single-part cases
+(`answered.ts`, A33) pin it: the pontine base alone (stated, S157's paramedian pontine infarction),
+the peduncle, the capsule's genu and the face area of the motor cortex; applied directly, each of
+the six now fails.
