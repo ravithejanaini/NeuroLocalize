@@ -237,9 +237,13 @@ export class Panel {
           'brain.face-divisions',
           'brain.sympathetic',
           'territory.cavernous-sinus',
+          // P31.
+          'brain.vertigo-nerve',
+          'territory.eighth-nerve',
+          'territory.cerebellopontine-angle',
         ],
         body: headHtml(f),
-        note: 'A gaze palsy from the pons is on the side of the lesion and lasts; one from the frontal eye field is toward the side away from the lesion — the eyes deviate toward it — and fades within days (S130, S131). Change the timepoint to see it go. With the ventral pons on both sides (locked-in), sensation is left intact because the model spares the tegmentum; one source says it is lost (C52). A cranial nerve outside the brainstem gives its own sign alone — no weak limbs, no gaze palsy, nothing in the other eye — and the fourth nerve, past its crossing, weakens its own eye where the nucleus weakens the other (S120, S70). The cavernous sinus carries the third, fourth and sixth nerves with V1, V2 and the carotid’s sympathetic plexus; V3 leaves by the foramen ovale, so the jaw is spared (S122, S165). Not modelled: the third nerve’s pupil (C74, C77), the facial nerve’s taste, tears and hearing by segment (C75), and partial sinus lesions (C78).',
+        note: 'A gaze palsy from the pons is on the side of the lesion and lasts; one from the frontal eye field is toward the side away from the lesion — the eyes deviate toward it — and fades within days (S130, S131). Change the timepoint to see it go. With the ventral pons on both sides (locked-in), sensation is left intact because the model spares the tegmentum; one source says it is lost (C52). A cranial nerve outside the brainstem gives its own sign alone — no weak limbs, no gaze palsy, nothing in the other eye — and the fourth nerve, past its crossing, weakens its own eye where the nucleus weakens the other (S120, S70). The cavernous sinus carries the third, fourth and sixth nerves with V1, V2 and the carotid’s sympathetic plexus; V3 leaves by the foramen ovale, so the jaw is spared (S122, S165). Not modelled: the third nerve’s pupil (C74, C77), the facial nerve’s taste, tears and hearing by segment (C75), and partial sinus lesions (C78). A mass at the cerebellopontine angle takes the eighth nerve first — a deaf ear — then the trigeminal root and the cerebellum; it seldom weakens the face (S168, S170), and whether the nerve gives vertigo is left unsettled (C80).',
       },
       {
         title: 'Language and attention',

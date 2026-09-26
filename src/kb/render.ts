@@ -291,6 +291,9 @@ export const RENDER: RenderKb = {
       // P29: the sixth ventral along the clivus, the seventh lateral at the cerebellopontine angle (S61, S51).
       'pons:abducens_nerve': [-0.3, -0.8, -1.6],
       'pons:facial_nerve': [-1.6, -0.6, -0.1],
+      // P31: the eighth nerve beside the seventh at the angle; the trigeminal root higher, at mid-pons (S169, S122).
+      'pons:vestibulocochlear_nerve': [-1.75, -0.45, 0.1],
+      'pons:trigeminal_root': [-1.6, 0.55, -0.2],
       'midbrain:peduncle': [-0.55, 0, -0.62],
       'midbrain:oculomotor': [-0.2, 0.15, -0.3],
       'midbrain:oculomotor_nucleus': [-0.13, 0.35, 0.22],

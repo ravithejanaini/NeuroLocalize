@@ -43,10 +43,11 @@ teaching from a phone.
 | P28 | A finer field chart — ten cells an eye — and the two sectoranopias of the lateral geniculate nucleus: a horizontal wedge from the lateral posterior choroidal artery, a quadruple sectoranopia from the anterior choroidal |
 | P29 | The cranial nerves after they leave the brainstem — the oculomotor, trochlear, abducens, facial and hypoglossal nerves — each giving its sign alone; the fourth nerve, past its crossing, weakens its own eye |
 | P30 | The cavernous sinus — the third, fourth and sixth nerves with V1, V2 and the carotid's sympathetic plexus — and the face felt by trigeminal division, so the sinus spares the jaw |
+| P31 | The eighth nerve and the cerebellopontine angle: a deaf ear alone, and a mass taking the eighth nerve, the trigeminal root and the cerebellum while the face moves; vertigo from the nerve left unsettled |
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 166 open-access sources that were
+- **Expected outputs are written first**, from 170 open-access sources that were
   actually read — one of them, S108, as its free abstract only (`docs/SOURCES.md`) — and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

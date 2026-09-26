@@ -20,7 +20,7 @@ export const CAVERNOUS_REVERSE_CASES: readonly BrainReverseCase[] = [
       { kind: 'face_division', side: 'L', division: 'V3', value: 'normal' },
       ...strong,
     ],
-    expectations: [{ timepoint: 'chronic', topFamily: 'nerve_left', topPlaces: ['cavernous_sinus'] }],
+    expectations: [{ timepoint: 'chronic', topFamily: 'cranial_nerve_left', topPlaces: ['cavernous_sinus'] }],
     cite: ['S165', 'S70', 'S122'],
     basis: 'stated',
     note: 'Three ocular nerves, V1 and the carotid’s sympathetic plexus meet only in the cavernous sinus (S165); a Horner syndrome with a sixth nerve palsy localises there (S70), and a normal jaw keeps V3, which does not pass through it (S122).',

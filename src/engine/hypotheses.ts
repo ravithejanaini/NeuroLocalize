@@ -164,10 +164,11 @@ export function hypotheses(): readonly Hypothesis[] {
     const cerebellum = row.level === 'cerebellum';
     // P11: a midline place is one candidate taking both sides, as the chiasm is in P8.
     for (const side of row.midline ? (['L'] as const) : SIDES) {
-      // P29: a place that is only cranial nerves outside the brainstem is ranked with the nerves.
+      // P29: a place made only of parts outside the brainstem is a cranial nerve family of its own —
+      // not the limb nerves', whose priors it would dilute (P31, D167).
       const nerve = row.compartments.every((c) => OUTSIDE_BRAINSTEM.includes(c));
       const family: LesionFamily = nerve
-        ? side === 'L' ? 'nerve_left' : 'nerve_right'
+        ? side === 'L' ? 'cranial_nerve_left' : 'cranial_nerve_right'
         : row.midline
         ? cerebellum ? 'cerebellum_midline' : 'brainstem_midline'
         : cerebellum

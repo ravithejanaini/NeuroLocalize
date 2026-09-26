@@ -21,6 +21,8 @@ export const FAMILY_NAME: Record<LesionFamily, string> = {
   plexus_right: 'Right brachial plexus',
   nerve_left: 'Left peripheral nerve',
   nerve_right: 'Right peripheral nerve',
+  cranial_nerve_left: 'Left cranial nerve, outside the brainstem',
+  cranial_nerve_right: 'Right cranial nerve, outside the brainstem',
   brainstem_left: 'Left brainstem',
   cerebellum_left: 'Left cerebellum',
   cerebellum_right: 'Right cerebellum',

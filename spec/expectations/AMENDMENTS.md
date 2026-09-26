@@ -607,6 +607,19 @@ situation the freeze exists to catch.
   cases also assert no Horner syndrome, so that the carotid plexus cannot be read as either nerve
   (D162).
 
+## A37 — The eighth nerve and the cerebellopontine angle (P31, 2026-09-27)
+
+- **Changed:** two new files. `angle.ts` holds the left eighth nerve alone and a large left
+  cerebellopontine angle mass; `reverse-angle.ts` holds one examination for each. The cranial
+  nerves outside the brainstem now rank in a family of their own (D167), so the examinations in
+  `reverse-cranial-nerves.ts`, `reverse-cavernous.ts` and `reverse-angle.ts` expect
+  `cranial_nerve_left`, and the isolated fourth nerve palsy in `reverse-nerves.ts` expects
+  `cranial_nerve_right` beside the other side's nucleus. No place or observation changed in them.
+- **How circularity was avoided:** every assertion is quoted from S122 and S167–S170, read into
+  `docs/P31-analysis.md` before any code; all four new expectations were run red against the P30
+  engine. The face's strength at the angle is never asserted (C81), and vertigo only as present or
+  unsettled (C80).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -633,7 +646,7 @@ situation the freeze exists to catch.
 | `midbrain.ts` | A17 |
 | `reverse-midbrain.ts` | A17 |
 | `nerves.ts` | A18 |
-| `reverse-nerves.ts` | A18, A35 |
+| `reverse-nerves.ts` | A18, A35, A37 |
 | `basal.ts` | A19 |
 | `reverse-basal.ts` | A19 |
 | `cortex.ts` | A20 |
@@ -656,8 +669,10 @@ situation the freeze exists to catch.
 | `sectoranopia.ts` | A34 |
 | `reverse-sectoranopia.ts` | A34 |
 | `cranial-nerves.ts` | A35, A36 |
-| `reverse-cranial-nerves.ts` | A35, A36 |
+| `reverse-cranial-nerves.ts` | A35, A36, A37 |
 | `cavernous.ts` | A36 |
-| `reverse-cavernous.ts` | A36 |
+| `reverse-cavernous.ts` | A36, A37 |
+| `angle.ts` | A37 |
+| `reverse-angle.ts` | A37 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

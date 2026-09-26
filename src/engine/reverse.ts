@@ -584,6 +584,9 @@ export const SITE_NAME: Record<Place, string> = {
   hypoglossal_nerve: 'hypoglossal nerve (in the hypoglossal canal)',
   // P30.
   cavernous_sinus: 'cavernous sinus (III, IV, VI, V1, V2 and the carotid sympathetic plexus)',
+  // P31.
+  eighth_nerve: 'vestibulocochlear nerve (internal acoustic canal)',
+  cerebellopontine_angle: 'cerebellopontine angle (VIII, the trigeminal root and the cerebellum)',
   subthalamic_nucleus: 'subthalamic nucleus',
   frontal_eye_field: 'frontal eye field (Brodmann area 8)',
   borderzone_anterior: 'anterior border zone (ACA–MCA), around Broca area',
@@ -712,6 +715,8 @@ const PART_NAME: Record<BrainCompartment, string> = {
   hypoglossal_nerve: 'hypoglossal nerve',
   ophthalmic_maxillary: 'ophthalmic and maxillary divisions in the cavernous sinus',
   carotid_sympathetic: 'sympathetic plexus on the carotid, in the cavernous sinus',
+  vestibulocochlear_nerve: 'vestibulocochlear nerve',
+  trigeminal_root: 'trigeminal root at the cerebellopontine angle',
 };
 const LEVEL_NAME: Record<BrainLevel, string> = {
   cortex: 'cortex',
@@ -854,7 +859,10 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
     }
     case 'vertigo': {
       const c = (['L', 'R'] as const).map((s) => brainCut(bmap, b.vertigo.steps, s, 'face')).filter((x): x is string => x !== null);
-      return c.length ? c.map(damaged).join('; ') : 'the vestibular nuclei are intact';
+      if (c.length) return c.map(damaged).join('; ');
+      const n = (['L', 'R'] as const).map((s) => brainCut(bmap, b.vertigoNerve.steps, s, 'face')).find((x): x is string => x !== null);
+      if (n) return `${damaged(n)} — often with vertigo, sometimes only imbalance; unsettled (C80)`;
+      return 'the vestibular nuclei and nerves are intact';
     }
     case 'truncal_ataxia': {
       const cut = (['L', 'R'] as const).map((s) => brainCut(bmap, b.truncalAtaxia.steps, s, 'face')).find((x): x is string => x !== null);

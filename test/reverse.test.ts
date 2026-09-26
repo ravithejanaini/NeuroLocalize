@@ -21,6 +21,7 @@ import { GENICULATE_REVERSE_CASES } from '../spec/expectations/reverse-geniculat
 import { SECTORANOPIA_REVERSE_CASES } from '../spec/expectations/reverse-sectoranopia.ts';
 import { CRANIAL_NERVE_REVERSE_CASES } from '../spec/expectations/reverse-cranial-nerves.ts';
 import { CAVERNOUS_REVERSE_CASES } from '../spec/expectations/reverse-cavernous.ts';
+import { ANGLE_REVERSE_CASES } from '../spec/expectations/reverse-angle.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
 import { hypotheses } from '../src/engine/hypotheses.ts';
@@ -35,7 +36,7 @@ import { examSlots } from '../src/render/slots.ts';
 const SLOTS = examSlots(RENDER);
 
 describe('frozen reverse expectations (A3, A4, A7)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES, ...SECTORANOPIA_REVERSE_CASES, ...CRANIAL_NERVE_REVERSE_CASES, ...CAVERNOUS_REVERSE_CASES]) {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES, ...SECTORANOPIA_REVERSE_CASES, ...CRANIAL_NERVE_REVERSE_CASES, ...CAVERNOUS_REVERSE_CASES, ...ANGLE_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });
@@ -252,7 +253,9 @@ describe('reverse engine contract', () => {
     assert.ok(nerve);
     assert.deepEqual(nerve.sites, ['long_thoracic'], 'the only nerve place that weakens serratus');
     const places = hypotheses().filter((x) => x.site);
-    assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 66 + 10 + 2, 'D32, P7, P19, P20, P23: 18 arm and 15 leg places on each side — P19 adds the deep fibular nerve at two places and the superficial at one, P20 the tarsal tunnel, P23 the pudendal nerve; P29 five cranial nerves outside the brainstem on each side; P30 the cavernous sinus on each side');
+    assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 66, 'D32, P7, P19, P20, P23: 18 arm and 15 leg places on each side — P19 adds the deep fibular nerve at two places and the superficial at one, P20 the tarsal tunnel, P23 the pudendal nerve');
+    // P29–P31: the cranial nerves outside the brainstem are a family of their own (D167).
+    assert.equal(places.filter((x) => x.family.startsWith('cranial_nerve')).length, 2 * (5 + 1 + 2), 'P29 five nerves, P30 the cavernous sinus, P31 the eighth nerve and the angle, on each side');
     assert.equal(
       places.filter((x) => x.family.startsWith('brainstem') || x.family.startsWith('hemisphere')).length,
       52,
@@ -446,8 +449,8 @@ describe('the working for the fourth and fifth nerves (P14)', () => {
 describe('the working for the cranial nerves outside the brainstem (P29)', () => {
   it('names the nerve, without a level, and traces the fourth nerve to its own eye (D154, D156)', () => {
     prepareSync('chronic');
-    const iv = hypotheses().find((x) => x.id === 'nerve_left:trochlear_nerve');
-    const vii = hypotheses().find((x) => x.id === 'nerve_left:facial_nerve');
+    const iv = hypotheses().find((x) => x.id === 'cranial_nerve_left:trochlear_nerve');
+    const vii = hypotheses().find((x) => x.id === 'cranial_nerve_left:facial_nerve');
     assert.ok(iv && vii);
     const [own, other] = explain(
       iv,
@@ -468,7 +471,7 @@ describe('the working for the cranial nerves outside the brainstem (P29)', () =>
 describe('the working for the cavernous sinus (P30)', () => {
   it('names the divisions in the sinus, and says why the jaw is spared', () => {
     prepareSync('chronic');
-    const cs = hypotheses().find((x) => x.id === 'nerve_left:cavernous_sinus');
+    const cs = hypotheses().find((x) => x.id === 'cranial_nerve_left:cavernous_sinus');
     assert.ok(cs);
     const [v1, v3, horner] = explain(
       cs,
@@ -484,6 +487,34 @@ describe('the working for the cavernous sinus (P30)', () => {
     assert.equal(v3?.verdict, 'fits');
     assert.match(v3?.because ?? '', /V3 leaves the skull by the foramen ovale/);
     assert.equal(horner?.verdict, 'fits');
+  });
+});
+
+describe('the eighth nerve and the angle (P31)', () => {
+  it('leaves vertigo from the nerve unsettled, and says why', () => {
+    prepareSync('chronic');
+    const viii = hypotheses().find((x) => x.id === 'cranial_nerve_left:eighth_nerve');
+    assert.ok(viii);
+    const [hearing, vertigo] = explain(
+      viii,
+      [
+        { kind: 'cranial', side: 'L', sign: 'hearing_loss', value: 'present' },
+        { kind: 'vertigo', value: 'present' },
+      ],
+      'chronic',
+    );
+    assert.equal(hearing?.verdict, 'fits');
+    assert.match(hearing?.because ?? '', /^the left vestibulocochlear nerve is damaged$/);
+    assert.equal(vertigo?.verdict, 'open');
+    assert.match(vertigo?.because ?? '', /unsettled \(C80\)/);
+  });
+
+  it('keeps the limb nerves’ priors apart from the cranial nerves’ (D167)', () => {
+    // A numb sole with the leg strong, and nothing else: the tarsal tunnel and both S2 roots both
+    // fit; P31 put the cranial nerves in a family of their own so they no longer dilute this.
+    prepareSync('chronic');
+    const limb = hypotheses().filter((h) => h.family === 'nerve_left');
+    assert.ok(limb.every((h) => !h.site || !['oculomotor_nerve', 'cavernous_sinus', 'eighth_nerve'].includes(h.site)));
   });
 });
 

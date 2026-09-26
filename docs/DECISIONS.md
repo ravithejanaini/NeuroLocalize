@@ -1935,7 +1935,7 @@ abducens, facial and hypoglossal nerves are parts held at the level each leaves,
 place of its own. Each joins the routes its nucleus already feeds — the third the oculomotor, lid,
 elevation and adduction routes; the sixth abduction; the seventh the facial route; the twelfth the
 hypoglossal route — and none joins a gaze route or a crossed route, which is the contrast every
-source draws. They rank with the nerves (`nerve_left`, `nerve_right`), not the brainstem (D157). None of
+source draws. They rank with the nerves, not the brainstem (D157) — from P31 in a cranial nerve family of their own (D167). None of
 the 72 earlier examination leaders moved.
 
 **D154 — The fourth nerve serves its own eye.** Past its decussation the trochlear nerve runs to the
@@ -2022,3 +2022,58 @@ are gone with the flag (D157). The remaining survivors are the ones already reco
 
 **R58** — C78: should partial sinus syndromes — the third and sixth nerves with a Horner syndrome,
 say — be places of their own, and if so, which combinations are common enough to teach?
+
+## P31 — The eighth nerve and the cerebellopontine angle
+
+The analysis written before any P31 code is `docs/P31-analysis.md`; S167–S170 were read for it on
+2026-09-27. Run against the P30 engine first, both new cases and both new examinations failed.
+
+### Source conflicts and limits
+
+**C80 — Vertigo from the eighth nerve.** S170: unilateral hearing loss "often with tinnitus and
+vertigo"; S168: vestibular schwannomas "usually present with decreased hearing, tinnitus, and
+imbalance". A nerve lesion gives vertigo as unsettled; the vestibular nuclei still give it outright.
+
+**C81 — The facial nerve at the angle.** "Rarely" (S168), "infrequently … due to the relative
+resistance of the facial nerve to chronic compression" (S170), and late "except in the case of very
+large tumors" (S167). The angle place does not take it, and no case asserts the face's strength
+there.
+
+**C82 — Brainstem compression.** Pyramidal weakness and contralateral cranial nerve signs come only
+with very large tumours (S167); not part of the place.
+
+**C83 — Not modelled.** The corneal reflex, tinnitus, word understanding and hydrocephalus.
+
+### Decisions
+
+**D163 — Two parts at the angle.** The vestibulocochlear nerve joins the hearing route, so a lesion
+of it loses hearing on its own side (S167, S169, S170). The trigeminal root joins the route to the
+face ahead of the nuclei; at the angle it is one nerve before the ganglion divides it, so it carries
+all three divisions (S122).
+
+**D164 — Vertigo from the nerve is data.** A row gives the answer for the nerve — `indeterminate`
+(C80) — as the hemisphere's truncal ataxia does (C35); the working says so.
+
+**D165 — The eighth nerve is a place.** In the internal acoustic canal: a deaf ear with the face
+moving and feeling, no Horner syndrome and no clumsiness — which is what separates it from the AICA's
+lateral pons, the only earlier place that took hearing.
+
+**D166 — The cerebellopontine angle is a place.** A large mass: the eighth nerve, the trigeminal root
+and the cerebellar hemisphere beside it (S167, S169). It does not take the facial nerve (C81) or the
+brainstem (C82).
+
+**D167 — The cranial nerves are a family of their own.** P31's first run failed an examination far
+from the head: the numb sole of `reverse-tarsal-tunnel` tied at no conflict between the tarsal tunnel
+and both S2 roots, and the roots won. A candidate's prior is its family's share divided among the
+family's members (`priorsFor`), and since P29 the fourteen cranial nerve places had shared the limb
+nerves' family, diluting each limb nerve's prior until this tie tipped. They are now
+`cranial_nerve_left` and `cranial_nerve_right`. That restores the limb nerves' priors exactly, and
+adding families scales every prior alike, so no other ranking changes: the only differences among
+the earlier leaders are the family names of the P29 and P30 examinations, and the order of the
+isolated fourth nerve palsy's tie, now nerve first — which its expectation deliberately does not fix
+(D155). The P29–P31 examinations name the new family (A37).
+
+### Reviewer questions
+
+**R59** — C80: after a destructive lesion of one eighth nerve, should the model teach vertigo, or
+imbalance, or neither once compensated?

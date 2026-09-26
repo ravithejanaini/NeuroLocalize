@@ -99,6 +99,9 @@ export const LESION_FAMILIES = [
   'visual_chiasm',
   // P18: both posterior cerebral arteries, one candidate across the midline.
   'visual_both',
+  // P31: the cranial nerves outside the brainstem, apart from the limb nerves (D167).
+  'cranial_nerve_left',
+  'cranial_nerve_right',
 ] as const;
 export type LesionFamily = (typeof LESION_FAMILIES)[number];
 
@@ -347,6 +350,9 @@ export const BRAIN_COMPARTMENTS = [
   // sympathetic plexus on the carotid within it.
   'ophthalmic_maxillary',
   'carotid_sympathetic',
+  // P31: the eighth nerve, and the trigeminal root before the ganglion, at the angle.
+  'vestibulocochlear_nerve',
+  'trigeminal_root',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 /**
@@ -361,6 +367,8 @@ export const OUTSIDE_BRAINSTEM: readonly BrainCompartment[] = [
   'hypoglossal_nerve',
   'ophthalmic_maxillary',
   'carotid_sympathetic',
+  'vestibulocochlear_nerve',
+  'trigeminal_root',
 ];
 
 /** P30: the three divisions of the trigeminal nerve, by the skin each feels — forehead, cheek, jaw. */
@@ -458,6 +466,9 @@ export const TERRITORIES = [
   'hypoglossal_nerve',
   // P30.
   'cavernous_sinus',
+  // P31.
+  'eighth_nerve',
+  'cerebellopontine_angle',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

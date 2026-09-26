@@ -56,12 +56,12 @@ export const BRAIN: Brain = {
   faceNucleus: {
     meta: {
       id: 'brain.face-nucleus',
-      claim: 'The spinal trigeminal nucleus and tract in the lateral medulla, and the principal sensory nucleus in the pontine tegmentum above it, carry sensation from the ipsilateral face.',
-      sources: ['S60', 'S47', 'S58', 'S122', 'S115'],
+      claim: 'The spinal trigeminal nucleus and tract in the lateral medulla, and the principal sensory nucleus in the pontine tegmentum above it, carry sensation from the ipsilateral face. Before them the trigeminal root crosses the cerebellopontine angle as one nerve, all three divisions together, and a mass there gives paraesthesia in its distribution (P31).',
+      sources: ['S60', 'S47', 'S58', 'S122', 'S115', 'S167'],
       tier: 'T1',
       bookRef: p,
     },
-    steps: [{ level: 'medulla', compartment: 'spinal_trigeminal' }, { level: 'pons', compartment: 'trigeminal_sensory' }],
+    steps: [{ level: 'pons', compartment: 'trigeminal_root' }, { level: 'medulla', compartment: 'spinal_trigeminal' }, { level: 'pons', compartment: 'trigeminal_sensory' }],
     serves: 'ipsilateral',
   },
   faceAscending: {
@@ -330,6 +330,18 @@ export const BRAIN: Brain = {
     },
     steps: [{ level: 'pons', compartment: 'vestibular' }, { level: 'medulla', compartment: 'vestibular' }],
   },
+  vertigoNerve: {
+    meta: {
+      id: 'brain.vertigo-nerve',
+      claim: 'A lesion of the vestibulocochlear nerve gives unilateral hearing loss "often with tinnitus and vertigo" (S170), while vestibular schwannomas "usually present with decreased hearing, tinnitus, and imbalance" (S168). Whether it gives vertigo is left unsettled (C80).',
+      sources: ['S170', 'S168'],
+      tier: 'T3',
+      bookRef: p,
+      conflict: 'C80',
+    },
+    steps: [{ level: 'pons', compartment: 'vestibulocochlear_nerve' }],
+    state: 'indeterminate',
+  },
   gazeCortex: {
     meta: {
       id: 'brain.gaze-cortex',
@@ -400,12 +412,12 @@ export const BRAIN: Brain = {
   hearing: {
     meta: {
       id: 'brain.hearing',
-      claim: 'The AICA supplies the lateral pons with the cochlear nuclei of the eighth nerve, and gives the labyrinthine artery; a lesion there loses hearing on its own side.',
-      sources: ['S113', 'S114', 'S65', 'S115'],
+      claim: 'The AICA supplies the lateral pons with the cochlear nuclei of the eighth nerve, and gives the labyrinthine artery; a lesion there loses hearing on its own side. So does a lesion of the eighth nerve itself, in the internal acoustic canal or at the cerebellopontine angle: unilateral sensorineural hearing loss from the cochlear nerve (P31).',
+      sources: ['S113', 'S114', 'S65', 'S115', 'S167', 'S169', 'S170'],
       tier: 'T1',
       bookRef: p,
     },
-    steps: [{ level: 'pons', compartment: 'cochlear' }],
+    steps: [{ level: 'pons', compartment: 'cochlear' }, { level: 'pons', compartment: 'vestibulocochlear_nerve' }],
     serves: 'ipsilateral',
   },
   upgaze: {
@@ -526,8 +538,8 @@ export const BRAIN: Brain = {
   partsAt: {
     meta: {
       id: 'brain.parts-at',
-      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei; and, outside the brainstem, the oculomotor and trochlear nerves at the midbrain, the abducens and facial nerves at the pons and the hypoglossal nerve at the medulla (P29), with the cavernous sinus — the ophthalmic and maxillary divisions and the carotid sympathetic plexus — held at the midbrain (P30).',
-      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125', 'S130', 'S61', 'S62', 'S63', 'S51', 'S165'],
+      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei; and, outside the brainstem, the oculomotor and trochlear nerves at the midbrain, the abducens and facial nerves at the pons and the hypoglossal nerve at the medulla (P29), with the cavernous sinus — the ophthalmic and maxillary divisions and the carotid sympathetic plexus — held at the midbrain (P30), and the vestibulocochlear nerve and trigeminal root at the cerebellopontine angle, held at the pons (P31).',
+      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125', 'S130', 'S61', 'S62', 'S63', 'S51', 'S165', 'S169'],
       tier: 'T1',
       bookRef: p,
     },
@@ -553,6 +565,8 @@ export const BRAIN: Brain = {
         'trigeminal_sensory',
         'abducens_nerve',
         'facial_nerve',
+        'vestibulocochlear_nerve',
+        'trigeminal_root',
       ],
       medulla: [
         'pyramid',
@@ -1017,6 +1031,30 @@ export const BRAIN: Brain = {
       level: 'midbrain',
       compartments: ['oculomotor_nerve', 'trochlear_nerve', 'ophthalmic_maxillary', 'carotid_sympathetic'],
       also: [{ level: 'pons', compartments: ['abducens_nerve'] }],
+    },
+    // P31: the eighth nerve alone, and a mass at the angle.
+    eighth_nerve: {
+      meta: {
+        id: 'territory.eighth-nerve',
+        claim: 'The vestibulocochlear nerve in the internal acoustic canal: unilateral sensorineural hearing loss, the face spared.',
+        sources: ['S167', 'S170'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'pons',
+      compartments: ['vestibulocochlear_nerve'],
+    },
+    cerebellopontine_angle: {
+      meta: {
+        id: 'territory.cerebellopontine-angle',
+        claim: 'A large mass at the cerebellopontine angle takes the eighth nerve, the trigeminal root and the cerebellar hemisphere beside it: a deaf ear, a numb face and a clumsy arm on one side. It seldom takes the facial nerve (C81), and only a very large one compresses the brainstem (C82).',
+        sources: ['S167', 'S169', 'S122'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'pons',
+      compartments: ['vestibulocochlear_nerve', 'trigeminal_root'],
+      also: [{ level: 'cerebellum', compartments: ['cerebellar_hemisphere'] }],
     },
   },
 };

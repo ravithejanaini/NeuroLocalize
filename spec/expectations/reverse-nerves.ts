@@ -24,7 +24,7 @@ export const NERVE_REVERSE_CASES: readonly BrainReverseCase[] = [
     ],
     // A35: from P29 the right trochlear nerve fits equally, and nothing examined separates the
     // two, so the leader is the pair — never the nucleus alone.
-    expectations: [{ timepoint: 'chronic', amongTop: { k: 2, families: [['brainstem_left'], ['nerve_right']] } }],
+    expectations: [{ timepoint: 'chronic', amongTop: { k: 2, families: [['brainstem_left'], ['cranial_nerve_right']] } }],
     cite: ['S120', 'S124', 'S70'],
     basis: 'stated',
     note: 'A right superior oblique palsy from the brainstem is the LEFT trochlear nucleus: its fibres cross before they leave the midbrain (S120). Outside the brainstem it is the right trochlear nerve; isolated nuclear lesions are rare (S70), but the model has no frequencies (A35).',

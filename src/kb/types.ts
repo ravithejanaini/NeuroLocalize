@@ -194,6 +194,8 @@ export type Brain = {
   readonly sympathetic: BrainRoute;
   readonly ataxia: BrainRoute;
   readonly vertigo: Row<{ readonly steps: readonly BrainStep[] }>;
+  /** P31: vertigo from the vestibular nerve, whose answer is data (C80). */
+  readonly vertigoNerve: Row<{ readonly steps: readonly BrainStep[]; readonly state: SignState }>;
   /** P11: truncal ataxia from the vermis; after a hemisphere lesion the answer is data (C35). */
   readonly truncalAtaxia: Row<{ readonly steps: readonly BrainStep[] }>;
   readonly truncalAfterHemisphere: Row<{ readonly steps: readonly BrainStep[]; readonly state: SignState }>;

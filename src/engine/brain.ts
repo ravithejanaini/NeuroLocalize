@@ -84,6 +84,7 @@ export function validateBrain(kb: Kb): void {
     b.trochlear.steps,
     b.trochlearNerve.steps,
     b.faceDivisions.steps,
+    b.vertigoNerve.steps,
     b.jaw.steps,
     b.upgaze.steps,
     b.lightNear.steps,
@@ -295,7 +296,10 @@ export function brainFindings(kb: Kb, map: BrainMap, timepoint: Timepoint = 'chr
     ataxia[x] = present(routeDamage(map, b.ataxia, x, 'face'));
     hemiballismus[x] = present(routeDamage(map, b.ballismus, x, 'face'));
   }
-  const vertigo = present(worst(SIDES.map((h) => along(map, b.vertigo.steps, h, 'face'))));
+  // The vestibular nuclei give vertigo; from the nerve it is data (C80, P31).
+  const nuclei = present(worst(SIDES.map((h) => along(map, b.vertigo.steps, h, 'face'))));
+  const nerve = SIDES.some((h) => along(map, b.vertigoNerve.steps, h, 'face') > 0);
+  const vertigo: SignState = nuclei === 'present' ? 'present' : nerve ? b.vertigoNerve.state : 'absent';
   // The vermis is midline: a lesion of either half gives truncal ataxia (S109, S110).
   const trunkHit = SIDES.some((h) => along(map, b.truncalAtaxia.steps, h, 'face') > 0);
   const hemisphereHit = SIDES.some((h) => along(map, b.truncalAfterHemisphere.steps, h, 'face') > 0);
