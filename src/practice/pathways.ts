@@ -5,7 +5,7 @@ import type { Findings } from '../engine/forward.ts';
 import type { Hypothesis } from '../engine/hypotheses.ts';
 import type { Observation } from '../engine/reverse.ts';
 import { KB } from '../kb/kb.ts';
-import { DORSAL_MIDBRAIN_SIGNS, FIELD_SECTORS, LANGUAGE_SIGNS, MUSCLES, SEGMENTS, SIDES, type Segment, type Side } from '../kb/vocab.ts';
+import { DORSAL_MIDBRAIN_SIGNS, FIELD_CELLS, LANGUAGE_SIGNS, MUSCLES, SEGMENTS, SIDES, type Segment, type Side } from '../kb/vocab.ts';
 
 export const PATHWAYS = [
   'spinothalamic',
@@ -95,7 +95,7 @@ export function pathwaysOf(f: Findings, h: Hypothesis): Pathway[] {
     if (f.ataxia[x] === 'present') out.add('cerebellar_vestibular');
   }
   if (f.vertigo === 'present' || f.truncalAtaxia === 'present') out.add('cerebellar_vestibular');
-  if (SIDES.some((x) => FIELD_SECTORS.some((s) => f.fields[x][s] === 'lost')) || SIDES.some((x) => f.rapd[x] === 'present')) out.add('visual');
+  if (SIDES.some((x) => FIELD_CELLS.some((s) => f.fields[x][s] === 'lost')) || SIDES.some((x) => f.rapd[x] === 'present')) out.add('visual');
   if (SIDES.some((x) => f.hemiballismus[x] === 'present')) out.add('movement');
   // P13: the dorsal midbrain's signs are read across both eyes, as conjugate gaze is.
   if (DORSAL_MIDBRAIN_SIGNS.some((s) => f.eyes[s] === 'present')) out.add('eye_movements');

@@ -10,7 +10,7 @@ import type {
   Compartment,
   Deformity,
   Dysreflexia,
-  FieldSector,
+  FieldRegion,
   FieldState,
   LanguageSign,
   DorsalMidbrainSign,
@@ -192,7 +192,8 @@ export type VisionAssertion = Evidence &
         readonly kind: 'field';
         /** Which eye's field; 'both' asserts the same of each eye. */
         readonly eye: Side | 'both';
-        readonly sectors: readonly FieldSector[];
+        /** P28: a coarse sector or a fine cell (D149). */
+        readonly sectors: readonly FieldRegion[];
         readonly oneOf: readonly FieldState[];
       }
     | (Sided & { readonly kind: 'rapd'; readonly oneOf: readonly SignState[] })

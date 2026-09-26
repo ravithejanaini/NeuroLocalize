@@ -235,6 +235,8 @@ export type VisionPartRow = Row<{
   readonly eye: 'same' | 'both';
   readonly field: 'whole' | 'temporal' | 'opposite';
   readonly quadrants: 'both' | 'upper' | 'lower' | 'none';
+  /** P28: only the cells beside the horizontal or the vertical meridian; both when absent. */
+  readonly band?: 'horizontal' | 'vertical';
   readonly centre: 'with' | 'half' | 'only' | 'none';
   readonly rapd: 'same' | 'opposite' | 'none' | 'open';
 }>;

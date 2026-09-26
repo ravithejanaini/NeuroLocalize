@@ -6,6 +6,7 @@ import { BRAIN_CASES } from '../spec/expectations/brain.ts';
 import { VISION_CASES } from '../spec/expectations/vision.ts';
 import { OCCIPITAL_CASES } from '../spec/expectations/occipital.ts';
 import { GENICULATE_CASES } from '../spec/expectations/geniculate.ts';
+import { SECTORANOPIA_CASES } from '../spec/expectations/sectoranopia.ts';
 import { LANGUAGE_CASES } from '../spec/expectations/language.ts';
 import { CEREBELLUM_CASES } from '../spec/expectations/cerebellum.ts';
 import { POSTERIOR_CASES } from '../spec/expectations/posterior.ts';
@@ -305,6 +306,9 @@ export const VISION_PLACE_CASE: Readonly<Record<string, string>> = {
   pca_bilateral: 'pca-both',
   // P24.
   lgn: 'lgn-left',
+  // P28.
+  lgn_crest: 'lgn-crest-left',
+  lgn_horns: 'lgn-horns-left',
 };
 
 /** Every visual place must take exactly the parts its frozen case lesions (D46, for P8). */
@@ -312,7 +316,7 @@ export function visionPlaceFailures(kb: Kb): Failure[] {
   const out: Failure[] = [];
   for (const [place, row] of Object.entries(kb.vision.places)) {
     const id = VISION_PLACE_CASE[place];
-    const kase = VISION_CASES.find((c) => c.id === id) ?? OCCIPITAL_CASES.find((c) => c.id === id) ?? GENICULATE_CASES.find((c) => c.id === id);
+    const kase = VISION_CASES.find((c) => c.id === id) ?? OCCIPITAL_CASES.find((c) => c.id === id) ?? GENICULATE_CASES.find((c) => c.id === id) ?? SECTORANOPIA_CASES.find((c) => c.id === id);
     const fail = (message: string): void => {
       out.push({ caseId: id ?? place, timepoint: 'chronic', message });
     };

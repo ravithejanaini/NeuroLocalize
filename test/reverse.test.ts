@@ -18,6 +18,7 @@ import { TARSAL_REVERSE_CASES } from '../spec/expectations/reverse-tarsal.ts';
 import { TRANSCORTICAL_REVERSE_CASES } from '../spec/expectations/reverse-transcortical.ts';
 import { PUDENDAL_REVERSE_CASES } from '../spec/expectations/reverse-pudendal.ts';
 import { GENICULATE_REVERSE_CASES } from '../spec/expectations/reverse-geniculate.ts';
+import { SECTORANOPIA_REVERSE_CASES } from '../spec/expectations/reverse-sectoranopia.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
 import { hypotheses } from '../src/engine/hypotheses.ts';
@@ -32,7 +33,7 @@ import { examSlots } from '../src/render/slots.ts';
 const SLOTS = examSlots(RENDER);
 
 describe('frozen reverse expectations (A3, A4, A7)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES]) {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES, ...SECTORANOPIA_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });
@@ -56,7 +57,8 @@ describe('reverse engine contract', () => {
     // P13 adds three signs of both eyes together, about the patient: + 3. P14 adds the superior
     // oblique and the jaw, two more cranial signs on each side, so that term becomes 2 * 15.
     // P15 adds hemiballismus, one on each side: + 2. P16 adds Gerstmann signs, about the patient: + 1.
-    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 15 + 1 + 2 * 7 + 3 + 2 + 1 + 3 + 2 + 1);
+    // P28: each eye's field is ten cells instead of six sectors: + 4 an eye.
+    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 15 + 1 + 2 * 7 + 3 + 2 + 1 + 3 + 2 + 1 + 2 * 4);
   });
 
   it('with no findings, prefers nothing in particular and still suggests a test', () => {

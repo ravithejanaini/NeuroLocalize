@@ -16,7 +16,7 @@ import {
   SIDES,
   type CranialSign,
   type DorsalMidbrainSign,
-  type FieldSector,
+  type FieldRegion,
   type LanguageSign,
   type Muscle,
   type SensoryModality,
@@ -92,13 +92,22 @@ export const CRANIAL_NAME: Record<CranialSign, string> = {
 };
 
 /** Each sector of one eye's field, as it is asked about. */
-export const SECTOR_NAME: Record<FieldSector, string> = {
+export const SECTOR_NAME: Record<FieldRegion, string> = {
   temporal_superior: 'upper outer quadrant (temporal)',
   temporal_inferior: 'lower outer quadrant (temporal)',
   nasal_superior: 'upper inner quadrant (nasal)',
   nasal_inferior: 'lower inner quadrant (nasal)',
   central_left: 'centre, to the patient’s left',
   central_right: 'centre, to the patient’s right',
+  // P28: each quadrant's two cells.
+  temporal_superior_horizontal: 'upper outer quadrant, beside the horizontal meridian',
+  temporal_superior_vertical: 'upper outer quadrant, beside the vertical meridian',
+  temporal_inferior_horizontal: 'lower outer quadrant, beside the horizontal meridian',
+  temporal_inferior_vertical: 'lower outer quadrant, beside the vertical meridian',
+  nasal_superior_horizontal: 'upper inner quadrant, beside the horizontal meridian',
+  nasal_superior_vertical: 'upper inner quadrant, beside the vertical meridian',
+  nasal_inferior_horizontal: 'lower inner quadrant, beside the horizontal meridian',
+  nasal_inferior_vertical: 'lower inner quadrant, beside the vertical meridian',
 };
 
 export const AREA_NAME: Record<SkinArea, string> = {

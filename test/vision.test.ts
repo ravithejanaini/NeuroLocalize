@@ -6,7 +6,8 @@ import { slotKey, type Slot } from '../src/engine/reverse.ts';
 import { placeRegions } from '../src/engine/vision.ts';
 import { KB } from '../src/kb/kb.ts';
 import { RENDER } from '../src/kb/render.ts';
-import { FIELD_SECTORS, SIDES, type FieldSector } from '../src/kb/vocab.ts';
+import { FIELD_CELLS, FIELD_SECTORS, SIDES, cellsOf } from '../src/kb/vocab.ts';
+import { SECTOR_NAME } from '../src/render/examine.ts';
 import { examSlots } from '../src/render/slots.ts';
 import { fieldChart, visionAffected, visionPanel } from '../src/render/vision.ts';
 
@@ -17,12 +18,33 @@ const classesOf = (svg: string): Map<string, string> =>
   );
 
 describe('the visual field chart (P8)', () => {
-  it('draws every sector of each eye, once, each with its own wedge', () => {
+  it('draws every cell of each eye, once, each with its own wedge (P28)', () => {
     for (const eye of SIDES) {
       const svg = fieldChart(eye, () => 'normal');
       const paths = [...svg.matchAll(/class="fsec [^"]*" d="([^"]+)"/g)].map((m) => m[1]);
-      assert.equal(paths.length, FIELD_SECTORS.length, eye);
-      assert.equal(new Set(paths).size, FIELD_SECTORS.length, `${eye}: two sectors share a wedge`);
+      assert.equal(paths.length, FIELD_CELLS.length, eye);
+      assert.equal(new Set(paths).size, FIELD_CELLS.length, `${eye}: two cells share a wedge`);
+    }
+  });
+
+  it('draws each cell beside its own meridian: horizontal cells touch y = 50, vertical cells x = 50 (P28)', () => {
+    for (const eye of SIDES) {
+      const svg = fieldChart(eye, () => 'normal');
+      for (const cell of FIELD_CELLS.filter((c) => !c.startsWith('central'))) {
+        const m = [...svg.matchAll(/<path class="fsec [^"]*" d="([^"]+)"><title>([^<]+)<\/title>/g)].find((x) => (x[2] ?? '').includes(SECTOR_NAME[cell]));
+        assert.ok(m, `${eye} ${cell} is not drawn`);
+        // The wedge's two rim points: after L and at the end of the arc.
+        const nums = (m[1] ?? '').match(/-?\d+\.\d+/g)?.map(Number) ?? [];
+        const rim = [[nums[0], nums[1]], [nums[nums.length - 2], nums[nums.length - 1]]];
+        const touches = cell.endsWith('_horizontal') ? rim.some(([, y]) => Math.abs((y ?? 0) - 50) < 0.01) : rim.some(([x]) => Math.abs((x ?? 0) - 50) < 0.01);
+        assert.ok(touches, `${eye} ${cell} is not beside its meridian: ${m[1]}`);
+        // And on the right side and height: temporal away from the nose, superior above the centre.
+        const cx = ((rim[0]?.[0] ?? 0) + (rim[1]?.[0] ?? 0)) / 2;
+        const cy = ((rim[0]?.[1] ?? 0) + (rim[1]?.[1] ?? 0)) / 2;
+        const viewerLeft = cell.startsWith('temporal') === (eye === 'L');
+        assert.equal(cx < 50, viewerLeft, `${eye} ${cell} is on the wrong side`);
+        assert.equal(cy < 50, cell.includes('_superior'), `${eye} ${cell} is at the wrong height`);
+      }
     }
   });
 
@@ -30,16 +52,32 @@ describe('the visual field chart (P8)', () => {
     const tract = at('optic_tract');
     for (const eye of SIDES) {
       const marks = classesOf(fieldChart(eye, (s) => tract.fields[eye][s]));
-      for (const sector of FIELD_SECTORS) {
-        const title = [...marks.keys()].find((k) => k.includes(sector.replace(/_/g, ' ')) || k.includes(sectorWord(sector)));
+      for (const sector of FIELD_CELLS) {
+        const title = [...marks.keys()].find((k) => k.includes(SECTOR_NAME[sector]));
         assert.ok(title, `${eye} ${sector} has no mark`);
         assert.equal(marks.get(title), `fs-${tract.fields[eye][sector]}`, `${eye} ${sector}`);
+      }
+      // The coarse sectors still read as before: each quadrant is its two cells (D149).
+      for (const sector of FIELD_SECTORS) {
+        assert.ok(cellsOf(sector).every((c) => tract.fields[eye][c] === tract.fields[eye][sector]), `${eye} ${sector}`);
       }
     }
     // A left tract lesion loses the right half-field: the left eye's nasal side, the right eye's temporal side.
     assert.equal(tract.fields.L.nasal_superior, 'lost');
     assert.equal(tract.fields.R.temporal_superior, 'lost');
     assert.equal(tract.fields.L.temporal_superior, 'normal');
+  });
+
+  it('reads a quadrant half-lost as unsettled, and lists the cells in the panel (P28, D149)', () => {
+    const wedge = at('lgn_crest');
+    assert.equal(wedge.fields.L.nasal_superior_horizontal, 'lost');
+    assert.equal(wedge.fields.L.nasal_superior_vertical, 'normal');
+    assert.equal(wedge.fields.L.nasal_superior, 'indeterminate');
+    const panel = visionPanel(wedge);
+    assert.match(panel, /upper inner quadrant, beside the horizontal meridian<\/th><td class="st st-field-lost">lost/);
+    assert.doesNotMatch(panel, /<th>upper inner quadrant \(nasal\)<\/th>/);
+    // A whole lesion still reads, and lists, whole quadrants.
+    assert.match(visionPanel(at('optic_tract')), /<th>upper inner quadrant \(nasal\)<\/th>/);
   });
 
   it('shows macular sparing as the centre kept, and a whole occipital lesion as the centre lost', () => {
@@ -89,14 +127,8 @@ describe('the visual field chart (P8)', () => {
     const vision = hypotheses().filter((h) => h.family.startsWith('visual'));
     assert.equal(vision.filter((h) => h.family === 'visual_chiasm').length, 1, 'the chiasm is midline');
     assert.equal(vision.filter((h) => h.family === 'visual_both').length, 1, 'both PCAs are one candidate (P18)');
-    // P24 adds the lateral geniculate nucleus, a seventh place on each side.
-    assert.equal(vision.length, 7 * 2 + 2);
+    // P24 adds the lateral geniculate nucleus, a seventh place on each side; P28 its crest and
+    // its horns, a ninth.
+    assert.equal(vision.length, 9 * 2 + 2);
   });
 });
-
-/** The words the chart puts in a sector's title, for the test above. */
-function sectorWord(sector: FieldSector): string {
-  if (sector === 'central_left') return 'patient’s left';
-  if (sector === 'central_right') return 'patient’s right';
-  return sector.startsWith('temporal') ? 'temporal' : 'nasal';
-}

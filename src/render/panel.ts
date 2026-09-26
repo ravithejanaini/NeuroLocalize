@@ -262,6 +262,10 @@ export class Panel {
           'vision.optic-nerve',
           'vision.chiasm',
           'vision.optic-tract',
+          // P24, P28: the lateral geniculate nucleus and its two arterial territories.
+          'vision.lgn',
+          'vision.lgn-crest',
+          'vision.lgn-horns',
           'vision.meyer-loop',
           'vision.parietal-radiation',
           'vision.calcarine-lower',
@@ -271,7 +275,7 @@ export class Panel {
         body: visionAffected(f)
           ? visionPanel(f)
           : '<p class="quiet">Both visual fields full, both pupils equal.</p>',
-        note: 'Each eye’s field is drawn as the patient sees it: the temporal half away from the nose, the centre split at fixation. With both occipital lobes, vision is lost on both sides but the pupils react and the centre is usually kept (S137, C56). The optic tract and the lateral geniculate nucleus give the same hemianopia, but only the tract gives a pupillary defect: the pupil’s fibres leave it just before the nucleus (S137, S91). Not modelled: acuity, colour, congruity (C26), and partial lesions of the nucleus (C69).',
+        note: 'Each eye’s field is drawn as the patient sees it: the temporal half away from the nose, the centre split at fixation. With both occipital lobes, vision is lost on both sides but the pupils react and the centre is usually kept (S137, C56). The optic tract and the lateral geniculate nucleus give the same hemianopia, but only the tract gives a pupillary defect: the pupil’s fibres leave it just before the nucleus (S137, S91). Each quadrant is drawn in two cells, beside the horizontal and beside the vertical meridian: the nucleus’s dorsal crest takes the horizontal band (a wedge), its horns the vertical (a quadruple sectoranopia) (S160, S162). Not modelled: acuity, colour, congruity (C26, C72).',
       },
       {
         title: 'Leg',

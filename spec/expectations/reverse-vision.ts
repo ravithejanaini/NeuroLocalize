@@ -1,13 +1,13 @@
 // Amendment A11. Reverse inference along the visual pathway, written before any visual code.
 // Each case is an examination of the fields and the pupils as the sources describe the
 // lesion (docs/P8-analysis.md); each expectation is a property of the ranking.
-import type { FieldSector, LesionFamily, SensoryObservation, Side, SignObservation, SourceId, Timepoint, VisionPlace } from '../../src/kb/vocab.ts';
+import type { FieldRegion, FieldSector, LesionFamily, SensoryObservation, Side, SignObservation, SourceId, Timepoint, VisionPlace } from '../../src/kb/vocab.ts';
 import type { BrainObservation } from './reverse-brain.ts';
 import type { ReverseExpectation } from './reverse.ts';
 
 export type VisionObservation =
   | BrainObservation
-  | { readonly kind: 'field'; readonly eye: Side; readonly sector: FieldSector; readonly value: SensoryObservation }
+  | { readonly kind: 'field'; readonly eye: Side; readonly sector: FieldRegion; readonly value: SensoryObservation }
   | { readonly kind: 'rapd'; readonly side: Side; readonly value: SignObservation };
 
 export type VisionReverseExpectation = ReverseExpectation & {

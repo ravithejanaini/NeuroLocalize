@@ -442,6 +442,31 @@ export const FIELD_SECTORS = [
 export type FieldSector = (typeof FIELD_SECTORS)[number];
 export type FieldState = 'normal' | 'lost' | 'indeterminate';
 
+/**
+ * P28: the finer chart. Each quadrant is two cells — the half beside the horizontal meridian and
+ * the half beside the vertical meridian — and the centre stays split at fixation. The six
+ * coarse names above keep their meaning: a quadrant is its two cells together (D149).
+ */
+export const FIELD_CELLS = [
+  'temporal_superior_horizontal',
+  'temporal_superior_vertical',
+  'temporal_inferior_horizontal',
+  'temporal_inferior_vertical',
+  'nasal_superior_horizontal',
+  'nasal_superior_vertical',
+  'nasal_inferior_horizontal',
+  'nasal_inferior_vertical',
+  'central_left',
+  'central_right',
+] as const;
+export type FieldCell = (typeof FIELD_CELLS)[number];
+/** Any name a field finding may use: a coarse sector or a fine cell. */
+export type FieldRegion = FieldSector | FieldCell;
+export const FIELD_REGIONS: readonly FieldRegion[] = [...new Set<FieldRegion>([...FIELD_SECTORS, ...FIELD_CELLS])];
+/** The cells a coarse sector is made of; a cell is its own. */
+export const cellsOf = (r: FieldRegion): readonly FieldCell[] =>
+  (FIELD_CELLS as readonly string[]).includes(r) ? [r as FieldCell] : FIELD_CELLS.filter((c) => c.startsWith(`${r}_`));
+
 /** Parts of the visual pathway, front to back. The chiasm is midline. */
 export const VISUAL_PARTS = [
   'optic_nerve',
@@ -449,6 +474,9 @@ export const VISUAL_PARTS = [
   'optic_tract',
   // P24: the lateral geniculate nucleus, between the tract and the radiation.
   'lgn',
+  // P28: its dorsal crest and its horns, each with its own artery.
+  'lgn_crest',
+  'lgn_horns',
   'meyer_loop',
   'parietal_radiation',
   'calcarine_lower',
@@ -470,6 +498,9 @@ export const VISION_PLACES = [
   'pca_bilateral',
   // P24: the lateral geniculate nucleus.
   'lgn',
+  // P28: the nucleus's two arterial territories.
+  'lgn_crest',
+  'lgn_horns',
 ] as const;
 export type VisionPlace = (typeof VISION_PLACES)[number];
 

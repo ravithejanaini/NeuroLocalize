@@ -3,10 +3,13 @@
 // only walks them (docs/P8-analysis.md).
 import type { Kb } from '../kb/types.ts';
 import {
+  FIELD_CELLS,
   FIELD_SECTORS,
   SIDES,
+  cellsOf,
   VISUAL_PARTS,
-  type FieldSector,
+  type FieldCell,
+  type FieldRegion,
   type FieldState,
   type Severity,
   type Side,
@@ -48,7 +51,7 @@ export function mapVision(kb: Kb, regions: readonly VisionRegion[]): VisionMap {
 
 export type VisionFindings = {
   /** Each eye's field, sector by sector. */
-  readonly fields: Readonly<Record<Side, Readonly<Record<FieldSector, FieldState>>>>;
+  readonly fields: Readonly<Record<Side, Readonly<Record<FieldRegion, FieldState>>>>;
   /** A relative afferent pupillary defect, by side. */
   readonly rapd: Readonly<Record<Side, SignState>>;
 };
@@ -57,26 +60,33 @@ const opposite = (s: Side): Side => (s === 'L' ? 'R' : 'L');
 const CENTRAL: Readonly<Record<string, Side>> = { central_left: 'L', central_right: 'R' };
 
 /** The side of space a sector of one eye's field lies on: temporal is the eye's own side. */
-export function sideOfSector(eye: Side, sector: FieldSector): Side {
+export function sideOfSector(eye: Side, sector: FieldRegion): Side {
   const central = CENTRAL[sector];
   if (central) return central;
   return sector.startsWith('temporal') ? eye : opposite(eye);
 }
-const verticalOf = (sector: FieldSector): 'upper' | 'lower' | null =>
-  sector.endsWith('_superior') ? 'upper' : sector.endsWith('_inferior') ? 'lower' : null;
+export const verticalOf = (sector: FieldRegion): 'upper' | 'lower' | null =>
+  sector.includes('_superior') ? 'upper' : sector.includes('_inferior') ? 'lower' : null;
+/** P28: which band of a quadrant a cell lies in; null for the centre. */
+export const bandOf = (cell: FieldCell): 'horizontal' | 'vertical' | null =>
+  cell.endsWith('_horizontal') ? 'horizontal' : cell.endsWith('_vertical') ? 'vertical' : null;
+/** P28 (D149): a coarse sector read from its cells — lost or normal only when all agree. */
+export const combineCells = (states: readonly FieldState[]): FieldState =>
+  states.every((x) => x === 'lost') ? 'lost' : states.every((x) => x === 'normal') ? 'normal' : 'indeterminate';
 
 const worse = (a: Damage, b: Damage): Damage => (a > b ? a : b);
 
 export function visionFindings(kb: Kb, map: VisionMap): VisionFindings {
-  const fields = {} as Record<Side, Record<FieldSector, FieldState>>;
+  const fields = {} as Record<Side, Record<FieldRegion, FieldState>>;
   const rapd: Record<Side, SignState> = { L: 'absent', R: 'absent' };
   const open: Record<Side, boolean> = { L: false, R: false };
 
   for (const eye of SIDES) {
-    fields[eye] = {} as Record<FieldSector, FieldState>;
-    for (const sector of FIELD_SECTORS) {
+    fields[eye] = {} as Record<FieldRegion, FieldState>;
+    for (const sector of FIELD_CELLS) {
       const at = sideOfSector(eye, sector);
       const vertical = verticalOf(sector);
+      const band = bandOf(sector);
       let whole: Damage = 0;
       const halves: Record<'upper' | 'lower', Damage> = { upper: 0, lower: 0 };
       for (const part of VISUAL_PARTS) {
@@ -89,7 +99,8 @@ export function visionFindings(kb: Kb, map: VisionMap): VisionFindings {
             row.field === 'whole' ? true : row.field === 'temporal' ? at === eye : at === opposite(partSide);
           if (!serves) continue;
           if (vertical) {
-            if (row.quadrants === 'both' || row.quadrants === vertical) whole = worse(whole, d);
+            const inBand = row.band === undefined || row.band === band;
+            if (inBand && (row.quadrants === 'both' || row.quadrants === vertical)) whole = worse(whole, d);
             continue;
           }
           // The centre of a half-field.
@@ -104,6 +115,8 @@ export function visionFindings(kb: Kb, map: VisionMap): VisionFindings {
       fields[eye][sector] =
         whole === 2 || both === 2 ? 'lost' : whole === 1 || any > 0 ? 'indeterminate' : 'normal';
     }
+    // The coarse quadrants, from their two cells (D149); the centre's halves are cells already.
+    for (const sector of FIELD_SECTORS) fields[eye][sector] = combineCells(cellsOf(sector).map((c) => fields[eye][c]));
   }
 
   for (const part of VISUAL_PARTS) {

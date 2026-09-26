@@ -17,7 +17,7 @@ import {
   type CranialSign,
   type LanguageSign,
   type DorsalMidbrainSign,
-  type FieldSector,
+  type FieldRegion,
   VISUAL_PARTS,
   type VisualPart,
   type FaceWeaknessObservation,
@@ -69,7 +69,7 @@ export type Observation =
   /** P13: a sign of both eyes together. */
   | { readonly kind: 'eyes'; readonly sign: DorsalMidbrainSign; readonly value: SignObservation }
   /** P8: one sector of one eye's visual field, and the relative afferent pupillary defect. */
-  | { readonly kind: 'field'; readonly eye: Side; readonly sector: FieldSector; readonly value: SensoryObservation }
+  | { readonly kind: 'field'; readonly eye: Side; readonly sector: FieldRegion; readonly value: SensoryObservation }
   | { readonly kind: 'rapd'; readonly side: Side; readonly value: SignObservation }
   /** P10: one facet of language (about the patient, not a side), and neglect of one side of space. */
   | { readonly kind: 'language'; readonly sign: LanguageSign; readonly value: SignObservation }
@@ -545,6 +545,8 @@ export const SITE_NAME: Record<Place, string> = {
   pca_occipital: 'occipital cortex (posterior cerebral artery), pole spared',
   pca_bilateral: 'occipital lobes on both sides (both posterior cerebral arteries), poles spared',
   lgn: 'lateral geniculate nucleus',
+  lgn_crest: 'lateral geniculate nucleus, dorsal crest (lateral posterior choroidal artery)',
+  lgn_horns: 'lateral geniculate nucleus, horns (anterior choroidal artery)',
   occipital_cortex: 'whole occipital cortex',
   lateral_medullary: 'lateral medulla',
   medial_medullary: 'medial medulla',
@@ -616,6 +618,8 @@ const PART_TEXT: Record<VisualPart, string> = {
   chiasm: 'chiasm',
   optic_tract: 'optic tract',
   lgn: 'lateral geniculate nucleus',
+  lgn_crest: 'dorsal crest of the lateral geniculate nucleus',
+  lgn_horns: 'horns of the lateral geniculate nucleus',
   meyer_loop: 'Meyer loop',
   parietal_radiation: 'parietal optic radiation',
   calcarine_lower: 'calcarine cortex below the fissure',
@@ -733,10 +737,12 @@ function muscleReason(map: LesionMap, kb: Kb, pmap: PlexusMap, side: Side, muscl
 }
 
 /** The parts of the visual pathway a lesion cuts that carry this sector of this eye's field. */
-function visionCuts(kb: Kb, vmap: VisionMap, eye: Side, sector: FieldSector): string[] {
+function visionCuts(kb: Kb, vmap: VisionMap, eye: Side, sector: FieldRegion): string[] {
   const out = new Set<string>();
   const at = sideOfSector(eye, sector);
-  const vertical = sector.endsWith('_superior') ? 'upper' : sector.endsWith('_inferior') ? 'lower' : null;
+  const vertical = sector.includes('_superior') ? 'upper' : sector.includes('_inferior') ? 'lower' : null;
+  // P28: a cell names its band; a coarse quadrant spans both.
+  const band = sector.endsWith('_horizontal') ? 'horizontal' : sector.endsWith('_vertical') ? 'vertical' : null;
   for (const part of VISUAL_PARTS) {
     const row = kb.vision.parts[part];
     for (const side of SIDES) {
@@ -745,7 +751,7 @@ function visionCuts(kb: Kb, vmap: VisionMap, eye: Side, sector: FieldSector): st
       const serves = row.field === 'whole' ? true : row.field === 'temporal' ? at === eye : at === (side === 'L' ? 'R' : 'L');
       if (!serves) continue;
       const carries = vertical
-        ? row.quadrants === 'both' || row.quadrants === vertical
+        ? (row.quadrants === 'both' || row.quadrants === vertical) && (row.band === undefined || band === null || row.band === band)
         : row.centre !== 'none';
       if (carries) out.add(`the ${row.eye === 'same' || kb.vision.places.chiasm.parts.includes(part) ? '' : `${SIDE[side]} `}${PART_TEXT[part]} is cut`.replace('the  ', 'the '));
     }

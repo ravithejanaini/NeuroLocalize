@@ -565,6 +565,17 @@ situation the freeze exists to catch.
   area — and each asserting the right half of the tongue weak and the left spared. Added after the
   mutation run found six mutants of the newly sourced route surviving (D148).
 
+## A34 — The sectoranopias (P28, 2026-09-26)
+
+- **Changed:** two new files. `sectoranopia.ts` holds two cases on the finer chart: the dorsal
+  crest of the left nucleus (a right horizontal wedge) and its horns (a right quadruple
+  sectoranopia, the centre spared). `reverse-sectoranopia.ts` holds one examination for each shape.
+  `types.ts` and `reverse-vision.ts` let a field finding name a fine cell as well as a coarse sector.
+  No earlier case or examination changed, and every earlier coarse name keeps its meaning (D149).
+- **How circularity was avoided:** every assertion is quoted from S160–S162, read into
+  `docs/P28-analysis.md` before any code; all four were run red against the P27 engine. The centre
+  in the wedge and incongruity are never asserted (C71, C72).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -573,7 +584,7 @@ situation the freeze exists to catch.
 | `boundaries.ts` | A2 |
 | `index.ts` | A2 (exports the boundary cases) |
 | `reverse.ts` | A3 |
-| `types.ts` | A4, A6, A7, A11, A14, A15, A17, A19, A20 |
+| `types.ts` | A4, A6, A7, A11, A14, A15, A17, A19, A20, A34 |
 | `plexus.ts` | A4, A5, A6, A9, A30 |
 | `reverse-plexus.ts` | A4, A5 |
 | `brain.ts` | A7, A8, A9, A13, A14, A16, A17, A18, A32 |
@@ -581,7 +592,7 @@ situation the freeze exists to catch.
 | `leg.ts` | A10, A23, A24 |
 | `reverse-leg.ts` | A10, A31 |
 | `vision.ts` | A11 |
-| `reverse-vision.ts` | A11, A14, A27 |
+| `reverse-vision.ts` | A11, A14, A27, A34 |
 | `language.ts` | A14, A20 |
 | `reverse-language.ts` | A14 |
 | `cerebellum.ts` | A15 |
@@ -611,5 +622,7 @@ situation the freeze exists to catch.
 | `geniculate.ts` | A27 |
 | `reverse-geniculate.ts` | A27 |
 | `answered.ts` | A29, A30, A31, A33 |
+| `sectoranopia.ts` | A34 |
+| `reverse-sectoranopia.ts` | A34 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

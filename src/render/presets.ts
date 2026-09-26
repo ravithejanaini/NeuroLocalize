@@ -159,6 +159,9 @@ export const PRESETS: readonly Preset[] = [
   { id: 'optic-tract', kind: 'vision', label: 'Optic tract', pattern: 'Hemianopia with a pupil defect', place: 'optic_tract' },
   // P24: the same field, no pupil defect.
   { id: 'lgn', kind: 'vision', label: 'Lateral geniculate nucleus', pattern: 'Hemianopia, pupils equal', place: 'lgn' },
+  // P28: the nucleus's two arteries, two sectoranopias.
+  { id: 'lgn-crest', kind: 'vision', label: 'LGN, dorsal crest', pattern: 'Horizontal wedge (lateral posterior choroidal)', place: 'lgn_crest' },
+  { id: 'lgn-horns', kind: 'vision', label: 'LGN, horns', pattern: 'Quadruple sectoranopia (anterior choroidal)', place: 'lgn_horns' },
   { id: 'meyer-loop', kind: 'vision', label: 'Meyer loop (temporal)', pattern: 'Superior quadrantanopia', place: 'meyer_loop' },
   { id: 'parietal-radiation', kind: 'vision', label: 'Parietal radiation', pattern: 'Inferior quadrantanopia', place: 'parietal_radiation' },
   { id: 'pca-occipital', kind: 'vision', label: 'Occipital cortex (PCA)', pattern: 'Hemianopia, macula spared', place: 'pca_occipital' },

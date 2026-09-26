@@ -1688,7 +1688,7 @@ source of the nucleus's row.
 ### Reviewer questions
 
 **R55** — C69: should the field chart be refined enough to show the nucleus's sector-shaped
-defects, from the anterior and the lateral posterior choroidal arteries?
+defects, from the anterior and the lateral posterior choroidal arteries? **Answered, 2026-09-26 (D149, D150): the chart now shows both sectoranopias.**
 
 ## Reviewer questions answered from sources
 
@@ -1848,3 +1848,56 @@ lesioned a single part of the route. As an unsourced row it had left 21. Four si
 (`answered.ts`, A33) pin it: the pontine base alone (stated, S157's paramedian pontine infarction),
 the peduncle, the capsule's genu and the face area of the motor cortex; applied directly, each of
 the six now fails.
+
+## P28 — a finer field chart, and the sectoranopias
+
+The analysis written before any P28 code is `docs/P28-analysis.md`; S160–S162 were read for it on
+2026-09-26. Run against the P27 engine first, the two frozen cases failed (the engine refused the
+new parts) and so did the two examinations (no place took a band of the field).
+
+### Source conflicts and limits
+
+**C71 — The wedge and the centre.** S162's hemi-hourglass narrows toward fixation without saying
+whether fixation itself is lost. The model leaves the centre intact for the dorsal crest and
+asserts nothing about it.
+
+**C72 — Incongruity.** S160's patient had the larger defect in one eye, and S162 gives sectoranopias
+as congruous or incongruous. The model draws both eyes alike, as it does everywhere (C26).
+
+**C73 — The occipital pole is still open.** S162 reports a pole infarct giving "a partial congruous
+right inferior field defect" and that "A small occipital pole embolus can cause a complete
+hemianopia"; neither settles what the pole alone does to the periphery (D129).
+
+### Decisions
+
+**D149 — Ten cells an eye; the six old names keep their meaning.** Each quadrant is split at 45°
+into the half beside the horizontal meridian and the half beside the vertical; the centre stays
+split at fixation. The engine computes the ten cells and reads each quadrant from its two — lost or
+normal only when both agree, unsettled otherwise. Every earlier lesion takes whole quadrants, so no
+earlier case or examination changed, and none of the 70 earlier examination leaders moved. The
+examination and the chart offer the cells; an observation of a whole quadrant is still read.
+
+**D150 — A visual part may take one band.** Beside `quadrants`, a part may declare `band`:
+horizontal or vertical. The dorsal crest of the nucleus takes the horizontal band of the opposite
+half-field — the wedge (S160, S162); its horns take the vertical band — the quadruple
+sectoranopia, sparing "the horizontal macular zone" (S160). Neither takes the centre or gives a
+pupillary defect. Each is a place of its own; the whole nucleus (P24) remains. A new test checks
+that each drawn cell touches its own meridian and lies on the right side and at the right height,
+because the 45° split is easy to draw backwards. The mutation run has a pool for `band`.
+
+**D151 — The panel lists cells only where a quadrant is split.** A quadrant whose two cells agree
+in both eyes is listed as before; one that is half lost is listed by its cells, so a sectoranopia
+does not read as "uncertain" quadrants.
+
+**D152 — The P28 mutation run: four survivors, none a gap.** 6251 mutants, 97.1% raw; sourced rows
+97.3%. The survivors on the new rows are: the crest's centre (`none` → `with`, `half`, `only`),
+left open on purpose because no source says whether the wedge takes fixation (C71, R56); and the
+horns' centre `none` → `half`, which the engine cannot express — a half centre follows a single
+quadrant pair, and the horns take both, so the mutant draws the same field. The whole nucleus's
+`with` → `only` is the same kind: the engine reads the two alike for the centre, and the whole
+nucleus's periphery is fixed by its quadrants. The earlier survivors are the ones already recorded
+(D129, D140, D143).
+
+### Reviewer questions
+
+**R56** — C71: does a horizontal wedge sectoranopia take fixation, or spare it?

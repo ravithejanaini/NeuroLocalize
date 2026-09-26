@@ -63,6 +63,36 @@ export const VISION: Vision = {
       centre: 'with',
       rapd: 'none',
     },
+    lgn_crest: {
+      meta: {
+        id: 'vision.lgn-crest',
+        claim: 'The dorsal crest of the lateral geniculate nucleus, supplied by the lateral posterior choroidal artery, carries the band of the opposite half-field beside the horizontal meridian: a lesion gives a horizontal wedge-shaped homonymous sectoranopia, a hemi-hourglass in the horizontal midline, with no afferent pupillary defect (C71, C72).',
+        sources: ['S160', 'S162', 'S161'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      eye: 'both',
+      field: 'opposite',
+      quadrants: 'both',
+      band: 'horizontal',
+      centre: 'none',
+      rapd: 'none',
+    },
+    lgn_horns: {
+      meta: {
+        id: 'vision.lgn-horns',
+        claim: 'The medial and lateral horns of the lateral geniculate nucleus, supplied by the distal anterior choroidal artery, carry the bands of the opposite half-field beside the vertical meridian: a lesion gives a quadruple sectoranopia — superior and inferior defects sparing the horizontal macular zone — with no afferent pupillary defect (C72).',
+        sources: ['S160', 'S161'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      eye: 'both',
+      field: 'opposite',
+      quadrants: 'both',
+      band: 'vertical',
+      centre: 'none',
+      rapd: 'none',
+    },
     meyer_loop: {
       meta: {
         id: 'vision.meyer-loop',
@@ -228,6 +258,26 @@ export const VISION: Vision = {
         bookRef: p,
       },
       parts: ['lgn'],
+    },
+    lgn_crest: {
+      meta: {
+        id: 'vision-place.lgn-crest',
+        claim: 'The dorsal crest of the lateral geniculate nucleus, the lateral posterior choroidal artery’s territory: a homonymous horizontal wedge.',
+        sources: ['S160', 'S162'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      parts: ['lgn_crest'],
+    },
+    lgn_horns: {
+      meta: {
+        id: 'vision-place.lgn-horns',
+        claim: 'The horns of the lateral geniculate nucleus, the distal anterior choroidal artery’s territory: a homonymous quadruple sectoranopia.',
+        sources: ['S160', 'S161'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      parts: ['lgn_horns'],
     },
   },
 
