@@ -164,6 +164,9 @@ export const PRESETS: readonly Preset[] = [
   // P31.
   { id: 'eighth-nerve', kind: 'brain', label: 'Vestibulocochlear nerve', pattern: 'One ear deaf, face spared', territory: 'eighth_nerve' },
   { id: 'cp-angle', kind: 'brain', label: 'Cerebellopontine angle', pattern: 'Deaf, numb face, clumsy arm; face moves', territory: 'cerebellopontine_angle' },
+  // P32.
+  { id: 'orbital-fissure', kind: 'brain', label: 'Superior orbital fissure', pattern: 'III, IV, VI, forehead; the eye sees', territory: 'superior_orbital_fissure' },
+  { id: 'orbital-apex', kind: 'brain', label: 'Orbital apex', pattern: 'The fissure, and the eye blind', territory: 'orbital_apex' },
   // P8: the visual pathway.
   { id: 'optic-nerve', kind: 'vision', label: 'Optic nerve', pattern: 'One eye blind, pupil defect', place: 'optic_nerve' },
   { id: 'chiasm', kind: 'vision', label: 'Optic chiasm', pattern: 'Bitemporal hemianopia', place: 'chiasm' },

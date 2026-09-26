@@ -587,6 +587,9 @@ export const SITE_NAME: Record<Place, string> = {
   // P31.
   eighth_nerve: 'vestibulocochlear nerve (internal acoustic canal)',
   cerebellopontine_angle: 'cerebellopontine angle (VIII, the trigeminal root and the cerebellum)',
+  // P32.
+  superior_orbital_fissure: 'superior orbital fissure (III, IV, VI and V1)',
+  orbital_apex: 'orbital apex (III, IV, VI, V1 and the optic nerve)',
   subthalamic_nucleus: 'subthalamic nucleus',
   frontal_eye_field: 'frontal eye field (Brodmann area 8)',
   borderzone_anterior: 'anterior border zone (ACA–MCA), around Broca area',
@@ -717,6 +720,7 @@ const PART_NAME: Record<BrainCompartment, string> = {
   carotid_sympathetic: 'sympathetic plexus on the carotid, in the cavernous sinus',
   vestibulocochlear_nerve: 'vestibulocochlear nerve',
   trigeminal_root: 'trigeminal root at the cerebellopontine angle',
+  ophthalmic_orbit: 'ophthalmic division in the superior orbital fissure',
 };
 const LEVEL_NAME: Record<BrainLevel, string> = {
   cortex: 'cortex',
@@ -805,15 +809,19 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
     });
   switch (o.kind) {
     case 'face_sensation': {
-      const c = faceCuts([b.faceNucleus, b.faceAscending, b.faceDivisions], o.side);
+      const c = faceCuts([b.faceNucleus, b.faceAscending, ...b.faceDivisions], o.side);
       return c.length ? c.join('; ') : 'the trigeminal routes are intact';
     }
     case 'face_division': {
-      // P30: the cavernous sinus carries V1 and V2 only; every other route carries all three.
-      const some = b.faceDivisions.divisions.includes(o.division) ? faceCuts([b.faceDivisions], o.side) : [];
-      const c = [...faceCuts([b.faceNucleus, b.faceAscending], o.side), ...some];
+      // P30, P32: the sinus carries V1 and V2, the fissure V1 alone; every other route carries all three.
+      const carrying = b.faceDivisions.filter((r) => r.divisions.includes(o.division));
+      const c = [...faceCuts([b.faceNucleus, b.faceAscending, ...carrying], o.side)];
       if (c.length) return c.join('; ');
-      if (faceCuts([b.faceDivisions], o.side).length) return `${o.division} leaves the skull by the foramen ovale, outside the cavernous sinus`;
+      const other = b.faceDivisions.filter((r) => !r.divisions.includes(o.division));
+      if (faceCuts(other, o.side).length) {
+        const exit = o.division === 'V3' ? 'the foramen ovale' : o.division === 'V2' ? 'the foramen rotundum' : 'the superior orbital fissure';
+        return `${o.division} leaves the skull by ${exit}, outside the damaged part`;
+      }
       return 'the trigeminal routes are intact';
     }
     case 'face_weakness': {

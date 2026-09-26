@@ -310,6 +310,8 @@ export const RENDER: RenderKb = {
       // the lateral wall, the sympathetic plexus on the carotid medial to them (S122, S165).
       'midbrain:ophthalmic_maxillary': [-1.45, 0.3, -1.4],
       'midbrain:carotid_sympathetic': [-1.1, 0.35, -1.5],
+      // P32: the fissure, forward of the sinus towards the orbit (S171).
+      'midbrain:ophthalmic_orbit': [-1.3, 0.6, -2.0],
       'midbrain:medial_lemniscus': [-0.6, 0, 0.0],
       'midbrain:spinothalamic': [-0.76, 0.1, 0.2],
       'midbrain:sympathetic': [-0.66, -0.2, 0.32],

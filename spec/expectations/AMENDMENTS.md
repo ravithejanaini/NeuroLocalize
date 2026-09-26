@@ -620,6 +620,14 @@ situation the freeze exists to catch.
   engine. The face's strength at the angle is never asserted (C81), and vertigo only as present or
   unsettled (C80).
 
+## A38 — The superior orbital fissure and the orbital apex (P32, 2026-09-27)
+
+- **Changed:** two new files. `orbit.ts` holds the left superior orbital fissure and the left orbital
+  apex; `reverse-orbit.ts` holds one examination for each. No earlier case or examination changed.
+- **How circularity was avoided:** every assertion is quoted from S171, with the foramina from S122,
+  read into `docs/P32-analysis.md` before any code; all four were run red against the P31 engine. A
+  Horner syndrome is never asserted at the fissure or the apex (C84).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -674,5 +682,7 @@ situation the freeze exists to catch.
 | `reverse-cavernous.ts` | A36, A37 |
 | `angle.ts` | A37 |
 | `reverse-angle.ts` | A37 |
+| `orbit.ts` | A38 |
+| `reverse-orbit.ts` | A38 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

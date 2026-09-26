@@ -353,6 +353,8 @@ export const BRAIN_COMPARTMENTS = [
   // P31: the eighth nerve, and the trigeminal root before the ganglion, at the angle.
   'vestibulocochlear_nerve',
   'trigeminal_root',
+  // P32: the ophthalmic division alone, in the superior orbital fissure.
+  'ophthalmic_orbit',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 /**
@@ -369,6 +371,7 @@ export const OUTSIDE_BRAINSTEM: readonly BrainCompartment[] = [
   'carotid_sympathetic',
   'vestibulocochlear_nerve',
   'trigeminal_root',
+  'ophthalmic_orbit',
 ];
 
 /** P30: the three divisions of the trigeminal nerve, by the skin each feels — forehead, cheek, jaw. */
@@ -469,6 +472,9 @@ export const TERRITORIES = [
   // P31.
   'eighth_nerve',
   'cerebellopontine_angle',
+  // P32.
+  'superior_orbital_fissure',
+  'orbital_apex',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

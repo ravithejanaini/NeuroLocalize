@@ -2077,3 +2077,37 @@ isolated fourth nerve palsy's tie, now nerve first — which its expectation del
 
 **R59** — C80: after a destructive lesion of one eighth nerve, should the model teach vertigo, or
 imbalance, or neither once compensated?
+
+## P32 — The superior orbital fissure and the orbital apex
+
+The analysis written before any P32 code is `docs/P32-analysis.md`; S171 was read for it on
+2026-09-27. Run against the P31 engine first, both new cases and both new examinations failed.
+
+### Source conflicts and limits
+
+**C84 — The sympathetic fibres at the apex.** S171 puts postganglionic sympathetic fibres in the
+optic canal and lists "anisocoria due to the involvement of the pupillary fibers" at the apex, yet
+names the oculosympathetic fibres as what the cavernous sinus adds. Neither the fissure nor the apex
+takes the sympathetic route, and no case asserts a Horner syndrome there either way.
+
+**C85 — A continuum.** S171: the three syndromes "may represent a continuum of the same spectrum".
+The model draws three whole places.
+
+**C86 — Proptosis and pain** are not modelled.
+
+### Decisions
+
+**D169 — V1 alone in the fissure.** The route to the face by division is now a list of rows: V1 and
+V2 in the cavernous sinus (P30), and V1 alone in the superior orbital fissure, since V2 "bypasses the
+superior orbital fissure" (S122). The working says which foramen a spared division leaves by.
+
+**D170 — The fissure and the apex are places.** The fissure takes the third, fourth and sixth nerves
+and V1; the apex takes the same and the optic nerve of that eye (S171). With the cavernous sinus the
+three syndromes differ exactly where S171 separates them — the cheek only in the sinus, the eye's
+vision and a relative afferent pupillary defect only at the apex — and the examinations for each
+lead to its own place. None of the 81 earlier examination leaders moved.
+
+### Reviewer questions
+
+**R60** — C84: should the orbital apex be taught with a Horner syndrome, anisocoria of another
+cause, or no pupil sign?

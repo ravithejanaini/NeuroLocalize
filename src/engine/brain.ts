@@ -83,7 +83,7 @@ export function validateBrain(kb: Kb): void {
     b.ballismus.steps,
     b.trochlear.steps,
     b.trochlearNerve.steps,
-    b.faceDivisions.steps,
+    ...b.faceDivisions.map((r) => r.steps),
     b.vertigoNerve.steps,
     b.jaw.steps,
     b.upgaze.steps,
@@ -240,11 +240,13 @@ export function brainFindings(kb: Kb, map: BrainMap, timepoint: Timepoint = 'chr
   for (const x of SIDES) {
     // Every route to the face carries all three divisions; the sinus carries V1 and V2 (P30).
     const whole = worst([routeDamage(map, b.faceNucleus, x, 'face'), routeDamage(map, b.faceAscending, x, 'face')]);
-    const some = routeDamage(map, b.faceDivisions, x, 'face');
     const divisions = {} as Record<TrigeminalDivision, SensoryState>;
-    for (const d of TRIGEMINAL_DIVISIONS) divisions[d] = STATE[b.faceDivisions.divisions.includes(d) ? worst([whole, some]) : whole];
+    for (const d of TRIGEMINAL_DIVISIONS) {
+      const some = b.faceDivisions.filter((r) => r.divisions.includes(d)).map((r) => routeDamage(map, r, x, 'face'));
+      divisions[d] = STATE[worst([whole, ...some])];
+    }
     faceDivision[x] = divisions;
-    faceSensation[x] = STATE[worst([whole, some])];
+    faceSensation[x] = STATE[worst([whole, ...b.faceDivisions.map((r) => routeDamage(map, r, x, 'face'))])];
     faceWeak[x] = faceWeakness(kb, map, x);
     const signs = {} as Record<CranialSign, SignState>;
     for (const sign of CRANIAL_SIGNS) {

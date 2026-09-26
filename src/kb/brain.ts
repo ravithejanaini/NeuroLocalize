@@ -293,18 +293,32 @@ export const BRAIN: Brain = {
     ],
     serves: 'ipsilateral',
   },
-  faceDivisions: {
-    meta: {
-      id: 'brain.face-divisions',
-      claim: 'The ophthalmic (V1) and maxillary (V2) divisions run in the lateral wall of the cavernous sinus, so a lesion there loses the forehead and the cheek on its own side; the mandibular division (V3) leaves by the foramen ovale and is not in the sinus, so the jaw is spared. Every other route to the face carries all three divisions.',
-      sources: ['S122', 'S165', 'S166'],
-      tier: 'T1',
-      bookRef: p,
+  faceDivisions: [
+    {
+      meta: {
+        id: 'brain.face-divisions',
+        claim: 'The ophthalmic (V1) and maxillary (V2) divisions run in the lateral wall of the cavernous sinus, so a lesion there loses the forehead and the cheek on its own side; the mandibular division (V3) leaves by the foramen ovale and is not in the sinus, so the jaw is spared. The nuclei and the routes above them carry all three divisions.',
+        sources: ['S122', 'S165', 'S166'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      steps: [{ level: 'midbrain', compartment: 'ophthalmic_maxillary' }],
+      serves: 'ipsilateral',
+      divisions: ['V1', 'V2'],
     },
-    steps: [{ level: 'midbrain', compartment: 'ophthalmic_maxillary' }],
-    serves: 'ipsilateral',
-    divisions: ['V1', 'V2'],
-  },
+    {
+      meta: {
+        id: 'brain.face-division-orbit',
+        claim: 'The ophthalmic division (V1) alone enters the orbit through the superior orbital fissure with the third, fourth and sixth nerves; the maxillary division bypasses the fissure through the foramen rotundum. A lesion there loses the forehead and spares the cheek and the jaw (P32).',
+        sources: ['S171', 'S122'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      steps: [{ level: 'midbrain', compartment: 'ophthalmic_orbit' }],
+      serves: 'ipsilateral',
+      divisions: ['V1'],
+    },
+  ],
   ataxia: {
     meta: {
       id: 'brain.ataxia',
@@ -538,8 +552,8 @@ export const BRAIN: Brain = {
   partsAt: {
     meta: {
       id: 'brain.parts-at',
-      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei; and, outside the brainstem, the oculomotor and trochlear nerves at the midbrain, the abducens and facial nerves at the pons and the hypoglossal nerve at the medulla (P29), with the cavernous sinus — the ophthalmic and maxillary divisions and the carotid sympathetic plexus — held at the midbrain (P30), and the vestibulocochlear nerve and trigeminal root at the cerebellopontine angle, held at the pons (P31).',
-      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125', 'S130', 'S61', 'S62', 'S63', 'S51', 'S165', 'S169'],
+      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei; and, outside the brainstem, the oculomotor and trochlear nerves at the midbrain, the abducens and facial nerves at the pons and the hypoglossal nerve at the medulla (P29), with the cavernous sinus — the ophthalmic and maxillary divisions and the carotid sympathetic plexus — held at the midbrain (P30), and the vestibulocochlear nerve and trigeminal root at the cerebellopontine angle, held at the pons (P31), and the ophthalmic division in the superior orbital fissure, held at the midbrain (P32).',
+      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125', 'S130', 'S61', 'S62', 'S63', 'S51', 'S165', 'S169', 'S171'],
       tier: 'T1',
       bookRef: p,
     },
@@ -547,7 +561,7 @@ export const BRAIN: Brain = {
       cortex: ['motor_cortex', 'sensory_cortex', 'inferior_frontal', 'superior_temporal', 'inferior_parietal', 'frontal_eye_field', 'anterior_borderzone', 'posterior_borderzone'],
       capsule: ['capsule_genu', 'capsule_posterior_motor', 'capsule_posterior_sensory'],
       thalamus: ['vpl', 'vpm', 'subthalamic'],
-      midbrain: ['peduncle', 'oculomotor', 'oculomotor_nucleus', 'mlf', 'pretectum', 'trochlear_nucleus', 'medial_lemniscus', 'spinothalamic', 'sympathetic', 'oculomotor_nerve', 'trochlear_nerve', 'ophthalmic_maxillary', 'carotid_sympathetic'],
+      midbrain: ['peduncle', 'oculomotor', 'oculomotor_nucleus', 'mlf', 'pretectum', 'trochlear_nucleus', 'medial_lemniscus', 'spinothalamic', 'sympathetic', 'oculomotor_nerve', 'trochlear_nerve', 'ophthalmic_maxillary', 'carotid_sympathetic', 'ophthalmic_orbit'],
       pons: [
         'basis',
         'facial',
@@ -1055,6 +1069,32 @@ export const BRAIN: Brain = {
       level: 'pons',
       compartments: ['vestibulocochlear_nerve', 'trigeminal_root'],
       also: [{ level: 'cerebellum', compartments: ['cerebellar_hemisphere'] }],
+    },
+    // P32: the fissure, and the apex — the fissure and the optic canal together.
+    superior_orbital_fissure: {
+      meta: {
+        id: 'territory.superior-orbital-fissure',
+        claim: 'The superior orbital fissure carries the third, fourth and sixth nerves and the ophthalmic division into the orbit; a lesion there takes all four and spares the optic nerve.',
+        sources: ['S171', 'S70'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'midbrain',
+      compartments: ['oculomotor_nerve', 'trochlear_nerve', 'ophthalmic_orbit'],
+      also: [{ level: 'pons', compartments: ['abducens_nerve'] }],
+    },
+    orbital_apex: {
+      meta: {
+        id: 'territory.orbital-apex',
+        claim: 'The orbital apex is the superior orbital fissure and the optic canal together: the third, fourth and sixth nerves, the ophthalmic division and the optic nerve — a frozen eye that is also blind, with a relative afferent pupillary defect.',
+        sources: ['S171', 'S91'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'midbrain',
+      compartments: ['oculomotor_nerve', 'trochlear_nerve', 'ophthalmic_orbit'],
+      also: [{ level: 'pons', compartments: ['abducens_nerve'] }],
+      vision: ['optic_nerve'],
     },
   },
 };

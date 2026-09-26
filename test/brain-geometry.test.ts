@@ -152,6 +152,8 @@ describe('the drawn brain keeps the sourced relations', () => {
       // P31: at the cerebellopontine angle.
       ['pons', 'vestibulocochlear_nerve'],
       ['pons', 'trigeminal_root'],
+      // P32: the fissure.
+      ['midbrain', 'ophthalmic_orbit'],
     ] as const;
     for (const [level, c] of nerves) {
       const r = L.levels[level].radius;

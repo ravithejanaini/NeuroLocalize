@@ -17,7 +17,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S116', 'S117', 'S118', 'S119',
   'S120', 'S121', 'S122', 'S123', 'S124',
   'S125', 'S126', 'S127',
-  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137', 'S138', 'S139', 'S140', 'S141', 'S142', 'S143', 'S144', 'S145', 'S146', 'S147', 'S148', 'S149', 'S150', 'S151', 'S152', 'S153', 'S154', 'S155', 'S156', 'S157', 'S158', 'S159', 'S160', 'S161', 'S162', 'S163', 'S164', 'S165', 'S166', 'S167', 'S168', 'S169', 'S170',
+  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137', 'S138', 'S139', 'S140', 'S141', 'S142', 'S143', 'S144', 'S145', 'S146', 'S147', 'S148', 'S149', 'S150', 'S151', 'S152', 'S153', 'S154', 'S155', 'S156', 'S157', 'S158', 'S159', 'S160', 'S161', 'S162', 'S163', 'S164', 'S165', 'S166', 'S167', 'S168', 'S169', 'S170', 'S171',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -193,4 +193,5 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S168', title: 'StatPearls — Vestibular Schwannoma', url: 'https://www.ncbi.nlm.nih.gov/books/NBK562312/' },
   { id: 'S169', title: 'StatPearls — Cerebellopontine Angle Cancer', url: 'https://www.ncbi.nlm.nih.gov/books/NBK559116/' },
   { id: 'S170', title: 'StatPearls — Neuroanatomy, Cranial Nerve 8 (Vestibulocochlear)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537359/' },
+  { id: 'S171', title: 'StatPearls — Orbital Apex Syndrome', url: 'https://www.ncbi.nlm.nih.gov/books/NBK592386/' },
 ];
