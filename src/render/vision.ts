@@ -67,7 +67,8 @@ export function fieldChart(eye: Side, state: (sector: FieldCell) => FieldState, 
     const press = entered ? ` data-slot="${key}" tabindex="0" role="button"` : '';
     return `<path class="fsec ${cls}"${press} d="${sectorPath(eye, sector)}"><title>${title}</title></path>`;
   }).join('');
-  const nose = eye === 'L' ? `<text class="fs-lbl" x="96" y="53" text-anchor="end">nose</text>` : `<text class="fs-lbl" x="4" y="53">nose</text>`;
+  // Below the circle on the nasal side, so it never sits over a cell (P28).
+  const nose = eye === 'L' ? `<text class="fs-lbl" x="98" y="102" text-anchor="end">nose →</text>` : `<text class="fs-lbl" x="2" y="102">← nose</text>`;
   return `<svg viewBox="0 0 100 104" role="img" aria-label="${EYE_WORD[eye]} visual field">
     ${sectors}<circle class="fs-edge" cx="${C}" cy="${C}" r="${R}"/><circle class="fs-edge" cx="${C}" cy="${C}" r="16"/>
     <line class="fs-edge" x1="4" y1="${C}" x2="96" y2="${C}"/><line class="fs-edge" x1="${C}" y1="4" x2="${C}" y2="96"/>

@@ -48,6 +48,16 @@ describe('the visual field chart (P8)', () => {
     }
   });
 
+  it('labels the nose outside the circle, on the nasal side, so it covers no cell', () => {
+    for (const eye of SIDES) {
+      const m = fieldChart(eye, () => 'normal').match(/<text class="fs-lbl" x="([\d.]+)" y="([\d.]+)"[^>]*>[^<]*nose/);
+      assert.ok(m, `${eye}: no nose label`);
+      assert.ok(Number(m[2]) > 96, `${eye}: the nose label is inside the circle`);
+      // Temporal cells are drawn on the viewer's left for the left eye, so its nose is on the right.
+      assert.equal(Number(m[1]) > 50, eye === 'L', `${eye}: the nose label is on the temporal side`);
+    }
+  });
+
   it('takes each sector’s state from the engine, and puts the temporal half away from the nose', () => {
     const tract = at('optic_tract');
     for (const eye of SIDES) {

@@ -1900,4 +1900,10 @@ nucleus's periphery is fixed by its quadrants. The earlier survivors are the one
 
 ### Reviewer questions
 
-**R56** — C71: does a horizontal wedge sectoranopia take fixation, or spare it?
+**R56** — C71: does a horizontal wedge sectoranopia take fixation, or spare it? Searched again on 2026-09-26 in
+the primary literature (Europe PMC, "horizontal sectoranopia"): the four-case series of 1991
+(PMID 1954215), the MR topography of partial geniculate lesions (PMID 14643913) and three later case
+reports (PMID 27928372, 32395157, 32868569) were read as abstracts, since none has open full text;
+none says whether fixation goes. Still open. PMID 1954215 and 32395157 also report the same wedge from
+the optic radiation and the occipital lobe — not modelled, since the model's radiation and cortex
+take whole quadrants.
