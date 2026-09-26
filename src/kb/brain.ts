@@ -124,23 +124,23 @@ export const BRAIN: Brain = {
   facialNucleus: {
     meta: {
       id: 'brain.facial-nucleus',
-      claim: 'A lesion of the facial nucleus or its fascicle in the pons paralyses the whole face on the same side.',
-      sources: ['S51', 'S49', 'S59'],
+      claim: 'A lesion of the facial nucleus or its fascicle in the pons, or of the facial nerve after it leaves the brainstem, paralyses the whole face on the same side, the forehead included (P29).',
+      sources: ['S51', 'S49', 'S59', 'S163'],
       tier: 'T1',
       bookRef: p,
     },
-    steps: [{ level: 'pons', compartment: 'facial' }],
+    steps: [{ level: 'pons', compartment: 'facial' }, { level: 'pons', compartment: 'facial_nerve' }],
     serves: 'ipsilateral',
   },
   hypoglossal: {
     meta: {
       id: 'brain.hypoglossal',
-      claim: 'A lesion of the hypoglossal nucleus or fascicles in the medulla weakens the same side of the tongue.',
-      sources: ['S63', 'S48'],
+      claim: 'A lesion of the hypoglossal nucleus or fascicles in the medulla, or of the nerve in the hypoglossal canal, weakens the same side of the tongue, which deviates towards the lesion (P29).',
+      sources: ['S63', 'S48', 'S164'],
       tier: 'T1',
       bookRef: p,
     },
-    steps: [{ level: 'medulla', compartment: 'hypoglossal' }],
+    steps: [{ level: 'medulla', compartment: 'hypoglossal' }, { level: 'medulla', compartment: 'hypoglossal_nerve' }],
     serves: 'ipsilateral',
   },
   ambiguus: {
@@ -157,19 +157,19 @@ export const BRAIN: Brain = {
   oculomotor: {
     meta: {
       id: 'brain.oculomotor',
-      claim: 'A lesion of the oculomotor fascicles or nucleus in the midbrain gives a third nerve palsy on the same side. A nuclear lesion also gives ptosis on both sides or neither (C29) and weakens the opposite superior rectus (P9).',
+      claim: 'A lesion of the oculomotor fascicles or nucleus in the midbrain, or of the nerve on its way to the cavernous sinus beside the posterior communicating artery, gives a third nerve palsy on the same side. A nuclear lesion also gives ptosis on both sides or neither (C29) and weakens the opposite superior rectus (P9).',
       sources: ['S62', 'S50', 'S70'],
       tier: 'T1',
       bookRef: p,
     },
-    steps: [{ level: 'midbrain', compartment: 'oculomotor' }, { level: 'midbrain', compartment: 'oculomotor_nucleus' }],
+    steps: [{ level: 'midbrain', compartment: 'oculomotor' }, { level: 'midbrain', compartment: 'oculomotor_nucleus' }, { level: 'midbrain', compartment: 'oculomotor_nerve' }],
     serves: 'ipsilateral',
   },
   adduction: {
     meta: {
       id: 'brain.adduction',
-      claim: 'The medial longitudinal fasciculus carries the abducens interneurons to the other side’s medial rectus, so a lesion of it loses adduction of the eye on its own side: an internuclear ophthalmoplegia. The third nerve moves the same muscle, so its fascicles and nucleus lose adduction too.',
-      sources: ['S98', 'S61', 'S62'],
+      claim: 'The medial longitudinal fasciculus carries the abducens interneurons to the other side’s medial rectus, so a lesion of it loses adduction of the eye on its own side: an internuclear ophthalmoplegia. The third nerve moves the same muscle, so its fascicles, nucleus and nerve lose adduction too.',
+      sources: ['S98', 'S61', 'S62', 'S70'],
       tier: 'T1',
       bookRef: p,
     },
@@ -178,6 +178,7 @@ export const BRAIN: Brain = {
       { level: 'midbrain', compartment: 'mlf' },
       { level: 'midbrain', compartment: 'oculomotor' },
       { level: 'midbrain', compartment: 'oculomotor_nucleus' },
+      { level: 'midbrain', compartment: 'oculomotor_nerve' },
     ],
     serves: 'ipsilateral',
   },
@@ -206,13 +207,13 @@ export const BRAIN: Brain = {
   ptosis: {
     meta: {
       id: 'brain.ptosis',
-      claim: 'A third nerve palsy from the fascicles droops the lid on its own side. From the nucleus it is left unsettled: one central caudal nucleus serves both lids, so a nuclear lesion gives ptosis on both sides or on neither.',
+      claim: 'A third nerve palsy from the fascicles or the nerve droops the lid on its own side. From the nucleus it is left unsettled: one central caudal nucleus serves both lids, so a nuclear lesion gives ptosis on both sides or on neither.',
       sources: ['S62', 'S70'],
       tier: 'T3',
       bookRef: p,
       conflict: 'C29',
     },
-    steps: [{ level: 'midbrain', compartment: 'oculomotor' }],
+    steps: [{ level: 'midbrain', compartment: 'oculomotor' }, { level: 'midbrain', compartment: 'oculomotor_nerve' }],
     serves: 'ipsilateral',
   },
   ptosisNuclear: {
@@ -230,12 +231,12 @@ export const BRAIN: Brain = {
   elevation: {
     meta: {
       id: 'brain.elevation',
-      claim: 'The superior rectus is weak on the side of an oculomotor fascicle lesion; a nuclear lesion weakens it on both sides, because the superior rectus subnuclei serve the opposite eye.',
-      sources: ['S70'],
+      claim: 'The superior rectus is weak on the side of an oculomotor fascicle or nerve lesion; a nuclear lesion weakens it on both sides, because the superior rectus subnuclei serve the opposite eye.',
+      sources: ['S70', 'S62'],
       tier: 'T2',
       bookRef: p,
     },
-    steps: [{ level: 'midbrain', compartment: 'oculomotor' }, { level: 'midbrain', compartment: 'oculomotor_nucleus' }],
+    steps: [{ level: 'midbrain', compartment: 'oculomotor' }, { level: 'midbrain', compartment: 'oculomotor_nucleus' }, { level: 'midbrain', compartment: 'oculomotor_nerve' }],
     serves: 'ipsilateral',
   },
   elevationCrossed: {
@@ -252,7 +253,7 @@ export const BRAIN: Brain = {
   abduction: {
     meta: {
       id: 'brain.abduction',
-      claim: 'A lesion of the abducens nucleus or fascicle, or of the paramedian pontine reticular formation, weakens abduction of the eye on the same side.',
+      claim: 'A lesion of the abducens nucleus or fascicle, of the paramedian pontine reticular formation, or of the abducens nerve along the clivus, weakens abduction of the eye on the same side; from the nerve it is an isolated abduction deficit (P29).',
       sources: ['S61', 'S49', 'S99'],
       tier: 'T1',
       bookRef: p,
@@ -261,6 +262,7 @@ export const BRAIN: Brain = {
       { level: 'pons', compartment: 'abducens_nucleus' },
       { level: 'pons', compartment: 'abducens_fascicle' },
       { level: 'pons', compartment: 'pprf' },
+      { level: 'pons', compartment: 'abducens_nerve' },
     ],
     serves: 'ipsilateral',
   },
@@ -355,6 +357,17 @@ export const BRAIN: Brain = {
     },
     steps: [{ level: 'midbrain', compartment: 'trochlear_nucleus' }],
     serves: 'contralateral',
+  },
+  trochlearNerve: {
+    meta: {
+      id: 'brain.trochlear-nerve',
+      claim: 'Past its decussation the trochlear nerve runs around the midbrain and through the cavernous sinus to the superior oblique of its own side, so a lesion of the nerve weakens the superior oblique of the eye on the same side (P29, C44).',
+      sources: ['S120', 'S70'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'midbrain', compartment: 'trochlear_nerve' }],
+    serves: 'ipsilateral',
   },
   jaw: {
     meta: {
@@ -496,8 +509,8 @@ export const BRAIN: Brain = {
   partsAt: {
     meta: {
       id: 'brain.parts-at',
-      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei.',
-      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125', 'S130'],
+      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei; and, outside the brainstem, the oculomotor and trochlear nerves at the midbrain, the abducens and facial nerves at the pons and the hypoglossal nerve at the medulla (P29).',
+      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125', 'S130', 'S61', 'S62', 'S63', 'S51'],
       tier: 'T1',
       bookRef: p,
     },
@@ -505,7 +518,7 @@ export const BRAIN: Brain = {
       cortex: ['motor_cortex', 'sensory_cortex', 'inferior_frontal', 'superior_temporal', 'inferior_parietal', 'frontal_eye_field', 'anterior_borderzone', 'posterior_borderzone'],
       capsule: ['capsule_genu', 'capsule_posterior_motor', 'capsule_posterior_sensory'],
       thalamus: ['vpl', 'vpm', 'subthalamic'],
-      midbrain: ['peduncle', 'oculomotor', 'oculomotor_nucleus', 'mlf', 'pretectum', 'trochlear_nucleus', 'medial_lemniscus', 'spinothalamic', 'sympathetic'],
+      midbrain: ['peduncle', 'oculomotor', 'oculomotor_nucleus', 'mlf', 'pretectum', 'trochlear_nucleus', 'medial_lemniscus', 'spinothalamic', 'sympathetic', 'oculomotor_nerve', 'trochlear_nerve'],
       pons: [
         'basis',
         'facial',
@@ -521,6 +534,8 @@ export const BRAIN: Brain = {
         'cochlear',
         'trigeminal_motor',
         'trigeminal_sensory',
+        'abducens_nerve',
+        'facial_nerve',
       ],
       medulla: [
         'pyramid',
@@ -532,6 +547,7 @@ export const BRAIN: Brain = {
         'ambiguus',
         'cerebellar_peduncle',
         'vestibular',
+        'hypoglossal_nerve',
       ],
       cerebellum: ['cerebellar_hemisphere', 'vermis'],
     },
@@ -915,6 +931,62 @@ export const BRAIN: Brain = {
       },
       level: 'pons',
       compartments: ['trigeminal_motor', 'trigeminal_sensory', 'spinothalamic', 'medial_lemniscus', 'cerebellar_peduncle'],
+    },
+    // P29: five cranial nerves outside the brainstem, each alone.
+    oculomotor_nerve: {
+      meta: {
+        id: 'territory.oculomotor-nerve',
+        claim: 'The oculomotor nerve between the midbrain and the cavernous sinus, beside the posterior communicating artery: a third nerve palsy with ptosis on the same side and nothing else.',
+        sources: ['S62', 'S70'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'midbrain',
+      compartments: ['oculomotor_nerve'],
+    },
+    trochlear_nerve: {
+      meta: {
+        id: 'territory.trochlear-nerve',
+        claim: 'The trochlear nerve past its decussation, around the midbrain: the superior oblique of the same eye.',
+        sources: ['S120', 'S70'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'midbrain',
+      compartments: ['trochlear_nerve'],
+    },
+    abducens_nerve: {
+      meta: {
+        id: 'territory.abducens-nerve',
+        claim: 'The abducens nerve along the clivus: an isolated abduction deficit on the same side, with no gaze palsy.',
+        sources: ['S61', 'S70'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'pons',
+      compartments: ['abducens_nerve'],
+    },
+    facial_nerve: {
+      meta: {
+        id: 'territory.facial-nerve',
+        claim: 'The facial nerve at the stylomastoid foramen, past the chorda tympani: the whole face on the same side, forehead included, and nothing else (C75).',
+        sources: ['S51', 'S163'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'pons',
+      compartments: ['facial_nerve'],
+    },
+    hypoglossal_nerve: {
+      meta: {
+        id: 'territory.hypoglossal-nerve',
+        claim: 'The hypoglossal nerve in the hypoglossal canal: the same side of the tongue, which deviates towards the lesion, and nothing else.',
+        sources: ['S63', 'S164'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'medulla',
+      compartments: ['hypoglossal_nerve'],
     },
   },
 };

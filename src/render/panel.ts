@@ -226,9 +226,16 @@ export class Panel {
           'brain.jaw',
           // P16: the frontal eye field, whose gaze palsy fades.
           'brain.gaze-cortex',
+          // P29: the cranial nerves outside the brainstem.
+          'brain.trochlear-nerve',
+          'territory.oculomotor-nerve',
+          'territory.trochlear-nerve',
+          'territory.abducens-nerve',
+          'territory.facial-nerve',
+          'territory.hypoglossal-nerve',
         ],
         body: headHtml(f),
-        note: 'A gaze palsy from the pons is on the side of the lesion and lasts; one from the frontal eye field is toward the side away from the lesion — the eyes deviate toward it — and fades within days (S130, S131). Change the timepoint to see it go. With the ventral pons on both sides (locked-in), sensation is left intact because the model spares the tegmentum; one source says it is lost (C52).',
+        note: 'A gaze palsy from the pons is on the side of the lesion and lasts; one from the frontal eye field is toward the side away from the lesion — the eyes deviate toward it — and fades within days (S130, S131). Change the timepoint to see it go. With the ventral pons on both sides (locked-in), sensation is left intact because the model spares the tegmentum; one source says it is lost (C52). A cranial nerve outside the brainstem gives its own sign alone — no weak limbs, no gaze palsy, nothing in the other eye — and the fourth nerve, past its crossing, weakens its own eye where the nucleus weakens the other (S120, S70). Not modelled: the third nerve’s pupil (C74), the facial nerve’s taste, tears and hearing by segment (C75), and the cavernous sinus (C76).',
       },
       {
         title: 'Language and attention',

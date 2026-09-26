@@ -337,8 +337,16 @@ export const BRAIN_COMPARTMENTS = [
   // P21: the cortex between arterial territories, around Broca and around Wernicke area.
   'anterior_borderzone',
   'posterior_borderzone',
+  // P29: five cranial nerves after they leave the brainstem, each held at the level it leaves.
+  'oculomotor_nerve',
+  'trochlear_nerve',
+  'abducens_nerve',
+  'facial_nerve',
+  'hypoglossal_nerve',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
+/** P29: the parts that are cranial nerves outside the brainstem; a place of these alone is a nerve. */
+export const CRANIAL_NERVES: readonly BrainCompartment[] = ['oculomotor_nerve', 'trochlear_nerve', 'abducens_nerve', 'facial_nerve', 'hypoglossal_nerve'];
 
 /** Parts of the body as the cortex and its projections map them. */
 export const BODY_REGIONS = ['face', 'neck', 'arm', 'trunk', 'leg'] as const;
@@ -423,6 +431,12 @@ export const TERRITORIES = [
   // P21: the border zones that give the transcortical aphasias.
   'borderzone_anterior',
   'borderzone_posterior',
+  // P29: the same five nerves as places.
+  'oculomotor_nerve',
+  'trochlear_nerve',
+  'abducens_nerve',
+  'facial_nerve',
+  'hypoglossal_nerve',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

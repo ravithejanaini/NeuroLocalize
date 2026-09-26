@@ -269,6 +269,8 @@ export const RENDER: RenderKb = {
       'medulla:ambiguus': [-0.48, 0.25, -0.18],
       'medulla:vestibular': [-0.52, 0.35, 0.62],
       'medulla:cerebellar_peduncle': [-0.9, 0.3, 0.55],
+      // P29: the twelfth leaving ventrally beside the pyramid, towards the hypoglossal canal (S63).
+      'medulla:hypoglossal_nerve': [-0.45, 0.1, -1.2],
       'pons:basis': [-0.4, 0, -0.95],
       'pons:facial': [-0.62, -0.3, 0.08],
       'pons:abducens_nucleus': [-0.2, -0.45, 0.55],
@@ -286,6 +288,9 @@ export const RENDER: RenderKb = {
       // P14: the trigeminal motor nucleus medial and anterior to the principal sensory nucleus (S122).
       'pons:trigeminal_motor': [-0.72, 0.55, 0.05],
       'pons:trigeminal_sensory': [-0.95, 0.6, 0.3],
+      // P29: the sixth ventral along the clivus, the seventh lateral at the cerebellopontine angle (S61, S51).
+      'pons:abducens_nerve': [-0.3, -0.8, -1.6],
+      'pons:facial_nerve': [-1.6, -0.6, -0.1],
       'midbrain:peduncle': [-0.55, 0, -0.62],
       'midbrain:oculomotor': [-0.2, 0.15, -0.3],
       'midbrain:oculomotor_nucleus': [-0.13, 0.35, 0.22],
@@ -294,6 +299,10 @@ export const RENDER: RenderKb = {
       'midbrain:pretectum': [-0.12, 0.5, 0.65],
       // P14: the trochlear nucleus near the midline beside the MLF, caudal, at the inferior colliculus (S120).
       'midbrain:trochlear_nucleus': [-0.11, -0.4, 0.35],
+      // P29: the nerves outside the brainstem, beyond each level's radius — the third ventral in
+      // the interpeduncular fossa, the fourth lateral around the midbrain (S62, S120).
+      'midbrain:oculomotor_nerve': [-0.35, -0.1, -1.3],
+      'midbrain:trochlear_nerve': [-1.25, -0.5, 0.2],
       'midbrain:medial_lemniscus': [-0.6, 0, 0.0],
       'midbrain:spinothalamic': [-0.76, 0.1, 0.2],
       'midbrain:sympathetic': [-0.66, -0.2, 0.32],

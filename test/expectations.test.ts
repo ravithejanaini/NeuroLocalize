@@ -8,6 +8,7 @@ import { VISION_CASES } from '../spec/expectations/vision.ts';
 import { OCCIPITAL_CASES } from '../spec/expectations/occipital.ts';
 import { GENICULATE_CASES } from '../spec/expectations/geniculate.ts';
 import { SECTORANOPIA_CASES } from '../spec/expectations/sectoranopia.ts';
+import { CRANIAL_NERVE_CASES } from '../spec/expectations/cranial-nerves.ts';
 import { ANSWERED_LIMB_CASES, ANSWERED_VISION_CASES, ROOT_MUSCLE_CASES, SOLE_ROOT_CASES, TONGUE_ROUTE_CASES } from '../spec/expectations/answered.ts';
 import { FIBULAR_CASES } from '../spec/expectations/fibular.ts';
 import { TARSAL_CASES } from '../spec/expectations/tarsal.ts';
@@ -25,7 +26,7 @@ import { forward } from '../src/engine/forward.ts';
 import { KB as KB_FOR_TERRITORIES } from '../src/kb/kb.ts';
 import { check, territoryFailures, visionPlaceFailures } from './harness.ts';
 
-const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...BASAL_CASES, ...CORTEX_CASES, ...BASILAR_CASES, ...OCCIPITAL_CASES, ...FIBULAR_CASES, ...TARSAL_CASES, ...TRANSCORTICAL_CASES, ...PUDENDAL_CASES, ...GENICULATE_CASES, ...ANSWERED_LIMB_CASES, ...ANSWERED_VISION_CASES, ...ROOT_MUSCLE_CASES, ...SOLE_ROOT_CASES, ...TONGUE_ROUTE_CASES, ...SECTORANOPIA_CASES];
+const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...BASAL_CASES, ...CORTEX_CASES, ...BASILAR_CASES, ...OCCIPITAL_CASES, ...FIBULAR_CASES, ...TARSAL_CASES, ...TRANSCORTICAL_CASES, ...PUDENDAL_CASES, ...GENICULATE_CASES, ...ANSWERED_LIMB_CASES, ...ANSWERED_VISION_CASES, ...ROOT_MUSCLE_CASES, ...SOLE_ROOT_CASES, ...TONGUE_ROUTE_CASES, ...SECTORANOPIA_CASES, ...CRANIAL_NERVE_CASES];
 
 describe('frozen expectations', () => {
   for (const kase of CASES) {

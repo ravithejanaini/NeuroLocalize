@@ -153,6 +153,12 @@ export const PRESETS: readonly Preset[] = [
   { id: 'mlf', kind: 'brain', label: 'Medial longitudinal fasciculus', pattern: 'Internuclear ophthalmoplegia', territory: 'mlf_pons' },
   { id: 'pontine-tegmentum', kind: 'brain', label: 'Pontine tegmentum', pattern: 'One-and-a-half syndrome', territory: 'pontine_tegmentum' },
   { id: 'oculomotor-nucleus', kind: 'brain', label: 'Oculomotor nucleus', pattern: 'Nuclear third nerve palsy', territory: 'oculomotor_nucleus' },
+  // P29: the cranial nerves outside the brainstem — each sign alone.
+  { id: 'oculomotor-nerve', kind: 'brain', label: 'Oculomotor nerve', pattern: 'Down and out, lid droops; nothing else', territory: 'oculomotor_nerve' },
+  { id: 'trochlear-nerve', kind: 'brain', label: 'Trochlear nerve', pattern: 'The SAME eye rides high', territory: 'trochlear_nerve' },
+  { id: 'abducens-nerve', kind: 'brain', label: 'Abducens nerve', pattern: 'Will not abduct; no gaze palsy', territory: 'abducens_nerve' },
+  { id: 'facial-nerve', kind: 'brain', label: 'Facial nerve (Bell)', pattern: 'Whole face, forehead too', territory: 'facial_nerve' },
+  { id: 'hypoglossal-nerve', kind: 'brain', label: 'Hypoglossal nerve', pattern: 'Tongue deviates to the lesion', territory: 'hypoglossal_nerve' },
   // P8: the visual pathway.
   { id: 'optic-nerve', kind: 'vision', label: 'Optic nerve', pattern: 'One eye blind, pupil defect', place: 'optic_nerve' },
   { id: 'chiasm', kind: 'vision', label: 'Optic chiasm', pattern: 'Bitemporal hemianopia', place: 'chiasm' },

@@ -576,6 +576,20 @@ situation the freeze exists to catch.
   `docs/P28-analysis.md` before any code; all four were run red against the P27 engine. The centre
   in the wedge and incongruity are never asserted (C71, C72).
 
+## A35 — The cranial nerves outside the brainstem (P29, 2026-09-26)
+
+- **Changed:** two new files. `cranial-nerves.ts` holds one case for each of five nerves on the
+  left — the oculomotor, trochlear, abducens, facial and hypoglossal — each asserting its own sign
+  and the absence of its brainstem neighbours. `reverse-cranial-nerves.ts` holds an examination for
+  four of them. In `reverse-nerves.ts` the isolated fourth nerve palsy, which expected the left
+  trochlear nucleus alone, now expects it and the right trochlear nerve in the top two: from P29
+  both fit equally and nothing examined separates them (D155). S70 is added to its citations.
+- **How circularity was avoided:** every assertion is quoted from S51, S61–S63, S70, S120, S163 and
+  S164, read into `docs/P29-analysis.md` before any code; all nine new expectations were run red
+  against the P28 engine. The amended examination still passed on the P28 engine and on P29 by the
+  order ties are listed in — which is why it was amended: it claimed a leader the model cannot pick.
+  The pupil is never asserted (C45, C74).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -602,7 +616,7 @@ situation the freeze exists to catch.
 | `midbrain.ts` | A17 |
 | `reverse-midbrain.ts` | A17 |
 | `nerves.ts` | A18 |
-| `reverse-nerves.ts` | A18 |
+| `reverse-nerves.ts` | A18, A35 |
 | `basal.ts` | A19 |
 | `reverse-basal.ts` | A19 |
 | `cortex.ts` | A20 |
@@ -624,5 +638,7 @@ situation the freeze exists to catch.
 | `answered.ts` | A29, A30, A31, A33 |
 | `sectoranopia.ts` | A34 |
 | `reverse-sectoranopia.ts` | A34 |
+| `cranial-nerves.ts` | A35 |
+| `reverse-cranial-nerves.ts` | A35 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

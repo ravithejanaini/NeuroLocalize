@@ -7,6 +7,7 @@ import { VISION_CASES } from '../spec/expectations/vision.ts';
 import { OCCIPITAL_CASES } from '../spec/expectations/occipital.ts';
 import { GENICULATE_CASES } from '../spec/expectations/geniculate.ts';
 import { SECTORANOPIA_CASES } from '../spec/expectations/sectoranopia.ts';
+import { CRANIAL_NERVE_CASES } from '../spec/expectations/cranial-nerves.ts';
 import { LANGUAGE_CASES } from '../spec/expectations/language.ts';
 import { CEREBELLUM_CASES } from '../spec/expectations/cerebellum.ts';
 import { POSTERIOR_CASES } from '../spec/expectations/posterior.ts';
@@ -291,6 +292,12 @@ export const TERRITORY_CASE: Readonly<Record<string, string>> = {
   mlf_pons: 'mlf-left',
   pontine_tegmentum: 'pontine-tegmentum-left',
   oculomotor_nucleus: 'oculomotor-nucleus-left',
+  // P29.
+  oculomotor_nerve: 'oculomotor-nerve-left',
+  trochlear_nerve: 'trochlear-nerve-left',
+  abducens_nerve: 'abducens-nerve-left',
+  facial_nerve: 'facial-nerve-left',
+  hypoglossal_nerve: 'hypoglossal-nerve-left',
 };
 
 /** P8: the frozen case that describes each place of the visual pathway. */
@@ -340,7 +347,7 @@ export function territoryFailures(kb: Kb): Failure[] {
     [...(a ?? [])].sort().join(',') === [...(b ?? [])].sort().join(',');
   for (const [territory, row] of Object.entries(kb.brain.territories)) {
     const id = TERRITORY_CASE[territory];
-    const kase = BRAIN_CASES.find((c) => c.id === id) ?? LANGUAGE_CASES.find((c) => c.id === id) ?? CEREBELLUM_CASES.find((c) => c.id === id) ?? POSTERIOR_CASES.find((c) => c.id === id) ?? MIDBRAIN_CASES.find((c) => c.id === id) ?? NERVE_CASES.find((c) => c.id === id) ?? BASAL_CASES.find((c) => c.id === id) ?? CORTEX_CASES.find((c) => c.id === id) ?? BASILAR_CASES.find((c) => c.id === id) ?? TRANSCORTICAL_CASES.find((c) => c.id === id);
+    const kase = BRAIN_CASES.find((c) => c.id === id) ?? LANGUAGE_CASES.find((c) => c.id === id) ?? CEREBELLUM_CASES.find((c) => c.id === id) ?? POSTERIOR_CASES.find((c) => c.id === id) ?? MIDBRAIN_CASES.find((c) => c.id === id) ?? NERVE_CASES.find((c) => c.id === id) ?? BASAL_CASES.find((c) => c.id === id) ?? CORTEX_CASES.find((c) => c.id === id) ?? BASILAR_CASES.find((c) => c.id === id) ?? TRANSCORTICAL_CASES.find((c) => c.id === id) ?? CRANIAL_NERVE_CASES.find((c) => c.id === id);
     const lesion = kase?.lesion[0];
     // P10: the visual parts a territory takes must be exactly the ones its case lesions.
     const caseVision = (kase?.lesion ?? []).flatMap((r) => ('vision' in r ? [r.vision] : []));

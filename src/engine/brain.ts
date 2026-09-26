@@ -80,6 +80,7 @@ export function validateBrain(kb: Kb): void {
     b.gerstmann.steps,
     b.ballismus.steps,
     b.trochlear.steps,
+    b.trochlearNerve.steps,
     b.jaw.steps,
     b.upgaze.steps,
     b.lightNear.steps,
@@ -267,7 +268,8 @@ export function brainFindings(kb: Kb, map: BrainMap, timepoint: Timepoint = 'chr
           signs[sign] = present(routeDamage(map, b.hearing, x, 'face'));
           break;
         case 'superior_oblique_weakness':
-          signs[sign] = present(routeDamage(map, b.trochlear, x, 'face'));
+          // The nucleus serves the other eye, the nerve past its decussation its own (P29).
+          signs[sign] = present(worst([routeDamage(map, b.trochlear, x, 'face'), routeDamage(map, b.trochlearNerve, x, 'face')]));
           break;
         case 'jaw_deviation':
           signs[sign] = present(routeDamage(map, b.jaw, x, 'face'));

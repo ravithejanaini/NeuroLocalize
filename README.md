@@ -41,10 +41,11 @@ teaching from a phone.
 | P25 | Muscle roots from each muscle's own anatomy article: the triceps C6–C8 (C7 key), the brachioradialis C5–C6 (C7 contributing), answering R14 and R18 |
 | P27 | Four open facts searched in the primary literature: the tongue's cortical fibres cross at the pontomedullary junction, so a medial medullary lesion now spares the other half of the tongue (R25); the bladder pathway partly sourced (R7); hip adduction and the saddle still unsourced |
 | P28 | A finer field chart — ten cells an eye — and the two sectoranopias of the lateral geniculate nucleus: a horizontal wedge from the lateral posterior choroidal artery, a quadruple sectoranopia from the anterior choroidal |
+| P29 | The cranial nerves after they leave the brainstem — the oculomotor, trochlear, abducens, facial and hypoglossal nerves — each giving its sign alone; the fourth nerve, past its crossing, weakens its own eye |
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 162 open-access sources that were
+- **Expected outputs are written first**, from 164 open-access sources that were
   actually read — one of them, S108, as its free abstract only (`docs/SOURCES.md`) — and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

@@ -17,7 +17,7 @@ export const SOURCE_IDS: readonly SourceId[] = [
   'S116', 'S117', 'S118', 'S119',
   'S120', 'S121', 'S122', 'S123', 'S124',
   'S125', 'S126', 'S127',
-  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137', 'S138', 'S139', 'S140', 'S141', 'S142', 'S143', 'S144', 'S145', 'S146', 'S147', 'S148', 'S149', 'S150', 'S151', 'S152', 'S153', 'S154', 'S155', 'S156', 'S157', 'S158', 'S159', 'S160', 'S161', 'S162',
+  'S128', 'S129', 'S130', 'S131', 'S132', 'S133', 'S134', 'S135', 'S136', 'S137', 'S138', 'S139', 'S140', 'S141', 'S142', 'S143', 'S144', 'S145', 'S146', 'S147', 'S148', 'S149', 'S150', 'S151', 'S152', 'S153', 'S154', 'S155', 'S156', 'S157', 'S158', 'S159', 'S160', 'S161', 'S162', 'S163', 'S164',
 ];
 
 export type SourceRecord = { readonly id: SourceId; readonly title: string; readonly url: string };
@@ -185,4 +185,6 @@ export const SOURCES: readonly SourceRecord[] = [
   { id: 'S160', title: 'Hanai et al. — Congenital geniculate quadruple sectoranopia with occipital heterotopia (Am J Ophthalmol Case Rep, 2020)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7509790/' },
   { id: 'S161', title: 'Kedar, Ghate, Corbett — Visual fields in neuro-ophthalmology (Indian J Ophthalmol, 2011)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3116538/' },
   { id: 'S162', title: 'Pula, Yuen — Eyes and stroke: the visual aspects of cerebrovascular disease (Stroke Vasc Neurol, 2017)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5829892/' },
+  { id: 'S163', title: 'StatPearls — Bell Palsy', url: 'https://www.ncbi.nlm.nih.gov/books/NBK482290/' },
+  { id: 'S164', title: 'Frisina et al. — Isolated Hypoglossal Nerve Palsy Associated with Internal Carotid Artery Dissection: A Systematic Review (Neurol Int, 2026)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC13517042/' },
 ];

@@ -22,10 +22,12 @@ export const NERVE_REVERSE_CASES: readonly BrainReverseCase[] = [
       cn('R', 'abduction_weakness', 'absent'),
       ...strong,
     ],
-    expectations: [{ timepoint: 'chronic', topFamily: 'brainstem_left', topPlaces: ['trochlear_nucleus'] }],
-    cite: ['S120', 'S124'],
+    // A35: from P29 the right trochlear nerve fits equally, and nothing examined separates the
+    // two, so the leader is the pair — never the nucleus alone.
+    expectations: [{ timepoint: 'chronic', amongTop: { k: 2, families: [['brainstem_left'], ['nerve_right']] } }],
+    cite: ['S120', 'S124', 'S70'],
     basis: 'stated',
-    note: 'A right superior oblique palsy from the brainstem is the LEFT trochlear nucleus: its fibres cross before they leave the midbrain (S120).',
+    note: 'A right superior oblique palsy from the brainstem is the LEFT trochlear nucleus: its fibres cross before they leave the midbrain (S120). Outside the brainstem it is the right trochlear nerve; isolated nuclear lesions are rare (S70), but the model has no frequencies (A35).',
   },
   {
     id: 'reverse-midpontine',

@@ -3,6 +3,7 @@
 // a lesion the engine has not been checked against.
 import {
   COMPARTMENTS,
+  CRANIAL_NERVES,
   PLEXUS_SITES,
   VISION_PLACES,
   SEGMENTS,
@@ -163,7 +164,11 @@ export function hypotheses(): readonly Hypothesis[] {
     const cerebellum = row.level === 'cerebellum';
     // P11: a midline place is one candidate taking both sides, as the chiasm is in P8.
     for (const side of row.midline ? (['L'] as const) : SIDES) {
-      const family: LesionFamily = row.midline
+      // P29: a place that is only cranial nerves outside the brainstem is ranked with the nerves.
+      const nerve = row.compartments.every((c) => CRANIAL_NERVES.includes(c));
+      const family: LesionFamily = nerve
+        ? side === 'L' ? 'nerve_left' : 'nerve_right'
+        : row.midline
         ? cerebellum ? 'cerebellum_midline' : 'brainstem_midline'
         : cerebellum
           ? side === 'L' ? 'cerebellum_left' : 'cerebellum_right'

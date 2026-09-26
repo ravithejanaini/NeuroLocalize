@@ -139,6 +139,29 @@ describe('the drawn brain keeps the sourced relations', () => {
     assert.ok(pons('trigeminal_motor').z < pons('trigeminal_sensory').z, 'and anterior');
   });
 
+  it('draws each cranial nerve of P29 outside the brainstem, on its own side (S61, S62, S63, S120, S51)', () => {
+    const nerves = [
+      ['midbrain', 'oculomotor_nerve'],
+      ['midbrain', 'trochlear_nerve'],
+      ['pons', 'abducens_nerve'],
+      ['pons', 'facial_nerve'],
+      ['medulla', 'hypoglossal_nerve'],
+    ] as const;
+    for (const [level, c] of nerves) {
+      const r = L.levels[level].radius;
+      for (const side of SIDES) {
+        const at = partPoint(RENDER, level, c, side, 'face');
+        assert.ok(Math.hypot(at.x, at.z) > r, `${side} ${c} is inside the ${level}`);
+        assert.equal(at.x < 0, side === 'L', `${side} ${c} is on the wrong side`);
+      }
+    }
+    // The third and sixth leave ventrally; the fourth runs laterally around the midbrain.
+    const at = (level: 'midbrain' | 'pons', c: Parameters<typeof partPoint>[2]) => partPoint(RENDER, level, c, 'L', 'face');
+    assert.ok(at('midbrain', 'oculomotor_nerve').z < at('midbrain', 'peduncle').z, 'the third nerve is ventral, in the interpeduncular fossa');
+    assert.ok(at('pons', 'abducens_nerve').z < at('pons', 'basis').z, 'the sixth runs ventral to the basilar pons');
+    assert.ok(Math.abs(at('midbrain', 'trochlear_nerve').x) > Math.abs(at('midbrain', 'peduncle').x), 'the fourth is lateral, around the midbrain');
+  });
+
   it('puts the subthalamic nucleus below the thalamus and medial to the capsule (S125)', () => {
     const stn = partPoint(RENDER, 'thalamus', 'subthalamic', 'L', 'face');
     assert.ok(stn.y < partPoint(RENDER, 'thalamus', 'vpl', 'L', 'face').y, 'below the thalamic nuclei');

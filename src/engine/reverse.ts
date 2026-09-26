@@ -19,6 +19,7 @@ import {
   type DorsalMidbrainSign,
   type FieldRegion,
   VISUAL_PARTS,
+  CRANIAL_NERVES,
   type VisualPart,
   type FaceWeaknessObservation,
   type LesionFamily,
@@ -567,6 +568,12 @@ export const SITE_NAME: Record<Place, string> = {
   dorsal_midbrain: 'dorsal midbrain (pretectum, superior colliculus)',
   ventral_pons_bilateral: 'ventral pons, both sides (basilar artery)',
   trochlear_nucleus: 'trochlear nucleus, in the midbrain',
+  // P29: the nerves outside the brainstem.
+  oculomotor_nerve: 'oculomotor nerve (beside the posterior communicating artery)',
+  trochlear_nerve: 'trochlear nerve (around the midbrain, past its crossing)',
+  abducens_nerve: 'abducens nerve (along the clivus)',
+  facial_nerve: 'facial nerve (at the stylomastoid foramen)',
+  hypoglossal_nerve: 'hypoglossal nerve (in the hypoglossal canal)',
   subthalamic_nucleus: 'subthalamic nucleus',
   frontal_eye_field: 'frontal eye field (Brodmann area 8)',
   borderzone_anterior: 'anterior border zone (ACA–MCA), around Broca area',
@@ -688,6 +695,11 @@ const PART_NAME: Record<BrainCompartment, string> = {
   ambiguus: 'nucleus ambiguus',
   cerebellar_peduncle: 'cerebellar peduncle',
   vestibular: 'vestibular nuclei',
+  oculomotor_nerve: 'oculomotor nerve',
+  trochlear_nerve: 'trochlear nerve',
+  abducens_nerve: 'abducens nerve',
+  facial_nerve: 'facial nerve',
+  hypoglossal_nerve: 'hypoglossal nerve',
 };
 const LEVEL_NAME: Record<BrainLevel, string> = {
   cortex: 'cortex',
@@ -707,7 +719,9 @@ const damaged = (phrase: string): string => `${phrase} ${PLURAL.test(phrase) ? '
 function brainCut(bmap: BrainMap, steps: readonly { level: BrainLevel; compartment: BrainCompartment }[], side: Side, region: BodyRegion): string | null {
   const s = steps.find((x) => bmap.damage(x.level, x.compartment, side, region) > 0);
   if (!s) return null;
-  const at = ['cortex', 'capsule', 'thalamus', 'cerebellum'].includes(s.level) ? '' : ` in the ${LEVEL_NAME[s.level]}`;
+  // A nerve outside the brainstem is not "in" the level it leaves (P29).
+  const outside = ['cortex', 'capsule', 'thalamus', 'cerebellum'].includes(s.level) || CRANIAL_NERVES.includes(s.compartment);
+  const at = outside ? '' : ` in the ${LEVEL_NAME[s.level]}`;
   return `the ${SIDE[side]} ${PART_NAME[s.compartment]}${at}`;
 }
 const opp = (s: Side): Side => (s === 'L' ? 'R' : 'L');
@@ -796,7 +810,7 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
         : o.sign === 'ptosis' ? [b.ptosis]
         : o.sign === 'elevation_weakness' ? [b.elevation, b.elevationCrossed]
         : o.sign === 'hearing_loss' ? [b.hearing]
-        : o.sign === 'superior_oblique_weakness' ? [b.trochlear]
+        : o.sign === 'superior_oblique_weakness' ? [b.trochlear, b.trochlearNerve]
         : o.sign === 'jaw_deviation' ? [b.jaw]
         : [b.ambiguus];
       const c = faceCuts(routes, o.side);
@@ -806,7 +820,9 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
       if (o.sign === 'ptosis' && !c.length && f.cranial[o.side].ptosis === 'indeterminate') {
         return 'the oculomotor nucleus is cut, and one central caudal nucleus raises both lids: ptosis on both sides or on neither (C29)';
       }
-      return c.length ? c.join('; ') : 'its nucleus, fascicle and supranuclear supply are intact';
+      // P29: the signs whose nerve outside the brainstem the model has name it too.
+      const withNerve = routes.some((r) => r.steps.some((x) => CRANIAL_NERVES.includes(x.compartment)));
+      return c.length ? c.join('; ') : withNerve ? 'its nucleus, fascicle, nerve and supranuclear supply are intact' : 'its nucleus, fascicle and supranuclear supply are intact';
     }
     case 'ataxia': {
       const c = faceCuts([b.ataxia], o.side);

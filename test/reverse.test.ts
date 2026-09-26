@@ -19,6 +19,7 @@ import { TRANSCORTICAL_REVERSE_CASES } from '../spec/expectations/reverse-transc
 import { PUDENDAL_REVERSE_CASES } from '../spec/expectations/reverse-pudendal.ts';
 import { GENICULATE_REVERSE_CASES } from '../spec/expectations/reverse-geniculate.ts';
 import { SECTORANOPIA_REVERSE_CASES } from '../spec/expectations/reverse-sectoranopia.ts';
+import { CRANIAL_NERVE_REVERSE_CASES } from '../spec/expectations/reverse-cranial-nerves.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
 import { hypotheses } from '../src/engine/hypotheses.ts';
@@ -33,7 +34,7 @@ import { examSlots } from '../src/render/slots.ts';
 const SLOTS = examSlots(RENDER);
 
 describe('frozen reverse expectations (A3, A4, A7)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES, ...SECTORANOPIA_REVERSE_CASES]) {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES, ...SECTORANOPIA_REVERSE_CASES, ...CRANIAL_NERVE_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });
@@ -249,7 +250,7 @@ describe('reverse engine contract', () => {
     assert.ok(nerve);
     assert.deepEqual(nerve.sites, ['long_thoracic'], 'the only nerve place that weakens serratus');
     const places = hypotheses().filter((x) => x.site);
-    assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 66, 'D32, P7, P19, P20, P23: 18 arm and 15 leg places on each side — P19 adds the deep fibular nerve at two places and the superficial at one, P20 the tarsal tunnel, P23 the pudendal nerve');
+    assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 66 + 10, 'D32, P7, P19, P20, P23: 18 arm and 15 leg places on each side — P19 adds the deep fibular nerve at two places and the superficial at one, P20 the tarsal tunnel, P23 the pudendal nerve; P29 five cranial nerves outside the brainstem on each side');
     assert.equal(
       places.filter((x) => x.family.startsWith('brainstem') || x.family.startsWith('hemisphere')).length,
       52,
@@ -437,6 +438,28 @@ describe('the working for the fourth and fifth nerves (P14)', () => {
     assert.match(eye?.because ?? '', /left trochlear nucleus in the midbrain is damaged/);
     const [jaw] = explain(mp, [{ kind: 'cranial', side: 'L', sign: 'jaw_deviation', value: 'present' }], 'chronic');
     assert.match(jaw?.because ?? '', /left trigeminal motor nucleus in the pons is damaged/);
+  });
+});
+
+describe('the working for the cranial nerves outside the brainstem (P29)', () => {
+  it('names the nerve, without a level, and traces the fourth nerve to its own eye (D154, D156)', () => {
+    prepareSync('chronic');
+    const iv = hypotheses().find((x) => x.id === 'nerve_left:trochlear_nerve');
+    const vii = hypotheses().find((x) => x.id === 'nerve_left:facial_nerve');
+    assert.ok(iv && vii);
+    const [own, other] = explain(
+      iv,
+      [
+        { kind: 'cranial', side: 'L', sign: 'superior_oblique_weakness', value: 'present' },
+        { kind: 'cranial', side: 'R', sign: 'superior_oblique_weakness', value: 'absent' },
+      ],
+      'chronic',
+    );
+    assert.equal(own?.verdict, 'fits');
+    assert.match(own?.because ?? '', /^the left trochlear nerve is damaged$/);
+    assert.match(other?.because ?? '', /nerve and supranuclear supply are intact/);
+    const [face] = explain(vii, [{ kind: 'face_weakness', side: 'L', value: 'whole' }], 'chronic');
+    assert.match(face?.because ?? '', /^the left facial nerve is damaged/);
   });
 });
 

@@ -1130,7 +1130,7 @@ and facial sensation intact.
 
 ### Source conflicts and limits
 
-**C44 — The trochlear fascicle.** S120: "a fascicular lesion affects the ipsilateral nerve and
+**C44 — The trochlear fascicle.** *(Answered for the nerve by P29; D154.)* S120: "a fascicular lesion affects the ipsilateral nerve and
 muscle". The fibres cross inside the midbrain before they exit, so "fascicle" can name either
 side of the crossing. The model has the nucleus only.
 
@@ -1907,3 +1907,63 @@ reports (PMID 27928372, 32395157, 32868569) were read as abstracts, since none h
 none says whether fixation goes. Still open. PMID 1954215 and 32395157 also report the same wedge from
 the optic radiation and the occipital lobe — not modelled, since the model's radiation and cortex
 take whole quadrants.
+
+## P29 — The cranial nerves after they leave the brainstem
+
+The analysis written before any P29 code is `docs/P29-analysis.md`; S163–S164 were read for it on
+2026-09-26, with S51, S61, S62, S63, S70 and S120 re-read in full. Run against the P28 engine
+first, all five new cases and all four new examinations failed.
+
+### Source conflicts and limits
+
+**C74 — The third nerve's pupil.** A compressive palsy involves the pupil and an ischaemic one
+often spares it (S62, S70). The model still has no pupil sign for the third nerve (C45).
+
+**C75 — The facial nerve by segment.** S51 lists taste, tears, saliva and hyperacusis by segment of
+the facial canal. The model has face strength only, so its facial nerve place is the stylomastoid
+foramen, below the chorda tympani, where S51 lists "Ipsilateral facial plegia" alone.
+
+**C76 — The cavernous sinus.** S70: cavernous sinus lesions combine the third, fourth and sixth
+nerves with V1 and V2, and a Horner syndrome with a sixth nerve palsy "localizes to the cavernous
+sinus". Drawing it needs sensation by trigeminal division and the third-order sympathetic fibres;
+the model has neither. Deferred to P30.
+
+### Decisions
+
+**D153 — Five nerves, each outside the brainstem and each a place.** The oculomotor, trochlear,
+abducens, facial and hypoglossal nerves are parts held at the level each leaves, and each is a
+place of its own. Each joins the routes its nucleus already feeds — the third the oculomotor, lid,
+elevation and adduction routes; the sixth abduction; the seventh the facial route; the twelfth the
+hypoglossal route — and none joins a gaze route or a crossed route, which is the contrast every
+source draws. They rank with the nerves (`nerve_left`, `nerve_right`), not the brainstem (D157). None of
+the 72 earlier examination leaders moved.
+
+**D154 — The fourth nerve serves its own eye.** Past its decussation the trochlear nerve runs to the
+superior oblique of its own side (S120, S70), so it has a route of its own that serves the same
+side, and the superior oblique sign reads both. This answers C44 for the nerve.
+
+**D155 — An isolated fourth nerve palsy has two answers.** A right superior oblique palsy fits the
+right trochlear nerve and the left trochlear nucleus equally, and nothing the model examines
+separates them. The frozen `reverse-trochlear-nucleus` examination, written when there was no
+nerve, now expects both in the top two rather than the nucleus alone (A35). S70 says isolated
+nuclear lesions are rare; the model has no frequencies and does not rank by them.
+
+**D156 — A nerve is not "in" the brainstem.** The working names a damaged nerve without the level it
+leaves ("the left facial nerve is damaged"), since it lies outside it. A new test checks that each
+nerve is drawn outside its level's radius, on its own side, the third and sixth ventrally and the
+fourth laterally.
+
+**D157 — The P29 mutation run, and a flag nothing could check.** 7117 mutants, 97.4% raw; sourced
+rows 97.6%. No new part or route survived. The five survivors on the new rows all flipped a
+`nerve: true` flag on each nerve place, which chose its family: the candidate list is built from
+the knowledge base the app ships, not the mutated one, so the flag could never be killed. It was
+also redundant — what makes a place a nerve is what it contains — so it is gone: a place made only of
+the five nerve parts (`CRANIAL_NERVES`, a fixed vocabulary list) ranks with the nerves. The run was made before the flag was removed; removing it deletes those five mutants and changes no finding, ranking or leader. Three P28
+survivors on the sole's disputed roots were killed in this run; nothing in P29 touches the sole,
+so this is recorded, not claimed. The remaining survivors are the ones already recorded (D129,
+D140, D143, D152).
+
+### Reviewer questions
+
+**R57** — C76: is a cavernous sinus place worth adding once the face can be split by trigeminal
+division, and should it assert all of III, IV, VI, V1, V2 and Horner syndrome, or leave each open?

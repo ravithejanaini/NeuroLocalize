@@ -13,6 +13,7 @@ import { VISION_CASES } from '../spec/expectations/vision.ts';
 import { OCCIPITAL_CASES } from '../spec/expectations/occipital.ts';
 import { GENICULATE_CASES } from '../spec/expectations/geniculate.ts';
 import { SECTORANOPIA_CASES } from '../spec/expectations/sectoranopia.ts';
+import { CRANIAL_NERVE_CASES } from '../spec/expectations/cranial-nerves.ts';
 import { ANSWERED_LIMB_CASES, ANSWERED_VISION_CASES, ROOT_MUSCLE_CASES, SOLE_ROOT_CASES, TONGUE_ROUTE_CASES } from '../spec/expectations/answered.ts';
 import { FIBULAR_CASES } from '../spec/expectations/fibular.ts';
 import { TARSAL_CASES } from '../spec/expectations/tarsal.ts';
@@ -61,13 +62,14 @@ import { TRANSCORTICAL_REVERSE_CASES } from '../spec/expectations/reverse-transc
 import { PUDENDAL_REVERSE_CASES } from '../spec/expectations/reverse-pudendal.ts';
 import { GENICULATE_REVERSE_CASES } from '../spec/expectations/reverse-geniculate.ts';
 import { SECTORANOPIA_REVERSE_CASES } from '../spec/expectations/reverse-sectoranopia.ts';
+import { CRANIAL_NERVE_REVERSE_CASES } from '../spec/expectations/reverse-cranial-nerves.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { RENDER } from '../src/kb/render.ts';
 import { examSlots } from '../src/render/slots.ts';
 import { reverseFailures, runAll, territoryFailures, visionPlaceFailures } from '../test/harness.ts';
 import { locateRows } from '../test/rows.ts';
 
-const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...BASAL_CASES, ...CORTEX_CASES, ...BASILAR_CASES, ...OCCIPITAL_CASES, ...FIBULAR_CASES, ...TARSAL_CASES, ...TRANSCORTICAL_CASES, ...PUDENDAL_CASES, ...GENICULATE_CASES, ...ANSWERED_LIMB_CASES, ...ANSWERED_VISION_CASES, ...ROOT_MUSCLE_CASES, ...SOLE_ROOT_CASES, ...TONGUE_ROUTE_CASES, ...SECTORANOPIA_CASES];
+const CASES = [...ALL_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...BASAL_CASES, ...CORTEX_CASES, ...BASILAR_CASES, ...OCCIPITAL_CASES, ...FIBULAR_CASES, ...TARSAL_CASES, ...TRANSCORTICAL_CASES, ...PUDENDAL_CASES, ...GENICULATE_CASES, ...ANSWERED_LIMB_CASES, ...ANSWERED_VISION_CASES, ...ROOT_MUSCLE_CASES, ...SOLE_ROOT_CASES, ...TONGUE_ROUTE_CASES, ...SECTORANOPIA_CASES, ...CRANIAL_NERVE_CASES];
 const THRESHOLD = 0.9;
 const ROOT = resolve(import.meta.dirname, '..');
 
@@ -258,7 +260,7 @@ const mutants: Mutant[] = [];
 collect(KB, [], mutants);
 
 type Result = { row: string; describe: string; killed: boolean; failures: number; threw: boolean; byReverse: boolean };
-const REVERSE = [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES, ...SECTORANOPIA_REVERSE_CASES];
+const REVERSE = [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES, ...SECTORANOPIA_REVERSE_CASES, ...CRANIAL_NERVE_REVERSE_CASES];
 const SLOTS = examSlots(RENDER);
 const results: Result[] = mutants.map((m) => {
   const base = { row: rowOf(m.path), describe: m.describe };
