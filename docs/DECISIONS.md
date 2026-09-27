@@ -2116,6 +2116,12 @@ three syndromes differ exactly where S171 separates them — the cheek only in t
 vision and a relative afferent pupillary defect only at the apex — and the examinations for each
 lead to its own place. None of the 81 earlier examination leaders moved.
 
+**D171 — The P32 mutation run.** 7995 mutants, 97.7% raw; sourced rows 97.9%. Two new survivors, the
+same shape as D162: V1 in the fissure read as the third or the fourth nerve, since every case that
+lesions it lesions those nerves too. The isolated third and fourth nerve cases now also assert a
+forehead that feels — the ophthalmic division is a nerve of its own (S122) — and both mutants were
+checked killed by hand (A38). No other survivor is new.
+
 ### Reviewer questions
 
 **R60** — C84: should the orbital apex be taught with a Horner syndrome, anisocoria of another

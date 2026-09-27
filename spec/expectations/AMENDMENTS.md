@@ -627,6 +627,9 @@ situation the freeze exists to catch.
 - **How circularity was avoided:** every assertion is quoted from S171, with the foramina from S122,
   read into `docs/P32-analysis.md` before any code; all four were run red against the P31 engine. A
   Horner syndrome is never asserted at the fissure or the apex (C84).
+- **Changed after the mutation run:** in `cranial-nerves.ts` the isolated third and fourth nerve
+  cases also assert the forehead intact, so that V1 in the fissure cannot be read as either nerve
+  (D171).
 
 ### Files amended since the tag, and the entry that covers each
 
@@ -676,7 +679,7 @@ situation the freeze exists to catch.
 | `answered.ts` | A29, A30, A31, A33 |
 | `sectoranopia.ts` | A34 |
 | `reverse-sectoranopia.ts` | A34 |
-| `cranial-nerves.ts` | A35, A36 |
+| `cranial-nerves.ts` | A35, A36, A38 |
 | `reverse-cranial-nerves.ts` | A35, A36, A37 |
 | `cavernous.ts` | A36 |
 | `reverse-cavernous.ts` | A36, A37 |
