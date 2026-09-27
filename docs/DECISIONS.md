@@ -2073,6 +2073,15 @@ the earlier leaders are the family names of the P29 and P30 examinations, and th
 isolated fourth nerve palsy's tie, now nerve first — which its expectation deliberately does not fix
 (D155). The P29–P31 examinations name the new family (A37).
 
+**D168 — The P31 mutation run.** 7801 mutants, 97.7% raw; sourced rows 97.9%. One new survivor: the
+nerve's vertigo `indeterminate` → `present`, which the eighth-nerve case accepts by design — S170
+says "often with vertigo", and C80 leaves it open; the mutation to `absent` is killed. Five
+survivors on the face route only renumbered, as the trigeminal root now comes first. The two P30
+sympathetic survivors are killed (D162). Three survivors on the sole's disputed roots, gone in the
+P29 and P30 runs, are back — the P28 state — which fits their disappearance having been a side effect
+of the prior dilution that D167 undid, not of anything P29 taught; D157 recorded it without claiming
+it.
+
 ### Reviewer questions
 
 **R59** — C80: after a destructive lesion of one eighth nerve, should the model teach vertigo, or
