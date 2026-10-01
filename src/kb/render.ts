@@ -271,6 +271,10 @@ export const RENDER: RenderKb = {
       'medulla:cerebellar_peduncle': [-0.9, 0.3, 0.55],
       // P29: the twelfth leaving ventrally beside the pyramid, towards the hypoglossal canal (S63).
       'medulla:hypoglossal_nerve': [-0.45, 0.1, -1.2],
+      // P33: the three nerves of the jugular foramen, lateral to the medulla, the ninth uppermost (S172).
+      'medulla:glossopharyngeal_nerve': [-1.2, 0.5, -0.3],
+      'medulla:vagus_nerve': [-1.25, 0.2, -0.25],
+      'medulla:accessory_nerve': [-1.25, -0.15, -0.15],
       'pons:basis': [-0.4, 0, -0.95],
       'pons:facial': [-0.62, -0.3, 0.08],
       'pons:abducens_nucleus': [-0.2, -0.45, 0.55],

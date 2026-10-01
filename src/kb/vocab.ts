@@ -355,6 +355,10 @@ export const BRAIN_COMPARTMENTS = [
   'trigeminal_root',
   // P32: the ophthalmic division alone, in the superior orbital fissure.
   'ophthalmic_orbit',
+  // P33: the three nerves of the jugular foramen.
+  'glossopharyngeal_nerve',
+  'vagus_nerve',
+  'accessory_nerve',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 /**
@@ -372,6 +376,9 @@ export const OUTSIDE_BRAINSTEM: readonly BrainCompartment[] = [
   'vestibulocochlear_nerve',
   'trigeminal_root',
   'ophthalmic_orbit',
+  'glossopharyngeal_nerve',
+  'vagus_nerve',
+  'accessory_nerve',
 ];
 
 /** P30: the three divisions of the trigeminal nerve, by the skin each feels — forehead, cheek, jaw. */
@@ -398,6 +405,10 @@ export const CRANIAL_SIGNS = [
   // P14: the fourth and fifth nerves.
   'superior_oblique_weakness',
   'jaw_deviation',
+  // P33: the ninth nerve — the back third of the tongue — and the eleventh — the shoulder and the
+  // turn of the head away.
+  'posterior_tongue_loss',
+  'accessory_weakness',
 ] as const;
 export type CranialSign = (typeof CRANIAL_SIGNS)[number];
 
@@ -475,6 +486,8 @@ export const TERRITORIES = [
   // P32.
   'superior_orbital_fissure',
   'orbital_apex',
+  // P33.
+  'jugular_foramen',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

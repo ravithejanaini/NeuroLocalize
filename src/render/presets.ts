@@ -167,6 +167,8 @@ export const PRESETS: readonly Preset[] = [
   // P32.
   { id: 'orbital-fissure', kind: 'brain', label: 'Superior orbital fissure', pattern: 'III, IV, VI, forehead; the eye sees', territory: 'superior_orbital_fissure' },
   { id: 'orbital-apex', kind: 'brain', label: 'Orbital apex', pattern: 'The fissure, and the eye blind', territory: 'orbital_apex' },
+  // P33.
+  { id: 'jugular-foramen', kind: 'brain', label: 'Jugular foramen', pattern: 'Palate, back of tongue, shoulder; tongue strong', territory: 'jugular_foramen' },
   // P8: the visual pathway.
   { id: 'optic-nerve', kind: 'vision', label: 'Optic nerve', pattern: 'One eye blind, pupil defect', place: 'optic_nerve' },
   { id: 'chiasm', kind: 'vision', label: 'Optic chiasm', pattern: 'Bitemporal hemianopia', place: 'chiasm' },

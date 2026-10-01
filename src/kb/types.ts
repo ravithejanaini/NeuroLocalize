@@ -187,6 +187,9 @@ export type Brain = {
   /** P30, P32: parts that carry only some trigeminal divisions — V1 and V2 in the cavernous sinus, V1 alone in the fissure. */
   readonly faceDivisions: readonly Row<{ readonly steps: readonly BrainStep[]; readonly serves: Laterality; readonly divisions: readonly TrigeminalDivision[] }>[];
   readonly jaw: BrainRoute;
+  /** P33: the ninth nerve's sensation and taste at the back of the tongue, and the eleventh nerve's two muscles. */
+  readonly posteriorTongue: BrainRoute;
+  readonly accessory: BrainRoute;
   /** P13: the three dorsal midbrain signs, each read from either half of the pretectum. */
   readonly upgaze: Row<{ readonly steps: readonly BrainStep[] }>;
   readonly lightNear: Row<{ readonly steps: readonly BrainStep[] }>;

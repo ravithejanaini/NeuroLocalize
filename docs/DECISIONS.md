@@ -2126,3 +2126,47 @@ checked killed by hand (A38). No other survivor is new.
 
 **R60** — C84: should the orbital apex be taught with a Horner syndrome, anisocoria of another
 cause, or no pupil sign?
+
+## P33 — The jugular foramen: the ninth, tenth and eleventh nerves
+
+The analysis written before any P33 code is `docs/P33-analysis.md`; S172–S175 were read for it on
+2026-10-01. Run against the P32 engine first, all four new cases and the new examination failed.
+
+### Source conflicts and limits
+
+**C87 — The gag reflex.** Only S172 gives "Loss of the ipsilateral gag reflex", and the reflex has
+two limbs, the ninth nerve in and the tenth out. It is not a finding of the model.
+
+**C88 — The eleventh nerve inside the cord and above it.** Its spinal root rises from C1 to C5, and
+its muscles "also receive motor impulses from cervical nerves C1 to C4" (S173). The model's sign
+reads the nerve alone: a high cervical cord lesion and a hemisphere lesion give no accessory sign.
+
+**C89 — The head's rotation.** S172 writes "contralateral rotation of the head" as a manifestation of
+the palsy; S173 and S174 make the sternocleidomastoid the muscle that rotates the head to the
+opposite side. The sign is worded as the weak movement: turning the head to the other side.
+
+**C90 — Not modelled.** Hoarseness, dysphagia, parotid secretion and venous congestion.
+
+**C91 — Collet–Sicard and Villaret syndromes** are named in S173 but described in no source read;
+they are not places.
+
+### Decisions
+
+**D172 — Two new signs.** The back of the tongue — sensation and taste on the posterior third, the
+ninth nerve's (S172, S174, S175) — and the eleventh nerve's: the shoulder droops and shrugs weakly
+on its own side and the head turns weakly to the other (S172, S173, S174). The examination offers
+both on each side. The gag reflex is not one of them (C87).
+
+**D173 — Three nerves outside the medulla.** The glossopharyngeal, vagus and accessory nerves are
+parts; the vagus joins the route the nucleus ambiguus already feeds, so the palate is weak on its
+own side from either. Each nerve alone is a frozen case, so no sign can be carried by another nerve.
+
+**D174 — The jugular foramen is a place.** It takes the three nerves and not the twelfth, which "does
+not traverse the jugular foramen" (S172): the tongue stays strong, and a strong tongue with no
+Horner syndrome and a face that feels is what separates it from the lateral medulla. None of the 83
+earlier examination leaders moved.
+
+### Reviewer questions
+
+**R61** — C88: should a hemicord or anterior horn lesion at C1–C5 weaken the sternocleidomastoid and
+trapezius in the model, and should a hemisphere lesion?

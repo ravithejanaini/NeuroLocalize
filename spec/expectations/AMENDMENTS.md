@@ -631,6 +631,15 @@ situation the freeze exists to catch.
   cases also assert the forehead intact, so that V1 in the fissure cannot be read as either nerve
   (D171).
 
+## A39 — The jugular foramen (P33, 2026-10-01)
+
+- **Changed:** two new files. `jugular.ts` holds the left jugular foramen and each of its three
+  nerves alone; `reverse-jugular.ts` holds one examination. They use two new cranial signs, the back
+  of the tongue and the eleventh nerve's weakness (D172). No earlier case or examination changed.
+- **How circularity was avoided:** every assertion is quoted from S172–S175, read into
+  `docs/P33-analysis.md` before any code; all five were run red against the P32 engine. The gag
+  reflex is never asserted (C87).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -687,5 +696,7 @@ situation the freeze exists to catch.
 | `reverse-angle.ts` | A37 |
 | `orbit.ts` | A38 |
 | `reverse-orbit.ts` | A38 |
+| `jugular.ts` | A39 |
+| `reverse-jugular.ts` | A39 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

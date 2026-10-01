@@ -86,6 +86,8 @@ export function validateBrain(kb: Kb): void {
     ...b.faceDivisions.map((r) => r.steps),
     b.vertigoNerve.steps,
     b.jaw.steps,
+    b.posteriorTongue.steps,
+    b.accessory.steps,
     b.upgaze.steps,
     b.lightNear.steps,
     b.convergenceRetraction.steps,
@@ -288,6 +290,12 @@ export function brainFindings(kb: Kb, map: BrainMap, timepoint: Timepoint = 'chr
           break;
         case 'jaw_deviation':
           signs[sign] = present(routeDamage(map, b.jaw, x, 'face'));
+          break;
+        case 'posterior_tongue_loss':
+          signs[sign] = present(routeDamage(map, b.posteriorTongue, x, 'face'));
+          break;
+        case 'accessory_weakness':
+          signs[sign] = present(routeDamage(map, b.accessory, x, 'face'));
           break;
         case 'elevation_weakness':
           signs[sign] = present(worst([routeDamage(map, b.elevation, x, 'face'), routeDamage(map, b.elevationCrossed, x, 'face')]));

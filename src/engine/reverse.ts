@@ -590,6 +590,8 @@ export const SITE_NAME: Record<Place, string> = {
   // P32.
   superior_orbital_fissure: 'superior orbital fissure (III, IV, VI and V1)',
   orbital_apex: 'orbital apex (III, IV, VI, V1 and the optic nerve)',
+  // P33.
+  jugular_foramen: 'jugular foramen (IX, X and XI)',
   subthalamic_nucleus: 'subthalamic nucleus',
   frontal_eye_field: 'frontal eye field (Brodmann area 8)',
   borderzone_anterior: 'anterior border zone (ACA–MCA), around Broca area',
@@ -721,6 +723,9 @@ const PART_NAME: Record<BrainCompartment, string> = {
   vestibulocochlear_nerve: 'vestibulocochlear nerve',
   trigeminal_root: 'trigeminal root at the cerebellopontine angle',
   ophthalmic_orbit: 'ophthalmic division in the superior orbital fissure',
+  glossopharyngeal_nerve: 'glossopharyngeal nerve',
+  vagus_nerve: 'vagus nerve',
+  accessory_nerve: 'accessory nerve',
 };
 const LEVEL_NAME: Record<BrainLevel, string> = {
   cortex: 'cortex',
@@ -845,6 +850,8 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
         : o.sign === 'hearing_loss' ? [b.hearing]
         : o.sign === 'superior_oblique_weakness' ? [b.trochlear, b.trochlearNerve]
         : o.sign === 'jaw_deviation' ? [b.jaw]
+        : o.sign === 'posterior_tongue_loss' ? [b.posteriorTongue]
+        : o.sign === 'accessory_weakness' ? [b.accessory]
         : [b.ambiguus];
       const c = faceCuts(routes, o.side);
       if (o.sign === 'palate_weakness' && !c.length && f.cranial[o.side].palate_weakness === 'indeterminate') {

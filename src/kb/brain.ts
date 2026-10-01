@@ -146,12 +146,34 @@ export const BRAIN: Brain = {
   ambiguus: {
     meta: {
       id: 'brain.ambiguus',
-      claim: 'A lesion of the nucleus ambiguus weakens the palate, pharynx and larynx on the same side.',
-      sources: ['S64', 'S47'],
+      claim: 'A lesion of the nucleus ambiguus weakens the palate, pharynx and larynx on the same side. So does a lesion of the vagus nerve after it leaves the medulla, as at the jugular foramen: unilateral paralysis of the soft palate, the uvula deviating toward the normal side (P33).',
+      sources: ['S64', 'S47', 'S172'],
       tier: 'T1',
       bookRef: p,
     },
-    steps: [{ level: 'medulla', compartment: 'ambiguus' }],
+    steps: [{ level: 'medulla', compartment: 'ambiguus' }, { level: 'medulla', compartment: 'vagus_nerve' }],
+    serves: 'ipsilateral',
+  },
+  posteriorTongue: {
+    meta: {
+      id: 'brain.posterior-tongue',
+      claim: 'The glossopharyngeal nerve carries general sensation and taste from the posterior third of the tongue and leaves the skull by the jugular foramen; a lesion of it loses both on the back of the tongue on its own side.',
+      sources: ['S172', 'S174', 'S175'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'medulla', compartment: 'glossopharyngeal_nerve' }],
+    serves: 'ipsilateral',
+  },
+  accessory: {
+    meta: {
+      id: 'brain.accessory',
+      claim: 'The accessory nerve supplies the sternocleidomastoid and trapezius of its own side and leaves the skull by the jugular foramen; a lesion of it droops the shoulder and weakens its shrug on that side, and weakens turning the head to the other side, which is the sternocleidomastoid’s movement. Its spinal root in C1–C5 is not modelled (C88).',
+      sources: ['S172', 'S173', 'S174'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'medulla', compartment: 'accessory_nerve' }],
     serves: 'ipsilateral',
   },
   oculomotor: {
@@ -552,8 +574,8 @@ export const BRAIN: Brain = {
   partsAt: {
     meta: {
       id: 'brain.parts-at',
-      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei; and, outside the brainstem, the oculomotor and trochlear nerves at the midbrain, the abducens and facial nerves at the pons and the hypoglossal nerve at the medulla (P29), with the cavernous sinus — the ophthalmic and maxillary divisions and the carotid sympathetic plexus — held at the midbrain (P30), and the vestibulocochlear nerve and trigeminal root at the cerebellopontine angle, held at the pons (P31), and the ophthalmic division in the superior orbital fissure, held at the midbrain (P32).',
-      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125', 'S130', 'S61', 'S62', 'S63', 'S51', 'S165', 'S169', 'S171'],
+      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei; and, outside the brainstem, the oculomotor and trochlear nerves at the midbrain, the abducens and facial nerves at the pons and the hypoglossal nerve at the medulla (P29), with the cavernous sinus — the ophthalmic and maxillary divisions and the carotid sympathetic plexus — held at the midbrain (P30), and the vestibulocochlear nerve and trigeminal root at the cerebellopontine angle, held at the pons (P31), and the ophthalmic division in the superior orbital fissure, held at the midbrain (P32), and the glossopharyngeal, vagus and accessory nerves at the jugular foramen, held at the medulla (P33).',
+      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125', 'S130', 'S61', 'S62', 'S63', 'S51', 'S165', 'S169', 'S171', 'S172'],
       tier: 'T1',
       bookRef: p,
     },
@@ -593,6 +615,9 @@ export const BRAIN: Brain = {
         'cerebellar_peduncle',
         'vestibular',
         'hypoglossal_nerve',
+        'glossopharyngeal_nerve',
+        'vagus_nerve',
+        'accessory_nerve',
       ],
       cerebellum: ['cerebellar_hemisphere', 'vermis'],
     },
@@ -1095,6 +1120,18 @@ export const BRAIN: Brain = {
       compartments: ['oculomotor_nerve', 'trochlear_nerve', 'ophthalmic_orbit'],
       also: [{ level: 'pons', compartments: ['abducens_nerve'] }],
       vision: ['optic_nerve'],
+    },
+    // P33: the jugular foramen (Vernet).
+    jugular_foramen: {
+      meta: {
+        id: 'territory.jugular-foramen',
+        claim: 'The jugular foramen transmits the glossopharyngeal, vagus and accessory nerves; a lesion there paralyses all three — the back of the tongue, the palate, and the sternocleidomastoid and trapezius, on one side. The hypoglossal nerve leaves by its own canal and is spared.',
+        sources: ['S172', 'S174'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'medulla',
+      compartments: ['glossopharyngeal_nerve', 'vagus_nerve', 'accessory_nerve'],
     },
   },
 };

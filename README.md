@@ -45,10 +45,11 @@ teaching from a phone.
 | P30 | The cavernous sinus — the third, fourth and sixth nerves with V1, V2 and the carotid's sympathetic plexus — and the face felt by trigeminal division, so the sinus spares the jaw |
 | P31 | The eighth nerve and the cerebellopontine angle: a deaf ear alone, and a mass taking the eighth nerve, the trigeminal root and the cerebellum while the face moves; vertigo from the nerve left unsettled |
 | P32 | The superior orbital fissure and the orbital apex beside the cavernous sinus: the three orbital syndromes told apart by the cheek and by the eye's vision |
+| P33 | The jugular foramen: the ninth, tenth and eleventh nerves together — the back of the tongue, the palate and the shoulder on one side, the tongue itself strong — with two new signs for the ninth and eleventh nerves |
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 171 open-access sources that were
+- **Expected outputs are written first**, from 175 open-access sources that were
   actually read — one of them, S108, as its free abstract only (`docs/SOURCES.md`) — and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

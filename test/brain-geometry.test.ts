@@ -154,6 +154,10 @@ describe('the drawn brain keeps the sourced relations', () => {
       ['pons', 'trigeminal_root'],
       // P32: the fissure.
       ['midbrain', 'ophthalmic_orbit'],
+      // P33: the jugular foramen's nerves.
+      ['medulla', 'glossopharyngeal_nerve'],
+      ['medulla', 'vagus_nerve'],
+      ['medulla', 'accessory_nerve'],
     ] as const;
     for (const [level, c] of nerves) {
       const r = L.levels[level].radius;
