@@ -34,6 +34,19 @@ function rowsById(root: object): Map<string, Meta> {
 }
 
 /** Runs of consecutive segments sharing a state, skipping the quiet ones. */
+/** P34: for each side with a Horner syndrome, the neurone cut and where sweating is lost. */
+function sweatingHtml(f: Findings): string {
+  const NEURONE = { 1: 'first-order (central)', 2: 'second-order (preganglionic)', 3: 'third-order (postganglionic)' } as const;
+  const WHERE = { none: 'nowhere', brow: 'only beside the brow', face: 'over the face', body: 'over the face and that half of the body' } as const;
+  return (['L', 'R'] as const)
+    .flatMap((x) => {
+      const n = f.hornerNeurone[x];
+      if (n === 0) return [];
+      return [`<div class="kv"><span class="k">&nbsp;&nbsp;${x === 'L' ? 'left' : 'right'}</span><span class="v">${NEURONE[n]} neurone · sweating lost ${WHERE[f.sweating[x]]}</span></div>`];
+    })
+    .join('');
+}
+
 export function runs<S extends string>(column: Readonly<Record<Segment, S>>, quiet: readonly S[]): { state: S; from: Segment; to: Segment }[] {
   const out: { state: S; from: Segment; to: Segment }[] = [];
   for (const seg of SEGMENTS) {
@@ -324,10 +337,11 @@ export class Panel {
       },
       {
         title: 'Signs',
-        drivers: ['observation.babinski-level', 'autonomic.ciliospinal', 'observation.romberg'],
+        drivers: ['observation.babinski-level', 'autonomic.ciliospinal', 'observation.romberg', 'autonomic.sympathetic-outflow', 'autonomic.anhidrosis', 'brain.sympathetic', 'brain.sympathetic-second', 'brain.sympathetic-third', 'territory.lung-apex', 'territory.carotid-neck'],
         body:
           `<div class="kv"><span class="k">Babinski</span><span class="v">${sign(f.babinski.L)} left · ${sign(f.babinski.R)} right</span></div>` +
           `<div class="kv"><span class="k">Horner</span><span class="v">${sign(f.horner.L)} left · ${sign(f.horner.R)} right</span></div>` +
+          sweatingHtml(f) +
           `<div class="kv"><span class="k">Romberg</span><span class="v">${sign(f.romberg)}</span></div>`,
       },
       {

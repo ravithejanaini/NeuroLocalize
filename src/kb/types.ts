@@ -30,6 +30,7 @@ import type {
   Tone,
   VisionPlace,
   VisualPart,
+  SweatLoss,
   Territory,
   TrigeminalDivision,
   Trunk,
@@ -195,6 +196,9 @@ export type Brain = {
   readonly lightNear: Row<{ readonly steps: readonly BrainStep[] }>;
   readonly convergenceRetraction: Row<{ readonly steps: readonly BrainStep[] }>;
   readonly sympathetic: BrainRoute;
+  /** P34: the second neurone outside the cord, and the third along the internal carotid. */
+  readonly sympatheticSecond: BrainRoute;
+  readonly sympatheticThird: BrainRoute;
   readonly ataxia: BrainRoute;
   readonly vertigo: Row<{ readonly steps: readonly BrainStep[] }>;
   /** P31: vertigo from the vestibular nerve, whose answer is data (C80). */
@@ -228,6 +232,8 @@ export type Brain = {
         readonly midline?: boolean;
         /** P12: parts at other levels on the same side — PICA takes the medulla and the cerebellum. */
         readonly also?: readonly { readonly level: BrainLevel; readonly compartments: readonly BrainCompartment[] }[];
+        /** P34: sites of the brachial plexus the same place takes — the lung apex takes the lower trunk. */
+        readonly plexus?: readonly PlexusSite[];
       }>
     >
   >;
@@ -280,6 +286,8 @@ export type Kb = {
     /** The root whose loss interrupts the second-order oculosympathetic neuron (D33). */
     readonly sympatheticOutflow: Row<{ readonly root: Segment }>;
     readonly sympatheticRootCompartment: Row<{ readonly compartment: Compartment }>;
+    /** P34: where sweating is lost, by the neurone of the oculosympathetic pathway that is cut. */
+    readonly anhidrosis: Row<{ readonly first: SweatLoss; readonly second: SweatLoss; readonly third: SweatLoss }>;
   };
   readonly reflexes: { readonly [R in Reflex]: Row<{ readonly span: Span }> };
   readonly vertebrae: readonly Row<{ readonly vertebra: Vertebra; readonly segments: Span }>[];

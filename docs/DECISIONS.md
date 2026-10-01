@@ -2175,3 +2175,69 @@ by a full run the hand check of D171. The remaining survivors are the ones alrea
 
 **R61** — C88: should a hemicord or anterior horn lesion at C1–C5 weaken the sternocleidomastoid and
 trapezius in the model, and should a hemisphere lesion?
+
+## P34 — Horner syndrome by the neurone: first, second and third order
+
+The analysis written before any P34 code is `docs/P34-analysis.md`; S176–S178 were read for it on
+2026-10-01, with S16 re-read in full. Run against the P33 engine first, all eight new cases and all
+three new examinations failed.
+
+### Source conflicts and limits
+
+**C92 — Proximal and distal to the ganglion.** S176 gives a postganglionic lesion "proximal to the
+superior cervical ganglion" the whole head and neck. The model's third-order parts are both distal
+to it, on the internal carotid, so both give the brow.
+
+**C93 — "Face" and "head and neck".** S16 says the face, S176 the head and neck, for the second
+neurone; the model's word is the face.
+
+**C94 — The lung apex and the C8–T1 roots look alike.** The roots themselves give the same hand and
+the same second-order Horner syndrome; nothing examined separates them. The examination expects
+both to lead.
+
+**C95 — Not modelled.** The pharmacological tests, the pupil's size, pain, harlequin flushing and
+the ciliospinal reflex.
+
+**C96 — "May".** S16 says first-order lesions "may cause" half-body anhidrosis and S178 that a Horner
+syndrome "may be present" in dissection; the model's lesions are complete and give the stated
+pattern.
+
+### Decisions
+
+**D176 — Where sweating is lost is a finding.** On each side: nowhere, the brow, the face, or the
+face and that half of the body. One row of the knowledge base gives the rule by neurone — first the
+half body, second the face, third the brow (S16, S176) — and the engine applies it to the most
+central neurone cut. The examination records it on each side, and the findings name the neurone.
+
+**D177 — Every Horner lesion is sorted by neurone, as the sources sort them.** The brainstem and the
+cord — its descending fibres and the ciliospinal centre itself — are first order: S16 and S176 both
+list syringomyelia and cord lesions there. The T1 root is second order. The carotid plexus in the
+cavernous sinus is third order; it leaves the first-order route, where P30 had put it, for a
+third-order route of its own. No Horner finding of any earlier case changed.
+
+**D178 — Two parts and two places in the neck.** The cervical sympathetic chain with the stellate
+ganglion (second order), and the plexus on the internal carotid in the neck (third order). The lung
+apex takes the chain with the lower trunk of the brachial plexus — a place may now name plexus sites
+as it may name visual parts — and the carotid in the neck takes its plexus alone.
+
+**D179 — The lung apex's examination has two leaders.** The C8 and T1 roots fit it as well (C94), so
+its expectation asks for both in the top two, as the fourth nerve's does (D155).
+
+**D180 — Which family, and what it did to two older examinations.** Put with the plexus and the
+cranial nerves, the two places diluted those families' priors by one member each and flipped two ties
+(the open foot-drop examination and the fourth nerve's) — the fault of D167 again. A family of their
+own was worse: two members share a family's whole share, and the lung apex then outranked the lower
+trunk on a weak hand with the Horner syndrome not yet examined. So both rank in the large family of
+structures outside the brain in the head and neck, renamed "cranial nerve or sympathetic pathway,
+outside the brain", where one more member moves almost nothing; a test holds the lower trunk above
+the lung apex. Two older examinations are touched. `reverse-hand-weakness-open` — a weak ulnar hand,
+nothing else examined — now has four candidates with nothing against them, the lung apex among them
+(S177), so it asks for the plexus and the ulnar nerve within the top four, not three (A40). And the
+isolated fourth nerve palsy's tie is listed nucleus first again; its expectation does not fix the
+order (D155). No other earlier leader moved.
+
+### Reviewer questions
+
+**R62** — D177: a lesion of the ciliospinal centre itself (a syrinx at C8–T2) is counted first order
+and given the half body, because both sources list syringomyelia there. Is that the pattern to teach,
+or does it behave as second order — the face only?

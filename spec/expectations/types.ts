@@ -28,6 +28,7 @@ import type {
   Segment,
   Severity,
   Side,
+  SweatLoss,
   TrigeminalDivision,
   SignState,
   SkinArea,
@@ -75,6 +76,8 @@ export type Assertion = Evidence &
     | (Sided & { readonly kind: 'reflex'; readonly reflex: Reflex; readonly oneOf: readonly ReflexState[] })
     | (Sided & { readonly kind: 'babinski'; readonly oneOf: readonly SignState[] })
     | (Sided & { readonly kind: 'horner'; readonly oneOf: readonly SignState[] })
+    // A40: where sweating is lost on that side.
+    | (Sided & { readonly kind: 'sweating'; readonly oneOf: readonly SweatLoss[] })
     | { readonly kind: 'romberg'; readonly oneOf: readonly SignState[] }
     | { readonly kind: 'bladder'; readonly oneOf: readonly BladderState[] }
     | { readonly kind: 'neurogenicShock'; readonly oneOf: readonly NeurogenicShock[] }

@@ -145,6 +145,7 @@ export const CYCLE: Record<Slot['kind'], readonly string[]> = {
   reflex: ['normal', 'reduced', 'brisk'],
   babinski: ['absent', 'present'],
   horner: ['absent', 'present'],
+  sweating: ['none', 'brow', 'face', 'body'],
   romberg: ['absent', 'present'],
   bladder: ['normal', 'overactive', 'retention'],
   muscle: ['normal', 'weak'],
@@ -193,6 +194,8 @@ export function slotLabel(render: RenderKb, s: Slot): string {
       return `${SIDE_WORD[s.side]} Babinski sign`;
     case 'horner':
       return `${SIDE_WORD[s.side]} Horner syndrome`;
+    case 'sweating':
+      return `${SIDE_WORD[s.side]} sweating lost`;
     case 'romberg':
       return 'Romberg test';
     case 'bladder':
@@ -233,6 +236,11 @@ export function slotLabel(render: RenderKb, s: Slot): string {
 }
 
 const VALUE_WORD: Record<string, string> = {
+  // P34: where sweating is lost.
+  none: 'nowhere',
+  brow: 'brow only',
+  face: 'face',
+  body: 'face and half body',
   normal: 'normal',
   abnormal: 'abnormal',
   weak: 'weak',
@@ -308,7 +316,7 @@ export function examTables(render: RenderKb, findings: Findings): string {
     }).join('');
     return `<tr><th colspan="2">${reflex}</th>${cells}</tr>`;
   }).join('');
-  const sided = (kind: 'babinski' | 'horner', name: string): string =>
+  const sided = (kind: 'babinski' | 'horner' | 'sweating', name: string): string =>
     `<tr><th colspan="2">${name}</th>${SIDES.map((side) => {
       const s: Slot = { kind, side };
       return `<td>${cell(slotKey(s), get(s), slotLabel(render, s))}</td>`;
@@ -361,7 +369,7 @@ export function examTables(render: RenderKb, findings: Findings): string {
     <thead><tr><th colspan="2">Visual fields</th><th>Left eye</th><th>Right eye</th></tr></thead>
     <tbody><tr><td colspan="4"><div class="fcharts exam-fields">${eyes}</div></td></tr>${pupils}</tbody>
     <thead><tr><th colspan="2">Reflexes and signs</th><th>Left</th><th>Right</th></tr></thead><tbody>${reflexes}
-    ${sided('babinski', 'Babinski')}${sided('horner', 'Horner')}
+    ${sided('babinski', 'Babinski')}${sided('horner', 'Horner')}${sided('sweating', 'Sweating lost')}
     ${single({ kind: 'romberg' }, 'Romberg')}${single({ kind: 'bladder' }, 'Bladder')}</tbody></table>`;
 }
 

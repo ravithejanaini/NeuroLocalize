@@ -34,6 +34,7 @@ import {
   type SignObservation,
   type SkinArea,
   type StrengthObservation,
+  type SweatLoss,
   type Timepoint,
   type TrigeminalDivision,
 } from '../kb/vocab.ts';
@@ -52,6 +53,8 @@ export type Observation =
   | { readonly kind: 'strength'; readonly side: Side; readonly span: Span; readonly value: StrengthObservation }
   | { readonly kind: 'reflex'; readonly side: Side; readonly reflex: Reflex; readonly value: ReflexObservation }
   | { readonly kind: 'babinski' | 'horner'; readonly side: Side; readonly value: SignObservation }
+  /** P34: where sweating is lost on that side — it tells the three neurones of a Horner syndrome apart. */
+  | { readonly kind: 'sweating'; readonly side: Side; readonly value: SweatLoss }
   | { readonly kind: 'romberg'; readonly value: SignObservation }
   | { readonly kind: 'bladder'; readonly value: BladderObservation }
   | { readonly kind: 'muscle'; readonly side: Side; readonly muscle: Muscle; readonly value: StrengthObservation }
@@ -96,6 +99,7 @@ const DOMAIN: Record<Observation['kind'], readonly string[]> = {
   reflex: ['normal', 'reduced', 'brisk'],
   babinski: ['present', 'absent'],
   horner: ['present', 'absent'],
+  sweating: ['none', 'brow', 'face', 'body'],
   romberg: ['present', 'absent'],
   bladder: ['normal', 'overactive', 'retention'],
   muscle: ['normal', 'weak'],
@@ -129,6 +133,7 @@ export const slotKey = (s: Slot): string => {
       return `reflex|${s.side}|${s.reflex}`;
     case 'babinski':
     case 'horner':
+    case 'sweating':
       return `${s.kind}|${s.side}`;
     case 'muscle':
       return `muscle|${s.side}|${s.muscle}`;
@@ -254,6 +259,8 @@ export function predict(f: Findings, s: Slot, kb: Kb = KB): Value | 'unknown' {
       const v = f[s.kind][s.side];
       return v === 'indeterminate' ? 'unknown' : v;
     }
+    case 'sweating':
+      return f.sweating[s.side];
     case 'romberg':
       return f.romberg === 'indeterminate' ? 'unknown' : f.romberg;
     case 'bladder':
@@ -592,6 +599,9 @@ export const SITE_NAME: Record<Place, string> = {
   orbital_apex: 'orbital apex (III, IV, VI, V1 and the optic nerve)',
   // P33.
   jugular_foramen: 'jugular foramen (IX, X and XI)',
+  // P34.
+  lung_apex: 'lung apex (the sympathetic chain and the lower trunk)',
+  carotid_neck: 'internal carotid artery in the neck (its sympathetic plexus)',
   subthalamic_nucleus: 'subthalamic nucleus',
   frontal_eye_field: 'frontal eye field (Brodmann area 8)',
   borderzone_anterior: 'anterior border zone (ACA–MCA), around Broca area',
@@ -726,6 +736,8 @@ const PART_NAME: Record<BrainCompartment, string> = {
   glossopharyngeal_nerve: 'glossopharyngeal nerve',
   vagus_nerve: 'vagus nerve',
   accessory_nerve: 'accessory nerve',
+  sympathetic_chain: 'cervical sympathetic chain',
+  carotid_plexus_neck: 'sympathetic plexus on the internal carotid in the neck',
 };
 const LEVEL_NAME: Record<BrainLevel, string> = {
   cortex: 'cortex',
@@ -1010,10 +1022,18 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
       return f.horner[o.side] === 'present'
         ? map.damage(kb.autonomic.sympatheticRootCompartment.compartment, o.side, idx(kb.autonomic.sympatheticOutflow.root)) > 0
           ? `the ${kb.autonomic.sympatheticOutflow.root} root, which carries the sympathetic outflow to the eye, is damaged`
-          : (faceCuts([b.sympathetic], o.side)[0] ?? 'the oculosympathetic pathway is interrupted at or above the ciliospinal centre')
+          : (faceCuts([b.sympathetic, b.sympatheticSecond, b.sympatheticThird], o.side)[0] ?? 'the oculosympathetic pathway is interrupted at or above the ciliospinal centre')
         : h.site && PLEXUS_SITE_SET.has(h.site)
           ? 'the sympathetic fibres leave with the T1 root, before this point'
           : 'the oculosympathetic pathway is intact';
+    case 'sweating': {
+      // P34: the neurone cut decides where sweating is lost (S16, S176).
+      const n = f.hornerNeurone[o.side];
+      if (n === 0) return 'the oculosympathetic pathway is intact, so sweating is kept';
+      const which = n === 1 ? 'first' : n === 2 ? 'second' : 'third';
+      const where = n === 1 ? 'over the face and that half of the body' : n === 2 ? 'over the face' : 'only beside the brow, the sweat fibres having left with the external carotid';
+      return `the ${which}-order neurone is cut: sweating is lost ${where}`;
+    }
     case 'romberg':
       return f.romberg === 'present'
         ? 'proprioception from the legs is lost'

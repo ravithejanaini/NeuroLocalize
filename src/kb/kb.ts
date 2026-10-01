@@ -128,6 +128,18 @@ export const KB: Kb = {
       },
       compartment: 'ventral_root',
     },
+    anhidrosis: {
+      meta: {
+        id: 'autonomic.anhidrosis',
+        claim: 'With a Horner syndrome, sweating is lost by the neurone cut: a first-order lesion over the ipsilateral face and half of the body, a second-order lesion over the ipsilateral face, and a third-order lesion beyond the superior cervical ganglion only beside the brow, because the sudomotor fibres have already left with the external carotid artery.',
+        sources: ['S16', 'S176'],
+        tier: 'T1',
+        bookRef: 'pending',
+      },
+      first: 'body',
+      second: 'face',
+      third: 'brow',
+    },
   },
 
   reflexes: {

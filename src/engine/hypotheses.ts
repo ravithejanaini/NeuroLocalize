@@ -167,6 +167,9 @@ export function hypotheses(): readonly Hypothesis[] {
       // P29: a place made only of parts outside the brainstem is a cranial nerve family of its own —
       // not the limb nerves', whose priors it would dilute (P31, D167).
       const nerve = row.compartments.every((c) => OUTSIDE_BRAINSTEM.includes(c));
+      // P34: the lung apex and the carotid in the neck rank here too. A family of their own gave
+      // each half of a family's share and put the lung apex above the lower trunk; the plexus's
+      // family was diluted by one more member. This large family absorbs them (D180).
       const family: LesionFamily = nerve
         ? side === 'L' ? 'cranial_nerve_left' : 'cranial_nerve_right'
         : row.midline
@@ -228,5 +231,7 @@ export function territoryRegions(kb: Kb, territory: (typeof TERRITORIES)[number]
     // P10: a territory may take part of the visual pathway too — the inferior MCA division
     // takes the optic radiation of its own side (C31).
     ...(row.vision ?? []).map((vision) => ({ vision, sides: [side], severity: 'complete' as const })),
+    // P34: and sites of the brachial plexus — the lung apex takes the lower trunk.
+    ...(row.plexus ?? []).map((plexus) => ({ plexus, sides: [side], severity: 'complete' as const })),
   ];
 }

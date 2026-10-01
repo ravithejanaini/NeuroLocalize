@@ -20,11 +20,12 @@ import {
   type SensoryState,
   type Side,
   type SignState,
+  type SweatLoss,
   type Timepoint,
   type Tone,
 } from '../kb/vocab.ts';
 import { idx, mapLesion, opposite, type Damage, type LesionMap, type LesionRegion } from './lesion.ts';
-import { brainBodyDamage, brainFindings, brainHorner, mapBrain, type BrainFindings, type BrainMap, type BrainRegion } from './brain.ts';
+import { brainBodyDamage, brainFindings, brainHornerOrder, mapBrain, type BrainFindings, type BrainMap, type BrainRegion } from './brain.ts';
 import { limbFindings, limbReflex, mapPlexus, type LimbFindings, type PlexusRegion } from './limb.ts';
 import { mapVision, visionFindings, type VisionFindings, type VisionRegion } from './vision.ts';
 import { crossingOffsets, damageAlong, motorRoute, sensoryRoute, type Route } from './routes.ts';
@@ -53,6 +54,9 @@ export type Findings = {
   readonly reflexes: Readonly<Record<Side, Readonly<Record<Reflex, ReflexState>>>>;
   readonly babinski: Readonly<Record<Side, SignState>>;
   readonly horner: Readonly<Record<Side, SignState>>;
+  /** P34: which neurone gives the Horner syndrome (0 when there is none), and where sweating is lost. */
+  readonly hornerNeurone: Readonly<Record<Side, 0 | 1 | 2 | 3>>;
+  readonly sweating: Readonly<Record<Side, SweatLoss>>;
   readonly romberg: SignState;
   readonly bladder: BladderState;
   readonly neurogenicShock: NeurogenicShock;
@@ -170,7 +174,12 @@ function babinskiFor(map: LesionMap, bmap: BrainMap, kb: Kb, t: Timepoint, x: Si
   return kb.observations.chronicUmn.babinskiPresent ? 'present' : 'absent';
 }
 
-function hornerFor(map: LesionMap, bmap: BrainMap, kb: Kb, x: Side): SignState {
+/**
+ * P34: the most central neurone of the oculosympathetic pathway cut on side x: 1, 2, 3, or 0.
+ * The cord — its descending fibres and the ciliospinal centre — is first order, as S16 lists it;
+ * the T1 root is second.
+ */
+export function hornerOrderFor(map: LesionMap, bmap: BrainMap, kb: Kb, x: Side): 0 | 1 | 2 | 3 {
   const { centre, firstOrderRunsOn } = kb.autonomic.ciliospinal;
   const fibres = onSide(x, firstOrderRunsOn);
   const [start, end] = [idx(centre[0]), idx(centre[1])];
@@ -178,7 +187,19 @@ function hornerFor(map: LesionMap, bmap: BrainMap, kb: Kb, x: Side): SignState {
   const centreHit = range(start, end).some((k) => map.damage('intermediolateral', x, k) > 0);
   const outflow = idx(kb.autonomic.sympatheticOutflow.root);
   const rootHit = map.damage(kb.autonomic.sympatheticRootCompartment.compartment, x, outflow) > 0;
-  return descending || centreHit || rootHit || brainHorner(kb, bmap, x) ? 'present' : 'absent';
+  const above = brainHornerOrder(kb, bmap, x);
+  if (descending || centreHit || above === 1) return 1;
+  if (rootHit || above === 2) return 2;
+  return above;
+}
+
+const hornerFor = (map: LesionMap, bmap: BrainMap, kb: Kb, x: Side): SignState => (hornerOrderFor(map, bmap, kb, x) > 0 ? 'present' : 'absent');
+
+/** P34: where sweating is lost on side x, read from the knowledge base by the neurone cut. */
+function sweatingFor(map: LesionMap, bmap: BrainMap, kb: Kb, x: Side): SweatLoss {
+  const order = hornerOrderFor(map, bmap, kb, x);
+  const row = kb.autonomic.anhidrosis;
+  return order === 1 ? row.first : order === 2 ? row.second : order === 3 ? row.third : 'none';
 }
 
 /** Level at which descending autonomic control is cut on both sides, or -1. */
@@ -311,6 +332,8 @@ export function forward(lesion: readonly AnyRegion[], timepoint: Timepoint, opti
     reflexes,
     babinski: { L: babinskiFor(map, bmap, kb, timepoint, 'L'), R: babinskiFor(map, bmap, kb, timepoint, 'R') },
     horner: { L: hornerFor(map, bmap, kb, 'L'), R: hornerFor(map, bmap, kb, 'R') },
+    hornerNeurone: { L: hornerOrderFor(map, bmap, kb, 'L'), R: hornerOrderFor(map, bmap, kb, 'R') },
+    sweating: { L: sweatingFor(map, bmap, kb, 'L'), R: sweatingFor(map, bmap, kb, 'R') },
     romberg,
     bladder: bladderFor(map, kb, timepoint),
     neurogenicShock: neurogenicShockFor(map, kb, timepoint),

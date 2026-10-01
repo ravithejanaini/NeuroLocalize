@@ -302,8 +302,8 @@ export const BRAIN: Brain = {
   sympathetic: {
     meta: {
       id: 'brain.sympathetic',
-      claim: 'First-order sympathetic fibres descend uncrossed through the midbrain, pons and lateral medulla; a lesion there gives an ipsilateral Horner syndrome. The third-order fibres return as the plexus around the internal carotid artery and pass through the cavernous sinus, where damage to them gives a Horner syndrome too (P30).',
-      sources: ['S16', 'S47', 'S165', 'S70'],
+      claim: 'First-order sympathetic fibres descend uncrossed through the midbrain, pons and lateral medulla; a lesion there gives an ipsilateral Horner syndrome.',
+      sources: ['S16', 'S47'],
       tier: 'T1',
       bookRef: p,
     },
@@ -311,8 +311,29 @@ export const BRAIN: Brain = {
       { level: 'midbrain', compartment: 'sympathetic' },
       { level: 'pons', compartment: 'sympathetic' },
       { level: 'medulla', compartment: 'sympathetic' },
-      { level: 'midbrain', compartment: 'carotid_sympathetic' },
     ],
+    serves: 'ipsilateral',
+  },
+  sympatheticSecond: {
+    meta: {
+      id: 'brain.sympathetic-second',
+      claim: 'Second-order preganglionic fibres leave the cord at T1 and ascend in the cervical sympathetic chain, through the stellate ganglion, to the superior cervical ganglion; a lesion of the chain — as at the lung apex — gives an ipsilateral Horner syndrome.',
+      sources: ['S16', 'S177', 'S176'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'medulla', compartment: 'sympathetic_chain' }],
+    serves: 'ipsilateral',
+  },
+  sympatheticThird: {
+    meta: {
+      id: 'brain.sympathetic-third',
+      claim: 'Third-order postganglionic fibres ascend as the plexus around the internal carotid artery, in the neck and then through the cavernous sinus; a lesion of them at either place — a dissection of the artery, or the sinus — gives an ipsilateral Horner syndrome.',
+      sources: ['S16', 'S178', 'S165', 'S70'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'medulla', compartment: 'carotid_plexus_neck' }, { level: 'midbrain', compartment: 'carotid_sympathetic' }],
     serves: 'ipsilateral',
   },
   faceDivisions: [
@@ -574,8 +595,8 @@ export const BRAIN: Brain = {
   partsAt: {
     meta: {
       id: 'brain.parts-at',
-      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei; and, outside the brainstem, the oculomotor and trochlear nerves at the midbrain, the abducens and facial nerves at the pons and the hypoglossal nerve at the medulla (P29), with the cavernous sinus — the ophthalmic and maxillary divisions and the carotid sympathetic plexus — held at the midbrain (P30), and the vestibulocochlear nerve and trigeminal root at the cerebellopontine angle, held at the pons (P31), and the ophthalmic division in the superior orbital fissure, held at the midbrain (P32), and the glossopharyngeal, vagus and accessory nerves at the jugular foramen, held at the medulla (P33).',
-      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125', 'S130', 'S61', 'S62', 'S63', 'S51', 'S165', 'S169', 'S171', 'S172'],
+      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei; and, outside the brainstem, the oculomotor and trochlear nerves at the midbrain, the abducens and facial nerves at the pons and the hypoglossal nerve at the medulla (P29), with the cavernous sinus — the ophthalmic and maxillary divisions and the carotid sympathetic plexus — held at the midbrain (P30), and the vestibulocochlear nerve and trigeminal root at the cerebellopontine angle, held at the pons (P31), and the ophthalmic division in the superior orbital fissure, held at the midbrain (P32), and the glossopharyngeal, vagus and accessory nerves at the jugular foramen, held at the medulla (P33), and the cervical sympathetic chain and the carotid plexus in the neck, held at the medulla too (P34).',
+      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125', 'S130', 'S61', 'S62', 'S63', 'S51', 'S165', 'S169', 'S171', 'S172', 'S176'],
       tier: 'T1',
       bookRef: p,
     },
@@ -618,6 +639,8 @@ export const BRAIN: Brain = {
         'glossopharyngeal_nerve',
         'vagus_nerve',
         'accessory_nerve',
+        'sympathetic_chain',
+        'carotid_plexus_neck',
       ],
       cerebellum: ['cerebellar_hemisphere', 'vermis'],
     },
@@ -1132,6 +1155,30 @@ export const BRAIN: Brain = {
       },
       level: 'medulla',
       compartments: ['glossopharyngeal_nerve', 'vagus_nerve', 'accessory_nerve'],
+    },
+    // P34: the two lesions behind a Horner syndrome outside the head.
+    lung_apex: {
+      meta: {
+        id: 'territory.lung-apex',
+        claim: 'A lesion of the lung apex (the superior sulcus) involves the sympathetic chain and the brachial plexus: a Horner syndrome with weakness of the intrinsic muscles of the hand and numbness of the fourth and fifth digits and the medial forearm — the lower trunk.',
+        sources: ['S177', 'S16'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'medulla',
+      compartments: ['sympathetic_chain'],
+      plexus: ['lower_trunk'],
+    },
+    carotid_neck: {
+      meta: {
+        id: 'territory.carotid-neck',
+        claim: 'A dissection of the internal carotid artery in the neck compresses the sympathetic fibres on it: a third-order Horner syndrome, with sweating lost only beside the brow.',
+        sources: ['S178', 'S16'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'medulla',
+      compartments: ['carotid_plexus_neck'],
     },
   },
 };

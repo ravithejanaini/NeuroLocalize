@@ -169,6 +169,9 @@ export const PRESETS: readonly Preset[] = [
   { id: 'orbital-apex', kind: 'brain', label: 'Orbital apex', pattern: 'The fissure, and the eye blind', territory: 'orbital_apex' },
   // P33.
   { id: 'jugular-foramen', kind: 'brain', label: 'Jugular foramen', pattern: 'Palate, back of tongue, shoulder; tongue strong', territory: 'jugular_foramen' },
+  // P34: a Horner syndrome outside the head.
+  { id: 'lung-apex', kind: 'brain', label: 'Lung apex (Pancoast)', pattern: 'Horner, face dry; ulnar hand weak and numb', territory: 'lung_apex' },
+  { id: 'carotid-neck', kind: 'brain', label: 'Carotid artery, neck', pattern: 'Horner, only the brow dry', territory: 'carotid_neck' },
   // P8: the visual pathway.
   { id: 'optic-nerve', kind: 'vision', label: 'Optic nerve', pattern: 'One eye blind, pupil defect', place: 'optic_nerve' },
   { id: 'chiasm', kind: 'vision', label: 'Optic chiasm', pattern: 'Bitemporal hemianopia', place: 'chiasm' },

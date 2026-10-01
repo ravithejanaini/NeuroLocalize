@@ -19,7 +19,7 @@ export function examSlots(render: RenderKb): Slot[] {
     }
     for (const row of render.myotomes.rows) out.push({ kind: 'strength', side, span: row.span });
     for (const reflex of REFLEXES) out.push({ kind: 'reflex', side, reflex });
-    out.push({ kind: 'babinski', side }, { kind: 'horner', side });
+    out.push({ kind: 'babinski', side }, { kind: 'horner', side }, { kind: 'sweating', side });
     for (const muscle of MUSCLES) out.push({ kind: 'muscle', side, muscle });
     for (const area of OWN_AREAS) out.push({ kind: 'skin', side, area });
     out.push({ kind: 'face_sensation', side }, { kind: 'face_weakness', side }, { kind: 'ataxia', side }, { kind: 'hemiballismus', side });

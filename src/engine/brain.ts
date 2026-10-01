@@ -92,6 +92,8 @@ export function validateBrain(kb: Kb): void {
     b.lightNear.steps,
     b.convergenceRetraction.steps,
     b.sympathetic.steps,
+    b.sympatheticSecond.steps,
+    b.sympatheticThird.steps,
     b.ataxia.steps,
     b.vertigo.steps,
     b.truncalAtaxia.steps,
@@ -344,4 +346,15 @@ export function brainFindings(kb: Kb, map: BrainMap, timepoint: Timepoint = 'chr
 }
 
 /** The ipsilateral oculosympathetic pathway in the brainstem (S16). */
-export const brainHorner = (kb: Kb, map: BrainMap, x: Side): boolean => routeDamage(map, kb.brain.sympathetic, x, 'face') > 0;
+export const brainHorner = (kb: Kb, map: BrainMap, x: Side): boolean => brainHornerOrder(kb, map, x) > 0;
+
+/**
+ * P34: the most central neurone of the oculosympathetic pathway that a lesion above the cord
+ * cuts on side x — 1, 2 or 3 — or 0 when it cuts none.
+ */
+export function brainHornerOrder(kb: Kb, map: BrainMap, x: Side): 0 | 1 | 2 | 3 {
+  if (routeDamage(map, kb.brain.sympathetic, x, 'face') > 0) return 1;
+  if (routeDamage(map, kb.brain.sympatheticSecond, x, 'face') > 0) return 2;
+  if (routeDamage(map, kb.brain.sympatheticThird, x, 'face') > 0) return 3;
+  return 0;
+}

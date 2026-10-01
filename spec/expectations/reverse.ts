@@ -12,6 +12,7 @@ import type {
   SignObservation,
   SourceId,
   StrengthObservation,
+  SweatLoss,
   Timepoint,
 } from '../../src/kb/vocab.ts';
 import type { Span } from './types.ts';
@@ -21,6 +22,8 @@ export type Observation =
   | { readonly kind: 'strength'; readonly side: Side; readonly span: Span; readonly value: StrengthObservation }
   | { readonly kind: 'reflex'; readonly side: Side; readonly reflex: Reflex; readonly value: ReflexObservation }
   | { readonly kind: 'babinski' | 'horner'; readonly side: Side; readonly value: SignObservation }
+  // A40.
+  | { readonly kind: 'sweating'; readonly side: Side; readonly value: SweatLoss }
   | { readonly kind: 'romberg'; readonly value: SignObservation }
   | { readonly kind: 'bladder'; readonly value: BladderObservation };
 

@@ -275,6 +275,10 @@ export const RENDER: RenderKb = {
       'medulla:glossopharyngeal_nerve': [-1.2, 0.5, -0.3],
       'medulla:vagus_nerve': [-1.25, 0.2, -0.25],
       'medulla:accessory_nerve': [-1.25, -0.15, -0.15],
+      // P34: in the neck, below and beside the medulla — the sympathetic chain posterolateral, the
+      // plexus on the internal carotid in front of it (S176).
+      'medulla:sympathetic_chain': [-1.5, -0.7, 0.2],
+      'medulla:carotid_plexus_neck': [-1.45, -0.55, -0.7],
       'pons:basis': [-0.4, 0, -0.95],
       'pons:facial': [-0.62, -0.3, 0.08],
       'pons:abducens_nucleus': [-0.2, -0.45, 0.55],

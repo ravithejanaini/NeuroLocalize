@@ -640,6 +640,19 @@ situation the freeze exists to catch.
   `docs/P33-analysis.md` before any code; all five were run red against the P32 engine. The gag
   reflex is never asserted (C87).
 
+## A40 — Horner syndrome by neurone (P34, 2026-10-01)
+
+- **Changed:** two new files. `horner.ts` holds eight cases — each neurone alone at each place the
+  model has it, the lung apex and the carotid in the neck; `reverse-horner.ts` holds three
+  examinations. `types.ts` and `reverse.ts` gain a finding and an observation for where sweating is
+  lost. In `reverse-plexus.ts` the open examination of a weak ulnar hand asks for the plexus and the
+  ulnar nerve within the top four rather than three: the lung apex fits it too (D180).
+- **How circularity was avoided:** every assertion is quoted from S16 and S176–S178, read into
+  `docs/P34-analysis.md` before any code; all eleven new expectations were run red against the P33
+  engine. The amended examination failed on the first P34 run, and was amended because a new and
+  sourced candidate fits its findings — its observations are unchanged. The pupil and the drug tests
+  are never asserted (C95).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -647,10 +660,10 @@ situation the freeze exists to catch.
 | `cases.ts` | A1, A2, A9 |
 | `boundaries.ts` | A2 |
 | `index.ts` | A2 (exports the boundary cases) |
-| `reverse.ts` | A3 |
-| `types.ts` | A4, A6, A7, A11, A14, A15, A17, A19, A20, A34, A36 |
+| `reverse.ts` | A3, A40 |
+| `types.ts` | A4, A6, A7, A11, A14, A15, A17, A19, A20, A34, A36, A40 |
 | `plexus.ts` | A4, A5, A6, A9, A30 |
-| `reverse-plexus.ts` | A4, A5 |
+| `reverse-plexus.ts` | A4, A5, A40 |
 | `brain.ts` | A7, A8, A9, A13, A14, A16, A17, A18, A32 |
 | `reverse-brain.ts` | A7, A13, A14, A15, A16, A17, A19, A20, A36 |
 | `leg.ts` | A10, A23, A24 |
@@ -698,5 +711,7 @@ situation the freeze exists to catch.
 | `reverse-orbit.ts` | A38 |
 | `jugular.ts` | A39 |
 | `reverse-jugular.ts` | A39 |
+| `horner.ts` | A40 |
+| `reverse-horner.ts` | A40 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

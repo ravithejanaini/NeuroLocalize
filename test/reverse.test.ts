@@ -24,6 +24,7 @@ import { CAVERNOUS_REVERSE_CASES } from '../spec/expectations/reverse-cavernous.
 import { ANGLE_REVERSE_CASES } from '../spec/expectations/reverse-angle.ts';
 import { ORBIT_REVERSE_CASES } from '../spec/expectations/reverse-orbit.ts';
 import { JUGULAR_REVERSE_CASES } from '../spec/expectations/reverse-jugular.ts';
+import { HORNER_REVERSE_CASES } from '../spec/expectations/reverse-horner.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
 import { hypotheses } from '../src/engine/hypotheses.ts';
@@ -38,7 +39,7 @@ import { examSlots } from '../src/render/slots.ts';
 const SLOTS = examSlots(RENDER);
 
 describe('frozen reverse expectations (A3, A4, A7)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES, ...SECTORANOPIA_REVERSE_CASES, ...CRANIAL_NERVE_REVERSE_CASES, ...CAVERNOUS_REVERSE_CASES, ...ANGLE_REVERSE_CASES, ...ORBIT_REVERSE_CASES, ...JUGULAR_REVERSE_CASES]) {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES, ...SECTORANOPIA_REVERSE_CASES, ...CRANIAL_NERVE_REVERSE_CASES, ...CAVERNOUS_REVERSE_CASES, ...ANGLE_REVERSE_CASES, ...ORBIT_REVERSE_CASES, ...JUGULAR_REVERSE_CASES, ...HORNER_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });
@@ -65,7 +66,8 @@ describe('reverse engine contract', () => {
     // P28: each eye's field is ten cells instead of six sectors: + 4 an eye.
     // P30: each trigeminal division on each side: + 3 a side.
     // P33 adds the back of the tongue and the eleventh nerve, two more cranial signs on each side: 2 * 17.
-    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 17 + 1 + 2 * 7 + 3 + 2 + 1 + 3 + 2 + 1 + 2 * 4 + 2 * 3);
+    // P34 adds where sweating is lost, one on each side: the second + 2.
+    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 17 + 1 + 2 * 7 + 3 + 2 + 1 + 3 + 2 + 1 + 2 * 4 + 2 * 3);
   });
 
   it('with no findings, prefers nothing in particular and still suggests a test', () => {
@@ -257,8 +259,9 @@ describe('reverse engine contract', () => {
     assert.deepEqual(nerve.sites, ['long_thoracic'], 'the only nerve place that weakens serratus');
     const places = hypotheses().filter((x) => x.site);
     assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 66, 'D32, P7, P19, P20, P23: 18 arm and 15 leg places on each side — P19 adds the deep fibular nerve at two places and the superficial at one, P20 the tarsal tunnel, P23 the pudendal nerve');
+
     // P29–P31: the cranial nerves outside the brainstem are a family of their own (D167).
-    assert.equal(places.filter((x) => x.family.startsWith('cranial_nerve')).length, 2 * (5 + 1 + 2 + 2 + 1), 'P29 five nerves, P30 the cavernous sinus, P31 the eighth nerve and the angle, P32 the fissure and the apex, P33 the jugular foramen, on each side');
+    assert.equal(places.filter((x) => x.family.startsWith('cranial_nerve')).length, 2 * (5 + 1 + 2 + 2 + 1 + 2), 'P29 five nerves, P30 the cavernous sinus, P31 the eighth nerve and the angle, P32 the fissure and the apex, P33 the jugular foramen, P34 the lung apex and the carotid in the neck (D180), on each side');
     assert.equal(
       places.filter((x) => x.family.startsWith('brainstem') || x.family.startsWith('hemisphere')).length,
       52,
@@ -560,6 +563,45 @@ describe('the jugular foramen (P33)', () => {
     // The lateral medulla has the palate, from the nucleus ambiguus, but neither new sign.
     const medulla = explain(lm, obs, 'chronic');
     assert.deepEqual(medulla.map((v) => v.verdict), ['fits', 'conflicts', 'conflicts', 'fits']);
+  });
+});
+
+describe('Horner syndrome by neurone (P34)', () => {
+  it('sorts every Horner lesion by neurone, and names it in the working', () => {
+    prepareSync('chronic');
+    const find = (id: string) => {
+      const h = hypotheses().find((x) => x.id === id);
+      assert.ok(h, id);
+      return h;
+    };
+    const dry = (value: 'brow' | 'face' | 'body'): Observation[] => [
+      { kind: 'horner', side: 'L', value: 'present' },
+      { kind: 'sweating', side: 'L', value },
+    ];
+    // First order: the lateral medulla. Second: the lung apex. Third: the carotid and the sinus.
+    const [, medulla] = explain(find('brainstem_left:lateral_medullary'), dry('body'), 'chronic');
+    assert.equal(medulla?.verdict, 'fits');
+    assert.match(medulla?.because ?? '', /^the first-order neurone is cut: sweating is lost over the face and that half of the body$/);
+    const [hornerApex, apex] = explain(find('cranial_nerve_left:lung_apex'), dry('face'), 'chronic');
+    assert.match(hornerApex?.because ?? '', /^the left cervical sympathetic chain is damaged$/);
+    assert.match(apex?.because ?? '', /^the second-order neurone is cut: sweating is lost over the face$/);
+    const [, carotid] = explain(find('cranial_nerve_left:carotid_neck'), dry('brow'), 'chronic');
+    assert.match(carotid?.because ?? '', /^the third-order neurone is cut: sweating is lost only beside the brow/);
+    const [, sinus] = explain(find('cranial_nerve_left:cavernous_sinus'), dry('brow'), 'chronic');
+    assert.equal(sinus?.verdict, 'fits');
+    // And the wrong extent conflicts: a dry half body is not the carotid.
+    const [, wrong] = explain(find('cranial_nerve_left:carotid_neck'), dry('body'), 'chronic');
+    assert.equal(wrong?.verdict, 'conflicts');
+  });
+
+  it('keeps the lung apex out of the plexus family and below the lower trunk (D180)', () => {
+    prepareSync('chronic');
+    assert.ok(hypotheses().filter((h) => h.family === 'plexus_left').every((h) => h.site !== 'lung_apex'));
+    const r = reverse([{ kind: 'muscle', side: 'L', muscle: 'interossei', value: 'weak' }], 'chronic', SLOTS);
+    const order = r.groups.map((g) => g.sites.join('/'));
+    const trunk = order.findIndex((s) => s.includes('lower_trunk'));
+    const apex = order.findIndex((s) => s.includes('lung_apex'));
+    assert.ok(trunk >= 0 && apex >= 0 && trunk < apex, `lower trunk ${trunk}, lung apex ${apex}`);
   });
 });
 

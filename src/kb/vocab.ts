@@ -359,6 +359,10 @@ export const BRAIN_COMPARTMENTS = [
   'glossopharyngeal_nerve',
   'vagus_nerve',
   'accessory_nerve',
+  // P34: the second neurone of the oculosympathetic pathway in the neck — the cervical chain and
+  // stellate ganglion — and the third on the internal carotid artery in the neck.
+  'sympathetic_chain',
+  'carotid_plexus_neck',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 /**
@@ -379,7 +383,13 @@ export const OUTSIDE_BRAINSTEM: readonly BrainCompartment[] = [
   'glossopharyngeal_nerve',
   'vagus_nerve',
   'accessory_nerve',
+  'sympathetic_chain',
+  'carotid_plexus_neck',
 ];
+
+/** P34: where sweating is lost with a Horner syndrome — nowhere, the brow, the face, or the face and that half of the body. */
+export const SWEAT_LOSS = ['none', 'brow', 'face', 'body'] as const;
+export type SweatLoss = (typeof SWEAT_LOSS)[number];
 
 /** P30: the three divisions of the trigeminal nerve, by the skin each feels — forehead, cheek, jaw. */
 export const TRIGEMINAL_DIVISIONS = ['V1', 'V2', 'V3'] as const;
@@ -488,6 +498,9 @@ export const TERRITORIES = [
   'orbital_apex',
   // P33.
   'jugular_foramen',
+  // P34.
+  'lung_apex',
+  'carotid_neck',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

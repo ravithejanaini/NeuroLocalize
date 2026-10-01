@@ -158,6 +158,9 @@ describe('the drawn brain keeps the sourced relations', () => {
       ['medulla', 'glossopharyngeal_nerve'],
       ['medulla', 'vagus_nerve'],
       ['medulla', 'accessory_nerve'],
+      // P34: in the neck.
+      ['medulla', 'sympathetic_chain'],
+      ['medulla', 'carotid_plexus_neck'],
     ] as const;
     for (const [level, c] of nerves) {
       const r = L.levels[level].radius;

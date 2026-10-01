@@ -167,11 +167,13 @@ export const LIMB_REVERSE_CASES: readonly LimbReverseCase[] = [
       m('interossei', 'normal', 'R'),
       ...noLongTract,
     ],
+    // A40: from P34 the lung apex fits too — its lower trunk gives the same hand, and the Horner
+    // syndrome has not been examined — so four candidates have nothing against them, not three.
     expectations: [
-      { timepoint: 'chronic', amongTop: { k: 3, families: [['plexus_left'], ['nerve_left']] }, nextTestSeparatesTopTwo: true },
+      { timepoint: 'chronic', amongTop: { k: 4, families: [['plexus_left'], ['nerve_left']] }, nextTestSeparatesTopTwo: true },
     ],
-    cite: ['S33', 'S38'],
+    cite: ['S33', 'S38', 'S177'],
     basis: 'stated',
-    note: 'Both the lower plexus and the ulnar nerve give these findings (S33, S38); the tool must name a test that separates them.',
+    note: 'Both the lower plexus and the ulnar nerve give these findings (S33, S38), and so does the lung apex through the lower trunk (S177); the tool must name a test that separates them.',
   },
 ];

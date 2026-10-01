@@ -157,6 +157,9 @@ export function pathwaysShown(observations: readonly Observation[], f: Findings,
       case 'horner':
         if (o.value === 'present') out.add('autonomic');
         break;
+      case 'sweating':
+        if (o.value !== 'none') out.add('autonomic');
+        break;
       case 'bladder':
         if (o.value !== 'normal') out.add('autonomic');
         break;
