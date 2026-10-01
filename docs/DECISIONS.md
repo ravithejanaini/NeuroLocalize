@@ -2166,6 +2166,11 @@ not traverse the jugular foramen" (S172): the tongue stays strong, and a strong 
 Horner syndrome and a face that feels is what separates it from the lateral medulla. None of the 83
 earlier examination leaders moved.
 
+**D175 — The P33 mutation run: nothing new survived.** 8477 mutants, 97.8% raw; sourced rows 98.0%.
+No mutant of the three nerves, the two signs' routes or the foramen survived — each nerve alone is
+a case (D173). The two P32 survivors on V1 in the fissure are killed in this run, which confirms
+by a full run the hand check of D171. The remaining survivors are the ones already recorded.
+
 ### Reviewer questions
 
 **R61** — C88: should a hemicord or anterior horn lesion at C1–C5 weaken the sternocleidomastoid and
