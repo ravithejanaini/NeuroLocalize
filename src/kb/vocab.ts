@@ -363,6 +363,11 @@ export const BRAIN_COMPARTMENTS = [
   // stellate ganglion — and the third on the internal carotid artery in the neck.
   'sympathetic_chain',
   'carotid_plexus_neck',
+  // P35: the facial nerve inside the temporal bone, by its branch points. `facial_nerve` (P29) is
+  // the fourth stretch, below the chorda tympani.
+  'facial_above_geniculate',
+  'facial_above_stapedius',
+  'facial_above_chorda',
 ] as const;
 export type BrainCompartment = (typeof BRAIN_COMPARTMENTS)[number];
 /**
@@ -385,6 +390,9 @@ export const OUTSIDE_BRAINSTEM: readonly BrainCompartment[] = [
   'accessory_nerve',
   'sympathetic_chain',
   'carotid_plexus_neck',
+  'facial_above_geniculate',
+  'facial_above_stapedius',
+  'facial_above_chorda',
 ];
 
 /** P34: where sweating is lost with a Horner syndrome — nowhere, the brow, the face, or the face and that half of the body. */
@@ -419,6 +427,10 @@ export const CRANIAL_SIGNS = [
   // turn of the head away.
   'posterior_tongue_loss',
   'accessory_weakness',
+  // P35: the facial nerve's three branches inside the temporal bone.
+  'tear_loss',
+  'hyperacusis',
+  'taste_loss',
 ] as const;
 export type CranialSign = (typeof CRANIAL_SIGNS)[number];
 
@@ -501,6 +513,10 @@ export const TERRITORIES = [
   // P34.
   'lung_apex',
   'carotid_neck',
+  // P35.
+  'facial_above_geniculate',
+  'facial_above_stapedius',
+  'facial_above_chorda',
 ] as const;
 export type Territory = (typeof TERRITORIES)[number];
 

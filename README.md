@@ -47,10 +47,11 @@ teaching from a phone.
 | P32 | The superior orbital fissure and the orbital apex beside the cavernous sinus: the three orbital syndromes told apart by the cheek and by the eye's vision |
 | P33 | The jugular foramen: the ninth, tenth and eleventh nerves together — the back of the tongue, the palate and the shoulder on one side, the tongue itself strong — with two new signs for the ninth and eleventh nerves |
 | P34 | Horner syndrome by neurone: where sweating is lost — the half body, the face, or only the brow — tells first, second and third order apart; the lung apex and the carotid artery in the neck become places |
+| P35 | The facial nerve by segment: tears, hyperacusis and taste place a lower-motor-neurone facial palsy above the geniculate ganglion, above the nerve to stapedius, above the chorda tympani, or below all three |
 
 ## How accuracy is enforced
 
-- **Expected outputs are written first**, from 178 open-access sources that were
+- **Expected outputs are written first**, from 179 open-access sources that were
   actually read — one of them, S108, as its free abstract only (`docs/SOURCES.md`) — and committed before the code they test. Every later change to
   an expectation is an amendment with its reason (`spec/expectations/AMENDMENTS.md`).
 - **Every fact carries its source.** Where sources disagree, both positions are recorded

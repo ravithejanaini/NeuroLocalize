@@ -653,6 +653,17 @@ situation the freeze exists to catch.
   sourced candidate fits its findings — its observations are unchanged. The pupil and the drug tests
   are never asserted (C95).
 
+## A41 — The facial nerve by segment (P35, 2026-10-02)
+
+- **Changed:** two new files. `facial-canal.ts` holds each of the four stretches of the left facial
+  nerve and the nucleus; `reverse-facial-canal.ts` holds an examination for each of the three
+  stretches inside the temporal bone. They use three new cranial signs (D182). In
+  `reverse-cranial-nerves.ts` the isolated facial palsy now records taste, tears and the comfort of
+  hearing as normal (D184); its leader is unchanged.
+- **How circularity was avoided:** every assertion is quoted from S51 and S179, read into
+  `docs/P35-analysis.md` before any code; all eight new expectations were run red against the P34
+  engine. Salivation is never asserted (C98), nor hyperacusis from the nucleus (C99).
+
 ### Files amended since the tag, and the entry that covers each
 
 | File | Entry |
@@ -702,7 +713,7 @@ situation the freeze exists to catch.
 | `sectoranopia.ts` | A34 |
 | `reverse-sectoranopia.ts` | A34 |
 | `cranial-nerves.ts` | A35, A36, A38 |
-| `reverse-cranial-nerves.ts` | A35, A36, A37 |
+| `reverse-cranial-nerves.ts` | A35, A36, A37, A41 |
 | `cavernous.ts` | A36 |
 | `reverse-cavernous.ts` | A36, A37 |
 | `angle.ts` | A37 |
@@ -713,5 +724,7 @@ situation the freeze exists to catch.
 | `reverse-jugular.ts` | A39 |
 | `horner.ts` | A40 |
 | `reverse-horner.ts` | A40 |
+| `facial-canal.ts` | A41 |
+| `reverse-facial-canal.ts` | A41 |
 
 `npm run check:freeze` requires every changed file to appear in this file by name.

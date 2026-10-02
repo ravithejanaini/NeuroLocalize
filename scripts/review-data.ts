@@ -18,6 +18,7 @@ import { ANGLE_CASES } from '../spec/expectations/angle.ts';
 import { ORBIT_CASES } from '../spec/expectations/orbit.ts';
 import { JUGULAR_CASES } from '../spec/expectations/jugular.ts';
 import { HORNER_CASES } from '../spec/expectations/horner.ts';
+import { FACIAL_CANAL_CASES } from '../spec/expectations/facial-canal.ts';
 import { ANSWERED_LIMB_CASES, ANSWERED_VISION_CASES, ROOT_MUSCLE_CASES, SOLE_ROOT_CASES, TONGUE_ROUTE_CASES } from '../spec/expectations/answered.ts';
 import { FIBULAR_CASES } from '../spec/expectations/fibular.ts';
 import { TARSAL_CASES } from '../spec/expectations/tarsal.ts';
@@ -141,7 +142,7 @@ export function buildWorksheet(): Worksheet {
   }
 
   let k = 0;
-  for (const c of [...CORD_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...BASAL_CASES, ...CORTEX_CASES, ...BASILAR_CASES, ...OCCIPITAL_CASES, ...FIBULAR_CASES, ...TARSAL_CASES, ...TRANSCORTICAL_CASES, ...PUDENDAL_CASES, ...GENICULATE_CASES, ...ANSWERED_LIMB_CASES, ...ANSWERED_VISION_CASES, ...ROOT_MUSCLE_CASES, ...SOLE_ROOT_CASES, ...TONGUE_ROUTE_CASES, ...SECTORANOPIA_CASES, ...CRANIAL_NERVE_CASES, ...CAVERNOUS_CASES, ...ANGLE_CASES, ...ORBIT_CASES, ...JUGULAR_CASES, ...HORNER_CASES]) {
+  for (const c of [...CORD_CASES, ...PLEXUS_CASES, ...LEG_CASES, ...BRAIN_CASES, ...VISION_CASES, ...LANGUAGE_CASES, ...CEREBELLUM_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...BASAL_CASES, ...CORTEX_CASES, ...BASILAR_CASES, ...OCCIPITAL_CASES, ...FIBULAR_CASES, ...TARSAL_CASES, ...TRANSCORTICAL_CASES, ...PUDENDAL_CASES, ...GENICULATE_CASES, ...ANSWERED_LIMB_CASES, ...ANSWERED_VISION_CASES, ...ROOT_MUSCLE_CASES, ...SOLE_ROOT_CASES, ...TONGUE_ROUTE_CASES, ...SECTORANOPIA_CASES, ...CRANIAL_NERVE_CASES, ...CAVERNOUS_CASES, ...ANGLE_CASES, ...ORBIT_CASES, ...JUGULAR_CASES, ...HORNER_CASES, ...FACIAL_CANAL_CASES]) {
     const findings: Finding[] = c.evaluations.flatMap((e) =>
       e.assertions
         .filter((a) => a.basis === 'composed')

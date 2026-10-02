@@ -87,6 +87,9 @@ export function validateBrain(kb: Kb): void {
     b.vertigoNerve.steps,
     b.jaw.steps,
     b.posteriorTongue.steps,
+    b.lacrimation.steps,
+    b.stapedius.steps,
+    b.tasteAnterior.steps,
     b.accessory.steps,
     b.upgaze.steps,
     b.lightNear.steps,
@@ -298,6 +301,15 @@ export function brainFindings(kb: Kb, map: BrainMap, timepoint: Timepoint = 'chr
           break;
         case 'accessory_weakness':
           signs[sign] = present(routeDamage(map, b.accessory, x, 'face'));
+          break;
+        case 'tear_loss':
+          signs[sign] = present(routeDamage(map, b.lacrimation, x, 'face'));
+          break;
+        case 'hyperacusis':
+          signs[sign] = present(routeDamage(map, b.stapedius, x, 'face'));
+          break;
+        case 'taste_loss':
+          signs[sign] = present(routeDamage(map, b.tasteAnterior, x, 'face'));
           break;
         case 'elevation_weakness':
           signs[sign] = present(worst([routeDamage(map, b.elevation, x, 'face'), routeDamage(map, b.elevationCrossed, x, 'face')]));

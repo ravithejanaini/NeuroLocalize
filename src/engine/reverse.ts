@@ -587,7 +587,7 @@ export const SITE_NAME: Record<Place, string> = {
   oculomotor_nerve: 'oculomotor nerve (beside the posterior communicating artery)',
   trochlear_nerve: 'trochlear nerve (around the midbrain, past its crossing)',
   abducens_nerve: 'abducens nerve (along the clivus)',
-  facial_nerve: 'facial nerve (at the stylomastoid foramen)',
+  facial_nerve: 'facial nerve below the chorda tympani (stylomastoid foramen)',
   hypoglossal_nerve: 'hypoglossal nerve (in the hypoglossal canal)',
   // P30.
   cavernous_sinus: 'cavernous sinus (III, IV, VI, V1, V2 and the carotid sympathetic plexus)',
@@ -602,6 +602,10 @@ export const SITE_NAME: Record<Place, string> = {
   // P34.
   lung_apex: 'lung apex (the sympathetic chain and the lower trunk)',
   carotid_neck: 'internal carotid artery in the neck (its sympathetic plexus)',
+  // P35.
+  facial_above_geniculate: 'facial nerve above the geniculate ganglion',
+  facial_above_stapedius: 'facial nerve between the geniculate ganglion and the nerve to stapedius',
+  facial_above_chorda: 'facial nerve between the nerve to stapedius and the chorda tympani',
   subthalamic_nucleus: 'subthalamic nucleus',
   frontal_eye_field: 'frontal eye field (Brodmann area 8)',
   borderzone_anterior: 'anterior border zone (ACA–MCA), around Broca area',
@@ -738,6 +742,9 @@ const PART_NAME: Record<BrainCompartment, string> = {
   accessory_nerve: 'accessory nerve',
   sympathetic_chain: 'cervical sympathetic chain',
   carotid_plexus_neck: 'sympathetic plexus on the internal carotid in the neck',
+  facial_above_geniculate: 'facial nerve above the geniculate ganglion',
+  facial_above_stapedius: 'facial nerve between the geniculate ganglion and the nerve to stapedius',
+  facial_above_chorda: 'facial nerve between the nerve to stapedius and the chorda tympani',
 };
 const LEVEL_NAME: Record<BrainLevel, string> = {
   cortex: 'cortex',
@@ -864,6 +871,9 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
         : o.sign === 'jaw_deviation' ? [b.jaw]
         : o.sign === 'posterior_tongue_loss' ? [b.posteriorTongue]
         : o.sign === 'accessory_weakness' ? [b.accessory]
+        : o.sign === 'tear_loss' ? [b.lacrimation]
+        : o.sign === 'hyperacusis' ? [b.stapedius]
+        : o.sign === 'taste_loss' ? [b.tasteAnterior]
         : [b.ambiguus];
       const c = faceCuts(routes, o.side);
       if (o.sign === 'palate_weakness' && !c.length && f.cranial[o.side].palate_weakness === 'indeterminate') {
@@ -871,6 +881,14 @@ function reason(map: LesionMap, pmap: PlexusMap, bmap: BrainMap, kb: Kb, h: Hypo
       }
       if (o.sign === 'ptosis' && !c.length && f.cranial[o.side].ptosis === 'indeterminate') {
         return 'the oculomotor nucleus is cut, and one central caudal nucleus raises both lids: ptosis on both sides or on neither (C29)';
+      }
+      // P35: a branch of the facial nerve spared by a lesion lower in the canal.
+      const BRANCH: Partial<Record<CranialSign, string>> = { tear_loss: 'greater petrosal nerve', hyperacusis: 'nerve to stapedius', taste_loss: 'chorda tympani' };
+      const branch = BRANCH[o.sign];
+      if (branch && !c.length) {
+        return faceCuts([b.facialNucleus], o.side).length
+          ? `the ${branch} leaves the facial nerve above this lesion`
+          : 'the facial nerve and its branches are intact';
       }
       // P29: the signs whose nerve outside the brainstem the model has name it too.
       const withNerve = routes.some((r) => r.steps.some((x) => OUTSIDE_BRAINSTEM.includes(x.compartment)));

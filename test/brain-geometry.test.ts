@@ -161,6 +161,10 @@ describe('the drawn brain keeps the sourced relations', () => {
       // P34: in the neck.
       ['medulla', 'sympathetic_chain'],
       ['medulla', 'carotid_plexus_neck'],
+      // P35: the facial nerve in the temporal bone.
+      ['pons', 'facial_above_geniculate'],
+      ['pons', 'facial_above_stapedius'],
+      ['pons', 'facial_above_chorda'],
     ] as const;
     for (const [level, c] of nerves) {
       const r = L.levels[level].radius;

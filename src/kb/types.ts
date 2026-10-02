@@ -190,6 +190,10 @@ export type Brain = {
   readonly jaw: BrainRoute;
   /** P33: the ninth nerve's sensation and taste at the back of the tongue, and the eleventh nerve's two muscles. */
   readonly posteriorTongue: BrainRoute;
+  /** P35: the facial nerve's branches — tears (greater petrosal), the stapedius, taste (chorda tympani). */
+  readonly lacrimation: BrainRoute;
+  readonly stapedius: BrainRoute;
+  readonly tasteAnterior: BrainRoute;
   readonly accessory: BrainRoute;
   /** P13: the three dorsal midbrain signs, each read from either half of the pretectum. */
   readonly upgaze: Row<{ readonly steps: readonly BrainStep[] }>;

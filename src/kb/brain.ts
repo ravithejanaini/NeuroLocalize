@@ -124,12 +124,56 @@ export const BRAIN: Brain = {
   facialNucleus: {
     meta: {
       id: 'brain.facial-nucleus',
-      claim: 'A lesion of the facial nucleus or its fascicle in the pons, or of the facial nerve after it leaves the brainstem, paralyses the whole face on the same side, the forehead included (P29).',
+      claim: 'A lesion of the facial nucleus or its fascicle in the pons, or of the facial nerve after it leaves the brainstem — at any level of the facial canal or below it — paralyses the whole face on the same side, the forehead included (P29, P35).',
       sources: ['S51', 'S49', 'S59', 'S163'],
       tier: 'T1',
       bookRef: p,
     },
-    steps: [{ level: 'pons', compartment: 'facial' }, { level: 'pons', compartment: 'facial_nerve' }],
+    steps: [
+      { level: 'pons', compartment: 'facial' },
+      { level: 'pons', compartment: 'facial_above_geniculate' },
+      { level: 'pons', compartment: 'facial_above_stapedius' },
+      { level: 'pons', compartment: 'facial_above_chorda' },
+      { level: 'pons', compartment: 'facial_nerve' },
+    ],
+    serves: 'ipsilateral',
+  },
+  lacrimation: {
+    meta: {
+      id: 'brain.lacrimation',
+      claim: 'The greater petrosal nerve, carrying the parasympathetic fibres for the lacrimal gland, leaves the facial nerve at the geniculate ganglion; a lesion of the nerve above the ganglion reduces tears on its own side, and one below it does not.',
+      sources: ['S51', 'S179'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [{ level: 'pons', compartment: 'facial_above_geniculate' }],
+    serves: 'ipsilateral',
+  },
+  stapedius: {
+    meta: {
+      id: 'brain.stapedius',
+      claim: 'The nerve to stapedius leaves the facial nerve in its canal below the geniculate ganglion; a lesion of the nerve above that branch gives hyperacusis on its own side. The facial motor nucleus supplies the stapedius too (S179), though S51 lists no hyperacusis with its pontine lesions (C99).',
+      sources: ['S51', 'S179'],
+      tier: 'T3',
+      bookRef: p,
+      conflict: 'C99',
+    },
+    steps: [{ level: 'pons', compartment: 'facial_above_geniculate' }, { level: 'pons', compartment: 'facial_above_stapedius' }],
+    serves: 'ipsilateral',
+  },
+  tasteAnterior: {
+    meta: {
+      id: 'brain.taste-anterior',
+      claim: 'The chorda tympani, the last branch of the facial nerve in its canal, carries taste from the anterior two-thirds of the tongue; a lesion of the nerve anywhere above it loses that taste on its own side, and one below it does not.',
+      sources: ['S51', 'S179'],
+      tier: 'T1',
+      bookRef: p,
+    },
+    steps: [
+      { level: 'pons', compartment: 'facial_above_geniculate' },
+      { level: 'pons', compartment: 'facial_above_stapedius' },
+      { level: 'pons', compartment: 'facial_above_chorda' },
+    ],
     serves: 'ipsilateral',
   },
   hypoglossal: {
@@ -595,8 +639,8 @@ export const BRAIN: Brain = {
   partsAt: {
     meta: {
       id: 'brain.parts-at',
-      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei; and, outside the brainstem, the oculomotor and trochlear nerves at the midbrain, the abducens and facial nerves at the pons and the hypoglossal nerve at the medulla (P29), with the cavernous sinus — the ophthalmic and maxillary divisions and the carotid sympathetic plexus — held at the midbrain (P30), and the vestibulocochlear nerve and trigeminal root at the cerebellopontine angle, held at the pons (P31), and the ophthalmic division in the superior orbital fissure, held at the midbrain (P32), and the glossopharyngeal, vagus and accessory nerves at the jugular foramen, held at the medulla (P33), and the cervical sympathetic chain and the carotid plexus in the neck, held at the medulla too (P34).',
-      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125', 'S130', 'S61', 'S62', 'S63', 'S51', 'S165', 'S169', 'S171', 'S172', 'S176'],
+      claim: 'The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei; and, outside the brainstem, the oculomotor and trochlear nerves at the midbrain, the abducens and facial nerves at the pons and the hypoglossal nerve at the medulla (P29), with the cavernous sinus — the ophthalmic and maxillary divisions and the carotid sympathetic plexus — held at the midbrain (P30), and the vestibulocochlear nerve and trigeminal root at the cerebellopontine angle, held at the pons (P31), and the ophthalmic division in the superior orbital fissure, held at the midbrain (P32), and the glossopharyngeal, vagus and accessory nerves at the jugular foramen, held at the medulla (P33), and the cervical sympathetic chain and the carotid plexus in the neck, held at the medulla too (P34), and the three stretches of the facial nerve inside the temporal bone, held at the pons (P35).',
+      sources: ['S54', 'S56', 'S57', 'S58', 'S59', 'S16', 'S47', 'S48', 'S98', 'S99', 'S70', 'S104', 'S105', 'S110', 'S114', 'S116', 'S120', 'S122', 'S125', 'S130', 'S61', 'S62', 'S63', 'S51', 'S165', 'S169', 'S171', 'S172', 'S176', 'S179'],
       tier: 'T1',
       bookRef: p,
     },
@@ -624,6 +668,9 @@ export const BRAIN: Brain = {
         'facial_nerve',
         'vestibulocochlear_nerve',
         'trigeminal_root',
+        'facial_above_geniculate',
+        'facial_above_stapedius',
+        'facial_above_chorda',
       ],
       medulla: [
         'pyramid',
@@ -1062,7 +1109,7 @@ export const BRAIN: Brain = {
     facial_nerve: {
       meta: {
         id: 'territory.facial-nerve',
-        claim: 'The facial nerve at the stylomastoid foramen, past the chorda tympani: the whole face on the same side, forehead included, and nothing else (C75).',
+        claim: 'The facial nerve at the stylomastoid foramen, past the chorda tympani: the whole face on the same side, forehead included, and nothing else — tears, the stapedius and taste are spared (P35).',
         sources: ['S51', 'S163'],
         tier: 'T1',
         bookRef: p,
@@ -1179,6 +1226,40 @@ export const BRAIN: Brain = {
       },
       level: 'medulla',
       compartments: ['carotid_plexus_neck'],
+    },
+    // P35: the facial nerve inside the temporal bone, by its branches.
+    facial_above_geniculate: {
+      meta: {
+        id: 'territory.facial-above-geniculate',
+        claim: 'The facial nerve between the internal acoustic meatus and the geniculate ganglion: the whole face, with tears reduced, hyperacusis and taste lost on the front of the tongue.',
+        sources: ['S51', 'S179'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'pons',
+      compartments: ['facial_above_geniculate'],
+    },
+    facial_above_stapedius: {
+      meta: {
+        id: 'territory.facial-above-stapedius',
+        claim: 'The facial nerve between the geniculate ganglion and the nerve to stapedius: the whole face, hyperacusis and taste lost; tears are kept.',
+        sources: ['S51', 'S179'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'pons',
+      compartments: ['facial_above_stapedius'],
+    },
+    facial_above_chorda: {
+      meta: {
+        id: 'territory.facial-above-chorda',
+        claim: 'The facial nerve between the nerve to stapedius and the chorda tympani: the whole face and taste lost; tears and the stapedius are kept.',
+        sources: ['S51', 'S179'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      level: 'pons',
+      compartments: ['facial_above_chorda'],
     },
   },
 };

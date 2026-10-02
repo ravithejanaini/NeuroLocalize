@@ -7,9 +7,9 @@ claims are what it teaches. Mark each one; where a claim is wrong, a one-line co
 with a source is the most useful thing you can give.
 
 The same review can be filled in on screen and saved to a file: `review/review.html`.
-Worksheet version `8a8af3fa4a99`.
+Worksheet version `1e339de13828`.
 
-227 knowledge-base claims, 19 displayed facts, 62 open questions, 956 composed findings in 174 cases. Mutation score 98.0% over sourced rows, 97.8% over all rows.
+233 knowledge-base claims, 19 displayed facts, 63 open questions, 967 composed findings in 178 cases. Mutation score 98.0% over sourced rows, 97.8% over all rows.
 Claims are ordered by load-bearing weight: how many expected findings fail when the claim
 is corrupted. The first ten carry most of the engine.
 
@@ -153,7 +153,7 @@ Correction and source (a book and page is ideal): ____
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**24. A lesion of the facial nucleus or its fascicle in the pons, or of the facial nerve after it leaves the brainstem, paralyses the whole face on the same side, the forehead included (P29).**
+**24. A lesion of the facial nucleus or its fascicle in the pons, or of the facial nerve after it leaves the brainstem — at any level of the facial canal or below it — paralyses the whole face on the same side, the forehead included (P29, P35).**
 `brain.facial-nucleus` · tier T1 · weight 96 · sources [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/), [S49](https://www.ncbi.nlm.nih.gov/books/NBK532907/), [S59](https://www.ncbi.nlm.nih.gov/books/NBK544297/), [S163](https://www.ncbi.nlm.nih.gov/books/NBK482290/)
 
 ☐ right ☐ wrong ☐ unsure
@@ -1236,146 +1236,182 @@ Correction and source (a book and page is ideal): ____
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**204. Second-order preganglionic fibres leave the cord at T1 and ascend in the cervical sympathetic chain, through the stellate ganglion, to the superior cervical ganglion; a lesion of the chain — as at the lung apex — gives an ipsilateral Horner syndrome.**
+**204. The greater petrosal nerve, carrying the parasympathetic fibres for the lacrimal gland, leaves the facial nerve at the geniculate ganglion; a lesion of the nerve above the ganglion reduces tears on its own side, and one below it does not.**
+`brain.lacrimation` · tier T1 · weight 0 · sources [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/), [S179](https://www.ncbi.nlm.nih.gov/books/NBK554569/)
+
+☐ right ☐ wrong ☐ unsure
+Correction and source (a book and page is ideal): ____
+
+**205. The nerve to stapedius leaves the facial nerve in its canal below the geniculate ganglion; a lesion of the nerve above that branch gives hyperacusis on its own side. The facial motor nucleus supplies the stapedius too (S179), though S51 lists no hyperacusis with its pontine lesions (C99).**
+`brain.stapedius` · tier T3 · weight 0 · conflict C99 · sources [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/), [S179](https://www.ncbi.nlm.nih.gov/books/NBK554569/)
+
+☐ right ☐ wrong ☐ unsure
+Correction and source (a book and page is ideal): ____
+
+**206. The chorda tympani, the last branch of the facial nerve in its canal, carries taste from the anterior two-thirds of the tongue; a lesion of the nerve anywhere above it loses that taste on its own side, and one below it does not.**
+`brain.taste-anterior` · tier T1 · weight 0 · sources [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/), [S179](https://www.ncbi.nlm.nih.gov/books/NBK554569/)
+
+☐ right ☐ wrong ☐ unsure
+Correction and source (a book and page is ideal): ____
+
+**207. Second-order preganglionic fibres leave the cord at T1 and ascend in the cervical sympathetic chain, through the stellate ganglion, to the superior cervical ganglion; a lesion of the chain — as at the lung apex — gives an ipsilateral Horner syndrome.**
 `brain.sympathetic-second` · tier T1 · weight 0 · sources [S16](https://www.ncbi.nlm.nih.gov/books/NBK500000/), [S177](https://www.ncbi.nlm.nih.gov/books/NBK556109/), [S176](https://www.ncbi.nlm.nih.gov/books/NBK563206/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**205. Third-order postganglionic fibres ascend as the plexus around the internal carotid artery, in the neck and then through the cavernous sinus; a lesion of them at either place — a dissection of the artery, or the sinus — gives an ipsilateral Horner syndrome.**
+**208. Third-order postganglionic fibres ascend as the plexus around the internal carotid artery, in the neck and then through the cavernous sinus; a lesion of them at either place — a dissection of the artery, or the sinus — gives an ipsilateral Horner syndrome.**
 `brain.sympathetic-third` · tier T1 · weight 0 · sources [S16](https://www.ncbi.nlm.nih.gov/books/NBK500000/), [S178](https://www.ncbi.nlm.nih.gov/books/NBK430835/), [S165](https://www.ncbi.nlm.nih.gov/books/NBK459244/), [S70](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**206. The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei; and, outside the brainstem, the oculomotor and trochlear nerves at the midbrain, the abducens and facial nerves at the pons and the hypoglossal nerve at the medulla (P29), with the cavernous sinus — the ophthalmic and maxillary divisions and the carotid sympathetic plexus — held at the midbrain (P30), and the vestibulocochlear nerve and trigeminal root at the cerebellopontine angle, held at the pons (P31), and the ophthalmic division in the superior orbital fissure, held at the midbrain (P32), and the glossopharyngeal, vagus and accessory nerves at the jugular foramen, held at the medulla (P33), and the cervical sympathetic chain and the carotid plexus in the neck, held at the medulla too (P34).**
-`brain.parts-at` · tier T1 · weight 0 · sources [S54](https://www.ncbi.nlm.nih.gov/books/NBK544218/), [S56](https://www.ncbi.nlm.nih.gov/books/NBK542181/), [S57](https://www.ncbi.nlm.nih.gov/books/NBK526040/), [S58](https://www.ncbi.nlm.nih.gov/books/NBK507824/), [S59](https://www.ncbi.nlm.nih.gov/books/NBK544297/), [S16](https://www.ncbi.nlm.nih.gov/books/NBK500000/), [S47](https://www.ncbi.nlm.nih.gov/books/NBK551670/), [S48](https://www.ncbi.nlm.nih.gov/books/NBK560590/), [S98](https://www.ncbi.nlm.nih.gov/books/NBK441970/), [S99](https://pmc.ncbi.nlm.nih.gov/articles/PMC5756788/), [S70](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/), [S104](https://www.ncbi.nlm.nih.gov/books/NBK556132/), [S105](https://www.ncbi.nlm.nih.gov/books/NBK526002/), [S110](https://www.ncbi.nlm.nih.gov/books/NBK538167/), [S114](https://www.ncbi.nlm.nih.gov/books/NBK556084/), [S116](https://www.ncbi.nlm.nih.gov/books/NBK441892/), [S120](https://www.ncbi.nlm.nih.gov/books/NBK537244/), [S122](https://www.ncbi.nlm.nih.gov/books/NBK482283/), [S125](https://www.ncbi.nlm.nih.gov/books/NBK559002/), [S130](https://pmc.ncbi.nlm.nih.gov/articles/PMC7287959/), [S61](https://www.ncbi.nlm.nih.gov/books/NBK544265/), [S62](https://www.ncbi.nlm.nih.gov/books/NBK526112/), [S63](https://www.ncbi.nlm.nih.gov/books/NBK532869/), [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/), [S165](https://www.ncbi.nlm.nih.gov/books/NBK459244/), [S169](https://www.ncbi.nlm.nih.gov/books/NBK559116/), [S171](https://www.ncbi.nlm.nih.gov/books/NBK592386/), [S172](https://www.ncbi.nlm.nih.gov/books/NBK549871/), [S176](https://www.ncbi.nlm.nih.gov/books/NBK563206/)
+**209. The motor and sensory cortex, with the inferior frontal, superior temporal and inferior parietal cortex around the Sylvian fissure and the frontal eye field in front of the motor strip; the genu and posterior limb of the capsule; VPL and VPM, with the subthalamic nucleus below them; in the midbrain the peduncle, oculomotor fascicles, lemniscus, spinothalamic tract and sympathetic fibres; in the midbrain also the oculomotor nucleus, the medial longitudinal fasciculus dorsally at the superior colliculus the pretectum and at the inferior colliculus the trochlear nucleus; in the pons the basis, facial and abducens nuclei and fascicles, the paramedian pontine reticular formation, the medial longitudinal fasciculus, lemniscus, spinothalamic tract, sympathetic fibres, cerebellar peduncle and vestibular nuclei; the cochlear nuclei and the trigeminal motor and principal sensory nuclei in the lateral pons, and the cerebellar hemispheres and vermis behind the pons and medulla; in the medulla the pyramid, lemniscus, hypoglossal nucleus, spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus, cerebellar peduncle and vestibular nuclei; and, outside the brainstem, the oculomotor and trochlear nerves at the midbrain, the abducens and facial nerves at the pons and the hypoglossal nerve at the medulla (P29), with the cavernous sinus — the ophthalmic and maxillary divisions and the carotid sympathetic plexus — held at the midbrain (P30), and the vestibulocochlear nerve and trigeminal root at the cerebellopontine angle, held at the pons (P31), and the ophthalmic division in the superior orbital fissure, held at the midbrain (P32), and the glossopharyngeal, vagus and accessory nerves at the jugular foramen, held at the medulla (P33), and the cervical sympathetic chain and the carotid plexus in the neck, held at the medulla too (P34), and the three stretches of the facial nerve inside the temporal bone, held at the pons (P35).**
+`brain.parts-at` · tier T1 · weight 0 · sources [S54](https://www.ncbi.nlm.nih.gov/books/NBK544218/), [S56](https://www.ncbi.nlm.nih.gov/books/NBK542181/), [S57](https://www.ncbi.nlm.nih.gov/books/NBK526040/), [S58](https://www.ncbi.nlm.nih.gov/books/NBK507824/), [S59](https://www.ncbi.nlm.nih.gov/books/NBK544297/), [S16](https://www.ncbi.nlm.nih.gov/books/NBK500000/), [S47](https://www.ncbi.nlm.nih.gov/books/NBK551670/), [S48](https://www.ncbi.nlm.nih.gov/books/NBK560590/), [S98](https://www.ncbi.nlm.nih.gov/books/NBK441970/), [S99](https://pmc.ncbi.nlm.nih.gov/articles/PMC5756788/), [S70](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/), [S104](https://www.ncbi.nlm.nih.gov/books/NBK556132/), [S105](https://www.ncbi.nlm.nih.gov/books/NBK526002/), [S110](https://www.ncbi.nlm.nih.gov/books/NBK538167/), [S114](https://www.ncbi.nlm.nih.gov/books/NBK556084/), [S116](https://www.ncbi.nlm.nih.gov/books/NBK441892/), [S120](https://www.ncbi.nlm.nih.gov/books/NBK537244/), [S122](https://www.ncbi.nlm.nih.gov/books/NBK482283/), [S125](https://www.ncbi.nlm.nih.gov/books/NBK559002/), [S130](https://pmc.ncbi.nlm.nih.gov/articles/PMC7287959/), [S61](https://www.ncbi.nlm.nih.gov/books/NBK544265/), [S62](https://www.ncbi.nlm.nih.gov/books/NBK526112/), [S63](https://www.ncbi.nlm.nih.gov/books/NBK532869/), [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/), [S165](https://www.ncbi.nlm.nih.gov/books/NBK459244/), [S169](https://www.ncbi.nlm.nih.gov/books/NBK559116/), [S171](https://www.ncbi.nlm.nih.gov/books/NBK592386/), [S172](https://www.ncbi.nlm.nih.gov/books/NBK549871/), [S176](https://www.ncbi.nlm.nih.gov/books/NBK563206/), [S179](https://www.ncbi.nlm.nih.gov/books/NBK554569/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**207. The arm is C5–T1 and the leg L2 downward, the genitals and perineum represented with the leg.**
+**210. The arm is C5–T1 and the leg L2 downward, the genitals and perineum represented with the leg.**
 `brain.limb-regions` · tier T2 · weight 0 · sources [S66](https://www.ncbi.nlm.nih.gov/books/NBK549841/), [S31](https://www.ncbi.nlm.nih.gov/books/NBK544267/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**208. The neck is C1–C4 and the trunk T2–L1, represented between arm and leg.**
+**211. The neck is C1–C4 and the trunk T2–L1, represented between arm and leg.**
 `brain.axial-regions` · tier T2 · weight 0 · sources [S66](https://www.ncbi.nlm.nih.gov/books/NBK549841/)
 > ⚠ No source read supports all of this. R20: the segment boundaries of neck and trunk are a convention
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**209. The inferior frontal gyrus alone: in the dominant hemisphere, pure Broca aphasia.**
+**212. The inferior frontal gyrus alone: in the dominant hemisphere, pure Broca aphasia.**
 `territory.broca-area` · tier T1 · weight 0 · sources [S100](https://www.ncbi.nlm.nih.gov/books/NBK436010/), [S107](https://www.ncbi.nlm.nih.gov/books/NBK549789/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**210. The posterior superior temporal gyrus alone: in the dominant hemisphere, Wernicke aphasia (C34).**
+**213. The posterior superior temporal gyrus alone: in the dominant hemisphere, Wernicke aphasia (C34).**
 `territory.wernicke-area` · tier T3 · weight 0 · conflict C34 · sources [S101](https://www.ncbi.nlm.nih.gov/books/NBK441951/), [S107](https://www.ncbi.nlm.nih.gov/books/NBK549789/), [S102](https://www.ncbi.nlm.nih.gov/books/NBK537006/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**211. The inferior parietal lobule (supramarginal and angular gyri): conduction aphasia in the dominant hemisphere, neglect of the other side of space in the nondominant one.**
+**214. The inferior parietal lobule (supramarginal and angular gyri): conduction aphasia in the dominant hemisphere, neglect of the other side of space in the nondominant one.**
 `territory.supramarginal` · tier T1 · weight 0 · sources [S102](https://www.ncbi.nlm.nih.gov/books/NBK537006/), [S106](https://www.ncbi.nlm.nih.gov/books/NBK562184/), [S107](https://www.ncbi.nlm.nih.gov/books/NBK549789/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**212. A lesion of one cerebellar hemisphere gives limb ataxia on the same side.**
+**215. A lesion of one cerebellar hemisphere gives limb ataxia on the same side.**
 `territory.cerebellar-hemisphere` · tier T1 · weight 0 · sources [S109](https://www.ncbi.nlm.nih.gov/books/NBK562284/), [S110](https://www.ncbi.nlm.nih.gov/books/NBK538167/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**213. A lesion of the oculomotor nucleus itself gives a third nerve palsy on its own side with the other eye’s superior rectus weak, and ptosis on both sides or on neither.**
+**216. A lesion of the oculomotor nucleus itself gives a third nerve palsy on its own side with the other eye’s superior rectus weak, and ptosis on both sides or on neither.**
 `territory.oculomotor-nucleus` · tier T2 · weight 0 · sources [S70](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**214. A lesion of the frontal eye field alone: the eyes deviate toward it on the first day, and recover within days.**
+**217. A lesion of the frontal eye field alone: the eyes deviate toward it on the first day, and recover within days.**
 `territory.frontal-eye-field` · tier T2 · weight 0 · sources [S129](https://www.ncbi.nlm.nih.gov/books/NBK537247/), [S130](https://pmc.ncbi.nlm.nih.gov/articles/PMC7287959/), [S131](https://pubmed.ncbi.nlm.nih.gov/6497357/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**215. The border zone between the anterior and middle cerebral arteries, around Broca area but sparing it: in the dominant hemisphere, transcortical motor aphasia — non-fluent, understands, repeats. S142 says it begins as the mixed form (C62).**
+**218. The border zone between the anterior and middle cerebral arteries, around Broca area but sparing it: in the dominant hemisphere, transcortical motor aphasia — non-fluent, understands, repeats. S142 says it begins as the mixed form (C62).**
 `territory.borderzone-anterior` · tier T2 · weight 0 · sources [S103](https://www.ncbi.nlm.nih.gov/books/NBK559315/), [S142](https://pubmed.ncbi.nlm.nih.gov/21904919/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**216. The border zone between the middle and posterior cerebral arteries, around Wernicke area but sparing it: in the dominant hemisphere, transcortical sensory aphasia — fluent, does not understand, repeats. S142 says it begins as the mixed form (C62).**
+**219. The border zone between the middle and posterior cerebral arteries, around Wernicke area but sparing it: in the dominant hemisphere, transcortical sensory aphasia — fluent, does not understand, repeats. S142 says it begins as the mixed form (C62).**
 `territory.borderzone-posterior` · tier T2 · weight 0 · sources [S103](https://www.ncbi.nlm.nih.gov/books/NBK559315/), [S142](https://pubmed.ncbi.nlm.nih.gov/21904919/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**217. A lesion of one subthalamic nucleus, medial to the internal capsule and below the thalamus, gives hemiballismus of the opposite arm and leg.**
+**220. A lesion of one subthalamic nucleus, medial to the internal capsule and below the thalamus, gives hemiballismus of the opposite arm and leg.**
 `territory.subthalamic-nucleus` · tier T1 · weight 0 · sources [S125](https://www.ncbi.nlm.nih.gov/books/NBK559002/), [S126](https://www.ncbi.nlm.nih.gov/books/NBK537141/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**218. A lesion of one trochlear nucleus, near the midline beside the MLF at the inferior colliculus, weakens the superior oblique of the other eye.**
+**221. A lesion of one trochlear nucleus, near the midline beside the MLF at the inferior colliculus, weakens the superior oblique of the other eye.**
 `territory.trochlear-nucleus` · tier T2 · weight 0 · sources [S120](https://www.ncbi.nlm.nih.gov/books/NBK537244/), [S124](https://www.ncbi.nlm.nih.gov/books/NBK565850/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**219. The oculomotor nerve between the midbrain and the cavernous sinus, beside the posterior communicating artery: a third nerve palsy with ptosis on the same side and nothing else.**
+**222. The oculomotor nerve between the midbrain and the cavernous sinus, beside the posterior communicating artery: a third nerve palsy with ptosis on the same side and nothing else.**
 `territory.oculomotor-nerve` · tier T1 · weight 0 · sources [S62](https://www.ncbi.nlm.nih.gov/books/NBK526112/), [S70](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**220. The trochlear nerve past its decussation, around the midbrain: the superior oblique of the same eye.**
+**223. The trochlear nerve past its decussation, around the midbrain: the superior oblique of the same eye.**
 `territory.trochlear-nerve` · tier T1 · weight 0 · sources [S120](https://www.ncbi.nlm.nih.gov/books/NBK537244/), [S70](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**221. The abducens nerve along the clivus: an isolated abduction deficit on the same side, with no gaze palsy.**
+**224. The abducens nerve along the clivus: an isolated abduction deficit on the same side, with no gaze palsy.**
 `territory.abducens-nerve` · tier T1 · weight 0 · sources [S61](https://www.ncbi.nlm.nih.gov/books/NBK544265/), [S70](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**222. The facial nerve at the stylomastoid foramen, past the chorda tympani: the whole face on the same side, forehead included, and nothing else (C75).**
+**225. The facial nerve at the stylomastoid foramen, past the chorda tympani: the whole face on the same side, forehead included, and nothing else — tears, the stapedius and taste are spared (P35).**
 `territory.facial-nerve` · tier T1 · weight 0 · sources [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/), [S163](https://www.ncbi.nlm.nih.gov/books/NBK482290/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**223. The hypoglossal nerve in the hypoglossal canal: the same side of the tongue, which deviates towards the lesion, and nothing else.**
+**226. The hypoglossal nerve in the hypoglossal canal: the same side of the tongue, which deviates towards the lesion, and nothing else.**
 `territory.hypoglossal-nerve` · tier T1 · weight 0 · sources [S63](https://www.ncbi.nlm.nih.gov/books/NBK532869/), [S164](https://pmc.ncbi.nlm.nih.gov/articles/PMC13517042/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**224. The vestibulocochlear nerve in the internal acoustic canal: unilateral sensorineural hearing loss, the face spared.**
+**227. The vestibulocochlear nerve in the internal acoustic canal: unilateral sensorineural hearing loss, the face spared.**
 `territory.eighth-nerve` · tier T1 · weight 0 · sources [S167](https://www.ncbi.nlm.nih.gov/books/NBK470177/), [S170](https://www.ncbi.nlm.nih.gov/books/NBK537359/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**225. A lesion of the lung apex (the superior sulcus) involves the sympathetic chain and the brachial plexus: a Horner syndrome with weakness of the intrinsic muscles of the hand and numbness of the fourth and fifth digits and the medial forearm — the lower trunk.**
+**228. A lesion of the lung apex (the superior sulcus) involves the sympathetic chain and the brachial plexus: a Horner syndrome with weakness of the intrinsic muscles of the hand and numbness of the fourth and fifth digits and the medial forearm — the lower trunk.**
 `territory.lung-apex` · tier T1 · weight 0 · sources [S177](https://www.ncbi.nlm.nih.gov/books/NBK556109/), [S16](https://www.ncbi.nlm.nih.gov/books/NBK500000/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**226. A dissection of the internal carotid artery in the neck compresses the sympathetic fibres on it: a third-order Horner syndrome, with sweating lost only beside the brow.**
+**229. A dissection of the internal carotid artery in the neck compresses the sympathetic fibres on it: a third-order Horner syndrome, with sweating lost only beside the brow.**
 `territory.carotid-neck` · tier T1 · weight 0 · sources [S178](https://www.ncbi.nlm.nih.gov/books/NBK430835/), [S16](https://www.ncbi.nlm.nih.gov/books/NBK500000/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**227. The plantar reflex runs from the S1 dermatome to the S1 segment; when the corticospinal tract is damaged the input spreads to the L5 and L4 anterior horn cells and the great toe extends. So a Babinski sign needs corticospinal interruption rostral to L5 with the S1 arc intact (R6, D134).**
+**230. The facial nerve between the internal acoustic meatus and the geniculate ganglion: the whole face, with tears reduced, hyperacusis and taste lost on the front of the tongue.**
+`territory.facial-above-geniculate` · tier T1 · weight 0 · sources [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/), [S179](https://www.ncbi.nlm.nih.gov/books/NBK554569/)
+
+☐ right ☐ wrong ☐ unsure
+Correction and source (a book and page is ideal): ____
+
+**231. The facial nerve between the geniculate ganglion and the nerve to stapedius: the whole face, hyperacusis and taste lost; tears are kept.**
+`territory.facial-above-stapedius` · tier T1 · weight 0 · sources [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/), [S179](https://www.ncbi.nlm.nih.gov/books/NBK554569/)
+
+☐ right ☐ wrong ☐ unsure
+Correction and source (a book and page is ideal): ____
+
+**232. The facial nerve between the nerve to stapedius and the chorda tympani: the whole face and taste lost; tears and the stapedius are kept.**
+`territory.facial-above-chorda` · tier T1 · weight 0 · sources [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/), [S179](https://www.ncbi.nlm.nih.gov/books/NBK554569/)
+
+☐ right ☐ wrong ☐ unsure
+Correction and source (a book and page is ideal): ____
+
+**233. The plantar reflex runs from the S1 dermatome to the S1 segment; when the corticospinal tract is damaged the input spreads to the L5 and L4 anterior horn cells and the great toe extends. So a Babinski sign needs corticospinal interruption rostral to L5 with the S1 arc intact (R6, D134).**
 `observation.babinski-level` · tier T2 · weight 0 · sources [S151](https://www.ncbi.nlm.nih.gov/books/NBK519009/), [S12](https://www.ncbi.nlm.nih.gov/books/NBK531502/)
 
 ☐ right ☐ wrong ☐ unsure
@@ -1386,118 +1422,118 @@ Correction and source (a book and page is ideal): ____
 These do not change any computed finding, but they are drawn or printed: segment and
 vertebra positions, myotomes, dermatome landmarks, fibre speeds and tract arrangement.
 
-**228. Each trunk divides beneath the clavicle; the three posterior divisions form the posterior cord and the anterior divisions form the lateral and medial cords.**
+**234. Each trunk divides beneath the clavicle; the three posterior divisions form the posterior cord and the anterior divisions form the lateral and medial cords.**
 `render.plexus-divisions` · tier T1 · sources [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**229. The roots pass between the anterior and middle scalenes; the trunks cross the first rib; the divisions pass beneath and behind the clavicle; the cords are named by where they lie around the axillary artery. Positions are schematic and the arm is drawn shortened.**
+**235. The roots pass between the anterior and middle scalenes; the trunks cross the first rib; the divisions pass beneath and behind the clavicle; the cords are named by where they lie around the axillary artery. Positions are schematic and the arm is drawn shortened.**
 `render.limb-layout` · tier T1 · sources [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/), [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**230. The lumbar plexus lies in front of the sacral plexus; the femoral nerve passes beneath the inguinal ligament to the front of the thigh and the obturator nerve to its medial side; the gluteal nerves leave the pelvis behind; the sciatic nerve runs down the back of the thigh and divides above the knee into the tibial nerve behind the leg and the common fibular nerve, which winds round the fibular neck to the front. Positions are schematic.**
+**236. The lumbar plexus lies in front of the sacral plexus; the femoral nerve passes beneath the inguinal ligament to the front of the thigh and the obturator nerve to its medial side; the gluteal nerves leave the pelvis behind; the sciatic nerve runs down the back of the thigh and divides above the knee into the tibial nerve behind the leg and the common fibular nerve, which winds round the fibular neck to the front. Positions are schematic.**
 `render.leg-layout` · tier T1 · sources [S71](https://www.ncbi.nlm.nih.gov/books/NBK545137/), [S72](https://www.ncbi.nlm.nih.gov/books/NBK556030/), [S73](https://www.ncbi.nlm.nih.gov/books/NBK482225/), [S75](https://www.ncbi.nlm.nih.gov/books/NBK482431/), [S76](https://www.ncbi.nlm.nih.gov/books/NBK532968/), [S79](https://www.ncbi.nlm.nih.gov/books/NBK537028/), [S80](https://www.ncbi.nlm.nih.gov/books/NBK535408/), [S81](https://www.ncbi.nlm.nih.gov/books/NBK532884/), [S89](https://www.ncbi.nlm.nih.gov/books/NBK556065/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**231. The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally, with the inferior frontal gyrus in front of the motor strip and the frontal eye field (Brodmann area 8) in front of it and higher, with the anterior border zone around Broca area and the posterior border zone around Wernicke area, the inferior parietal lobule behind the sensory strip and the superior temporal gyrus below them; the cerebellum lies behind the pons and medulla, its hemispheres lateral to the midline vermis; the pretectum is dorsal in the rostral midbrain, and the trochlear nucleus beside the MLF below it; the trigeminal motor nucleus lies medial and anterior to the principal sensory nucleus in the pons; the subthalamic nucleus lies below the thalamus, medial to the capsule. Positions are schematic.**
+**237. The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally, with the inferior frontal gyrus in front of the motor strip and the frontal eye field (Brodmann area 8) in front of it and higher, with the anterior border zone around Broca area and the posterior border zone around Wernicke area, the inferior parietal lobule behind the sensory strip and the superior temporal gyrus below them; the cerebellum lies behind the pons and medulla, its hemispheres lateral to the midline vermis; the pretectum is dorsal in the rostral midbrain, and the trochlear nucleus beside the MLF below it; the trigeminal motor nucleus lies medial and anterior to the principal sensory nucleus in the pons; the subthalamic nucleus lies below the thalamus, medial to the capsule. Positions are schematic.**
 `render.brain-layout` · tier T1 · sources [S48](https://www.ncbi.nlm.nih.gov/books/NBK560590/), [S58](https://www.ncbi.nlm.nih.gov/books/NBK507824/), [S47](https://www.ncbi.nlm.nih.gov/books/NBK551670/), [S54](https://www.ncbi.nlm.nih.gov/books/NBK544218/), [S66](https://www.ncbi.nlm.nih.gov/books/NBK549841/), [S59](https://www.ncbi.nlm.nih.gov/books/NBK544297/), [S98](https://www.ncbi.nlm.nih.gov/books/NBK441970/), [S99](https://pmc.ncbi.nlm.nih.gov/articles/PMC5756788/), [S70](https://pmc.ncbi.nlm.nih.gov/articles/PMC10563973/), [S104](https://www.ncbi.nlm.nih.gov/books/NBK556132/), [S105](https://www.ncbi.nlm.nih.gov/books/NBK526002/), [S107](https://www.ncbi.nlm.nih.gov/books/NBK549789/), [S110](https://www.ncbi.nlm.nih.gov/books/NBK538167/), [S116](https://www.ncbi.nlm.nih.gov/books/NBK441892/), [S120](https://www.ncbi.nlm.nih.gov/books/NBK537244/), [S122](https://www.ncbi.nlm.nih.gov/books/NBK482283/), [S125](https://www.ncbi.nlm.nih.gov/books/NBK559002/), [S130](https://pmc.ncbi.nlm.nih.gov/articles/PMC7287959/), [S103](https://www.ncbi.nlm.nih.gov/books/NBK559315/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**232. Dorsal scapular C5; long thoracic C5–C6, C7 disputed; suprascapular C5–C6; axillary C5–C6; musculocutaneous C5–C6, C7 disputed; radial C5–T1; median C6–T1, C5 disputed; ulnar and medial antebrachial cutaneous C8–T1. In the leg: psoas branches L1–L3; femoral and obturator L2–L4; lateral femoral cutaneous L2–L3; superior gluteal L4–S1; inferior gluteal L5–S2; sciatic and tibial L4–S3; common fibular L4–S2.**
+**238. Dorsal scapular C5; long thoracic C5–C6, C7 disputed; suprascapular C5–C6; axillary C5–C6; musculocutaneous C5–C6, C7 disputed; radial C5–T1; median C6–T1, C5 disputed; ulnar and medial antebrachial cutaneous C8–T1. In the leg: psoas branches L1–L3; femoral and obturator L2–L4; lateral femoral cutaneous L2–L3; superior gluteal L4–S1; inferior gluteal L5–S2; sciatic and tibial L4–S3; common fibular L4–S2.**
 `render.nerve-roots` · tier T3 · conflict C12 · sources [S33](https://www.ncbi.nlm.nih.gov/books/NBK500016/), [S34](https://www.ncbi.nlm.nih.gov/books/NBK531473/), [S37](https://www.ncbi.nlm.nih.gov/books/NBK562197/), [S41](https://www.ncbi.nlm.nih.gov/books/NBK448084/), [S42](https://www.ncbi.nlm.nih.gov/books/NBK493212/), [S43](https://www.ncbi.nlm.nih.gov/books/NBK534199/), [S44](https://www.ncbi.nlm.nih.gov/books/NBK535396/), [S45](https://www.ncbi.nlm.nih.gov/books/NBK551638/), [S46](https://www.ncbi.nlm.nih.gov/books/NBK545249/), [S85](https://www.ncbi.nlm.nih.gov/books/NBK531508/), [S89](https://www.ncbi.nlm.nih.gov/books/NBK556065/), [S71](https://www.ncbi.nlm.nih.gov/books/NBK545137/), [S74](https://www.ncbi.nlm.nih.gov/books/NBK532301/), [S80](https://www.ncbi.nlm.nih.gov/books/NBK535408/), [S81](https://www.ncbi.nlm.nih.gov/books/NBK532884/), [S75](https://www.ncbi.nlm.nih.gov/books/NBK482431/), [S79](https://www.ncbi.nlm.nih.gov/books/NBK537028/), [S76](https://www.ncbi.nlm.nih.gov/books/NBK532968/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**233. C6 thumb; C7 middle finger; C8 little finger; T1 anteromedial forearm and arm; T2 medial arm to the axilla; T4 nipple; T6 xiphoid; T10 umbilicus; L3 medial knee; L4 anterior knee and medial malleolus; L5 dorsum of the foot and first three toes; S1 lateral malleolus. Body positions are schematic.**
+**239. C6 thumb; C7 middle finger; C8 little finger; T1 anteromedial forearm and arm; T2 medial arm to the axilla; T4 nipple; T6 xiphoid; T10 umbilicus; L3 medial knee; L4 anterior knee and medial malleolus; L5 dorsum of the foot and first three toes; S1 lateral malleolus. Body positions are schematic.**
 `render.dermatome-landmarks` · tier T2 · sources [S21](https://www.ncbi.nlm.nih.gov/books/NBK535401/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**234. Loss around the anus and perineum — saddle anaesthesia — marks conus and cauda equina lesions; it is drawn for S3–S5, and since P23 the test also reads the perineum, which the pudendal nerve carries from S2–S4 (C66).**
+**240. Loss around the anus and perineum — saddle anaesthesia — marks conus and cauda equina lesions; it is drawn for S3–S5, and since P23 the test also reads the perineum, which the pudendal nerve carries from S2–S4 (C66).**
 `render.saddle` · tier T2 · sources [S05](https://www.msdmanuals.com/professional/multimedia/table/spinal-cord-syndromes), [S09](https://www.ncbi.nlm.nih.gov/books/NBK537200/), [S14](https://www.ncbi.nlm.nih.gov/books/NBK545227/)
 > ⚠ No source read supports all of this. R5: no source read assigns the saddle to particular segments
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**235. The regimental badge lies over the lower lateral deltoid; the musculocutaneous nerve supplies the lateral forearm; the superficial radial nerve the back of the hand at the first web space. In the leg: the anterior, medial and lateral thigh; the anterolateral leg; the first dorsal web space of the foot; and the sole, drawn at the edge of the foot because the map is a front view. Body positions are schematic.**
+**241. The regimental badge lies over the lower lateral deltoid; the musculocutaneous nerve supplies the lateral forearm; the superficial radial nerve the back of the hand at the first web space. In the leg: the anterior, medial and lateral thigh; the anterolateral leg; the first dorsal web space of the foot; and the sole, drawn at the edge of the foot because the map is a front view. Body positions are schematic.**
 `render.skin-patches` · tier T2 · sources [S42](https://www.ncbi.nlm.nih.gov/books/NBK493212/), [S43](https://www.ncbi.nlm.nih.gov/books/NBK534199/), [S39](https://www.ncbi.nlm.nih.gov/books/NBK532993/), [S71](https://www.ncbi.nlm.nih.gov/books/NBK545137/), [S73](https://www.ncbi.nlm.nih.gov/books/NBK482225/), [S74](https://www.ncbi.nlm.nih.gov/books/NBK532301/), [S77](https://www.ncbi.nlm.nih.gov/books/NBK549859/), [S79](https://www.ncbi.nlm.nih.gov/books/NBK537028/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**236. C5 shoulder abduction; C6 elbow flexion and wrist extension; C7 elbow extension; C8 wrist flexion and thumb extension (S31) or finger flexion (S32); T1 finger abduction; T2–L1 chest wall and abdominal muscles; L2 hip flexion; L3 knee extension; L4 ankle dorsiflexion; L5 great toe extension; S1 ankle plantar flexion; S2 knee flexion.**
+**242. C5 shoulder abduction; C6 elbow flexion and wrist extension; C7 elbow extension; C8 wrist flexion and thumb extension (S31) or finger flexion (S32); T1 finger abduction; T2–L1 chest wall and abdominal muscles; L2 hip flexion; L3 knee extension; L4 ankle dorsiflexion; L5 great toe extension; S1 ankle plantar flexion; S2 knee flexion.**
 `render.myotomes` · tier T3 · conflict C9 · sources [S31](https://www.ncbi.nlm.nih.gov/books/NBK544267/), [S32](https://www.ncbi.nlm.nih.gov/books/NBK448146/), [S19](https://www.ncbi.nlm.nih.gov/books/NBK441828/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**237. The adult cord is 42–45 cm long; about 0.64–0.83 cm wide in the thoracic region and 1.27–1.33 cm in the cervical and lumbar regions.**
+**243. The adult cord is 42–45 cm long; about 0.64–0.83 cm wide in the thoracic region and 1.27–1.33 cm in the cervical and lumbar regions.**
 `render.cord-dimensions` · tier T2 · sources [S30](https://radiopaedia.org/articles/spinal-cord), [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**238. The cervical enlargement spans C5–T1 (S24) or C3–T1 (S26); the lumbar enlargement L2–S3 (S24) or L1–S2 (S26). Drawn over the union.**
+**244. The cervical enlargement spans C5–T1 (S24) or C3–T1 (S26); the lumbar enlargement L2–S3 (S24) or L1–S2 (S26). Drawn over the union.**
 `render.enlargements` · tier T3 · conflict C6 · sources [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S26](https://nba.uth.tmc.edu/neuroscience/m/s2/chapter03.html)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**239. C1 begins at the foramen magnum and C8 lies at the C7 vertebra; the lower thoracic cord runs three segments ahead of the vertebrae; the conus (S2–Co1) lies at L1 and the cord ends at L1–L2. Positions between these anchors are interpolated.**
+**245. C1 begins at the foramen magnum and C8 lies at the C7 vertebra; the lower thoracic cord runs three segments ahead of the vertebrae; the conus (S2–Co1) lies at L1 and the cord ends at L1–L2. Positions between these anchors are interpolated.**
 `render.segment-ruler` · tier T2 · sources [S26](https://nba.uth.tmc.edu/neuroscience/m/s2/chapter03.html), [S14](https://www.ncbi.nlm.nih.gov/books/NBK545227/), [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S30](https://radiopaedia.org/articles/spinal-cord)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**240. The lateral horn is present only from T1 to L2.**
+**246. The lateral horn is present only from T1 to L2.**
 `render.lateral-horn` · tier T1 · sources [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S07](https://www.ncbi.nlm.nih.gov/books/NBK560731/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**241. The fasciculus gracilis lies medially and carries the lower body; the fasciculus cuneatus lies laterally, exists at T6 and above, and carries the upper body.**
+**247. The fasciculus gracilis lies medially and carries the lower body; the fasciculus cuneatus lies laterally, exists at T6 and above, and carries the upper body.**
 `render.posterior-column-somatotopy` · tier T2 · sources [S27](https://www.ncbi.nlm.nih.gov/books/NBK507888/), [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**242. Posterior columns lie dorsally with gracilis medial; the lateral corticospinal tract in the lateral funiculus; the spinothalamic tract anterolaterally; grey matter forms an H around the central canal. Coordinates are a schematic, not measurements.**
+**248. Posterior columns lie dorsally with gracilis medial; the lateral corticospinal tract in the lateral funiculus; the spinothalamic tract anterolaterally; grey matter forms an H around the central canal. Coordinates are a schematic, not measurements.**
 `render.cross-section-layout` · tier T2 · sources [S24](https://www.ncbi.nlm.nih.gov/books/NBK545206/), [S27](https://www.ncbi.nlm.nih.gov/books/NBK507888/)
 > ⚠ No source read supports all of this. the positions of the descending autonomic pathway and the roots are schematic (R7)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**243. Aβ fibres conduct at 16–100 m/s, Aδ at 5–30 (about 15), C at 0.2–2 (about 1); the corticospinal tract at about 67 m/s.**
+**249. Aβ fibres conduct at 16–100 m/s, Aδ at 5–30 (about 15), C at 0.2–2 (about 1); the corticospinal tract at about 67 m/s.**
 `render.conduction-velocity` · tier T2 · sources [S25](https://www.ncbi.nlm.nih.gov/books/NBK547731/), [S28](https://www.ncbi.nlm.nih.gov/books/NBK554461/), [S29](https://pmc.ncbi.nlm.nih.gov/articles/PMC1028573/)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**244. Posterior-column and spinothalamic axons inside the cord are drawn at one illustrative speed.**
+**250. Posterior-column and spinothalamic axons inside the cord are drawn at one illustrative speed.**
 `render.intraspinal-speed` · tier T2 · sources _none_
 > ⚠ No source read supports all of this. D14: no source read gives their conduction velocity
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**245. Classical: lumbar and sacral fibres dorsolateral, cervical ventromedial. Revised (cordotomy mapping): lower-limb fibres superficial and posterior, shifting ventrally on ascent; upper-limb fibres deep and anterior, some posterior. Positions schematic.**
+**251. Classical: lumbar and sacral fibres dorsolateral, cervical ventromedial. Revised (cordotomy mapping): lower-limb fibres superficial and posterior, shifting ventrally on ascent; upper-limb fibres deep and anterior, some posterior. Positions schematic.**
 `render.lamination-spinothalamic` · tier T3 · conflict C7 · sources [S23](https://academic.oup.com/braincomms/article/7/3/fcaf237/8165923)
 
 ☐ right ☐ wrong ☐ unsure
 Correction and source (a book and page is ideal): ____
 
-**246. Historical: arm fibres medial in the lateral corticospinal tract. Current: arm and leg fibres diffusely distributed. Positions schematic.**
+**252. Historical: arm fibres medial in the lateral corticospinal tract. Current: arm and leg fibres diffusely distributed. Positions schematic.**
 `render.lamination-corticospinal` · tier T3 · conflict C8 · sources [S06](https://www.ncbi.nlm.nih.gov/books/NBK441932/)
 
 ☐ right ☐ wrong ☐ unsure
@@ -1567,6 +1603,7 @@ Correction and source (a book and page is ideal): ____
 - **R60** — C84: should the orbital apex be taught with a Horner syndrome, anisocoria of another cause, or no pupil sign?
 - **R61** — C88: should a hemicord or anterior horn lesion at C1–C5 weaken the sternocleidomastoid and trapezius in the model, and should a hemisphere lesion?
 - **R62** — D177: a lesion of the ciliospinal centre itself (a syrinx at C8–T2) is counted first order and given the half body, because both sources list syringomyelia there. Is that the pattern to teach, or does it behave as second order — the face only?
+- **R63** — C99: should a lesion of the facial nucleus or fascicle in the pons give hyperacusis in the model, as S179's anatomy implies?
 
 ## 3. Disputed mechanisms
 
@@ -1585,7 +1622,7 @@ For context. The engine never uses these; they drive only the teaching layer.
 
 ## 4. Composed expectations
 
-956 expected findings are not stated by any single source; they follow from
+967 expected findings are not stated by any single source; they follow from
 several stated facts. They are the most likely place for a reasoning error. Each line is
 what the tool will teach for that lesion.
 
@@ -3066,4 +3103,27 @@ what the tool will teach for that lesion.
 - ☐ chronic · left · oculomotor palsy → absent — [S165](https://www.ncbi.nlm.nih.gov/books/NBK459244/) — _unlike the cavernous sinus, where the same plexus runs with the ocular nerves_
 - ☐ chronic · left · abduction weakness → absent — [S165](https://www.ncbi.nlm.nih.gov/books/NBK459244/)
 - ☐ chronic · both sides · motor · C1–Co1 → none — [S16](https://www.ncbi.nlm.nih.gov/books/NBK500000/)
+
+### Left facial nerve between the internal acoustic meatus and the geniculate ganglion — _the face, with tears, the stapedius and taste all lost_
+
+- ☐ chronic · right · tear loss → absent — [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/)
+- ☐ chronic · right · taste loss → absent — [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/)
+- ☐ chronic · left · hearing loss → absent — [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/) — _S51 adds deafness only if the eighth nerve is involved too_
+- ☐ chronic · right · face weakness → none — [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/)
+- ☐ chronic · both sides · motor · C1–Co1 → none — [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/)
+
+### Left facial nerve between the geniculate ganglion and the nerve to stapedius — _the face, hyperacusis and taste; the eye still waters_
+
+- ☐ chronic · right · face weakness → none — [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/)
+- ☐ chronic · both sides · motor · C1–Co1 → none — [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/)
+
+### Left facial nerve between the nerve to stapedius and the chorda tympani — _the face and taste; hearing comfortable, the eye waters_
+
+- ☐ chronic · right · face weakness → none — [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/)
+- ☐ chronic · both sides · motor · C1–Co1 → none — [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/)
+
+### Left facial nucleus and fascicle in the pons: the face alone — _inside the brainstem the three branch signs are spared_
+
+- ☐ chronic · left · taste loss → absent — [S51](https://www.ncbi.nlm.nih.gov/books/NBK526119/), [S179](https://www.ncbi.nlm.nih.gov/books/NBK554569/) — _taste runs in the nervus intermedius to the nucleus of the solitary tract, not the motor nucleus_
+- ☐ chronic · left · tear loss → absent — [S179](https://www.ncbi.nlm.nih.gov/books/NBK554569/) — _the lacrimal nucleus is separate_
 

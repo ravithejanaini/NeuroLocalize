@@ -157,7 +157,11 @@ export const PRESETS: readonly Preset[] = [
   { id: 'oculomotor-nerve', kind: 'brain', label: 'Oculomotor nerve', pattern: 'Down and out, lid droops; nothing else', territory: 'oculomotor_nerve' },
   { id: 'trochlear-nerve', kind: 'brain', label: 'Trochlear nerve', pattern: 'The SAME eye rides high', territory: 'trochlear_nerve' },
   { id: 'abducens-nerve', kind: 'brain', label: 'Abducens nerve', pattern: 'Will not abduct; no gaze palsy', territory: 'abducens_nerve' },
-  { id: 'facial-nerve', kind: 'brain', label: 'Facial nerve (Bell)', pattern: 'Whole face, forehead too', territory: 'facial_nerve' },
+  // P35: the facial nerve by its branches, from the top of the canal down.
+  { id: 'facial-above-geniculate', kind: 'brain', label: 'Facial nerve, above the geniculate', pattern: 'Face; dry eye, loud sounds, taste lost', territory: 'facial_above_geniculate' },
+  { id: 'facial-above-stapedius', kind: 'brain', label: 'Facial nerve, above stapedius', pattern: 'Face; loud sounds, taste lost; eye waters', territory: 'facial_above_stapedius' },
+  { id: 'facial-above-chorda', kind: 'brain', label: 'Facial nerve, above the chorda', pattern: 'Face; taste lost only', territory: 'facial_above_chorda' },
+  { id: 'facial-nerve', kind: 'brain', label: 'Facial nerve, stylomastoid foramen', pattern: 'Whole face, forehead too; nothing else', territory: 'facial_nerve' },
   { id: 'hypoglossal-nerve', kind: 'brain', label: 'Hypoglossal nerve', pattern: 'Tongue deviates to the lesion', territory: 'hypoglossal_nerve' },
   // P30.
   { id: 'cavernous-sinus', kind: 'brain', label: 'Cavernous sinus', pattern: 'III, IV, VI, Horner; forehead numb, jaw spared', territory: 'cavernous_sinus' },

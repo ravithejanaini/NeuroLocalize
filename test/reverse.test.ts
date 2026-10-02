@@ -25,6 +25,7 @@ import { ANGLE_REVERSE_CASES } from '../spec/expectations/reverse-angle.ts';
 import { ORBIT_REVERSE_CASES } from '../spec/expectations/reverse-orbit.ts';
 import { JUGULAR_REVERSE_CASES } from '../spec/expectations/reverse-jugular.ts';
 import { HORNER_REVERSE_CASES } from '../spec/expectations/reverse-horner.ts';
+import { FACIAL_CANAL_REVERSE_CASES } from '../spec/expectations/reverse-facial-canal.ts';
 import { REVERSE_CASES } from '../spec/expectations/reverse.ts';
 import { forward } from '../src/engine/forward.ts';
 import { hypotheses } from '../src/engine/hypotheses.ts';
@@ -39,7 +40,7 @@ import { examSlots } from '../src/render/slots.ts';
 const SLOTS = examSlots(RENDER);
 
 describe('frozen reverse expectations (A3, A4, A7)', () => {
-  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES, ...SECTORANOPIA_REVERSE_CASES, ...CRANIAL_NERVE_REVERSE_CASES, ...CAVERNOUS_REVERSE_CASES, ...ANGLE_REVERSE_CASES, ...ORBIT_REVERSE_CASES, ...JUGULAR_REVERSE_CASES, ...HORNER_REVERSE_CASES]) {
+  for (const kase of [...REVERSE_CASES, ...LIMB_REVERSE_CASES, ...LEG_REVERSE_CASES, ...BRAIN_REVERSE_CASES, ...VISION_REVERSE_CASES, ...LANGUAGE_REVERSE_CASES, ...CEREBELLUM_REVERSE_CASES, ...POSTERIOR_REVERSE_CASES, ...MIDBRAIN_REVERSE_CASES, ...NERVE_REVERSE_CASES, ...BASAL_REVERSE_CASES, ...CORTEX_REVERSE_CASES, ...BASILAR_REVERSE_CASES, ...OCCIPITAL_REVERSE_CASES, ...FIBULAR_REVERSE_CASES, ...TARSAL_REVERSE_CASES, ...TRANSCORTICAL_REVERSE_CASES, ...PUDENDAL_REVERSE_CASES, ...GENICULATE_REVERSE_CASES, ...SECTORANOPIA_REVERSE_CASES, ...CRANIAL_NERVE_REVERSE_CASES, ...CAVERNOUS_REVERSE_CASES, ...ANGLE_REVERSE_CASES, ...ORBIT_REVERSE_CASES, ...JUGULAR_REVERSE_CASES, ...HORNER_REVERSE_CASES, ...FACIAL_CANAL_REVERSE_CASES]) {
     it(kase.id, () => {
       assert.deepEqual(reverseFailures(kase, SLOTS).map((f) => `${f.timepoint}: ${f.message}`), []);
     });
@@ -67,7 +68,8 @@ describe('reverse engine contract', () => {
     // P30: each trigeminal division on each side: + 3 a side.
     // P33 adds the back of the tongue and the eleventh nerve, two more cranial signs on each side: 2 * 17.
     // P34 adds where sweating is lost, one on each side: the second + 2.
-    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 17 + 1 + 2 * 7 + 3 + 2 + 1 + 3 + 2 + 1 + 2 * 4 + 2 * 3);
+    // P35 adds tears, hyperacusis and taste, three more cranial signs on each side: 2 * 20.
+    assert.equal(SLOTS.length, 2 * 2 * 13 + 2 * 12 + 2 * 6 + 4 + 2 + 2 + 2 * (14 + 11) + 2 * (3 + 6) + 2 * 20 + 1 + 2 * 7 + 3 + 2 + 1 + 3 + 2 + 1 + 2 * 4 + 2 * 3);
   });
 
   it('with no findings, prefers nothing in particular and still suggests a test', () => {
@@ -261,7 +263,7 @@ describe('reverse engine contract', () => {
     assert.equal(places.filter((x) => x.family.startsWith('plexus') || x.family.startsWith('nerve')).length, 66, 'D32, P7, P19, P20, P23: 18 arm and 15 leg places on each side — P19 adds the deep fibular nerve at two places and the superficial at one, P20 the tarsal tunnel, P23 the pudendal nerve');
 
     // P29–P31: the cranial nerves outside the brainstem are a family of their own (D167).
-    assert.equal(places.filter((x) => x.family.startsWith('cranial_nerve')).length, 2 * (5 + 1 + 2 + 2 + 1 + 2), 'P29 five nerves, P30 the cavernous sinus, P31 the eighth nerve and the angle, P32 the fissure and the apex, P33 the jugular foramen, P34 the lung apex and the carotid in the neck (D180), on each side');
+    assert.equal(places.filter((x) => x.family.startsWith('cranial_nerve')).length, 2 * (5 + 1 + 2 + 2 + 1 + 2 + 3), 'P29 five nerves, P30 the cavernous sinus, P31 the eighth nerve and the angle, P32 the fissure and the apex, P33 the jugular foramen, P34 the lung apex and the carotid in the neck (D180), P35 three stretches of the facial canal, on each side');
     assert.equal(
       places.filter((x) => x.family.startsWith('brainstem') || x.family.startsWith('hemisphere')).length,
       52,
@@ -602,6 +604,28 @@ describe('Horner syndrome by neurone (P34)', () => {
     const trunk = order.findIndex((s) => s.includes('lower_trunk'));
     const apex = order.findIndex((s) => s.includes('lung_apex'));
     assert.ok(trunk >= 0 && apex >= 0 && trunk < apex, `lower trunk ${trunk}, lung apex ${apex}`);
+  });
+});
+
+describe('the facial nerve by segment (P35)', () => {
+  it('says which branch has already left, for each function a lesion spares', () => {
+    prepareSync('chronic');
+    const mid = hypotheses().find((x) => x.id === 'cranial_nerve_left:facial_above_stapedius');
+    const low = hypotheses().find((x) => x.id === 'cranial_nerve_left:facial_nerve');
+    assert.ok(mid && low);
+    const obs: Observation[] = [
+      { kind: 'cranial', side: 'L', sign: 'tear_loss', value: 'absent' },
+      { kind: 'cranial', side: 'L', sign: 'hyperacusis', value: 'present' },
+      { kind: 'cranial', side: 'L', sign: 'taste_loss', value: 'present' },
+    ];
+    const [tears, loud, taste] = explain(mid, obs, 'chronic');
+    assert.deepEqual([tears?.verdict, loud?.verdict, taste?.verdict], ['fits', 'fits', 'fits']);
+    assert.match(tears?.because ?? '', /^the greater petrosal nerve leaves the facial nerve above this lesion$/);
+    assert.match(loud?.because ?? '', /between the geniculate ganglion and the nerve to stapedius is damaged$/);
+    // At the stylomastoid foramen every branch has left: taste and the stapedius conflict.
+    const below = explain(low, obs, 'chronic');
+    assert.deepEqual(below.map((v) => v.verdict), ['fits', 'conflicts', 'conflicts']);
+    assert.match(below[2]?.because ?? '', /^the chorda tympani leaves the facial nerve above this lesion$/);
   });
 });
 

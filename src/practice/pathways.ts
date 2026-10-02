@@ -87,7 +87,10 @@ export function pathwaysOf(f: Findings, h: Hypothesis): Pathway[] {
       c.superior_oblique_weakness === 'present' ||
       c.jaw_deviation === 'present' ||
       c.posterior_tongue_loss === 'present' ||
-      c.accessory_weakness === 'present'
+      c.accessory_weakness === 'present' ||
+      c.tear_loss === 'present' ||
+      c.hyperacusis === 'present' ||
+      c.taste_loss === 'present'
     ) {
       out.add('cranial_nuclei');
     }

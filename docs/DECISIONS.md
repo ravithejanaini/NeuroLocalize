@@ -1919,7 +1919,7 @@ first, all five new cases and all four new examinations failed.
 **C74 — The third nerve's pupil.** A compressive palsy involves the pupil and an ischaemic one
 often spares it (S62, S70). The model still has no pupil sign for the third nerve (C45).
 
-**C75 — The facial nerve by segment.** S51 lists taste, tears, saliva and hyperacusis by segment of
+**C75 — The facial nerve by segment.** *(Answered by P35; D183.)* S51 lists taste, tears, saliva and hyperacusis by segment of
 the facial canal. The model has face strength only, so its facial nerve place is the stylomastoid
 foramen, below the chorda tympani, where S51 lists "Ipsilateral facial plegia" alone.
 
@@ -2241,3 +2241,47 @@ order (D155). No other earlier leader moved.
 **R62** — D177: a lesion of the ciliospinal centre itself (a syrinx at C8–T2) is counted first order
 and given the half body, because both sources list syringomyelia there. Is that the pattern to teach,
 or does it behave as second order — the face only?
+
+## P35 — The facial nerve by segment: tears, the stapedius and taste
+
+The analysis written before any P35 code is `docs/P35-analysis.md`; S179 was read for it on
+2026-10-02, and S51 had been read in full for P29. Run against the P34 engine first, all five new
+cases and all three new examinations failed. This answers C75.
+
+### Source conflicts and limits
+
+**C97 — Which named segment holds which branch.** S179 puts both the nerve to stapedius and the
+chorda tympani in the mastoid segment; S51 divides the canal at each branch. They agree on the order
+of the branches, which is all the model uses; its parts are named by branch, not by segment.
+
+**C98 — Not modelled.** Salivation, the stapedial reflex, and taste from the palate.
+
+**C99 — The stapedius from inside the brainstem.** S179: the facial motor nucleus supplies the
+stapedius. S51's pontine lesions list no hyperacusis. The model's hyperacusis reads the nerve in its
+canal only; a nuclear lesion gives none, and no case asserts it either way.
+
+**C100 — Bell palsy's site.** The P29 preset called the stylomastoid place "Bell". No source read ties
+Bell palsy to that stretch; the preset is renamed by its anatomy.
+
+### Decisions
+
+**D182 — Three new signs.** Tears reduced, hyperacusis, and taste lost on the front two-thirds of the
+tongue, each on one side (S51, S179). The examination offers all three on each side.
+
+**D183 — The facial nerve has four stretches, and each is a place.** Above the geniculate ganglion;
+between the ganglion and the nerve to stapedius; between that nerve and the chorda tympani; and
+below the chorda tympani, which is the P29 place at the stylomastoid foramen. Each sign reads the
+stretches above its branch — tears the first, the stapedius the first two, taste the first three,
+the face all four — so the four places differ exactly as S51's list does. When a function is spared,
+the working names the branch that has already left. None of the 87 earlier examination leaders
+moved.
+
+**D184 — The isolated facial palsy is examined as isolated.** With the three branches in the model,
+P29's examination for the nerve at the stylomastoid foramen records taste, tears and the comfort of
+hearing as normal (A41); without them the three higher stretches fitted as well. Its leader is
+unchanged. The same reasoning as D161.
+
+### Reviewer questions
+
+**R63** — C99: should a lesion of the facial nucleus or fascicle in the pons give hyperacusis in the
+model, as S179's anatomy implies?

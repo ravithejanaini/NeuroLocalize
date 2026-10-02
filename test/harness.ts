@@ -13,6 +13,7 @@ import { ANGLE_CASES } from '../spec/expectations/angle.ts';
 import { ORBIT_CASES } from '../spec/expectations/orbit.ts';
 import { JUGULAR_CASES } from '../spec/expectations/jugular.ts';
 import { HORNER_CASES } from '../spec/expectations/horner.ts';
+import { FACIAL_CANAL_CASES } from '../spec/expectations/facial-canal.ts';
 import { LANGUAGE_CASES } from '../spec/expectations/language.ts';
 import { CEREBELLUM_CASES } from '../spec/expectations/cerebellum.ts';
 import { POSTERIOR_CASES } from '../spec/expectations/posterior.ts';
@@ -328,6 +329,10 @@ export const TERRITORY_CASE: Readonly<Record<string, string>> = {
   // P34.
   lung_apex: 'lung-apex-left',
   carotid_neck: 'carotid-neck-left',
+  // P35.
+  facial_above_geniculate: 'facial-above-geniculate-left',
+  facial_above_stapedius: 'facial-above-stapedius-left',
+  facial_above_chorda: 'facial-above-chorda-left',
 };
 
 /** P8: the frozen case that describes each place of the visual pathway. */
@@ -377,7 +382,7 @@ export function territoryFailures(kb: Kb): Failure[] {
     [...(a ?? [])].sort().join(',') === [...(b ?? [])].sort().join(',');
   for (const [territory, row] of Object.entries(kb.brain.territories)) {
     const id = TERRITORY_CASE[territory];
-    const kase = BRAIN_CASES.find((c) => c.id === id) ?? LANGUAGE_CASES.find((c) => c.id === id) ?? CEREBELLUM_CASES.find((c) => c.id === id) ?? POSTERIOR_CASES.find((c) => c.id === id) ?? MIDBRAIN_CASES.find((c) => c.id === id) ?? NERVE_CASES.find((c) => c.id === id) ?? BASAL_CASES.find((c) => c.id === id) ?? CORTEX_CASES.find((c) => c.id === id) ?? BASILAR_CASES.find((c) => c.id === id) ?? TRANSCORTICAL_CASES.find((c) => c.id === id) ?? CRANIAL_NERVE_CASES.find((c) => c.id === id) ?? CAVERNOUS_CASES.find((c) => c.id === id) ?? ANGLE_CASES.find((c) => c.id === id) ?? ORBIT_CASES.find((c) => c.id === id) ?? JUGULAR_CASES.find((c) => c.id === id) ?? HORNER_CASES.find((c) => c.id === id);
+    const kase = BRAIN_CASES.find((c) => c.id === id) ?? LANGUAGE_CASES.find((c) => c.id === id) ?? CEREBELLUM_CASES.find((c) => c.id === id) ?? POSTERIOR_CASES.find((c) => c.id === id) ?? MIDBRAIN_CASES.find((c) => c.id === id) ?? NERVE_CASES.find((c) => c.id === id) ?? BASAL_CASES.find((c) => c.id === id) ?? CORTEX_CASES.find((c) => c.id === id) ?? BASILAR_CASES.find((c) => c.id === id) ?? TRANSCORTICAL_CASES.find((c) => c.id === id) ?? CRANIAL_NERVE_CASES.find((c) => c.id === id) ?? CAVERNOUS_CASES.find((c) => c.id === id) ?? ANGLE_CASES.find((c) => c.id === id) ?? ORBIT_CASES.find((c) => c.id === id) ?? JUGULAR_CASES.find((c) => c.id === id) ?? HORNER_CASES.find((c) => c.id === id) ?? FACIAL_CANAL_CASES.find((c) => c.id === id);
     const lesion = kase?.lesion[0];
     // P10: the visual parts a territory takes must be exactly the ones its case lesions.
     const caseVision = (kase?.lesion ?? []).flatMap((r) => ('vision' in r ? [r.vision] : []));

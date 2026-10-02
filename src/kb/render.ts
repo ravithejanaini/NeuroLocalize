@@ -298,10 +298,15 @@ export const RENDER: RenderKb = {
       'pons:trigeminal_sensory': [-0.95, 0.6, 0.3],
       // P29: the sixth ventral along the clivus, the seventh lateral at the cerebellopontine angle (S61, S51).
       'pons:abducens_nerve': [-0.3, -0.8, -1.6],
-      'pons:facial_nerve': [-1.6, -0.6, -0.1],
+      'pons:facial_nerve': [-2.3, -1.05, 0.15],
       // P31: the eighth nerve beside the seventh at the angle; the trigeminal root higher, at mid-pons (S169, S122).
       'pons:vestibulocochlear_nerve': [-1.75, -0.45, 0.1],
       'pons:trigeminal_root': [-1.6, 0.55, -0.2],
+      // P35: the facial nerve through the temporal bone, lateral and downward from the angle to the
+      // stylomastoid foramen, in the order of its branches (S51, S179).
+      'pons:facial_above_geniculate': [-1.95, -0.5, -0.1],
+      'pons:facial_above_stapedius': [-2.2, -0.65, 0.05],
+      'pons:facial_above_chorda': [-2.3, -0.85, 0.15],
       'midbrain:peduncle': [-0.55, 0, -0.62],
       'midbrain:oculomotor': [-0.2, 0.15, -0.3],
       'midbrain:oculomotor_nucleus': [-0.13, 0.35, 0.22],

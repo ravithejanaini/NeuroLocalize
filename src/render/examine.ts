@@ -93,6 +93,9 @@ export const CRANIAL_NAME: Record<CranialSign, string> = {
   jaw_deviation: 'jaw deviates to this side on opening',
   posterior_tongue_loss: 'back of the tongue numb, taste lost, on this side',
   accessory_weakness: 'this shoulder droops; head turns weakly to the other side',
+  tear_loss: 'tears reduced in this eye',
+  hyperacusis: 'sounds too loud in this ear (hyperacusis)',
+  taste_loss: 'taste lost on the front of the tongue, this side',
 };
 
 /** Each sector of one eye's field, as it is asked about. */

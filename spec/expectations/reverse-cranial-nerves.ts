@@ -53,13 +53,18 @@ export const CRANIAL_NERVE_REVERSE_CASES: readonly BrainReverseCase[] = [
   },
   {
     id: 'reverse-facial-nerve',
-    title: 'The whole left face is weak, forehead included; eye movements, hearing, face sensation and limbs normal',
+    title: 'The whole left face is weak, forehead included; taste, tears and the comfort of hearing normal; eye movements, hearing, face sensation and limbs normal',
     observations: [
       { kind: 'face_weakness', side: 'L', value: 'whole' },
       { kind: 'face_sensation', side: 'L', value: 'normal' },
       cn('L', 'abduction_weakness', 'absent'),
       cn('L', 'gaze_palsy', 'absent'),
       cn('L', 'hearing_loss', 'absent'),
+      // A41: with the nerve's three branches in the model, the stylomastoid foramen is the place
+      // only if their functions were examined and found normal (D184).
+      cn('L', 'taste_loss', 'absent'),
+      cn('L', 'hyperacusis', 'absent'),
+      cn('L', 'tear_loss', 'absent'),
       ...strong,
     ],
     expectations: [{ timepoint: 'chronic', topFamily: 'cranial_nerve_left', topPlaces: ['facial_nerve'] }],
