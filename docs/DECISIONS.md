@@ -2236,6 +2236,13 @@ nothing else examined — now has four candidates with nothing against them, the
 isolated fourth nerve palsy's tie is listed nucleus first again; its expectation does not fix the
 order (D155). No other earlier leader moved.
 
+**D181 — The P34 mutation run: nothing new survived, and six old survivors fell.** 8818 mutants,
+98.0% raw; sourced rows 98.2%. No mutant of the sweating rule, the two new routes, parts or places
+survived. The cases that lesion one neurone at a time killed six survivors recorded since P5 and P7:
+the brainstem's sympathetic step read as five neighbouring parts of the medulla, and the T1 outflow
+read as the dorsal root. The first attempt at this run was cut off when the machine stopped; this
+is the second, complete run.
+
 ### Reviewer questions
 
 **R62** — D177: a lesion of the ciliospinal centre itself (a syrinx at C8–T2) is counted first order
