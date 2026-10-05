@@ -2288,6 +2288,11 @@ P29's examination for the nerve at the stylomastoid foramen records taste, tears
 hearing as normal (A41); without them the three higher stretches fitted as well. Its leader is
 unchanged. The same reasoning as D161.
 
+**D185 — The P35 mutation run: nothing new survived.** 9721 mutants, 98.2% raw; sourced rows 98.4%.
+The list of survivors is the same as after P34, line for line: no mutant of the three branch routes,
+the three new stretches of the nerve or their places survived. Two earlier attempts at this run were
+cut off when the machine stopped; this is the third, complete run.
+
 ### Reviewer questions
 
 **R63** — C99: should a lesion of the facial nucleus or fascicle in the pons give hyperacusis in the
