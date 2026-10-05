@@ -48,6 +48,7 @@ teaching from a phone.
 | P33 | The jugular foramen: the ninth, tenth and eleventh nerves together — the back of the tongue, the palate and the shoulder on one side, the tongue itself strong — with two new signs for the ninth and eleventh nerves |
 | P34 | Horner syndrome by neurone: where sweating is lost — the half body, the face, or only the brow — tells first, second and third order apart; the lung apex and the carotid artery in the neck become places |
 | P35 | The facial nerve by segment: tears, hyperacusis and taste place a lower-motor-neurone facial palsy above the geniculate ganglion, above the nerve to stapedius, above the chorda tympani, or below all three |
+| P36 | Depth on the stage: lit, solid tracts and nerves that hide what is behind them, fog with distance, glass shells for the cord and brain, and an axial view that cuts away what lies above the slice. A drawing change only |
 
 ## How accuracy is enforced
 

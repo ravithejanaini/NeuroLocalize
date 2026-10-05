@@ -43,6 +43,7 @@ import {
 } from './examine.ts';
 import { Panel } from './panel.ts';
 import { PRESETS, type Preset } from './presets.ts';
+import { buildStage } from './materials.ts';
 import { DILATION, PulseField } from './pulses.ts';
 import { buildAnatomy, lesionMidY, type Palette } from './scene.ts';
 import { buildBrain } from './brain3d.ts';
@@ -143,6 +144,8 @@ viewport.prepend(renderer.domElement);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(38, 1, 0.05, 200);
+// P36: a lamp on the camera and a fog in the stage's colour, for depth.
+const stage = buildStage(scene, camera, renderer, palette.stage);
 const anatomy = buildAnatomy(RENDER, palette, labelLayer);
 scene.add(anatomy.root);
 const limb = buildLimb(KB, RENDER, palette, labelLayer);
@@ -220,6 +223,8 @@ function placeCamera(): void {
     radius * Math.sin(phi) * Math.cos(theta),
   );
   camera.lookAt(x, y, 0);
+  // Looking down the cord (the axial station), cut away what lies above the slice.
+  stage.update(radius, phi < 0.5 ? -segmentMid(RENDER, sliceLevel()) + 0.03 : null);
 }
 
 // Pointer: one finger turns (shift moves along the cord), two fingers pinch to zoom.

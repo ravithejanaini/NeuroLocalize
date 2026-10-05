@@ -9,6 +9,7 @@ import { outline } from '../geometry/outline.ts';
 import { rootExit } from '../geometry/plexus.ts';
 import type { RenderKb } from '../kb/types.ts';
 import { SEGMENTS, SIDES, VERTEBRAE, type Compartment, type Side } from '../kb/vocab.ts';
+import { basic, glass, lit } from './materials.ts';
 
 export type Palette = {
   readonly stage: string;
@@ -28,8 +29,6 @@ export const TRACT_COLOUR = (p: Palette, c: Compartment): string =>
   c === 'dorsal_column' ? p.dc : c === 'anterolateral' ? p.stt : c === 'lateral_cst' ? p.cst : p.grey;
 
 const v3 = (p: { x: number; y: number; z: number }): THREE.Vector3 => new THREE.Vector3(p.x, p.y, p.z);
-const basic = (color: string, opacity: number): THREE.MeshBasicMaterial =>
-  new THREE.MeshBasicMaterial({ color, transparent: true, opacity, depthWrite: false, side: THREE.DoubleSide });
 const lineMat = (color: string, opacity: number): THREE.LineBasicMaterial =>
   new THREE.LineBasicMaterial({ color, transparent: true, opacity });
 
@@ -65,7 +64,8 @@ export function buildAnatomy(render: RenderKb, palette: Palette, layer: HTMLElem
     profile.push(new THREE.Vector2(radius, -segmentTop(render, k)));
   }
   profile.unshift(new THREE.Vector2(r(0), 0.9));
-  root.add(new THREE.Mesh(new THREE.LatheGeometry(profile, 48), basic(palette.cord, 0.06)));
+  // Glass, so the cord reads as a cylinder: clear face-on, bright at its edge (P36).
+  root.add(new THREE.Mesh(new THREE.LatheGeometry(profile, 48), glass(palette.cord, 0.02, 0.34)));
 
   // A ring at every segment boundary: the cord's own ruler.
   const segmentLabels: HTMLElement[] = [];
@@ -92,13 +92,14 @@ export function buildAnatomy(render: RenderKb, palette: Palette, layer: HTMLElem
       if (d) pts.push(v3(place(render, k, d)));
     }
     if (pts.length < 2) return;
-    const geo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), pts.length * 3, radius, 6, false);
-    root.add(new THREE.Mesh(geo, basic(colour, opacity)));
+    const geo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), pts.length * 3, radius, 10, false);
+    root.add(new THREE.Mesh(geo, lit(colour, opacity)));
   };
   for (const side of SIDES) {
-    for (const c of ['dorsal_column', 'lateral_cst', 'anterolateral'] as const) tube(c, side, TRACT_COLOUR(palette, c), 0.045, 0.3);
-    for (const c of ['dorsal_horn', 'anterior_horn'] as const) tube(c, side, palette.grey, 0.03, 0.22);
-    tube('intermediolateral', side, palette.grey, 0.018, 0.3);
+    // P36: solid and lit, so a tract in front hides the one behind it.
+    for (const c of ['dorsal_column', 'lateral_cst', 'anterolateral'] as const) tube(c, side, TRACT_COLOUR(palette, c), 0.045, 1);
+    for (const c of ['dorsal_horn', 'anterior_horn'] as const) tube(c, side, palette.grey, 0.03, 0.45);
+    tube('intermediolateral', side, palette.grey, 0.018, 0.5);
   }
 
   // Vertebral bodies, ventral to the cord, and their labels on the far side.
@@ -107,7 +108,8 @@ export function buildAnatomy(render: RenderKb, palette: Palette, layer: HTMLElem
   VERTEBRAE.forEach((v, i) => {
     const y = -(i + 0.5);
     const z = -(maxRadius + 0.75);
-    const mesh = new THREE.Mesh(body, basic(palette.rule, 0.08));
+    // Faint: from the front the bodies lie between the camera and the cord.
+    const mesh = new THREE.Mesh(body, lit(palette.rule, 0.09));
     mesh.position.set(0, y, z);
     const rim = new THREE.LineSegments(edges, lineMat(palette.rule, 0.4));
     rim.position.copy(mesh.position);

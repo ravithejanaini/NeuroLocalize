@@ -120,7 +120,8 @@ export class PulseField {
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
-    this.mesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.05, 10, 8), material, max);
+    // P36: wider than the widest strand (0.06), so a pulse stands proud of the solid tube it runs in.
+    this.mesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.07, 12, 10), material, max);
     this.mesh.count = 0;
     this.mesh.frustumCulled = false;
     scene.add(this.mesh);

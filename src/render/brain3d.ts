@@ -6,11 +6,10 @@ import type { BrainMap } from '../engine/brain.ts';
 import { allParts, partPoint } from '../geometry/brain.ts';
 import type { Kb, RenderKb } from '../kb/types.ts';
 import { BODY_REGIONS, SIDES, type BodyRegion, type BrainLevel, type Side } from '../kb/vocab.ts';
+import { basic, glass, lit, tint } from './materials.ts';
 import type { Label, Palette } from './scene.ts';
 
 const v3 = (p: { x: number; y: number; z: number }): THREE.Vector3 => new THREE.Vector3(p.x, p.y, p.z);
-const basic = (color: string, opacity: number): THREE.MeshBasicMaterial =>
-  new THREE.MeshBasicMaterial({ color, transparent: true, opacity, depthWrite: false, side: THREE.DoubleSide });
 
 export type BrainScene = {
   readonly root: THREE.Group;
@@ -41,8 +40,8 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
   };
   const tube = (pts: readonly THREE.Vector3[], radius: number, colour: string, opacity: number): THREE.Mesh =>
     new THREE.Mesh(
-      new THREE.TubeGeometry(new THREE.CatmullRomCurve3([...pts], false, 'centripetal'), Math.max(8, pts.length * 8), radius, 6, false),
-      basic(colour, opacity),
+      new THREE.TubeGeometry(new THREE.CatmullRomCurve3([...pts], false, 'centripetal'), Math.max(8, pts.length * 8), radius, 10, false),
+      lit(colour, opacity),
     );
 
   // The brainstem as one lathe whose radius follows the three levels.
@@ -52,7 +51,7 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
     const { y, height, radius } = layout.levels[l];
     profile.push(new THREE.Vector2(radius * 0.9, y - height / 2 + 0.05), new THREE.Vector2(radius, y), new THREE.Vector2(radius * 0.9, y + height / 2 - 0.05));
   }
-  root.add(new THREE.Mesh(new THREE.LatheGeometry(profile, 40), basic(palette.cord, 0.05)));
+  root.add(new THREE.Mesh(new THREE.LatheGeometry(profile, 40), glass(palette.cord, 0.02, 0.32)));
   for (const l of stem) {
     const { y, height } = layout.levels[l];
     label(LEVEL_WORD[l], new THREE.Vector3(-(layout.levels[l].radius + 0.5), y, 0));
@@ -66,7 +65,7 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
   {
     const c = layout.levels.cerebellum;
     for (const side of SIDES) {
-      const lobe = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), basic(palette.cord, 0.06));
+      const lobe = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), glass(palette.cord, 0.02, 0.3));
       lobe.scale.set(1.25, 0.85, 0.9);
       lobe.position.set((side === 'L' ? -1 : 1) * 1.3, c.y, 2.2);
       root.add(lobe);
@@ -77,13 +76,13 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
   // Thalamus and capsule as faint forms on either side; the cortex as two shells.
   for (const side of SIDES) {
     const s = side === 'L' ? -1 : 1;
-    const th = new THREE.Mesh(new THREE.SphereGeometry(0.75, 20, 14), basic(palette.cord, 0.07));
+    const th = new THREE.Mesh(new THREE.SphereGeometry(0.75, 32, 20), glass(palette.cord, 0.03, 0.34));
     th.scale.set(1.3, 0.7, 1);
     th.position.set(s * 0.95, layout.levels.thalamus.y, 0.1);
     const cap = new THREE.Mesh(new THREE.BoxGeometry(0.25, 1.1, 1.3), basic(palette.cord, 0.06));
     cap.position.set(s * 1.55, layout.levels.capsule.y, 0.1);
     cap.rotation.z = s * 0.35;
-    const shell = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20, 0, Math.PI * 2, 0, Math.PI / 2), basic(palette.cord, 0.045));
+    const shell = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20, 0, Math.PI * 2, 0, Math.PI / 2), glass(palette.cord, 0.015, 0.26));
     shell.scale.set(3.4, 2.6, 4.2);
     shell.position.set(s * 1.9, layout.levels.cortex.y - 1.4, 0);
     root.add(th, cap, shell);
@@ -98,7 +97,7 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
       ['motor_cortex', palette.cst],
       ['sensory_cortex', palette.dc],
     ] as const) {
-      root.add(tube(order.map((r) => v3(partPoint(render, 'cortex', c, side, r))), 0.06, colour, 0.35));
+      root.add(tube(order.map((r) => v3(partPoint(render, 'cortex', c, side, r))), 0.06, colour, 1));
     }
   }
   for (const r of BODY_REGIONS) {
@@ -110,7 +109,7 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
 
   // The long tracts, drawn through their own step lists (arm fibres stand for all).
   const tract = (steps: readonly { level: BrainLevel; compartment: Parameters<typeof partPoint>[2] }[], side: Side, colour: string): void => {
-    root.add(tube(steps.map((s) => v3(partPoint(render, s.level, s.compartment, side, 'arm'))), 0.03, colour, 0.3));
+    root.add(tube(steps.map((s) => v3(partPoint(render, s.level, s.compartment, side, 'arm'))), 0.03, colour, 1));
   };
   for (const side of SIDES) {
     tract([...kb.brain.corticospinal.steps], side, palette.cst);
@@ -130,14 +129,14 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
 
   // A mark for every part; the lesion colours the ones it takes.
   const marks = allParts(render).map((p) => {
-    const mesh = new THREE.Mesh(new THREE.SphereGeometry(p.level === 'cortex' ? 0.13 : 0.075, 12, 8), basic(palette.grey, 0.3));
+    const mesh = new THREE.Mesh(new THREE.SphereGeometry(p.level === 'cortex' ? 0.13 : 0.075, 16, 12), lit(palette.grey, 0.4));
     mesh.position.copy(v3(p.at));
     root.add(mesh);
     return { ...p, mesh };
   });
   const f = layout.face;
   for (const side of SIDES) {
-    const face = new THREE.Mesh(new THREE.SphereGeometry(0.28, 16, 10), basic(palette.cord, 0.12));
+    const face = new THREE.Mesh(new THREE.SphereGeometry(0.28, 24, 16), glass(palette.cord, 0.05, 0.45));
     face.position.set((side === 'L' ? 1 : -1) * f[0], f[1], f[2]);
     root.add(face);
   }
@@ -149,9 +148,7 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
     setLesion(bmap) {
       for (const m of marks) {
         const d = bmap.damage(m.level, m.compartment, m.side, m.region);
-        const mat = m.mesh.material as THREE.MeshBasicMaterial;
-        mat.color.set(d > 0 ? palette.lesion : palette.grey);
-        mat.opacity = d === 2 ? 0.95 : d === 1 ? 0.6 : 0.3;
+        tint(m.mesh, d > 0 ? palette.lesion : palette.grey, d === 2 ? 0.95 : d === 1 ? 0.6 : 0.4);
         m.mesh.scale.setScalar(d > 0 ? 1.8 : 1);
       }
     },

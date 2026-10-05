@@ -6,11 +6,10 @@ import type { Findings } from '../engine/forward.ts';
 import { legStrands, mirror, plexusStrands, siteAnchor, targetPoint, type Strand, type Target } from '../geometry/plexus.ts';
 import type { Kb, LimbPoint, RenderKb } from '../kb/types.ts';
 import { MUSCLES, SIDES, SKIN_AREAS, type PlexusSite, type SensoryState, type Side } from '../kb/vocab.ts';
+import { basic, lit, tint } from './materials.ts';
 import type { Label, Palette } from './scene.ts';
 
 const v3 = (p: { x: number; y: number; z: number }): THREE.Vector3 => new THREE.Vector3(p.x, p.y, p.z);
-const basic = (color: string, opacity: number): THREE.MeshBasicMaterial =>
-  new THREE.MeshBasicMaterial({ color, transparent: true, opacity, depthWrite: false, side: THREE.DoubleSide });
 
 export type Limb = {
   readonly root: THREE.Group;
@@ -20,12 +19,13 @@ export type Limb = {
 };
 
 const STRAND_STYLE: Record<Strand['kind'], { radius: number; opacity: number }> = {
-  root: { radius: 0.035, opacity: 0.55 },
-  trunk: { radius: 0.06, opacity: 0.75 },
-  division: { radius: 0.04, opacity: 0.6 },
-  cord: { radius: 0.055, opacity: 0.75 },
-  nerve: { radius: 0.035, opacity: 0.6 },
-  branch: { radius: 0.014, opacity: 0.4 },
+  // P36: the strands are solid and lit; only the fine branches stay see-through.
+  root: { radius: 0.035, opacity: 1 },
+  trunk: { radius: 0.06, opacity: 1 },
+  division: { radius: 0.04, opacity: 1 },
+  cord: { radius: 0.055, opacity: 1 },
+  nerve: { radius: 0.035, opacity: 1 },
+  branch: { radius: 0.014, opacity: 0.55 },
 };
 
 export function buildLimb(kb: Kb, render: RenderKb, palette: Palette, layer: HTMLElement): Limb {
@@ -35,7 +35,7 @@ export function buildLimb(kb: Kb, render: RenderKb, palette: Palette, layer: HTM
 
   const tube = (pts: readonly THREE.Vector3[], radius: number, colour: string, opacity: number): THREE.Mesh => {
     const curve = pts.length > 2 ? new THREE.CatmullRomCurve3([...pts], false, 'centripetal') : new THREE.LineCurve3(pts[0] ?? new THREE.Vector3(), pts[1] ?? new THREE.Vector3());
-    return new THREE.Mesh(new THREE.TubeGeometry(curve, Math.max(4, pts.length * 6), radius, 6, false), basic(colour, opacity));
+    return new THREE.Mesh(new THREE.TubeGeometry(curve, Math.max(4, pts.length * 6), radius, 10, false), lit(colour, opacity));
   };
   const line = (pts: readonly LimbPoint[], side: Side, colour: string, opacity: number): THREE.Line =>
     new THREE.Line(
@@ -57,9 +57,9 @@ export function buildLimb(kb: Kb, render: RenderKb, palette: Palette, layer: HTM
       root.add(tube(s.points.map(v3), style.radius, colour, style.opacity));
     }
     root.add(line(layout.clavicle, side, palette.rule, 0.8));
-    root.add(tube(layout.clavicle.map((p) => v3(mirror(p, side))), 0.09, palette.rule, 0.25));
+    root.add(tube(layout.clavicle.map((p) => v3(mirror(p, side))), 0.09, palette.rule, 0.35));
     root.add(line(layout.firstRib, side, palette.rule, 0.6));
-    root.add(tube(layout.artery.map((p) => v3(mirror(p, side))), 0.06, palette.artery, 0.4));
+    root.add(tube(layout.artery.map((p) => v3(mirror(p, side))), 0.06, palette.artery, 0.6));
     for (const scalene of [layout.scalenes.anterior, layout.scalenes.middle]) root.add(line(scalene, side, palette.rule, 0.35));
     for (const bone of layout.bones) root.add(line(bone, side, palette.rule, 0.5));
     // P7: the leg.
@@ -103,12 +103,12 @@ export function buildLimb(kb: Kb, render: RenderKb, palette: Palette, layer: HTM
 
   // A mark on every muscle and patch; its colour is its finding.
   const marks = new Map<string, THREE.Mesh>();
-  const muscleGeo = new THREE.SphereGeometry(0.11, 12, 8);
+  const muscleGeo = new THREE.SphereGeometry(0.11, 16, 12);
   const skinGeo = new THREE.OctahedronGeometry(0.1);
   for (const side of SIDES) {
     for (const t of [...MUSCLES, ...SKIN_AREAS] as Target[]) {
       const isMuscle = (MUSCLES as readonly string[]).includes(t);
-      const mesh = new THREE.Mesh(isMuscle ? muscleGeo : skinGeo, basic(palette.grey, 0.35));
+      const mesh = new THREE.Mesh(isMuscle ? muscleGeo : skinGeo, lit(palette.grey, 0.45));
       mesh.position.copy(v3(mirror(targetPoint(render, t), side)));
       root.add(mesh);
       marks.set(`${side}|${t}`, mesh);
@@ -119,7 +119,7 @@ export function buildLimb(kb: Kb, render: RenderKb, palette: Palette, layer: HTM
   root.add(lesions);
 
   const sensoryColour = (s: SensoryState): [string, number] =>
-    s === 'lost' ? [palette.lesion, 0.95] : s === 'impaired' ? [palette.lesion, 0.55] : s === 'indeterminate' ? [palette.stt, 0.6] : [palette.grey, 0.3];
+    s === 'lost' ? [palette.lesion, 0.95] : s === 'impaired' ? [palette.lesion, 0.55] : s === 'indeterminate' ? [palette.stt, 0.6] : [palette.grey, 0.45];
 
   return {
     root,
@@ -130,10 +130,8 @@ export function buildLimb(kb: Kb, render: RenderKb, palette: Palette, layer: HTM
           const mesh = marks.get(`${side}|${m}`);
           if (!mesh) continue;
           const s = f?.muscles[side][m] ?? 'normal';
-          const [c, o] = s === 'weak' ? [palette.lesion, 0.95] : s === 'indeterminate' ? [palette.stt, 0.6] : [palette.grey, 0.35];
-          const mat = mesh.material as THREE.MeshBasicMaterial;
-          mat.color.set(c);
-          mat.opacity = o;
+          const [c, o] = s === 'weak' ? [palette.lesion, 0.95] : s === 'indeterminate' ? [palette.stt, 0.6] : [palette.grey, 0.45];
+          tint(mesh, c, o);
           mesh.scale.setScalar(s === 'weak' ? 1.35 : 1);
         }
         for (const a of SKIN_AREAS) {
@@ -143,9 +141,7 @@ export function buildLimb(kb: Kb, render: RenderKb, palette: Palette, layer: HTM
           const v = f?.skin[side].posterior_column[a] ?? 'intact';
           const worst = [p, v].includes('lost') ? 'lost' : [p, v].includes('impaired') ? 'impaired' : [p, v].includes('indeterminate') ? 'indeterminate' : 'intact';
           const [c, o] = sensoryColour(worst);
-          const mat = mesh.material as THREE.MeshBasicMaterial;
-          mat.color.set(c);
-          mat.opacity = o;
+          tint(mesh, c, o);
           mesh.scale.setScalar(worst === 'intact' ? 1 : 1.3);
         }
       }

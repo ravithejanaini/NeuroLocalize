@@ -2292,3 +2292,27 @@ unchanged. The same reasoning as D161.
 
 **R63** — C99: should a lesion of the facial nucleus or fascicle in the pons give hyperacusis in the
 model, as S179's anatomy implies?
+
+## P36 — Depth on the stage
+
+`docs/P36-analysis.md`. A drawing change only: no row, finding, expectation or ranking changed, and
+no source is cited because no anatomical claim is made.
+
+### Decisions
+
+**D186 — Four cues for depth.** Solid structures are lit by a lamp on the camera and write depth, so
+a tube is round and the near one hides the far one; a fog in the stage's colour follows the camera's
+distance; shells are glass, bright at the silhouette. The materials live in one module,
+`src/render/materials.ts`, where the three scene files each had their own flat tint.
+
+**D187 — The tracts are solid, not see-through.** They were translucent so that the cord read as a
+lightbox. See-through things that write depth hide each other in whatever order they draw, so a
+tract cannot be both translucent and correctly occluding; solid was chosen, and the pulses widened
+to stand proud of them.
+
+**D188 — The axial station is a cut-away.** Looking down the cord, everything above the slice is
+clipped. It was needed once the tracts were solid, and it is what a cross-section is.
+
+**D189 — Verified by eye.** The unit tests cannot load the scene. Every station was checked in the
+browser with a lesion placed; the vertebral bodies were thinned again after the first pass, when
+from the front they greyed the cord behind them.
