@@ -32,8 +32,8 @@ const v3 = (p: { x: number; y: number; z: number }): THREE.Vector3 => new THREE.
 const lineMat = (color: string, opacity: number): THREE.LineBasicMaterial =>
   new THREE.LineBasicMaterial({ color, transparent: true, opacity });
 
-/** `limb` labels show only near a limb, `brain` labels only near the brain, and `close` ones (P37) only once the camera is near enough for them not to pile up. */
-export type Label = { readonly el: HTMLElement; readonly at: THREE.Vector3; readonly limb?: boolean; readonly brain?: boolean; readonly close?: boolean };
+/** `limb` labels show only near a limb, `brain` labels only near the brain, and `close` ones (P37) only once the camera is near enough for them not to pile up; `vision` ones (P38) only from the Vision station, where the other close ones are put away. */
+export type Label = { readonly el: HTMLElement; readonly at: THREE.Vector3; readonly limb?: boolean; readonly brain?: boolean; readonly close?: boolean; readonly vision?: boolean };
 
 export type Anatomy = {
   readonly root: THREE.Group;

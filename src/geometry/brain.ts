@@ -2,18 +2,23 @@
 // lists (D39), so a pulse passes exactly the parts the engine judges, on the side the engine
 // judges them (D40), and stops at the first one it says is cut (D18).
 import { regionOf, type BrainMap } from '../engine/brain.ts';
+import { carriers, isMidlinePart, sideOfSector, type VisionMap } from '../engine/vision.ts';
 import type { BrainRoute, BrainStep, Kb, LimbPoint, RenderKb } from '../kb/types.ts';
 import {
   BODY_REGIONS,
   BRAIN_LEVELS,
+  FIELD_CELLS,
   type BodyRegion,
   type BrainCompartment,
   type BrainLevel,
   type CranialSign,
   type CranialTarget,
+  type FieldCell,
+  type FieldState,
   type SensoryModality,
   type Side,
   type TrigeminalDivision,
+  type VisualPart,
 } from '../kb/vocab.ts';
 import type { Vec3 } from './paths.ts';
 
@@ -121,6 +126,81 @@ export function faceMotorPath(kb: Kb, render: RenderKb, x: Side): { readonly poi
   const f = render.brainLayout.face;
   points.push({ x: sign(x) * f[0], y: f[1] - 0.4, z: f[2] });
   return { points, elements };
+}
+
+/** P38: where a part of the visual pathway is drawn; a midline part sits on the midline. */
+export function visualPartPoint(kb: Kb, render: RenderKb, part: VisualPart, side: Side): Vec3 {
+  const p = render.visionLayout.parts[part];
+  return { x: isMidlinePart(kb, part) ? 0 : sign(side) * p[0], y: p[1], z: p[2] };
+}
+
+/**
+ * P38: the fibre of one cell of one eye's field, from the retina back through every part the
+ * engine says carries it (`carriers`), in the pathway's own order. Light from one side of space
+ * falls on the other side of the retina, and from above on its lower half, so the fibre starts
+ * there.
+ */
+export type Fibre = {
+  readonly eye: Side;
+  readonly cell: FieldCell;
+  /** The side of space the cell lies on. */
+  readonly fieldSide: Side;
+  readonly points: Vec3[];
+  /** One per point after the first: the part drawn there, and how it carries the cell. */
+  readonly parts: { readonly part: VisualPart; readonly side: Side; readonly how: 'whole' | 'upper' | 'lower'; readonly point: number }[];
+};
+
+export function visionFibres(kb: Kb, render: RenderKb): Fibre[] {
+  const out: Fibre[] = [];
+  const r = render.visionLayout.retina;
+  for (const eye of ['L', 'R'] as const) {
+    const centre = targetPoint(render, 'eye', eye);
+    for (const cell of FIELD_CELLS) {
+      const fieldSide = sideOfSector(eye, cell);
+      const upper = cell.includes('_superior');
+      const lower = cell.includes('_inferior');
+      const central = !upper && !lower;
+      // The retina is the field turned over: left field on the right of the retina, upper below.
+      const retina: Vec3 = {
+        x: centre.x - sign(fieldSide) * r * (central ? 0.35 : cell.endsWith('_vertical') ? 0.45 : 1),
+        y: centre.y + (central ? 0 : upper ? -r : r) * (cell.endsWith('_horizontal') ? 0.45 : 1),
+        z: centre.z + 0.15,
+      };
+      const points: Vec3[] = [retina];
+      const parts: Fibre['parts'] = [];
+      const all = carriers(kb, eye, cell);
+      // The centre of the field runs in both halves of the radiation: one point, midway, stands
+      // for the two parts that each carry half of it.
+      const halves = all.filter((c) => c.how !== 'whole').map((c) => visualPartPoint(kb, render, c.part, c.side));
+      let shared = -1;
+      for (const c of all) {
+        if (c.how !== 'whole' && halves.length > 1) {
+          if (shared < 0) {
+            shared = points.length;
+            const n = halves.length;
+            points.push({ x: halves.reduce((a, h) => a + h.x, 0) / n, y: halves.reduce((a, h) => a + h.y, 0) / n, z: halves.reduce((a, h) => a + h.z, 0) / n });
+          }
+          parts.push({ ...c, point: shared });
+          continue;
+        }
+        parts.push({ ...c, point: points.length });
+        points.push(visualPartPoint(kb, render, c.part, c.side));
+      }
+      out.push({ eye, cell, fieldSide, points, parts });
+    }
+  }
+  return out;
+}
+
+/**
+ * P38: where a pulse on a fibre stops. The engine's own field decides whether it does — lost,
+ * unsettled or seen — and the first damaged part on the fibre is where.
+ */
+export function fibreFate(vmap: VisionMap, state: FieldState, fibre: Fibre): { readonly diesAt: number; readonly dimmed: boolean } {
+  if (state === 'normal') return { diesAt: -1, dimmed: false };
+  const hit = fibre.parts.find((p) => vmap.damage(p.part, p.side) > 0);
+  if (state === 'lost') return { diesAt: hit ? hit.point : -1, dimmed: false };
+  return { diesAt: -1, dimmed: true };
 }
 
 /** P37: where an end organ of a cranial nerve is drawn on side `side`. */

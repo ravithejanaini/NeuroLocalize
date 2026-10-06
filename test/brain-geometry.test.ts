@@ -3,7 +3,13 @@ import { describe, it } from 'node:test';
 import { BRAIN_CASES } from '../spec/expectations/brain.ts';
 import { mapBrain } from '../src/engine/brain.ts';
 import { crossingOffsets, forward, isBrain, isCord, isSacral, mapLesion } from '../src/engine/forward.ts';
-import { brainFate, cranialCourses, faceMotorPath, faceSensoryPath, partPoint, targetPoint } from '../src/geometry/brain.ts';
+import { brainFate, cranialCourses, faceMotorPath, faceSensoryPath, fibreFate, partPoint, targetPoint, visionFibres, visualPartPoint } from '../src/geometry/brain.ts';
+import { isVision, type AnyRegion } from '../src/engine/forward.ts';
+import { mapVision } from '../src/engine/vision.ts';
+import { GENICULATE_CASES } from '../spec/expectations/geniculate.ts';
+import { OCCIPITAL_CASES } from '../spec/expectations/occipital.ts';
+import { SECTORANOPIA_CASES } from '../spec/expectations/sectoranopia.ts';
+import { VISION_CASES } from '../spec/expectations/vision.ts';
 import { ANGLE_CASES } from '../spec/expectations/angle.ts';
 import { CAVERNOUS_CASES } from '../spec/expectations/cavernous.ts';
 import { CRANIAL_NERVE_CASES } from '../spec/expectations/cranial-nerves.ts';
@@ -263,5 +269,65 @@ describe('the cranial nerves are drawn as the engine reads them (P37)', () => {
       if (c.id === 'IV') assert.equal(first?.side, 'R', 'the trochlear nucleus serves the other eye (S120)');
       if (c.id === 'III' || c.id === 'VI') assert.equal(first?.side, 'L', `${c.id} is uncrossed`);
     }
+  });
+});
+
+describe('the visual pathway is drawn as the engine reads it (P38)', () => {
+  const CASES = [...VISION_CASES, ...OCCIPITAL_CASES, ...GENICULATE_CASES, ...SECTORANOPIA_CASES, ...ORBIT_CASES];
+  const fibres = visionFibres(KB, RENDER);
+
+  it('stops a pulse on a fibre exactly where the engine loses that cell of the field, in every case', () => {
+    let checked = 0;
+    let stopped = 0;
+    for (const kase of CASES) {
+      const lesion: readonly AnyRegion[] = kase.lesion;
+      const vmap = mapVision(KB, lesion.filter(isVision));
+      const f = forward(kase.lesion, 'chronic');
+      for (const fibre of fibres) {
+        const state = f.fields[fibre.eye][fibre.cell];
+        const fate = fibreFate(vmap, state, fibre);
+        const where = `${kase.id} ${fibre.eye} ${fibre.cell}`;
+        const damaged = fibre.parts.filter((p) => vmap.damage(p.part, p.side) > 0);
+        // A lost cell must have a damaged part on its drawn fibre to stop at; a seen one, none
+        // that carries all of it.
+        if (state === 'lost') assert.ok(fate.diesAt > 0, `${where}: lost, but nothing on the fibre is damaged`);
+        if (state === 'normal') assert.equal(damaged.filter((p) => p.how === 'whole').length, 0, `${where}: seen, but a part that carries it is damaged`);
+        if (state === 'indeterminate') assert.ok(damaged.length > 0, `${where}: unsettled, with nothing damaged on the fibre`);
+        checked++;
+        if (fate.diesAt > 0) stopped++;
+      }
+    }
+    assert.ok(checked > 300 && stopped > 60, `${checked} fibres checked, ${stopped} stopped`);
+  });
+
+  it('crosses the nasal fibres at the chiasm and no others', () => {
+    for (const fibre of fibres) {
+      const tract = fibre.parts.find((p) => p.part === 'optic_tract');
+      const nerve = fibre.parts.find((p) => p.part === 'optic_nerve');
+      assert.ok(tract && nerve, `${fibre.eye} ${fibre.cell} has no nerve or no tract`);
+      assert.equal(nerve.side, fibre.eye, 'the optic nerve is the eye’s own');
+      // Each tract carries the opposite half of space: the temporal field's fibres — from the
+      // nasal retina — are the ones that change sides.
+      assert.equal(tract.side !== fibre.eye, fibre.fieldSide === fibre.eye, `${fibre.eye} ${fibre.cell}`);
+      assert.equal(tract.side !== fibre.fieldSide, true, 'a tract carries the opposite half-field');
+      // And only the crossing fibres pass the chiasm as the engine reads it.
+      assert.equal(fibre.parts.some((p) => p.part === 'chiasm'), fibre.fieldSide === fibre.eye, `${fibre.eye} ${fibre.cell}: chiasm`);
+    }
+  });
+
+  it('runs every fibre backward from the eye, with the chiasm on the midline', () => {
+    assert.equal(visualPartPoint(KB, RENDER, 'chiasm', 'L').x, 0);
+    assert.equal(visualPartPoint(KB, RENDER, 'chiasm', 'R').x, 0);
+    for (const fibre of fibres) {
+      assert.ok(fibre.points.length >= 4, `${fibre.eye} ${fibre.cell} is too short`);
+      const first = fibre.points[0];
+      const last = fibre.points[fibre.points.length - 1];
+      assert.ok(first && last && last.z > first.z + 3, `${fibre.eye} ${fibre.cell} does not run back to the occipital lobe`);
+    }
+    // Meyer loop dips below and in front of the parietal fibres (S91, S93).
+    const meyer = visualPartPoint(KB, RENDER, 'meyer_loop', 'L');
+    const parietal = visualPartPoint(KB, RENDER, 'parietal_radiation', 'L');
+    assert.ok(meyer.y < parietal.y && meyer.z < parietal.z);
+    assert.ok(visualPartPoint(KB, RENDER, 'calcarine_lower', 'L').y < visualPartPoint(KB, RENDER, 'calcarine_upper', 'L').y);
   });
 });

@@ -62,6 +62,9 @@ button,input{font:inherit;color:inherit}
 .lbl-land{color:var(--stage-dim);font-style:italic}
 .lbl-brain{color:var(--stage-text);font-size:9.5px}
 .lbl-nerve{color:var(--nerve-glow);font-weight:600}
+.lbl-vision{color:var(--stage-text);font-weight:600}
+.lbl-field-l{color:var(--dc-glow);font-style:italic}
+.lbl-field-r{color:var(--stt-glow);font-style:italic}
 .lbl-homunculus{color:var(--cst-glow);opacity:.85}
 .head{border-collapse:collapse;width:100%;font-family:var(--f-mono);font-size:10.5px}
 .head th{text-align:left;font-weight:400;color:var(--ink2);font-family:var(--f-body);font-size:12px;padding:2px 6px 2px 0}
@@ -403,8 +406,9 @@ body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-
       <button type="button" data-station="leg" aria-pressed="false">Leg</button>
       <button type="button" data-station="brain" aria-pressed="false">Brain</button>
       <button type="button" data-station="head" aria-pressed="false">Head</button>
+      <button type="button" data-station="vision" aria-pressed="false">Vision</button>
     </div>
-    <p class="hud hint">Drag to turn · scroll or pinch to zoom · shift-drag to move along the cord · keys 1–8</p>
+    <p class="hud hint">Drag to turn · scroll or pinch to zoom · shift-drag to move along the cord · keys 1–9</p>
     <ul class="hud legend">
       <li><i style="background:var(--dc-glow)"></i>Posterior columns</li>
       <li><i style="background:var(--stt-glow)"></i>Spinothalamic</li>

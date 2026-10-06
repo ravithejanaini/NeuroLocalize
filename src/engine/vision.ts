@@ -38,9 +38,7 @@ export function mapVision(kb: Kb, regions: readonly VisionRegion[]): VisionMap {
     // A midline part has no side: lesioning it on one side lesions it for both. A part is
     // midline only when every place holding it is (the chiasm); the calcarine banks sit in both
     // PCAs (P18) but also in one-sided places, so they keep their side.
-    const holders = Object.values(kb.vision.places).filter((q) => q.parts.includes(r.vision));
-    const midline = holders.length > 0 && holders.every((q) => q.midline === true);
-    const sides = midline ? SIDES : r.sides;
+    const sides = isMidlinePart(kb, r.vision) ? SIDES : r.sides;
     for (const side of sides) {
       const key = `${r.vision}|${side}`;
       cells.set(key, Math.max(cells.get(key) ?? 0, d) as Damage);
@@ -76,6 +74,49 @@ export const combineCells = (states: readonly FieldState[]): FieldState =>
 
 const worse = (a: Damage, b: Damage): Damage => (a > b ? a : b);
 
+/** P38: a part that has no side — the chiasm — because every place holding it is midline. */
+export function isMidlinePart(kb: Kb, part: VisualPart): boolean {
+  const holders = Object.values(kb.vision.places).filter((q) => q.parts.includes(part));
+  return holders.length > 0 && holders.every((q) => q.midline === true);
+}
+
+/**
+ * How the part `part` on side `partSide` carries one cell of one eye's field: all of it, the
+ * upper or lower half of the centre, or not at all. The one rule both the findings and the
+ * drawn pathway read (P38).
+ */
+export function carries(kb: Kb, part: VisualPart, partSide: Side, eye: Side, sector: FieldCell): 'whole' | 'upper' | 'lower' | null {
+  const row = kb.vision.parts[part];
+  if (row.eye === 'same' && partSide !== eye) return null;
+  const at = sideOfSector(eye, sector);
+  const serves = row.field === 'whole' ? true : row.field === 'temporal' ? at === eye : at === opposite(partSide);
+  if (!serves) return null;
+  const vertical = verticalOf(sector);
+  if (vertical) {
+    const inBand = row.band === undefined || row.band === bandOf(sector);
+    return inBand && (row.quadrants === 'both' || row.quadrants === vertical) ? 'whole' : null;
+  }
+  // The centre of a half-field.
+  if (row.centre === 'with' || row.centre === 'only') return 'whole';
+  if (row.centre === 'half' && row.quadrants !== 'both' && row.quadrants !== 'none') return row.quadrants;
+  return null;
+}
+
+/** P38: every part that carries one cell of one eye's field, along the pathway from the eye back. */
+export function carriers(kb: Kb, eye: Side, sector: FieldCell): { readonly part: VisualPart; readonly side: Side; readonly how: 'whole' | 'upper' | 'lower' }[] {
+  const out: { part: VisualPart; side: Side; how: 'whole' | 'upper' | 'lower' }[] = [];
+  for (const part of VISUAL_PARTS) {
+    for (const side of SIDES) {
+      const how = carries(kb, part, side, eye, sector);
+      if (!how) continue;
+      // A midline part is one thing; name it once.
+      if (isMidlinePart(kb, part) && out.some((c) => c.part === part)) continue;
+      out.push({ part, side, how });
+    }
+  }
+  return out;
+}
+
 export function visionFindings(kb: Kb, map: VisionMap): VisionFindings {
   const fields = {} as Record<Side, Record<FieldRegion, FieldState>>;
   const rapd: Record<Side, SignState> = { L: 'absent', R: 'absent' };
@@ -84,30 +125,15 @@ export function visionFindings(kb: Kb, map: VisionMap): VisionFindings {
   for (const eye of SIDES) {
     fields[eye] = {} as Record<FieldRegion, FieldState>;
     for (const sector of FIELD_CELLS) {
-      const at = sideOfSector(eye, sector);
-      const vertical = verticalOf(sector);
-      const band = bandOf(sector);
       let whole: Damage = 0;
       const halves: Record<'upper' | 'lower', Damage> = { upper: 0, lower: 0 };
       for (const part of VISUAL_PARTS) {
-        const row = kb.vision.parts[part];
         for (const partSide of SIDES) {
           const d = map.damage(part, partSide);
           if (d === 0) continue;
-          if (row.eye === 'same' && partSide !== eye) continue;
-          const serves =
-            row.field === 'whole' ? true : row.field === 'temporal' ? at === eye : at === opposite(partSide);
-          if (!serves) continue;
-          if (vertical) {
-            const inBand = row.band === undefined || row.band === band;
-            if (inBand && (row.quadrants === 'both' || row.quadrants === vertical)) whole = worse(whole, d);
-            continue;
-          }
-          // The centre of a half-field.
-          if (row.centre === 'with' || row.centre === 'only') whole = worse(whole, d);
-          else if (row.centre === 'half' && row.quadrants !== 'both' && row.quadrants !== 'none') {
-            halves[row.quadrants] = worse(halves[row.quadrants], d);
-          }
+          const how = carries(kb, part, partSide, eye, sector);
+          if (how === 'whole') whole = worse(whole, d);
+          else if (how) halves[how] = worse(halves[how], d);
         }
       }
       const both = Math.min(halves.upper, halves.lower) as Damage;

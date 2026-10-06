@@ -4,9 +4,10 @@
 import * as THREE from 'three';
 import type { BrainMap } from '../engine/brain.ts';
 import type { Findings } from '../engine/forward.ts';
-import { allParts, cranialCourses, partPoint, targetPoint } from '../geometry/brain.ts';
+import type { VisionMap } from '../engine/vision.ts';
+import { allParts, cranialCourses, partPoint, targetPoint, visionFibres, visualPartPoint } from '../geometry/brain.ts';
 import type { Kb, RenderKb } from '../kb/types.ts';
-import { BODY_REGIONS, CRANIAL_TARGETS, SIDES, type BodyRegion, type BrainLevel, type CranialTarget, type Side } from '../kb/vocab.ts';
+import { BODY_REGIONS, CRANIAL_TARGETS, SIDES, VISUAL_PARTS, type BodyRegion, type BrainLevel, type CranialTarget, type Side, type VisualPart } from '../kb/vocab.ts';
 import { basic, glass, lit, tint } from './materials.ts';
 import type { Label, Palette } from './scene.ts';
 
@@ -18,6 +19,23 @@ export type BrainScene = {
   setLesion(bmap: BrainMap): void;
   /** P37: colours each end organ by its finding; null clears them. */
   setFindings(f: Findings | null): void;
+  /** P38: colours each part of the visual pathway the lesion takes. */
+  setVision(vmap: VisionMap): void;
+};
+
+/** P38: what each part of the visual pathway is called on the stage. */
+const VISUAL_WORD: Record<VisualPart, string> = {
+  optic_nerve: 'optic nerve',
+  chiasm: 'chiasm',
+  optic_tract: 'optic tract',
+  lgn: 'lateral geniculate',
+  lgn_crest: 'LGN crest',
+  lgn_horns: 'LGN horns',
+  meyer_loop: 'Meyer loop',
+  parietal_radiation: 'parietal radiation',
+  calcarine_lower: 'calcarine, lower bank',
+  calcarine_upper: 'calcarine, upper bank',
+  occipital_pole: 'occipital pole',
 };
 
 /** P37: what each end organ is called on the stage. */
@@ -100,7 +118,7 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
     el.className = cls;
     el.textContent = text;
     layer.append(el);
-    labels.push({ el, at, brain: true, close });
+    labels.push({ el, at, brain: true, close, vision: cls.includes('lbl-vision') || cls.includes('lbl-field') });
   };
   const tube = (pts: readonly THREE.Vector3[], radius: number, colour: string, opacity: number): THREE.Mesh =>
     new THREE.Mesh(
@@ -232,9 +250,42 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
     }
   }
 
+  // P38: the visual pathway — one strand for each cell of each eye's field, through the parts
+  // the engine says carry it (geometry/brain.ts), coloured by the half of space it sees; and a
+  // mark on every part, named on the patient's left.
+  for (const fibre of visionFibres(kb, render)) {
+    if (fibre.points.length < 2) continue;
+    root.add(tube(fibre.points.map(v3), 0.02, fibre.fieldSide === 'L' ? palette.dc : palette.stt, 1));
+  }
+  const visual: { part: VisualPart; side: Side; mesh: THREE.Mesh }[] = [];
+  for (const part of VISUAL_PARTS) {
+    for (const side of SIDES) {
+      const at = v3(visualPartPoint(kb, render, part, side));
+      if (at.x === 0 && side === 'R') continue;
+      const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.07, 16, 12), lit(palette.grey, 0.4));
+      mesh.position.copy(at);
+      root.add(mesh);
+      visual.push({ part, side, mesh });
+      if (side === 'L') label(VISUAL_WORD[part], new THREE.Vector3(at.x - 0.16, at.y + 0.14, at.z), 'lbl lbl-brain lbl-vision', true);
+    }
+  }
+  // Behind the chiasm each side carries the opposite half of space, in that half's colour.
+  for (const side of SIDES) {
+    const pole = v3(visualPartPoint(kb, render, 'occipital_pole', side));
+    label(side === 'R' ? 'left half of space' : 'right half of space', new THREE.Vector3(pole.x + (side === 'L' ? -0.5 : 0.5), pole.y + 0.1, pole.z + 0.6), `lbl lbl-brain ${side === 'R' ? 'lbl-field-l' : 'lbl-field-r'}`, true);
+  }
+
   return {
     root,
     labels,
+    setVision(vmap) {
+      for (const m of visual) {
+        // A midline part is one mark for both sides.
+        const d = Math.max(vmap.damage(m.part, m.side), m.mesh.position.x === 0 ? vmap.damage(m.part, 'R') : 0);
+        tint(m.mesh, d > 0 ? palette.lesion : palette.grey, d === 2 ? 0.95 : d === 1 ? 0.6 : 0.4);
+        m.mesh.scale.setScalar(d > 0 ? 1.8 : 1);
+      }
+    },
     setLesion(bmap) {
       for (const m of marks) {
         const d = bmap.damage(m.level, m.compartment, m.side, m.region);

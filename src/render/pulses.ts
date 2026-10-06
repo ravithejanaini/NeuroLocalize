@@ -3,7 +3,7 @@
 // arm run the same cord route, then the plexus route limbPath() builds from the engine's
 // (D27), and stop at the first place the plexus lesion cuts.
 import * as THREE from 'three';
-import { crossingOffsets, type LesionMap } from '../engine/forward.ts';
+import { crossingOffsets, type Findings, type LesionMap } from '../engine/forward.ts';
 import { isSacral } from '../engine/forward.ts';
 import {
   cmPerUnit,
@@ -17,7 +17,8 @@ import {
 } from '../geometry/paths.ts';
 import { mapBrain, type BrainMap } from '../engine/brain.ts';
 import { disputedSegments, mapPlexus, type PlexusMap } from '../engine/limb.ts';
-import { cranialCourses, faceMotorPath } from '../geometry/brain.ts';
+import { mapVision, type VisionMap } from '../engine/vision.ts';
+import { cranialCourses, faceMotorPath, fibreFate, visionFibres, type Fibre } from '../geometry/brain.ts';
 import { limbFate, limbPath, suppliesOf, TARGETS, type LimbPath, type Target } from '../geometry/plexus.ts';
 import type { Kb, RenderKb, Span } from '../kb/types.ts';
 import { MUSCLES, SEGMENTS, type Muscle, type Segment, type Side, type SkinArea } from '../kb/vocab.ts';
@@ -26,7 +27,10 @@ import type { Palette } from './scene.ts';
 /** Real conduction crosses the cord in milliseconds; everything is slowed by this (D15). */
 export const DILATION = 333;
 
-type Kind = 'pain' | 'posterior' | 'motor' | 'face-sense' | 'face-motor';
+type Kind = 'pain' | 'posterior' | 'motor' | 'face-sense' | 'face-motor' | 'vision-left' | 'vision-right';
+
+/** P38: each eye's field as the engine reports it, which decides where a pulse on a fibre stops. */
+type Fields = Findings['fields'];
 
 /** The arm part of a pulse: where its plexus route sits within the whole path. */
 type LimbLeg = {
@@ -43,6 +47,8 @@ type Pulse = {
   readonly times: readonly number[];
   readonly sacral: boolean;
   readonly limb?: LimbLeg;
+  /** P38: set on a pulse in the visual pathway. */
+  readonly fibre?: Fibre;
   t: number;
   fate: Fate;
   flashed: boolean;
@@ -96,6 +102,9 @@ export class PulseField {
   private map: LesionMap | null = null;
   private pmap: PlexusMap = mapPlexus([]);
   private bmap: BrainMap;
+  private vmap: VisionMap;
+  private fields: Fields | null = null;
+  private fibres: Fibre[] | null = null;
   private readonly limbCache = new Map<string, { path: Path; times: number[]; limb: LimbLeg } | null>();
   private options: PathOptions = { model: 'classical', painFibre: 'adelta' };
   private frozen = false;
@@ -115,6 +124,7 @@ export class PulseField {
     this.palette = palette;
     this.max = max;
     this.bmap = mapBrain(kb, []);
+    this.vmap = mapVision(kb, []);
     const material = new THREE.MeshBasicMaterial({
       transparent: true,
       depthWrite: false,
@@ -132,10 +142,54 @@ export class PulseField {
     this.pmap = pmap;
     this.bmap = bmap;
     for (const p of this.pulses) {
-      p.fate = this.fateOf(p.path, p.sacral, p.limb);
+      p.fate = p.fibre ? this.fibreFateOf(p.fibre) : this.fateOf(p.path, p.sacral, p.limb);
       p.flashed = false;
     }
     if (this.frozen) this.seedStill();
+  }
+
+  /** P38: the visual pathway's lesion and the fields the engine reads from it. Call before setLesion. */
+  setVision(vmap: VisionMap, fields: Fields | null): void {
+    this.vmap = vmap;
+    this.fields = fields;
+  }
+
+  private fibreFateOf(fibre: Fibre): Fate {
+    const state = this.fields ? this.fields[fibre.eye][fibre.cell] : 'normal';
+    const f = fibreFate(this.vmap, state, fibre);
+    return { diesAtPoint: f.diesAt, dimmed: f.dimmed };
+  }
+
+  /** A pulse from the retina back along one fibre of the visual pathway. */
+  private spawnVision(t = 0, pick = Math.random): void {
+    if (!this.map || this.pulses.length >= this.max) return;
+    this.fibres ??= visionFibres(this.kb, this.render);
+    const i = Math.floor(pick() * this.fibres.length);
+    const fibre = this.fibres[i];
+    if (!fibre || fibre.points.length < 2) return;
+    const key = `vision|${i}`;
+    let entry = this.cache.get(key);
+    if (!entry) {
+      const path: Path = {
+        points: fibre.points,
+        legs: [{ from: 0, to: fibre.points.length - 1, speed: 'abeta' }],
+        elementPoint: [],
+        route: { elements: [], crossesAt: -1 },
+        brain: [],
+      };
+      entry = { path, times: timeline(this.render, path) };
+      this.cache.set(key, entry);
+    }
+    this.pulses.push({
+      kind: fibre.fieldSide === 'L' ? 'vision-left' : 'vision-right',
+      path: entry.path,
+      times: entry.times,
+      sacral: false,
+      fibre,
+      t,
+      fate: this.fibreFateOf(fibre),
+      flashed: false,
+    });
   }
 
   /** The cord's verdict and the plexus's, in the order the pulse meets them. */
@@ -292,7 +346,9 @@ export class PulseField {
     const roll = Math.random();
     // P37: a quarter of the pulses run in the cranial nerves, now that there are sixteen a side.
     if (roll < 0.25) {
-      this.spawnFace();
+      // P38: two in five of those in the visual pathway.
+      if (Math.random() < 0.4) this.spawnVision();
+      else this.spawnFace();
       return;
     }
     if (roll < 0.5) {
@@ -317,6 +373,12 @@ export class PulseField {
       seed = (seed * 16807) % 2147483647;
       return seed / 2147483647;
     };
+    for (let i = 0; i < 20; i++) {
+      const before = this.pulses.length;
+      this.spawnVision(0, pick);
+      const p = this.pulses[before];
+      if (p) p.t = (p.times[p.times.length - 1] ?? 0) * (0.2 + pick() * 0.75);
+    }
     for (let i = 0; i < 24; i++) {
       const before = this.pulses.length;
       this.spawnFace(0, pick);
@@ -353,7 +415,11 @@ export class PulseField {
   }
 
   private hue(kind: Kind): string {
-    return kind === 'pain' || kind === 'face-sense' ? this.palette.stt : kind === 'posterior' ? this.palette.dc : this.palette.cst;
+    return kind === 'pain' || kind === 'face-sense' || kind === 'vision-right'
+      ? this.palette.stt
+      : kind === 'posterior' || kind === 'vision-left'
+        ? this.palette.dc
+        : this.palette.cst;
   }
 
   update(dt: number, camera: THREE.Camera): void {

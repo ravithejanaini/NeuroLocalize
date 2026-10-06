@@ -2352,3 +2352,32 @@ the Brain, as before.
 **D194 — No mutation run.** The knowledge base changed only in the order of steps within routes.
 The engine takes the worst damage along a route whatever the order, so the set of mutants and their
 outcomes is the same; this is argued, not measured.
+
+## P38 — The visual pathway on the stage
+
+`docs/P38-analysis.md`. No new source and no new finding.
+
+### Decisions
+
+**D195 — One rule for which part carries which cell.** `carries()` and `carriers()` in
+`engine/vision.ts` replace two copies of the same rule. The forward pass, the explanation and the
+drawing read it. All 475 earlier tests pass unchanged and no examination's leader moved.
+
+**D196 — A fibre is the carriers of one cell.** `visionFibres()` builds twenty strands, one per
+cell per eye, through the parts `carriers()` lists and nothing else. Where they are drawn comes
+from one layout row (`render.vision-layout`, T2, schematic).
+
+**D197 — The engine's field decides whether a pulse stops; the first damaged part decides where.**
+`fibreFate()` does not judge a field. A test holds it to the engine in every frozen visual and
+orbital case, and a second holds the crossing at the chiasm.
+
+**D198 — A Vision station, the ninth.** From above and in front. The visual parts are named only
+there, and the cranial nerves' names are put away while it is the station, because together they
+pile up. A lesion of the visual pathway alone flies there.
+
+**D199 — Colour is the half of space.** Fibres and pulses of the left half take the posterior
+columns' colour and those of the right half the spinothalamic tract's. The palette has no spare
+colours; labels behind the occipital poles say which is which.
+
+**D200 — No mutation run.** The engine change is an equivalent rewrite and the knowledge base
+gained only a layout row that no finding reads; this is argued, not measured.

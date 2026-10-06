@@ -50,6 +50,7 @@ teaching from a phone.
 | P35 | The facial nerve by segment: tears, hyperacusis and taste place a lower-motor-neurone facial palsy above the geniculate ganglion, above the nerve to stapedius, above the chorda tympani, or below all three |
 | P36 | Depth on the stage: lit, solid tracts and nerves that hide what is behind them, fog with distance, glass shells for the cord and brain, and an axial view that cuts away what lies above the slice. A drawing change only |
 | P37 | The cranial nerves on the stage: sixteen courses a side from nucleus to end organ, built from the model's own routes, with pulses that stop at the lesion, end organs that take the colour of their finding, and a Head station to see them from |
+| P38 | The visual pathway on the stage: twenty fibres from the two retinas to the occipital cortex, crossing at the chiasm as the model's own rule says, with pulses that stop at the lesion, a mark on every part, and a Vision station to see them from |
 
 ## How accuracy is enforced
 

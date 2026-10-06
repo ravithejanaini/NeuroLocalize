@@ -377,6 +377,31 @@ export const RENDER: RenderKb = {
     },
   },
 
+  visionLayout: {
+    meta: {
+      id: 'render.vision-layout',
+      claim: 'The visual pathway runs from the eye back: the optic nerve to the chiasm at the midline, the optic tract to the lateral geniculate nucleus, then the radiation — Meyer loop sweeping forward and down into the temporal lobe, the parietal fibres above it — to the calcarine cortex at the back, its lower bank below its upper, with the occipital pole behind them. Positions are schematic.',
+      sources: ['S91', 'S93', 'S147'],
+      tier: 'T2',
+      bookRef: 'pending',
+    },
+    parts: {
+      optic_nerve: [-1.15, 5.75, -2.3],
+      chiasm: [0, 5.95, -1.5],
+      optic_tract: [-0.8, 6.15, -0.7],
+      lgn: [-1.3, 6.35, 0.2],
+      // The crest dorsal, the horns to either side of it; one mark each.
+      lgn_crest: [-1.3, 6.6, 0.3],
+      lgn_horns: [-1.55, 6.2, 0.35],
+      meyer_loop: [-2.55, 5.7, -0.5],
+      parietal_radiation: [-2.2, 7.6, 1.5],
+      calcarine_lower: [-0.5, 6.7, 3.7],
+      calcarine_upper: [-0.5, 7.45, 3.7],
+      occipital_pole: [-0.4, 7.05, 4.25],
+    },
+    retina: 0.16,
+  },
+
   nerveRoots: {
     meta: {
       id: 'render.nerve-roots',

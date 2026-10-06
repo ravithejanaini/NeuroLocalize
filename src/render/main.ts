@@ -2,12 +2,12 @@
 // and seeing its findings, entering findings and seeing where the lesion could be, or
 // practising on generated cases scheduled by the pathways answered wrongly.
 import * as THREE from 'three';
-import { forward, isBrain, isCord, isPlexus, mapLesion, type AnyRegion, type PlexusRegion } from '../engine/forward.ts';
+import { forward, isBrain, isCord, isPlexus, isVision, mapLesion, type AnyRegion, type PlexusRegion } from '../engine/forward.ts';
 import { mapBrain } from '../engine/brain.ts';
 import { territoryRegions } from '../engine/hypotheses.ts';
 import { mapPlexus } from '../engine/limb.ts';
 import { hypotheses, type Hypothesis } from '../engine/hypotheses.ts';
-import { placeRegions } from '../engine/vision.ts';
+import { mapVision, placeRegions } from '../engine/vision.ts';
 import {
   explain,
   isPrepared,
@@ -194,6 +194,10 @@ function station(name: string): View {
       // P37: close on the brainstem and the face, from the front and a little to one side, where
       // the cranial nerves and their end organs can be told apart and named.
       return { theta: Math.PI + 0.3, phi: 1.4, radius: 14, y: 4.2, x: 0 };
+    case 'vision':
+      // P38: from above and in front, so the pathway runs away from the eyes to the back of the
+      // head and the crossing at the chiasm is plain. Not so steep that the cord's cut-away starts.
+      return { theta: Math.PI + 0.25, phi: 0.62, radius: 16, y: 6.2, x: 0 };
     case 'leg':
       // From the front, like the arm: the whole lower limb, turned a little toward the chosen side.
       return { theta: Math.PI + (armSide === 'L' ? 0.3 : -0.3), phi: 1.5, radius: 40, y: -35, x: armSide === 'L' ? -2.6 : 2.6 };
@@ -288,6 +292,11 @@ function showLesion(lesion: Shown): void {
   const plexus = lesion.regions.filter((r): r is PlexusRegion => isPlexus(r));
   const bmap = mapBrain(KB, lesion.regions.filter(isBrain));
   brain.setLesion(bmap);
+  // P38: the visual pathway's own lesion, and the fields the engine reads from it.
+  const vision = lesion.regions.filter(isVision);
+  const vmap = mapVision(KB, vision);
+  brain.setVision(vmap);
+  pulses.setVision(vmap, vision.length ? forward(lesion.regions, state.timepoint).fields : null);
   const map = mapLesion(cord, KB);
   limb.setLesions(plexus.flatMap((r) => r.sides.map((side) => ({ site: r.plexus, side }))));
   currentSegments = lesion.shape ? segmentsBetween(RENDER, lesion.top, lesion.bottom) : [...map.segments];
@@ -409,11 +418,13 @@ let lastRepIsBrain = false;
  * P37: the station for a lesion above the cord — the Head, close on the nerves and their organs,
  * when every part it takes lies outside the brainstem; otherwise the whole Brain.
  */
-const brainStation = (regions: readonly AnyRegion[]): 'brain' | 'head' => {
+const brainStation = (regions: readonly AnyRegion[]): 'brain' | 'head' | 'vision' => {
+  // P38: a lesion of the visual pathway alone is seen from the Vision station.
+  if (regions.some(isVision) && !regions.some(isBrain)) return 'vision';
   const parts = regions.filter(isBrain).flatMap((r) => r.compartments);
   return parts.length > 0 && parts.every((c) => OUTSIDE_BRAINSTEM.includes(c)) ? 'head' : 'brain';
 };
-let lastRepStation: 'brain' | 'head' = 'brain';
+let lastRepStation: 'brain' | 'head' | 'vision' = 'brain';
 
 function applyExamine(): void {
   const t = state.timepoint;
@@ -461,7 +472,7 @@ function applyExamine(): void {
     brain.setFindings(forward(rep.regions, t));
     const at = rep.regions.find(isPlexus);
     if (at?.sides[0]) armSide = at.sides[0];
-    lastRepIsBrain = rep.regions.some(isBrain);
+    lastRepIsBrain = rep.regions.some((r) => isBrain(r) || isVision(r));
     lastRepStation = brainStation(rep.regions);
     lastRepLimb = at ? limbStationFor(at.plexus) : null;
   } else {
@@ -601,7 +612,7 @@ function showTruth(): void {
   const truth = hypothesisById(practice.current?.hypothesisId);
   if (!truth || !practice.revealed) return;
   const place = truth.regions.find(isPlexus);
-  go(truth.regions.some(isBrain) ? brainStation(truth.regions) : place ? limbStationFor(place.plexus) : 'lesion');
+  go(truth.regions.some((r) => isBrain(r) || isVision(r)) ? brainStation(truth.regions) : place ? limbStationFor(place.plexus) : 'lesion');
 }
 
 function nextCase(): void {
@@ -711,7 +722,7 @@ function choose(p: Preset): void {
         : p.kind === 'brain'
           ? brainStation(placedLesion().regions)
           : p.kind === 'vision'
-            ? 'brain'
+            ? 'vision'
           : p.leg
             ? 'leg'
             : 'whole',
@@ -931,7 +942,7 @@ document.querySelectorAll<HTMLButtonElement>('[data-tab-btn]').forEach((b) => {
 showTab('lesion');
 
 // Keyboard: 1–4 stations, [ ] move the lesion, , . move the slice.
-const STATIONS = ['whole', 'lesion', 'axial', 'side', 'arm', 'leg', 'brain', 'head'];
+const STATIONS = ['whole', 'lesion', 'axial', 'side', 'arm', 'leg', 'brain', 'head', 'vision'];
 window.addEventListener('keydown', (e) => {
   const typing = e.target instanceof Element && e.target.closest('input, textarea, select') !== null;
   if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
@@ -979,7 +990,7 @@ function placeLabels(): void {
   const w = viewport.clientWidth;
   const h = viewport.clientHeight;
   const nearArm = currentStation === 'arm' || currentStation === 'leg' || view.radius < 20;
-  const nearBrain = currentStation === 'brain' || currentStation === 'head' || (view.y > 0 && view.radius < 34);
+  const nearBrain = currentStation === 'brain' || currentStation === 'head' || currentStation === 'vision' || (view.y > 0 && view.radius < 34);
   const close = nearBrain && view.radius < 21;
   for (const l of allLabels) {
     projected.copy(l.at).project(camera);
@@ -987,6 +998,7 @@ function placeLabels(): void {
       (!l.limb || nearArm) &&
       (!l.brain || nearBrain) &&
       (!l.close || close) &&
+      (l.vision ? currentStation === 'vision' : !(l.close && currentStation === 'vision')) &&
       projected.z < 1 &&
       Math.abs(projected.x) < 1.05 &&
       Math.abs(projected.y) < 1.05;

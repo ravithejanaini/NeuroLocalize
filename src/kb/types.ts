@@ -439,6 +439,11 @@ export type RenderKb = {
   readonly limb: Row<LimbLayout>;
   readonly leg: Row<LegLayout>;
   readonly brainLayout: Row<BrainLayout>;
+  /**
+   * P38: where each part of the visual pathway is drawn, on the left; the right mirrors x and a
+   * midline part sits at x = 0. `retina` is how far a cell's fibre starts from the eye's centre.
+   */
+  readonly visionLayout: Row<{ readonly parts: Readonly<Record<VisualPart, LimbPoint>>; readonly retina: number }>;
   /** Root values of each nerve, as drawn. Muscles and skin carry their own (D29). */
   readonly nerveRoots: Row<{
     readonly nerves: Readonly<Record<Nerve, { readonly roots: Span; readonly disputedRoots?: Span }>>;
