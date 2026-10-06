@@ -8,6 +8,7 @@ import type { VisionMap } from '../engine/vision.ts';
 import { allParts, cranialCourses, partPoint, targetPoint, visionFibres, visualPartPoint } from '../geometry/brain.ts';
 import type { Kb, RenderKb } from '../kb/types.ts';
 import { BODY_REGIONS, CRANIAL_TARGETS, SIDES, VISUAL_PARTS, type BodyRegion, type BrainLevel, type CranialTarget, type Side, type VisualPart } from '../kb/vocab.ts';
+import { sympatheticCourse, type SympatheticCourse } from '../geometry/sympathetic.ts';
 import { VISUAL_WORD, type PartRef } from './describe.ts';
 import { basic, glass, lit, tint } from './materials.ts';
 import type { Label, Palette } from './scene.ts';
@@ -22,6 +23,8 @@ export type BrainScene = {
   setFindings(f: Findings | null): void;
   /** P38: colours each part of the visual pathway the lesion takes. */
   setVision(vmap: VisionMap): void;
+  /** P40: colours the ciliospinal centre and the T1 root when the strand stops there (-1: nowhere). */
+  setSympathetic(diesAt: Readonly<Record<Side, number>>): void;
   /** P39: every mark that can be named, with what it stands for and where it is. */
   readonly pickables: readonly { readonly ref: PartRef; readonly at: THREE.Vector3 }[];
   /** P39: rings the chosen part; null clears it. */
@@ -114,7 +117,8 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
     el.className = cls;
     el.textContent = text;
     layer.append(el);
-    labels.push({ el, at, brain: true, close, vision: cls.includes('lbl-vision') || cls.includes('lbl-field') });
+    const only = cls.includes('lbl-vision') || cls.includes('lbl-field') ? 'vision' : cls.includes('lbl-symp') ? 'sympathetic' : undefined;
+    labels.push({ el, at, brain: !only || only === 'vision', close, ...(only ? { only } : {}) });
   };
   const tube = (pts: readonly THREE.Vector3[], radius: number, colour: string, opacity: number): THREE.Mesh =>
     new THREE.Mesh(
@@ -271,6 +275,49 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
     label(side === 'R' ? 'left half of space' : 'right half of space', new THREE.Vector3(pole.x + (side === 'L' ? -0.5 : 0.5), pole.y + 0.1, pole.z + 0.6), `lbl lbl-brain ${side === 'R' ? 'lbl-field-l' : 'lbl-field-r'}`, true);
   }
 
+  // P40: the oculosympathetic pathway, one strand a side in three lengths — the neurones — built
+  // from the rows the engine reads for a Horner syndrome (geometry/sympathetic.ts). The centre
+  // and the root get marks of their own; the parts above the cord already have theirs.
+  const sympathetic: { side: Side; course: SympatheticCourse; centre: THREE.Mesh; rootMark: THREE.Mesh }[] = [];
+  for (const side of SIDES) {
+    const course = sympatheticCourse(kb, render, side);
+    const pts = course.points.map(v3);
+    const lengths: [number, number][] = [
+      [course.starts[1], course.centre],
+      [course.centre, course.starts[3] - 1],
+      [course.starts[3] - 1, pts.length - 1],
+    ];
+    for (const [from, to] of lengths) {
+      const part = pts.slice(from, to + 1);
+      if (part.length >= 2) root.add(tube(part, 0.024, palette.autonomic, 1));
+    }
+    const mark = (at: THREE.Vector3): THREE.Mesh => {
+      const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.09, 16, 12), lit(palette.autonomic, 0.9));
+      mesh.position.copy(at);
+      root.add(mesh);
+      return mesh;
+    };
+    const centreAt = pts[course.centre];
+    const rootAt = pts[course.root];
+    if (!centreAt || !rootAt) continue;
+    sympathetic.push({ side, course, centre: mark(centreAt), rootMark: mark(rootAt) });
+    if (side === 'L') {
+      const name = (text: string, i: number, dx: number, dy = 0): void => {
+        const at = pts[i];
+        if (at) label(text, new THREE.Vector3(at.x + dx, at.y + dy, at.z), 'lbl lbl-symp', false);
+      };
+      const [a, b] = kb.autonomic.ciliospinal.centre;
+      name('1st neurone · brainstem', 1, -0.5);
+      name('1st neurone · down the cord', Math.floor((course.starts[1] + course.centre) / 2) + 1, -0.5);
+      name(`ciliospinal centre · ${a}–${b}`, course.centre, 0.25, -0.75);
+      name(`2nd neurone · leaves by the ${kb.autonomic.sympatheticOutflow.root} root`, course.root, -0.4, 0.55);
+      name('sympathetic chain', course.root + 1, -0.5);
+      name('3rd neurone · on the carotid', course.starts[3], -0.5, 0.3);
+      name('cavernous sinus', course.starts[3] + 1, -0.45, 0.2);
+      name('eye · pupil and lid', pts.length - 1, -0.5, -0.3);
+    }
+  }
+
   // P39: every mark can be named. A part of the two strips carries its body region; the rest
   // stand for the whole part.
   const pickables: { ref: PartRef; at: THREE.Vector3 }[] = [
@@ -295,6 +342,18 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
     root,
     labels,
     pickables,
+    setSympathetic(diesAt) {
+      for (const s of sympathetic) {
+        const at = diesAt[s.side];
+        for (const [mesh, point] of [
+          [s.centre, s.course.centre],
+          [s.rootMark, s.course.root],
+        ] as const) {
+          tint(mesh, at === point ? palette.lesion : palette.autonomic, 0.9);
+          mesh.scale.setScalar(at === point ? 1.7 : 1);
+        }
+      }
+    },
     select(ref) {
       const hit = ref ? pickables.find((p) => sameRef(p.ref, ref)) : undefined;
       ring.visible = hit !== undefined;

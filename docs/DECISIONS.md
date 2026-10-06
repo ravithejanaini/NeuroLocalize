@@ -2404,3 +2404,28 @@ flies to the station that shows it. The chosen mark is ringed.
 and reused, so a part is called the same thing on the card and in the working.
 
 **D205 — No mutation run.** Nothing the engine reads changed.
+
+## P40 — The sympathetic pathway on the stage
+
+`docs/P40-analysis.md`. No new source and no new finding.
+
+### Decisions
+
+**D206 — The strand is the engine's own tests, in order.** `sympatheticCourse()` builds one strand
+a side from the six rows `hornerOrderFor()` reads. Each test is a stop tagged with its neurone;
+`sympatheticFate()` stops a pulse at the first one damaged.
+
+**D207 — A test holds the strand to the engine.** In every frozen case of the cord, plexus, brain
+and cranial nerves, on both sides, the strand stops exactly when the engine reports a Horner
+syndrome and at the neurone it reports; the cases reach each of 0, 1, 2 and 3.
+
+**D208 — The hypothalamus is not drawn.** The first-order row begins in the midbrain. Drawing an
+origin above it would put on the stage a part the model does not hold and no row cites.
+
+**D209 — A Sympathetic station, the tenth, on the 0 key.** Its names show only from there. The
+legend moves below the station buttons, which now span the stage.
+
+**D210 — A colour of its own.** The palette gains `autonomic`; the pathway shares no colour with a
+tract or a nerve.
+
+**D211 — No mutation run.** Nothing the engine reads changed.

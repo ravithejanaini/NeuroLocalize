@@ -8,6 +8,7 @@ import { territoryRegions } from '../engine/hypotheses.ts';
 import { mapPlexus } from '../engine/limb.ts';
 import { hypotheses, type Hypothesis } from '../engine/hypotheses.ts';
 import { mapVision, placeRegions } from '../engine/vision.ts';
+import { sympatheticCourse, sympatheticFate } from '../geometry/sympathetic.ts';
 import { describePart, partCardHtml, partName, type PartRef } from './describe.ts';
 import {
   explain,
@@ -81,6 +82,7 @@ const palette: Palette = {
   nerve: css('--nerve-glow', '#e3cf8f'),
   nervePost: css('--nerve-post', '#b9a36b'),
   artery: css('--artery', '#b8565a'),
+  autonomic: css('--autonomic', '#5fc9a7'),
 };
 
 type Mode = 'place' | 'examine' | 'practise';
@@ -195,6 +197,10 @@ function station(name: string): View {
       // P37: close on the brainstem and the face, from the front and a little to one side, where
       // the cranial nerves and their end organs can be told apart and named.
       return { theta: Math.PI + 0.3, phi: 1.4, radius: 14, y: 4.2, x: 0 };
+    case 'sympathetic':
+      // P40: from the front and a little to one side, far enough back to hold the whole loop —
+      // down the cord to T1 and up the neck to the eye.
+      return { theta: Math.PI + 0.45, phi: 1.45, radius: 27, y: -1.4, x: 0 };
     case 'vision':
       // P38: from above and in front, so the pathway runs away from the eyes to the back of the
       // head and the crossing at the chiasm is plain. Not so steep that the cord's cut-away starts.
@@ -366,6 +372,11 @@ function showLesion(lesion: Shown): void {
   brain.setVision(vmap);
   pulses.setVision(vmap, vision.length ? forward(lesion.regions, state.timepoint).fields : null);
   const map = mapLesion(cord, KB);
+  // P40: where the sympathetic strand stops on each side, for the marks at the centre and the root.
+  brain.setSympathetic({
+    L: sympatheticFate(map, bmap, sympatheticCourse(KB, RENDER, 'L')).diesAt,
+    R: sympatheticFate(map, bmap, sympatheticCourse(KB, RENDER, 'R')).diesAt,
+  });
   limb.setLesions(plexus.flatMap((r) => r.sides.map((side) => ({ site: r.plexus, side }))));
   currentSegments = lesion.shape ? segmentsBetween(RENDER, lesion.top, lesion.bottom) : [...map.segments];
   const k = sliceLevel();
@@ -1011,7 +1022,7 @@ document.querySelectorAll<HTMLButtonElement>('[data-tab-btn]').forEach((b) => {
 showTab('lesion');
 
 // Keyboard: 1–4 stations, [ ] move the lesion, , . move the slice.
-const STATIONS = ['whole', 'lesion', 'axial', 'side', 'arm', 'leg', 'brain', 'head', 'vision'];
+const STATIONS = ['whole', 'lesion', 'axial', 'side', 'arm', 'leg', 'brain', 'head', 'vision', 'sympathetic'];
 window.addEventListener('keydown', (e) => {
   const typing = e.target instanceof Element && e.target.closest('input, textarea, select') !== null;
   if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
@@ -1019,7 +1030,8 @@ window.addEventListener('keydown', (e) => {
     e.preventDefault();
     return;
   }
-  const station = STATIONS[Number(e.key) - 1];
+  // The tenth station is on the 0 key.
+  const station = STATIONS[e.key === '0' ? 9 : Number(e.key) - 1];
   if (station) go(station);
   else if (e.key === '[' && state.mode === 'place' && state.preset.kind === 'focal') setLevel(state.level - 1);
   else if (e.key === ']' && state.mode === 'place' && state.preset.kind === 'focal') setLevel(state.level + 1);
@@ -1067,7 +1079,7 @@ function placeLabels(): void {
       (!l.limb || nearArm) &&
       (!l.brain || nearBrain) &&
       (!l.close || close) &&
-      (l.vision ? currentStation === 'vision' : !(l.close && currentStation === 'vision')) &&
+      (l.only ? currentStation === l.only : !(l.close && (currentStation === 'vision' || currentStation === 'sympathetic'))) &&
       projected.z < 1 &&
       Math.abs(projected.x) < 1.05 &&
       Math.abs(projected.y) < 1.05;

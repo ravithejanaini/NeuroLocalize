@@ -19,6 +19,7 @@ import { mapBrain, type BrainMap } from '../engine/brain.ts';
 import { disputedSegments, mapPlexus, type PlexusMap } from '../engine/limb.ts';
 import { mapVision, type VisionMap } from '../engine/vision.ts';
 import { cranialCourses, faceMotorPath, fibreFate, visionFibres, type Fibre } from '../geometry/brain.ts';
+import { sympatheticCourse, sympatheticFate, type SympatheticCourse } from '../geometry/sympathetic.ts';
 import { limbFate, limbPath, suppliesOf, TARGETS, type LimbPath, type Target } from '../geometry/plexus.ts';
 import type { Kb, RenderKb, Span } from '../kb/types.ts';
 import { MUSCLES, SEGMENTS, type Muscle, type Segment, type Side, type SkinArea } from '../kb/vocab.ts';
@@ -27,7 +28,7 @@ import type { Palette } from './scene.ts';
 /** Real conduction crosses the cord in milliseconds; everything is slowed by this (D15). */
 export const DILATION = 333;
 
-type Kind = 'pain' | 'posterior' | 'motor' | 'face-sense' | 'face-motor' | 'vision-left' | 'vision-right';
+type Kind = 'pain' | 'posterior' | 'motor' | 'face-sense' | 'face-motor' | 'vision-left' | 'vision-right' | 'sympathetic';
 
 /** P38: each eye's field as the engine reports it, which decides where a pulse on a fibre stops. */
 type Fields = Findings['fields'];
@@ -49,6 +50,8 @@ type Pulse = {
   readonly limb?: LimbLeg;
   /** P38: set on a pulse in the visual pathway. */
   readonly fibre?: Fibre;
+  /** P40: set on a pulse in the sympathetic pathway. */
+  readonly symp?: SympatheticCourse;
   t: number;
   fate: Fate;
   flashed: boolean;
@@ -105,6 +108,7 @@ export class PulseField {
   private vmap: VisionMap;
   private fields: Fields | null = null;
   private fibres: Fibre[] | null = null;
+  private readonly sympCache = new Map<string, { path: Path; times: number[]; course: SympatheticCourse }>();
   private readonly limbCache = new Map<string, { path: Path; times: number[]; limb: LimbLeg } | null>();
   private options: PathOptions = { model: 'classical', painFibre: 'adelta' };
   private frozen = false;
@@ -142,7 +146,7 @@ export class PulseField {
     this.pmap = pmap;
     this.bmap = bmap;
     for (const p of this.pulses) {
-      p.fate = p.fibre ? this.fibreFateOf(p.fibre) : this.fateOf(p.path, p.sacral, p.limb);
+      p.fate = p.fibre ? this.fibreFateOf(p.fibre) : p.symp ? this.sympFateOf(p.symp) : this.fateOf(p.path, p.sacral, p.limb);
       p.flashed = false;
     }
     if (this.frozen) this.seedStill();
@@ -158,6 +162,32 @@ export class PulseField {
     const state = this.fields ? this.fields[fibre.eye][fibre.cell] : 'normal';
     const f = fibreFate(this.vmap, state, fibre);
     return { diesAtPoint: f.diesAt, dimmed: f.dimmed };
+  }
+
+  private sympFateOf(course: SympatheticCourse): Fate {
+    if (!this.map) return { diesAtPoint: -1, dimmed: false };
+    return { diesAtPoint: sympatheticFate(this.map, this.bmap, course).diesAt, dimmed: false };
+  }
+
+  /** P40: a pulse down the sympathetic pathway and back up to the eye. */
+  private spawnSympathetic(t = 0, pick = Math.random): void {
+    if (!this.map || this.pulses.length >= this.max) return;
+    const side: Side = pick() < 0.5 ? 'L' : 'R';
+    const key = `sympathetic|${side}`;
+    let entry = this.sympCache.get(key);
+    if (!entry) {
+      const course = sympatheticCourse(this.kb, this.render, side);
+      const path: Path = {
+        points: course.points,
+        legs: [{ from: 0, to: course.points.length - 1, speed: 'illustrative' }],
+        elementPoint: [],
+        route: { elements: [], crossesAt: -1 },
+        brain: [],
+      };
+      entry = { path, times: timeline(this.render, path), course };
+      this.sympCache.set(key, entry);
+    }
+    this.pulses.push({ kind: 'sympathetic', path: entry.path, times: entry.times, sacral: false, symp: entry.course, t, fate: this.sympFateOf(entry.course), flashed: false });
   }
 
   /** A pulse from the retina back along one fibre of the visual pathway. */
@@ -346,8 +376,10 @@ export class PulseField {
     const roll = Math.random();
     // P37: a quarter of the pulses run in the cranial nerves, now that there are sixteen a side.
     if (roll < 0.25) {
-      // P38: two in five of those in the visual pathway.
-      if (Math.random() < 0.4) this.spawnVision();
+      // P38: two in five of those in the visual pathway; P40: one in ten in the sympathetic.
+      const r = Math.random();
+      if (r < 0.4) this.spawnVision();
+      else if (r < 0.5) this.spawnSympathetic();
       else this.spawnFace();
       return;
     }
@@ -373,6 +405,12 @@ export class PulseField {
       seed = (seed * 16807) % 2147483647;
       return seed / 2147483647;
     };
+    for (let i = 0; i < 8; i++) {
+      const before = this.pulses.length;
+      this.spawnSympathetic(0, pick);
+      const p = this.pulses[before];
+      if (p) p.t = (p.times[p.times.length - 1] ?? 0) * (0.05 + pick() * 0.9);
+    }
     for (let i = 0; i < 20; i++) {
       const before = this.pulses.length;
       this.spawnVision(0, pick);
@@ -415,6 +453,7 @@ export class PulseField {
   }
 
   private hue(kind: Kind): string {
+    if (kind === 'sympathetic') return this.palette.autonomic;
     return kind === 'pain' || kind === 'face-sense' || kind === 'vision-right'
       ? this.palette.stt
       : kind === 'posterior' || kind === 'vision-left'

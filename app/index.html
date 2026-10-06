@@ -18,7 +18,7 @@
   --stage:#0E1118; --stage-cord:#C9CFDC; --stage-rule:#5F6878; --stage-grey:#8B94A3;
   --stage-text:#A4ACBA; --stage-dim:#6F7888;
   --dc-glow:#7F98EA; --stt-glow:#D6A63E; --cst-glow:#E8674B; --lesion:#E8674B;
-  --nerve-glow:#E3CF8F; --nerve-post:#B9A36B; --artery:#B8565A;
+  --nerve-glow:#E3CF8F; --nerve-post:#B9A36B; --artery:#B8565A; --autonomic:#5FC9A7;
   --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
   --f-body:"Source Serif 4",Georgia,serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
@@ -63,6 +63,7 @@ button,input{font:inherit;color:inherit}
 .lbl-brain{color:var(--stage-text);font-size:9.5px}
 .lbl-nerve{color:var(--nerve-glow);font-weight:600}
 .lbl-vision{color:var(--stage-text);font-weight:600}
+.lbl-symp{color:var(--autonomic);font-weight:600;font-size:10px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .part-pick{top:74px;left:12px}
 .part-pick select{background:rgba(14,17,24,.8);border:1px solid #2C3342;color:var(--stage-text);font:inherit;padding:5px 8px;max-width:240px}
@@ -90,11 +91,11 @@ body[data-present="true"] .part-pick,body[data-present="true"] .part-card{displa
 .crossed{font-size:13px;margin:0 0 8px;padding:6px 10px;border-left:3px solid var(--ink);background:var(--sunk)}
 
 .hud{position:absolute;display:flex;gap:6px;flex-wrap:wrap;font-family:var(--f-mono);font-size:10.5px;color:var(--stage-text)}
-.stations{top:12px;left:12px}
+.stations{top:12px;left:12px;right:12px}
 .stations button{background:rgba(14,17,24,.7);border:1px solid #2C3342;color:var(--stage-text);padding:5px 10px;cursor:pointer;letter-spacing:.03em}
 .stations button[aria-pressed="true"]{background:var(--stage-cord);color:var(--stage);border-color:var(--stage-cord)}
 .stations button:hover{border-color:var(--stage-text)}
-.legend{top:12px;right:12px;flex-direction:column;gap:4px;margin:0;padding:8px 10px;list-style:none;background:rgba(14,17,24,.7);border:1px solid #2C3342}
+.legend{top:46px;right:12px;flex-direction:column;gap:4px;margin:0;padding:8px 10px;list-style:none;background:rgba(14,17,24,.7);border:1px solid #2C3342}
 .legend li{display:flex;align-items:center;gap:8px}
 .legend i{width:16px;height:3px;border-radius:2px;display:block}
 .hud-foot{bottom:10px;left:12px;right:12px;flex-direction:column;gap:6px;pointer-events:none}
@@ -377,7 +378,7 @@ body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-
   .app{grid-template-columns:1fr;grid-template-rows:minmax(0,46fr) minmax(0,54fr)}
   .legend,.hint,.caveats{display:none}
   .stations{top:8px;left:8px;right:8px}
-  .stations button{flex:1 1 18%;padding:9px 4px;min-height:40px}
+  .stations button{flex:1 1 18%;padding:9px 2px;min-height:40px;font-size:10px}
   .panel{border-left:0;border-top:1px solid var(--rule);overflow-y:auto;display:flex;flex-direction:column}
   .panel > *{flex-shrink:0}
   .panel > .sec,.panel > .foot{display:none}
@@ -423,8 +424,9 @@ body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-
       <button type="button" data-station="brain" aria-pressed="false">Brain</button>
       <button type="button" data-station="head" aria-pressed="false">Head</button>
       <button type="button" data-station="vision" aria-pressed="false">Vision</button>
+      <button type="button" data-station="sympathetic" aria-pressed="false">Sympathetic</button>
     </div>
-    <p class="hud hint">Drag to turn · scroll or pinch to zoom · shift-drag to move along the cord · keys 1–9 · tap a part of the brain to name it</p>
+    <p class="hud hint">Drag to turn · scroll or pinch to zoom · shift-drag to move along the cord · keys 1–9 and 0 · tap a part of the brain to name it</p>
     <label class="hud part-pick"><span class="sr-only">Name a part of the brain</span><select id="part-pick"></select></label>
     <aside class="part-card" id="part-card" aria-live="polite" aria-label="The chosen part" hidden>
       <button type="button" id="part-card-close" aria-label="Close">×</button>
@@ -436,6 +438,7 @@ body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-
       <li><i style="background:var(--stt-glow)"></i>Spinothalamic</li>
       <li><i style="background:var(--cst-glow)"></i>Corticospinal</li>
       <li><i style="background:var(--nerve-glow)"></i>Plexus and nerves</li>
+      <li><i style="background:var(--autonomic)"></i>Sympathetic to the eye</li>
       <li><i style="background:var(--lesion);height:8px;opacity:.5"></i>Lesion · weak muscle · numb skin</li>
     </ul>
     <div class="hud hud-foot">
