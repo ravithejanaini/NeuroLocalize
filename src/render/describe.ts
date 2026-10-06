@@ -14,6 +14,7 @@ import type { Kb, Meta as RowMeta, RenderKb } from '../kb/types.ts';
 import {
   FIELD_CELLS,
   NERVES,
+  OUTSIDE_BRAINSTEM,
   REFLEXES,
   SEGMENTS,
   SIDES,
@@ -270,7 +271,8 @@ export function partName(ref: PartRef, kb: Kb = KB): string {
     case 'organ':
       return `${SIDE_WORD[ref.side]} ${TARGET_WORD[ref.target]}`;
     case 'brain': {
-      const at = LEVELS_NAMED.includes(ref.level) && !PART_NAME[ref.compartment].includes('nerve') ? `, ${ref.level}` : '';
+      // A part outside the brainstem is not "in" the level it is filed under (P29).
+      const at = LEVELS_NAMED.includes(ref.level) && !OUTSIDE_BRAINSTEM.includes(ref.compartment) ? `, ${ref.level}` : '';
       const area = ref.region ? ` — ${ref.region} area` : '';
       return `${SIDE_WORD[ref.side]} ${PART_NAME[ref.compartment]}${at}${area}`;
     }

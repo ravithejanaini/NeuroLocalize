@@ -2459,3 +2459,36 @@ its side once and drops the examiner's "this"; a group leads with the side and t
 a stage narrower than it is tall.
 
 **D218 — No mutation run.** Nothing the engine reads changed.
+
+## P42 — Walking along a nerve
+
+`docs/P42-analysis.md`. No new source and no new finding.
+
+### Decisions
+
+**D219 — A walk is a course already drawn.** `allWalks()` builds a hundred walks from the functions
+that draw the nerves and pathways. A walk's stops are the parts on that course; its `fate()` is
+the function that stops the pulses there.
+
+**D220 — A stop shows the part's card.** The panel at a stop is `describePart()` under the stop's
+own name, with one line on the lesion: here, past it, weakened, or nothing.
+
+**D221 — The eye rides above the strand.** The camera follows a centripetal curve through the
+walk's points, a third of a unit above it, looking a unit ahead. Its up direction is carried along
+the curve rather than fixed to the world, because half the walks run straight down the cord.
+
+**D222 — Depth is made of four things**: a 64-degree lens, the stage's fog drawn close, a ring at
+each stop, and motes around the strand. The lesion's ring is closed by a wall.
+
+**D223 — Three ways in.** A double tap on a drawn line, the list by name, and a button on the card
+of any part that lies on a walk. A single tap's card waits 300 ms so that it does not land under
+the second tap.
+
+**D224 — On a phone a walk takes the whole screen**, and the instrument is put away until it ends.
+
+**D225 — Reduced motion.** The camera jumps between stops and Play is off.
+
+**D226 — A part outside the brainstem is not named with a level.** `partName()` now reads the
+model's own list of such parts, so the sympathetic chain is no longer "…, medulla".
+
+**D227 — No mutation run.** Nothing the engine reads changed.

@@ -3,7 +3,7 @@
 // plexus part and nerve places the engine judges, and stops at the one it says is cut
 // (D18, D27, P7).
 import { CORD_SITE, inPart, limbRoute, PART_SITE, TRUNK_SITE, type LimbRoute, type PlexusMap } from '../engine/limb.ts';
-import type { Kb, LimbPoint, RenderKb, Supply, Waypoint } from '../kb/types.ts';
+import type { Kb, LimbPoint, NerveOrigin, RenderKb, Supply, Waypoint } from '../kb/types.ts';
 import {
   ARM_NERVES,
   LEG_NERVES,
@@ -292,4 +292,42 @@ export function siteAnchor(render: RenderKb, site: PlexusSite, side: Side): Vec3
     if (w) return mirror(w.at, side);
   }
   throw new Error(`no drawn position for ${site}`);
+}
+
+/** P42: one stop along a nerve as it is drawn — a named lesion place, or a point where branches leave. */
+export type NerveStop = {
+  readonly point: number;
+  readonly site?: PlexusSite;
+  readonly branches?: readonly (Muscle | SkinArea)[];
+  /** The stop is where the nerve arises; `site` is then the trunk, cord or part of the plexus it leaves. */
+  readonly origin?: NerveOrigin;
+};
+
+/**
+ * P42: a nerve from where it arises to its last drawn point, on one side, with the places a
+ * lesion can sit and the points its branches leave in the order they are met. A nerve that
+ * arises from more than one cord is drawn from the first the knowledge base lists.
+ */
+export function nerveCourse(kb: Kb, render: RenderKb, nerve: Nerve, side: Side): { readonly points: Vec3[]; readonly stops: NerveStop[] } {
+  const origin = kb.plexus.nerves[nerve].origin;
+  const points: Vec3[] = [];
+  const stops: NerveStop[] = [];
+  const start = origin.from === 'roots' ? rootStartsFor(kb, render, nerve, side)[0] : nerveStart(kb, render, nerve, side)[0];
+  if (start) {
+    const site =
+      origin.from === 'trunk'
+        ? TRUNK_SITE[origin.trunk]
+        : origin.from === 'cords'
+          ? origin.cords[0] && CORD_SITE[origin.cords[0]]
+          : origin.from === 'plexus'
+            ? PART_SITE[origin.part]
+            : undefined;
+    stops.push({ point: 0, origin, ...(site ? { site } : {}) });
+    points.push(start);
+  }
+  for (const w of waypointsOf(render, nerve)) {
+    if (w.site || w.branches?.length) stops.push({ point: points.length, ...(w.site ? { site: w.site } : {}), ...(w.branches?.length ? { branches: w.branches } : {}) });
+    points.push(mirror(w.at, side));
+  }
+  return { points, stops };
 }

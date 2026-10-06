@@ -65,7 +65,8 @@ button,input{font:inherit;color:inherit}
 .lbl-vision{color:var(--stage-text);font-weight:600}
 .lbl-symp{color:var(--autonomic);font-weight:600;font-size:10px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.part-pick{top:74px;left:12px}
+.part-pick{top:72px;left:12px}
+.part-pick{gap:6px}
 .part-pick select{background:rgba(14,17,24,.8);border:1px solid #2C3342;color:var(--stage-text);font:inherit;padding:5px 8px;max-width:240px}
 .part-card{position:absolute;right:12px;bottom:12px;width:min(360px,calc(100% - 24px));max-height:62%;overflow:auto;background:rgba(14,17,24,.94);border:1px solid #2C3342;color:var(--stage-text);padding:12px 14px 10px;font-family:var(--f-body);font-size:12.5px;line-height:1.45;z-index:3}
 .part-card[hidden]{display:none}
@@ -79,7 +80,61 @@ button,input{font:inherit;color:inherit}
 .pc-note{font-size:10.5px;color:var(--stage-dim);margin-top:10px!important;font-style:italic}
 #part-card-close{position:absolute;top:6px;right:8px;background:none;border:0;color:var(--stage-text);font-size:18px;line-height:1;cursor:pointer;padding:4px 6px}
 body[data-present="true"] .part-pick,body[data-present="true"] .part-card{display:none}
-@media (max-width:860px){.part-pick{top:58px;left:8px}.part-pick select{max-width:200px;padding:8px}.part-card{left:8px;right:8px;bottom:8px;width:auto;max-height:48%}}
+.pc-walks{display:flex;flex-wrap:wrap;gap:6px}
+.pc-walks button{background:none;border:1px solid var(--stage-text);color:var(--stage-text);font:inherit;font-size:11.5px;padding:5px 9px;cursor:pointer}
+.pc-walks button:hover{background:var(--stage-text);color:var(--stage)}
+/* P42: walking along a nerve. The panel floats over the stage; only its own parts take the pointer. */
+.walk{position:absolute;inset:0;pointer-events:none;color:var(--stage-text);font-family:var(--f-body);z-index:4}
+.walk[hidden]{display:none}
+.walk > *{pointer-events:auto;position:absolute}
+.walk-top{top:12px;left:12px;right:12px;display:flex;gap:12px;align-items:flex-start;pointer-events:none}
+.walk-top > *{pointer-events:auto}
+.walk-top h2{font-size:16px;margin:0;font-weight:600;text-shadow:0 1px 6px var(--stage)}
+.walk-top p{margin:2px 0 0;font-size:12px;color:var(--stage-dim);max-width:60ch;text-shadow:0 1px 6px var(--stage)}
+.walk button,.walk select{background:rgba(14,17,24,.85);border:1px solid #2C3342;color:var(--stage-text);font-family:var(--f-mono);font-size:11px;padding:7px 11px;cursor:pointer;min-height:32px}
+.walk button:hover:not(:disabled){border-color:var(--stage-text)}
+.walk button:disabled{opacity:.4;cursor:default}
+.walk-card{right:12px;top:74px;max-height:calc(100% - 230px);width:min(350px,calc(100% - 24px));overflow:auto;background:rgba(14,17,24,.9);border:1px solid #2C3342;padding:12px 14px;font-size:12.5px;line-height:1.45}
+.walk-card h3{font-size:14.5px;margin:0 0 6px;font-weight:600}
+.walk-card h4{font-family:var(--f-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--stage-dim);margin:10px 0 4px;font-weight:400}
+.walk-card ul{margin:0;padding-left:16px}
+.walk-card li{margin:0 0 4px}
+.walk-card p{margin:0 0 6px}
+.walk-card .quiet{color:var(--stage-dim)}
+.walk-count{font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--stage-dim)}
+.walk-lesion{border-left:3px solid var(--lesion);padding:4px 0 4px 8px;color:var(--stage-text)}
+.walk-lesion[data-state="beyond"],.walk-lesion[data-state="weakened"]{border-left-color:var(--stage-dim);color:var(--stage-dim)}
+.walk-note{color:var(--nerve-glow)}
+.walk-foot{left:12px;right:12px;bottom:10px;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.walk-foot > *{pointer-events:auto}
+.walk-route{display:flex;gap:4px;margin:0;padding:0 0 2px;list-style:none;overflow-x:auto;scrollbar-width:thin}
+.walk-route li{flex:0 0 auto}
+.walk-route button{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;font-family:var(--f-body);font-size:11.5px}
+.walk-route b{font-family:var(--f-mono);font-weight:400;color:var(--stage-dim);margin-right:4px}
+.walk-route button[aria-current="step"]{background:var(--stage-cord);color:var(--stage);border-color:var(--stage-cord)}
+.walk-route button[aria-current="step"] b{color:var(--stage)}
+.walk-route button[data-cut="here"]{border-color:var(--lesion);box-shadow:inset 0 -3px 0 var(--lesion)}
+.walk-route button[data-cut="beyond"]{opacity:.55}
+.walk-ctl{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.walk-ctl input[type=range]{flex:1 1 140px;min-width:100px;accent-color:var(--stage-cord)}
+.walk-ctl label{font-family:var(--f-mono);font-size:10.5px;color:var(--stage-dim);display:flex;align-items:center;gap:6px}
+.walk-hint{margin:0;font-family:var(--f-mono);font-size:10px;color:var(--stage-dim)}
+.lbl-walk{color:var(--stage-text);font-size:11px;font-weight:600;text-shadow:0 0 6px var(--stage),0 0 2px var(--stage)}
+body[data-walk="true"] .stations,body[data-walk="true"] .hint,body[data-walk="true"] .legend,body[data-walk="true"] .part-pick,body[data-walk="true"] .part-card,body[data-walk="true"] .hud-foot{display:none}
+body[data-walk="true"] .stage canvas{cursor:move}
+@media (max-width:860px){
+  .walk-top{top:8px;left:8px;right:8px}
+  .walk-top h2{font-size:13.5px}
+  .walk-top p{display:none}
+  /* On a phone the walk takes the whole screen: the instrument is put away until it ends. */
+  body[data-walk="true"] .app{grid-template-rows:minmax(0,1fr)}
+  body[data-walk="true"] .panel,body[data-walk="true"] .tabs{display:none}
+  .walk-card{left:8px;right:8px;top:auto;bottom:150px;width:auto;max-height:36%;padding:8px 10px}
+  .walk-foot{left:8px;right:8px;bottom:6px}
+  .walk-hint{display:none}
+  .walk button,.walk select{min-height:40px}
+}
+@media (max-width:860px){.part-pick{top:58px;left:8px;right:8px;flex-wrap:nowrap}.part-pick label{flex:1 1 0;min-width:0}.part-pick select{width:100%;max-width:none;padding:8px}.part-card{left:8px;right:8px;bottom:8px;width:auto;max-height:48%}}
 .lbl-field-l{color:var(--dc-glow);font-style:italic}
 .lbl-field-r{color:var(--stt-glow);font-style:italic}
 .lbl-homunculus{color:var(--cst-glow);opacity:.85}
@@ -103,7 +158,7 @@ body[data-present="true"] .part-pick,body[data-present="true"] .part-card{displa
 .caveats{display:flex;flex-wrap:wrap;gap:2px 14px;color:var(--stage-dim);font-size:10px}
 .caveats span+span::before{content:"· ";color:#3A4252}
 .conv{margin:0;padding:0 0 0 16px;display:grid;gap:6px;font-size:12.5px;color:var(--ink2)}
-.hint{top:52px;left:12px;color:var(--stage-dim);font-size:10px}
+.hint{top:48px;left:12px;color:var(--stage-dim);font-size:10px;white-space:nowrap}
 
 .panel{background:var(--surface);border-left:1px solid var(--rule);overflow-y:auto;min-height:0}
 .sec{padding:14px 18px 16px;border-bottom:1px solid var(--rule)}
@@ -428,8 +483,33 @@ body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-
       <button type="button" data-station="vision" aria-pressed="false">Vision</button>
       <button type="button" data-station="sympathetic" aria-pressed="false">Sympathetic</button>
     </div>
-    <p class="hud hint">Drag to turn · scroll or pinch to zoom · shift-drag to move along the cord · keys 1–9 and 0 · tap a part of the brain to name it</p>
-    <label class="hud part-pick"><span class="sr-only">Name a part of the brain</span><select id="part-pick"></select></label>
+    <p class="hud hint">Drag to turn · scroll or pinch to zoom · shift-drag to move along the cord · keys 1–9 and 0 · tap a part to name it · double-click a nerve to walk along it</p>
+    <div class="hud part-pick">
+      <label><span class="sr-only">Name a part</span><select id="part-pick"></select></label>
+      <label><span class="sr-only">Walk along a nerve or pathway</span><select id="walk-pick"></select></label>
+    </div>
+    <section class="walk" id="walk" aria-label="Walking along a nerve" hidden>
+      <header class="walk-top">
+        <button type="button" id="walk-exit">← Leave</button>
+        <div><h2 id="walk-name"></h2><p id="walk-runs"></p></div>
+      </header>
+      <aside class="walk-card" aria-live="polite">
+        <p class="walk-count" id="walk-count"></p>
+        <p class="walk-lesion" id="walk-lesion" hidden></p>
+        <div id="walk-body"></div>
+      </aside>
+      <footer class="walk-foot">
+        <ol class="walk-route" id="walk-route" aria-label="Stops along the way"></ol>
+        <div class="walk-ctl">
+          <button type="button" id="walk-prev" aria-label="Previous stop">◀ Back</button>
+          <button type="button" id="walk-play" aria-pressed="false">Play</button>
+          <button type="button" id="walk-next" aria-label="Next stop">On ▶</button>
+          <input type="range" id="walk-scrub" min="0" max="1000" value="0" aria-label="Position along the walk">
+          <label>Pace <select id="walk-speed"><option value="0.5">slow</option><option value="1" selected>steady</option><option value="2">quick</option></select></label>
+        </div>
+        <p class="walk-hint">Drag to look around · scroll to move · ← → between stops · space plays · Esc leaves</p>
+      </footer>
+    </section>
     <aside class="part-card" id="part-card" aria-live="polite" aria-label="The chosen part" hidden>
       <button type="button" id="part-card-close" aria-label="Close">×</button>
       <div id="part-card-body"></div>

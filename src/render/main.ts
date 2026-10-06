@@ -13,6 +13,8 @@ import { rootExit, siteAnchor } from '../geometry/plexus.ts';
 import { place, radiusAt } from '../geometry/paths.ts';
 import { discAt } from '../geometry/section.ts';
 import { describePart, partCardHtml, partName, refKey, type PartRef } from './describe.ts';
+import { buildWalkView } from './walk-view.ts';
+import { allWalks, lesionAt, WALK_GROUPS, type Walk, type WalkLesion } from './walks.ts';
 import {
   explain,
   isPrepared,
@@ -255,6 +257,158 @@ function placeCamera(): void {
   stage.update(radius, phi < 0.5 ? -segmentMid(RENDER, sliceLevel()) + 0.03 : null);
 }
 
+// P42: walking along a nerve. While a walk is on, the camera belongs to it.
+const walks = allWalks(KB, RENDER);
+const walkView = buildWalkView(scene, palette);
+let walking: Walk | null = null;
+let walkLesion: WalkLesion = { map: mapLesion([], KB), bmap: mapBrain(KB, []), pmap: mapPlexus([]), vmap: mapVision(KB, []), fields: null };
+let walkStop = -1;
+let walkLabels: HTMLElement[] = [];
+const esc = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+/** The walk whose drawn line passes nearest a point of the screen, within reach of a finger. */
+function walkAt(clientX: number, clientY: number): Walk | null {
+  const box = canvas.getBoundingClientRect();
+  const a = new THREE.Vector3();
+  const b = new THREE.Vector3();
+  let best: Walk | null = null;
+  let bestD = 14;
+  for (const w of walks) {
+    for (let i = 1; i < w.points.length; i++) {
+      const p = w.points[i - 1];
+      const q = w.points[i];
+      if (!p || !q) continue;
+      a.set(p.x, p.y, p.z).project(camera);
+      b.set(q.x, q.y, q.z).project(camera);
+      if (a.z >= 1 || b.z >= 1) continue;
+      const ax = ((a.x + 1) / 2) * box.width + box.left;
+      const ay = ((1 - a.y) / 2) * box.height + box.top;
+      const bx = ((b.x + 1) / 2) * box.width + box.left;
+      const by = ((1 - b.y) / 2) * box.height + box.top;
+      const len2 = (bx - ax) ** 2 + (by - ay) ** 2;
+      const t = len2 > 0 ? Math.min(1, Math.max(0, ((clientX - ax) * (bx - ax) + (clientY - ay) * (by - ay)) / len2)) : 0;
+      const d = Math.hypot(ax + (bx - ax) * t - clientX, ay + (by - ay) * t - clientY);
+      if (d < bestD) {
+        bestD = d;
+        best = w;
+      }
+    }
+  }
+  return best;
+}
+
+/** What the walk's panel says at one stop: the part's card under the stop's own name, and the lesion. */
+function renderWalkStop(i: number): void {
+  const w = walking;
+  const s = w?.stops[i];
+  if (!w || !s) return;
+  walkStop = i;
+  $('#walk-count').textContent = `Stop ${i + 1} of ${w.stops.length}`;
+  const where = lesionAt(w, i, walkLesion);
+  const line = $('#walk-lesion');
+  line.hidden = where === 'clear';
+  line.dataset.state = where;
+  line.textContent =
+    where === 'here'
+      ? 'The lesion cuts this pathway here. Nothing travels past this point.'
+      : where === 'beyond'
+        ? 'Past the lesion: the signal does not reach here.'
+        : where === 'weakened'
+          ? 'The lesion weakens the signal on this pathway.'
+          : '';
+  const card = s.ref ? partCardHtml(describePart(RENDER, s.ref, state.timepoint)).replace(/<h3>[\s\S]*?<\/h3>/, '') : '';
+  $('#walk-body').innerHTML = `<h3>${esc(s.label)}</h3>${s.note ? `<p class="walk-note">${esc(s.note)}</p>` : ''}${card}`;
+  $('#walk-body').scrollTop = 0;
+  document.querySelectorAll<HTMLButtonElement>('#walk-route button').forEach((b, j) => {
+    if (j === i) {
+      b.setAttribute('aria-current', 'step');
+      b.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+    } else b.removeAttribute('aria-current');
+  });
+}
+
+/** Marks the stops the lesion closes, on the stage and in the list of stops. */
+function refreshWalkLesion(): void {
+  const w = walking;
+  if (!w) return;
+  const cut = w.fate(walkLesion).diesAt;
+  walkView.setCut(cut);
+  document.querySelectorAll<HTMLButtonElement>('#walk-route button').forEach((b, j) => {
+    const point = w.stops[j]?.point ?? 0;
+    b.dataset.cut = cut >= 0 && point === cut ? 'here' : cut >= 0 && point > cut ? 'beyond' : '';
+  });
+  if (walkStop >= 0) renderWalkStop(walkStop);
+}
+
+function startWalk(w: Walk, fromStop = 0): void {
+  if (walking) endWalk();
+  showPart(null);
+  walking = w;
+  walkStop = -1;
+  tween = null;
+  document.body.dataset.walk = 'true';
+  $('#walk').hidden = false;
+  $('#walk-name').textContent = w.name;
+  $('#walk-runs').textContent = `Walking ${w.runs}.`;
+  $('#walk-route').innerHTML = w.stops.map((s, i) => `<li><button type="button" data-stop="${i}"><b>${i + 1}</b> ${esc(s.label)}</button></li>`).join('');
+  $<HTMLSelectElement>('#walk-pick').value = w.id;
+  walkView.start(w, camera, fromStop, reduced);
+  $<HTMLButtonElement>('#walk-play').disabled = reduced;
+  for (const l of allLabels) l.el.style.visibility = 'hidden';
+  walkLabels = w.stops.map((s, i) => {
+    const el = document.createElement('span');
+    el.className = 'lbl lbl-walk';
+    el.textContent = `${i + 1} · ${s.label}`;
+    labelLayer.append(el);
+    return el;
+  });
+  refreshWalkLesion();
+  renderWalkStop(Math.min(w.stops.length - 1, Math.max(0, fromStop)));
+  $<HTMLButtonElement>('#walk-next').focus();
+}
+
+function endWalk(): void {
+  if (!walking) return;
+  walking = null;
+  walkStop = -1;
+  walkView.stop(camera);
+  for (const el of walkLabels) el.remove();
+  walkLabels = [];
+  delete document.body.dataset.walk;
+  $('#walk').hidden = true;
+  $<HTMLSelectElement>('#walk-pick').value = '';
+  setPlayingLabel(false);
+}
+
+const setPlayingLabel = (on: boolean): void => {
+  const b = $<HTMLButtonElement>('#walk-play');
+  b.textContent = on ? 'Pause' : 'Play';
+  b.setAttribute('aria-pressed', String(on));
+};
+
+/** Each frame of a walk: the panel follows the stop, the scrubber the position, the names the stops ahead. */
+function walkFrame(f: { stop: number; progress: number; playing: boolean }): void {
+  if (f.stop !== walkStop) renderWalkStop(f.stop);
+  const scrub = $<HTMLInputElement>('#walk-scrub');
+  if (document.activeElement !== scrub) scrub.value = String(Math.round(f.progress * 1000));
+  if ($('#walk-play').getAttribute('aria-pressed') !== String(f.playing)) setPlayingLabel(f.playing);
+  const w = viewport.clientWidth;
+  const h = viewport.clientHeight;
+  walkLabels.forEach((el, i) => {
+    const at = walkView.anchors[i];
+    if (!at) return;
+    const far = camera.position.distanceTo(at);
+    projected.copy(at).project(camera);
+    // Only the stops ahead and near: the rest would pile up.
+    const visible = projected.z < 1 && Math.abs(projected.x) < 1 && Math.abs(projected.y) < 1 && far < 9 && far > 0.5 && i >= f.stop;
+    el.style.visibility = visible ? 'visible' : 'hidden';
+    if (visible) {
+      el.style.opacity = String(Math.min(1, Math.max(0.25, 1.3 - far / 7)));
+      el.style.transform = `translate(${((projected.x + 1) / 2) * w + 14}px, ${((1 - projected.y) / 2) * h}px)`;
+    }
+  });
+}
+
 // Pointer: one finger turns (shift moves along the cord), two fingers pinch to zoom.
 const pointers = new Map<number, { x: number; y: number }>();
 let pinch = 0;
@@ -346,7 +500,15 @@ function showPart(ref: PartRef | null): void {
   brain.selectAt(ref ? whereIs(ref) : null, ref?.kind === 'cord' ? 0.45 : 1);
   const card = $('#part-card');
   card.hidden = ref === null;
-  if (ref) $('#part-card-body').innerHTML = partCardHtml(describePart(RENDER, ref, state.timepoint));
+  if (ref) {
+    // P42: the walks that pass this part, to set off along from here.
+    const key = refKey(ref);
+    const through = walks.filter((w) => w.stops.some((s) => s.ref && refKey(s.ref) === key)).slice(0, 4);
+    const offer = through.length
+      ? `<h4>Walk along</h4><p class="pc-walks">${through.map((w) => `<button type="button" data-walk-id="${esc(w.id)}">${esc(w.name)} →</button>`).join('')}</p>`
+      : '';
+    $('#part-card-body').innerHTML = partCardHtml(describePart(RENDER, ref, state.timepoint)) + offer;
+  }
   const pick = $<HTMLSelectElement>('#part-pick');
   pick.value = ref ? String(listed.findIndex((l) => listKey(l.ref) === listKey(ref))) : '';
 }
@@ -364,7 +526,7 @@ canvas.addEventListener('pointermove', (e) => {
   const prev = pointers.get(e.pointerId);
   if (!prev) {
     // P39: a mouse over a part that can be named shows it.
-    if (e.pointerType === 'mouse') canvas.style.cursor = pickAt(e.clientX, e.clientY) ? 'pointer' : '';
+    if (e.pointerType === 'mouse' && !walking) canvas.style.cursor = pickAt(e.clientX, e.clientY) ? 'pointer' : '';
     return;
   }
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -378,6 +540,11 @@ canvas.addEventListener('pointermove', (e) => {
   }
   const dx = e.clientX - prev.x;
   const dy = e.clientY - prev.y;
+  if (walking) {
+    // P42: on a walk a drag turns the head, as if the scene were held and pulled.
+    walkView.look(-dx * 0.005, dy * 0.004);
+    return;
+  }
   if (e.shiftKey) view.y += dy * 0.03 * (view.radius / 20);
   else {
     view.theta -= dx * 0.008;
@@ -387,20 +554,40 @@ canvas.addEventListener('pointermove', (e) => {
 const release = (e: PointerEvent): void => {
   pointers.delete(e.pointerId);
   if (pointers.size < 2) pinch = 0;
+  if (pointers.size === 0) walkView.release();
 };
 canvas.addEventListener('pointerup', (e) => {
   const tap = tapStart;
   tapStart = null;
-  if (!tap || Math.hypot(e.clientX - tap.x, e.clientY - tap.y) > 6 || performance.now() - tap.at > 600) return;
+  if (walking || !tap || Math.hypot(e.clientX - tap.x, e.clientY - tap.y) > 6 || performance.now() - tap.at > 600) return;
+  // P42: a second tap in the same place, soon after, walks the nerve under it.
+  const now = performance.now();
+  const twice = lastTap !== null && now - lastTap.at < 420 && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 30;
+  lastTap = twice ? null : { x: e.clientX, y: e.clientY, at: now };
+  window.clearTimeout(naming);
   const ref = pickAt(e.clientX, e.clientY);
-  if (ref) showPart(ref);
+  if (twice) {
+    const w = walkAt(e.clientX, e.clientY);
+    if (w) startWalk(w);
+    else if (ref) showPart(ref);
+    return;
+  }
+  // The name waits a moment, so that a second tap finds the stage and not the card that the first put there.
+  if (ref) naming = window.setTimeout(() => showPart(ref), 300);
 });
+let lastTap: { x: number; y: number; at: number } | null = null;
+let naming = 0;
 canvas.addEventListener('pointerup', release);
 canvas.addEventListener('pointercancel', release);
 canvas.addEventListener(
   'wheel',
   (e) => {
     e.preventDefault();
+    if (walking) {
+      // P42: on a walk the wheel moves along the nerve — away from you is onward.
+      walkView.nudge(-Math.sign(e.deltaY) * 0.025);
+      return;
+    }
     view.radius = Math.min(60, Math.max(2.5, view.radius * (1 + Math.sign(e.deltaY) * 0.08)));
   },
   { passive: false },
@@ -440,6 +627,38 @@ canvas.addEventListener(
     }
   });
   $('#part-card-close').addEventListener('click', () => showPart(null));
+  $('#part-card-body').addEventListener('click', (e) => {
+    const b = e.target instanceof Element ? e.target.closest<HTMLButtonElement>('[data-walk-id]') : null;
+    const w = b ? walks.find((x) => x.id === b.dataset.walkId) : undefined;
+    const key = chosenPart ? refKey(chosenPart) : '';
+    if (w) startWalk(w, Math.max(0, w.stops.findIndex((s) => s.ref && refKey(s.ref) === key)));
+  });
+}
+
+// P42: the walks by name, and the walk's own controls.
+{
+  const pick = $<HTMLSelectElement>('#walk-pick');
+  pick.innerHTML = `<option value="">Walk along a nerve…</option>${WALK_GROUPS.map(
+    (g) => `<optgroup label="${g}">${walks.filter((w) => w.group === g).map((w) => `<option value="${esc(w.id)}">${esc(w.name)}</option>`).join('')}</optgroup>`,
+  ).join('')}`;
+  pick.addEventListener('change', () => {
+    const w = walks.find((x) => x.id === pick.value);
+    if (w) startWalk(w);
+    else endWalk();
+  });
+  $('#walk-exit').addEventListener('click', endWalk);
+  $('#walk-prev').addEventListener('click', () => walkView.step(-1));
+  $('#walk-next').addEventListener('click', () => walkView.step(1));
+  $('#walk-play').addEventListener('click', () => walkView.setPlaying($('#walk-play').getAttribute('aria-pressed') !== 'true'));
+  $('#walk-speed').addEventListener('change', (e) => walkView.setSpeed(Number((e.target as HTMLSelectElement).value) || 1));
+  $('#walk-scrub').addEventListener('input', (e) => walkView.setProgress(Number((e.target as HTMLInputElement).value) / 1000));
+  $('#walk-route').addEventListener('click', (e) => {
+    const b = e.target instanceof Element ? e.target.closest<HTMLButtonElement>('[data-stop]') : null;
+    if (b) {
+      walkView.setPlaying(false);
+      walkView.goTo(Number(b.dataset.stop));
+    }
+  });
 }
 
 // ── drawing a lesion, whichever mode chose it ────────────────────────────
@@ -469,6 +688,9 @@ function showLesion(lesion: Shown): void {
   anatomy.setLesion(lesion.shape, lesion.top, lesion.bottom, lesion.shape ? currentSegments : []);
   anatomy.setSlice(k, inside);
   pulses.setLesion(map, mapPlexus(plexus), bmap);
+  // P42: a walk in progress hears of the lesion too.
+  walkLesion = { map, bmap, pmap: mapPlexus(plexus), vmap, fields: vision.length ? forward(lesion.regions, state.timepoint).fields : null };
+  refreshWalkLesion();
 
   $('#slice').innerHTML = sliceSvg(RENDER, k, state.model, inside ? lesion.shape : null);
   $('#slice-cap').textContent = `${SEGMENTS[k] ?? ''} — ${
@@ -1110,6 +1332,18 @@ const STATIONS = ['whole', 'lesion', 'axial', 'side', 'arm', 'leg', 'brain', 'he
 window.addEventListener('keydown', (e) => {
   const typing = e.target instanceof Element && e.target.closest('input, textarea, select') !== null;
   if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (walking) {
+    // P42: on a walk the arrows move between stops, space plays, Escape leaves.
+    if (e.key === 'Escape') endWalk();
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') walkView.step(1);
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') walkView.step(-1);
+    else if (e.key === 'Home') walkView.goTo(0);
+    else if (e.key === 'End') walkView.goTo(walking.stops.length - 1);
+    else if (e.key === ' ' && !(e.target instanceof HTMLButtonElement)) walkView.setPlaying($('#walk-play').getAttribute('aria-pressed') !== 'true');
+    else return;
+    e.preventDefault();
+    return;
+  }
   if (practiceKey(e)) {
     e.preventDefault();
     return;
@@ -1130,6 +1364,8 @@ const motionToggle = $<HTMLInputElement>('#still');
 motionToggle.checked = reduced;
 function setReduced(on: boolean): void {
   reduced = on;
+  walkView.setStill(on);
+  $<HTMLButtonElement>('#walk-play').disabled = on;
   pulses.setFrozen(on);
   apply();
 }
@@ -1186,6 +1422,16 @@ function frame(now: number): void {
     view.y = from.y + (to.y - from.y) * k;
     view.x = from.x + (to.x - from.x) * k;
     if (t >= 1) tween = null;
+  }
+  if (walking) {
+    // P42: the walk holds the camera; the fog closes in, so what is far is faint.
+    const f = walkView.update(dt, camera);
+    stage.update(4, null);
+    pulses.update(dt, camera);
+    renderer.render(scene, camera);
+    walkFrame(f);
+    requestAnimationFrame(frame);
+    return;
   }
   placeCamera();
   pulses.update(dt, camera);
