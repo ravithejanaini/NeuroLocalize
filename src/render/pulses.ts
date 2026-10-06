@@ -17,7 +17,7 @@ import {
 } from '../geometry/paths.ts';
 import { mapBrain, type BrainMap } from '../engine/brain.ts';
 import { disputedSegments, mapPlexus, type PlexusMap } from '../engine/limb.ts';
-import { faceMotorPath, faceSensoryPath } from '../geometry/brain.ts';
+import { cranialCourses, faceMotorPath } from '../geometry/brain.ts';
 import { limbFate, limbPath, suppliesOf, TARGETS, type LimbPath, type Target } from '../geometry/plexus.ts';
 import type { Kb, RenderKb, Span } from '../kb/types.ts';
 import { MUSCLES, SEGMENTS, type Muscle, type Segment, type Side, type SkinArea } from '../kb/vocab.ts';
@@ -258,15 +258,23 @@ export class PulseField {
     });
   }
 
-  /** A pulse to or from the face, through the trigeminal or facial routes. */
+  /**
+   * A pulse along a cranial nerve (P37): the face's movement through the facial routes, or any
+   * course cranialCourses() builds — to the eye, the tongue, the palate, the shoulder, and in
+   * from the skin of the face, the ear and the tongue.
+   */
   private spawnFace(t = 0, pick = Math.random): void {
     if (!this.map || this.pulses.length >= this.max) return;
     const side: Side = pick() < 0.5 ? 'L' : 'R';
-    const kind: Kind = pick() < 0.5 ? 'face-sense' : 'face-motor';
-    const key = `face|${kind}|${side}`;
+    const courses = cranialCourses(this.kb, this.render, side);
+    // One draw in (courses + 1) is the face's own movement, which the facial routes carry.
+    const i = Math.floor(pick() * (courses.length + 1));
+    const course = courses[i];
+    const kind: Kind = course ? (course.dir === 'sense' ? 'face-sense' : 'face-motor') : 'face-motor';
+    const key = `cranial|${course ? course.id : 'face'}|${side}`;
     let entry = this.cache.get(key);
     if (!entry) {
-      const g = kind === 'face-sense' ? faceSensoryPath(this.kb, this.render, side) : faceMotorPath(this.kb, this.render, side);
+      const g = course ?? faceMotorPath(this.kb, this.render, side);
       const path: Path = {
         points: g.points,
         legs: [{ from: 0, to: g.points.length - 1, speed: kind === 'face-sense' ? 'abeta' : 'corticospinal' }],
@@ -282,11 +290,12 @@ export class PulseField {
 
   private spawnRandom(): void {
     const roll = Math.random();
-    if (roll < 0.12) {
+    // P37: a quarter of the pulses run in the cranial nerves, now that there are sixteen a side.
+    if (roll < 0.25) {
       this.spawnFace();
       return;
     }
-    if (roll < 0.42) {
+    if (roll < 0.5) {
       this.spawnLimb();
       return;
     }
@@ -308,7 +317,7 @@ export class PulseField {
       seed = (seed * 16807) % 2147483647;
       return seed / 2147483647;
     };
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 24; i++) {
       const before = this.pulses.length;
       this.spawnFace(0, pick);
       const p = this.pulses[before];

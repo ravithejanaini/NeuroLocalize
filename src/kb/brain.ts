@@ -170,9 +170,9 @@ export const BRAIN: Brain = {
       bookRef: p,
     },
     steps: [
-      { level: 'pons', compartment: 'facial_above_geniculate' },
-      { level: 'pons', compartment: 'facial_above_stapedius' },
       { level: 'pons', compartment: 'facial_above_chorda' },
+      { level: 'pons', compartment: 'facial_above_stapedius' },
+      { level: 'pons', compartment: 'facial_above_geniculate' },
     ],
     serves: 'ipsilateral',
   },
@@ -228,7 +228,7 @@ export const BRAIN: Brain = {
       tier: 'T1',
       bookRef: p,
     },
-    steps: [{ level: 'midbrain', compartment: 'oculomotor' }, { level: 'midbrain', compartment: 'oculomotor_nucleus' }, { level: 'midbrain', compartment: 'oculomotor_nerve' }],
+    steps: [{ level: 'midbrain', compartment: 'oculomotor_nucleus' }, { level: 'midbrain', compartment: 'oculomotor' }, { level: 'midbrain', compartment: 'oculomotor_nerve' }],
     serves: 'ipsilateral',
   },
   adduction: {
@@ -325,9 +325,9 @@ export const BRAIN: Brain = {
       bookRef: p,
     },
     steps: [
+      { level: 'pons', compartment: 'pprf' },
       { level: 'pons', compartment: 'abducens_nucleus' },
       { level: 'pons', compartment: 'abducens_fascicle' },
-      { level: 'pons', compartment: 'pprf' },
       { level: 'pons', compartment: 'abducens_nerve' },
     ],
     serves: 'ipsilateral',
@@ -383,18 +383,6 @@ export const BRAIN: Brain = {
   faceDivisions: [
     {
       meta: {
-        id: 'brain.face-divisions',
-        claim: 'The ophthalmic (V1) and maxillary (V2) divisions run in the lateral wall of the cavernous sinus, so a lesion there loses the forehead and the cheek on its own side; the mandibular division (V3) leaves by the foramen ovale and is not in the sinus, so the jaw is spared. The nuclei and the routes above them carry all three divisions.',
-        sources: ['S122', 'S165', 'S166'],
-        tier: 'T1',
-        bookRef: p,
-      },
-      steps: [{ level: 'midbrain', compartment: 'ophthalmic_maxillary' }],
-      serves: 'ipsilateral',
-      divisions: ['V1', 'V2'],
-    },
-    {
-      meta: {
         id: 'brain.face-division-orbit',
         claim: 'The ophthalmic division (V1) alone enters the orbit through the superior orbital fissure with the third, fourth and sixth nerves; the maxillary division bypasses the fissure through the foramen rotundum. A lesion there loses the forehead and spares the cheek and the jaw (P32).',
         sources: ['S171', 'S122'],
@@ -404,6 +392,18 @@ export const BRAIN: Brain = {
       steps: [{ level: 'midbrain', compartment: 'ophthalmic_orbit' }],
       serves: 'ipsilateral',
       divisions: ['V1'],
+    },
+    {
+      meta: {
+        id: 'brain.face-divisions',
+        claim: 'The ophthalmic (V1) and maxillary (V2) divisions run in the lateral wall of the cavernous sinus, so a lesion there loses the forehead and the cheek on its own side; the mandibular division (V3) leaves by the foramen ovale and is not in the sinus, so the jaw is spared. The nuclei and the routes above them carry all three divisions.',
+        sources: ['S122', 'S165', 'S166'],
+        tier: 'T1',
+        bookRef: p,
+      },
+      steps: [{ level: 'midbrain', compartment: 'ophthalmic_maxillary' }],
+      serves: 'ipsilateral',
+      divisions: ['V1', 'V2'],
     },
   ],
   ataxia: {
@@ -518,7 +518,7 @@ export const BRAIN: Brain = {
       tier: 'T1',
       bookRef: p,
     },
-    steps: [{ level: 'pons', compartment: 'cochlear' }, { level: 'pons', compartment: 'vestibulocochlear_nerve' }],
+    steps: [{ level: 'pons', compartment: 'vestibulocochlear_nerve' }, { level: 'pons', compartment: 'cochlear' }],
     serves: 'ipsilateral',
   },
   upgaze: {

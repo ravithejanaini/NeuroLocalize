@@ -2321,3 +2321,34 @@ clipped. It was needed once the tracts were solid, and it is what a cross-sectio
 **D189 — Verified by eye.** The unit tests cannot load the scene. Every station was checked in the
 browser with a lesion placed; the vertebral bodies were thinned again after the first pass, when
 from the front they greyed the cord behind them.
+
+## P37 — The cranial nerves on the stage
+
+`docs/P37-analysis.md`. No new source and no new finding: the stage now draws what P29 to P35 put
+in the model.
+
+### Decisions
+
+**D190 — A course is the route.** `cranialCourses()` builds each nerve's drawn course from the
+knowledge base's own step lists, on the side each serves, and adds only the end organ. Four routes
+were put in the order the signal travels — the third nerve, the sixth, hearing and taste — and the
+face's division rows distal first; the engine does not read the order, and all 472 earlier tests
+passed unchanged.
+
+**D191 — A test holds the drawing to the engine.** In every frozen case above the cord, on both
+sides, a pulse on each course stops exactly when the engine reports that nerve's finding — over a
+thousand comparisons. The palate holds one way only, its supranuclear supply not being on the
+nerve's course.
+
+**D192 — End organs take the colour of their finding.** Twelve a side — the eye, the tear gland, the
+forehead, cheek and jaw, the jaw muscles, the ear, the tongue and its front and back, the palate,
+the shoulder — as the limb's muscles and skin do.
+
+**D193 — A Head station.** Close on the brainstem and face, the eighth station. The nerves' and
+organs' names show only when the camera is that close, because at the Brain station's distance they
+pile up. A lesion wholly outside the brainstem flies to the Head; any other lesion above the cord to
+the Brain, as before.
+
+**D194 — No mutation run.** The knowledge base changed only in the order of steps within routes.
+The engine takes the worst damage along a route whatever the order, so the set of mutants and their
+outcomes is the same; this is argued, not measured.

@@ -243,7 +243,7 @@ export const RENDER: RenderKb = {
   brainLayout: {
     meta: {
       id: 'render.brain-layout',
-      claim: 'The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally, with the inferior frontal gyrus in front of the motor strip and the frontal eye field (Brodmann area 8) in front of it and higher, with the anterior border zone around Broca area and the posterior border zone around Wernicke area, the inferior parietal lobule behind the sensory strip and the superior temporal gyrus below them; the cerebellum lies behind the pons and medulla, its hemispheres lateral to the midline vermis; the pretectum is dorsal in the rostral midbrain, and the trochlear nucleus beside the MLF below it; the trigeminal motor nucleus lies medial and anterior to the principal sensory nucleus in the pons; the subthalamic nucleus lies below the thalamus, medial to the capsule. Positions are schematic.',
+      claim: 'The medulla, pons and midbrain stack above C1; within them the pyramid and medial lemniscus lie medially and the spinothalamic tract, spinal trigeminal nucleus, sympathetic fibres, nucleus ambiguus and cerebellar peduncle laterally; the medial longitudinal fasciculus runs paramedian and dorsal through pons and midbrain with the paramedian pontine reticular formation beside the abducens nucleus and the oculomotor nucleus dorsal to its fascicles; the thalamus and internal capsule lie above, and the cortex carries the leg medially and the face laterally, with the inferior frontal gyrus in front of the motor strip and the frontal eye field (Brodmann area 8) in front of it and higher, with the anterior border zone around Broca area and the posterior border zone around Wernicke area, the inferior parietal lobule behind the sensory strip and the superior temporal gyrus below them; the cerebellum lies behind the pons and medulla, its hemispheres lateral to the midline vermis; the pretectum is dorsal in the rostral midbrain, and the trochlear nucleus beside the MLF below it; the trigeminal motor nucleus lies medial and anterior to the principal sensory nucleus in the pons; the subthalamic nucleus lies below the thalamus, medial to the capsule. The end organs of the cranial nerves are drawn in front of and beside the brainstem — the eye and tear gland above, the tongue and palate at the midline below, the ear lateral, the shoulder below the skull (P37). Positions are schematic.',
       sources: ['S48', 'S58', 'S47', 'S54', 'S66', 'S59', 'S98', 'S99', 'S70', 'S104', 'S105', 'S107', 'S110', 'S116', 'S120', 'S122', 'S125', 'S130', 'S103'],
       tier: 'T1',
       bookRef: 'pending',
@@ -359,6 +359,22 @@ export const RENDER: RenderKb = {
     },
     decussationY: 0.35,
     face: [-2.4, 3.4, -1.6],
+    // P37: the end organs, in front of and beside the brainstem. Schematic, like the rest: what is
+    // kept is their order from above down and from the midline out.
+    targets: {
+      eye: [-1.5, 5.6, -3.2],
+      lacrimal: [-2.15, 6.05, -3.0],
+      forehead: [-1.3, 7.0, -3.1],
+      cheek: [-2.0, 4.5, -3.2],
+      jaw_skin: [-1.5, 2.3, -3.2],
+      jaw_muscle: [-2.75, 2.7, -1.9],
+      ear: [-3.3, 3.7, 0.3],
+      tongue: [-0.4, 2.5, -2.7],
+      tongue_front: [-0.3, 2.75, -3.2],
+      tongue_back: [-0.5, 2.15, -2.1],
+      palate: [-0.45, 3.25, -2.1],
+      shoulder: [-2.9, -0.9, 0.3],
+    },
   },
 
   nerveRoots: {

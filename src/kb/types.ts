@@ -5,6 +5,7 @@ import type {
   BodyRegion,
   BrainCompartment,
   BrainLevel,
+  CranialTarget,
   Compartment,
   ArmMuscle,
   ArmNerve,
@@ -185,7 +186,7 @@ export type Brain = {
   readonly trochlear: BrainRoute;
   /** P29: the fourth nerve past its decussation serves its own eye. */
   readonly trochlearNerve: BrainRoute;
-  /** P30, P32: parts that carry only some trigeminal divisions — V1 and V2 in the cavernous sinus, V1 alone in the fissure. */
+  /** P30, P32: parts that carry only some trigeminal divisions — V1 alone in the fissure, V1 and V2 in the cavernous sinus — the more distal first (P37). */
   readonly faceDivisions: readonly Row<{ readonly steps: readonly BrainStep[]; readonly serves: Laterality; readonly divisions: readonly TrigeminalDivision[] }>[];
   readonly jaw: BrainRoute;
   /** P33: the ninth nerve's sensation and taste at the back of the tongue, and the eleventh nerve's two muscles. */
@@ -412,6 +413,8 @@ export type BrainLayout = {
   readonly decussationY: number;
   /** Where the face is drawn, for facial pulses. */
   readonly face: LimbPoint;
+  /** P37: where each end organ of a cranial nerve is drawn, on the left; the right mirrors x. */
+  readonly targets: Readonly<Record<CranialTarget, LimbPoint>>;
 };
 
 /** A point on the schematic front-view body, for the patient's left side. */

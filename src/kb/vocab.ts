@@ -395,6 +395,10 @@ export const OUTSIDE_BRAINSTEM: readonly BrainCompartment[] = [
   'facial_above_chorda',
 ];
 
+/** P37: the end organs the cranial nerves are drawn to. */
+export const CRANIAL_TARGETS = ['eye', 'lacrimal', 'forehead', 'cheek', 'jaw_skin', 'jaw_muscle', 'ear', 'tongue', 'tongue_front', 'tongue_back', 'palate', 'shoulder'] as const;
+export type CranialTarget = (typeof CRANIAL_TARGETS)[number];
+
 /** P34: where sweating is lost with a Horner syndrome — nowhere, the brow, the face, or the face and that half of the body. */
 export const SWEAT_LOSS = ['none', 'brow', 'face', 'body'] as const;
 export type SweatLoss = (typeof SWEAT_LOSS)[number];

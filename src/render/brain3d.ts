@@ -3,9 +3,10 @@
 // colour when the lesion takes it. Nothing here decides a finding.
 import * as THREE from 'three';
 import type { BrainMap } from '../engine/brain.ts';
-import { allParts, partPoint } from '../geometry/brain.ts';
+import type { Findings } from '../engine/forward.ts';
+import { allParts, cranialCourses, partPoint, targetPoint } from '../geometry/brain.ts';
 import type { Kb, RenderKb } from '../kb/types.ts';
-import { BODY_REGIONS, SIDES, type BodyRegion, type BrainLevel, type Side } from '../kb/vocab.ts';
+import { BODY_REGIONS, CRANIAL_TARGETS, SIDES, type BodyRegion, type BrainLevel, type CranialTarget, type Side } from '../kb/vocab.ts';
 import { basic, glass, lit, tint } from './materials.ts';
 import type { Label, Palette } from './scene.ts';
 
@@ -15,7 +16,70 @@ export type BrainScene = {
   readonly root: THREE.Group;
   readonly labels: Label[];
   setLesion(bmap: BrainMap): void;
+  /** P37: colours each end organ by its finding; null clears them. */
+  setFindings(f: Findings | null): void;
 };
+
+/** P37: what each end organ is called on the stage. */
+const TARGET_WORD: Record<CranialTarget, string> = {
+  eye: 'eye',
+  lacrimal: 'tear gland',
+  forehead: 'forehead · V1',
+  cheek: 'cheek · V2',
+  jaw_skin: 'jaw · V3',
+  jaw_muscle: 'jaw muscles',
+  ear: 'ear',
+  tongue: 'tongue',
+  tongue_front: 'taste, front',
+  tongue_back: 'tongue, back',
+  palate: 'palate',
+  shoulder: 'shoulder',
+};
+
+/** P37: the short name each course carries on the stage. */
+const COURSE_WORD: Record<string, string> = {
+  'V motor': 'V motor',
+  'VII tears': 'gr. petrosal',
+  'VII stapedius': 'n. to stapedius',
+  'VII taste': 'chorda tympani',
+};
+
+/** P37: whether the finding an end organ shows is abnormal on side `x` — 2 lost or present, 1 partly or unsettled, 0 normal. */
+function organState(f: Findings, t: CranialTarget, x: Side): 0 | 1 | 2 {
+  const c = f.cranial[x];
+  const any = (...signs: (keyof typeof c)[]): 0 | 1 | 2 =>
+    signs.some((s) => c[s] === 'present') ? 2 : signs.some((s) => c[s] === 'indeterminate') ? 1 : 0;
+  const skin = (d: 'V1' | 'V2' | 'V3'): 0 | 1 | 2 => {
+    const s = f.faceDivision[x][d];
+    return s === 'lost' ? 2 : s === 'intact' ? 0 : 1;
+  };
+  switch (t) {
+    case 'eye':
+      return any('oculomotor_palsy', 'abduction_weakness', 'superior_oblique_weakness', 'adduction_weakness', 'elevation_weakness', 'ptosis');
+    case 'lacrimal':
+      return any('tear_loss');
+    case 'forehead':
+      return skin('V1');
+    case 'cheek':
+      return skin('V2');
+    case 'jaw_skin':
+      return skin('V3');
+    case 'jaw_muscle':
+      return any('jaw_deviation');
+    case 'ear':
+      return any('hearing_loss', 'hyperacusis');
+    case 'tongue':
+      return any('tongue_weakness');
+    case 'tongue_front':
+      return any('taste_loss');
+    case 'tongue_back':
+      return any('posterior_tongue_loss');
+    case 'palate':
+      return any('palate_weakness');
+    case 'shoulder':
+      return any('accessory_weakness');
+  }
+}
 
 const LEVEL_WORD: Record<BrainLevel, string> = {
   medulla: 'medulla',
@@ -31,12 +95,12 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
   const root = new THREE.Group();
   const labels: Label[] = [];
   const layout = render.brainLayout;
-  const label = (text: string, at: THREE.Vector3, cls = 'lbl lbl-brain'): void => {
+  const label = (text: string, at: THREE.Vector3, cls = 'lbl lbl-brain', close = false): void => {
     const el = document.createElement('span');
     el.className = cls;
     el.textContent = text;
     layer.append(el);
-    labels.push({ el, at, brain: true });
+    labels.push({ el, at, brain: true, close });
   };
   const tube = (pts: readonly THREE.Vector3[], radius: number, colour: string, opacity: number): THREE.Mesh =>
     new THREE.Mesh(
@@ -142,6 +206,32 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
   }
   label('face', new THREE.Vector3(f[0], f[1] + 0.45, f[2]), 'lbl lbl-brain lbl-land');
 
+  // P37: every cranial nerve as a strand from its origin to its end organ, built from the same
+  // step lists the engine reads (geometry/brain.ts), and a mark on each end organ.
+  for (const side of SIDES) {
+    for (const c of cranialCourses(kb, render, side)) {
+      if (c.points.length < 2) continue;
+      root.add(tube(c.points.map(v3), 0.016, c.dir === 'motor' ? palette.nerve : palette.nervePost, 1));
+      // Name each nerve once, on the patient's left, beside the part nearest its organ.
+      if (side === 'L') {
+        const at = c.dir === 'motor' ? c.points[c.points.length - 2] : c.points[1];
+        if (at) label(COURSE_WORD[c.id] ?? c.id, new THREE.Vector3(at.x - 0.18, at.y + 0.12, at.z), 'lbl lbl-brain lbl-nerve', true);
+      }
+    }
+  }
+  const organs = new Map<string, THREE.Mesh>();
+  for (const side of SIDES) {
+    for (const t of CRANIAL_TARGETS) {
+      const at = v3(targetPoint(render, t, side));
+      const big = t === 'eye' || t === 'shoulder' || t === 'ear';
+      const mesh = new THREE.Mesh(new THREE.SphereGeometry(big ? 0.2 : 0.11, 24, 16), lit(palette.cord, 0.5));
+      mesh.position.copy(at);
+      root.add(mesh);
+      organs.set(`${side}|${t}`, mesh);
+      if (side === 'L') label(TARGET_WORD[t], new THREE.Vector3(at.x - 0.28, at.y - 0.02, at.z), 'lbl lbl-brain lbl-land', true);
+    }
+  }
+
   return {
     root,
     labels,
@@ -150,6 +240,17 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
         const d = bmap.damage(m.level, m.compartment, m.side, m.region);
         tint(m.mesh, d > 0 ? palette.lesion : palette.grey, d === 2 ? 0.95 : d === 1 ? 0.6 : 0.4);
         m.mesh.scale.setScalar(d > 0 ? 1.8 : 1);
+      }
+    },
+    setFindings(findings) {
+      for (const side of SIDES) {
+        for (const t of CRANIAL_TARGETS) {
+          const mesh = organs.get(`${side}|${t}`);
+          if (!mesh) continue;
+          const s = findings ? organState(findings, t, side) : 0;
+          tint(mesh, s === 2 ? palette.lesion : s === 1 ? palette.stt : palette.cord, s === 2 ? 0.95 : s === 1 ? 0.7 : 0.5);
+          mesh.scale.setScalar(s === 2 ? 1.25 : 1);
+        }
       }
     },
   };

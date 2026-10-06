@@ -9,8 +9,11 @@ import {
   type BodyRegion,
   type BrainCompartment,
   type BrainLevel,
+  type CranialSign,
+  type CranialTarget,
   type SensoryModality,
   type Side,
+  type TrigeminalDivision,
 } from '../kb/vocab.ts';
 import type { Vec3 } from './paths.ts';
 
@@ -118,6 +121,82 @@ export function faceMotorPath(kb: Kb, render: RenderKb, x: Side): { readonly poi
   const f = render.brainLayout.face;
   points.push({ x: sign(x) * f[0], y: f[1] - 0.4, z: f[2] });
   return { points, elements };
+}
+
+/** P37: where an end organ of a cranial nerve is drawn on side `side`. */
+export function targetPoint(render: RenderKb, target: CranialTarget, side: Side): Vec3 {
+  const p = render.brainLayout.targets[target];
+  return { x: sign(side) * p[0], y: p[1], z: p[2] };
+}
+
+/**
+ * P37: one cranial nerve as it is drawn — its parts in the order the signal meets them, and the
+ * end organ at one end. `reads` names the finding the engine computes from exactly these parts,
+ * so a test can hold the drawing to the engine.
+ */
+export type Course = {
+  readonly id: string;
+  readonly name: string;
+  /** The side of the end organ. */
+  readonly side: Side;
+  readonly dir: 'motor' | 'sense';
+  readonly target: CranialTarget;
+  readonly reads: { readonly sign: CranialSign } | { readonly division: TrigeminalDivision };
+  readonly points: Vec3[];
+  readonly elements: BrainElement[];
+};
+
+/**
+ * Every cranial nerve course for the end organs of side `x`. Each is built from the knowledge
+ * base's own step lists, in their own order, on the side each route serves — so a pulse passes
+ * exactly the parts the engine judges (D39). A motor course ends at its organ; a sensory one
+ * starts there.
+ */
+export function cranialCourses(kb: Kb, render: RenderKb, x: Side): Course[] {
+  const b = kb.brain;
+  type Leg = readonly [readonly BrainStep[], Side];
+  const build = (id: string, name: string, dir: Course['dir'], target: CranialTarget, reads: Course['reads'], legs: readonly Leg[]): Course => {
+    const organ = targetPoint(render, target, x);
+    const points: Vec3[] = dir === 'sense' ? [organ] : [];
+    const elements: BrainElement[] = [];
+    for (const [steps, side] of legs) walk(render, steps, side, 'face', points, elements);
+    if (dir === 'motor') points.push(organ);
+    return { id, name, side: x, dir, target, reads, points, elements };
+  };
+  const reading = (s: CranialSign): Course['reads'] => ({ sign: s });
+  // The face by division: the parts that carry this division, distal first, then the nuclei on
+  // the same side and the crossed route to the cortex (C16).
+  const division = (d: TrigeminalDivision, target: CranialTarget): Course =>
+    build(d, `trigeminal nerve, ${d}`, 'sense', target, { division: d }, [
+      ...b.faceDivisions.filter((r) => r.divisions.includes(d)).map((r): Leg => [r.steps, onSide(x, r)]),
+      [b.faceNucleus.steps, onSide(x, b.faceNucleus)],
+      [b.faceAscending.steps, onSide(x, b.faceAscending)],
+    ]);
+  return [
+    build('III', 'oculomotor nerve', 'motor', 'eye', reading('oculomotor_palsy'), [[b.oculomotor.steps, onSide(x, b.oculomotor)]]),
+    // The fourth nerve's nucleus is on the other side: its fibres cross before they leave.
+    build('IV', 'trochlear nerve', 'motor', 'eye', reading('superior_oblique_weakness'), [
+      [b.trochlear.steps, onSide(x, b.trochlear)],
+      [b.trochlearNerve.steps, onSide(x, b.trochlearNerve)],
+    ]),
+    build('VI', 'abducens nerve', 'motor', 'eye', reading('abduction_weakness'), [[b.abduction.steps, onSide(x, b.abduction)]]),
+    division('V1', 'forehead'),
+    division('V2', 'cheek'),
+    division('V3', 'jaw_skin'),
+    build('V motor', 'trigeminal motor root', 'motor', 'jaw_muscle', reading('jaw_deviation'), [[b.jaw.steps, onSide(x, b.jaw)]]),
+    build('VII tears', 'greater petrosal nerve', 'motor', 'lacrimal', reading('tear_loss'), [[b.lacrimation.steps, onSide(x, b.lacrimation)]]),
+    build('VII stapedius', 'nerve to stapedius', 'motor', 'ear', reading('hyperacusis'), [[b.stapedius.steps, onSide(x, b.stapedius)]]),
+    build('VII taste', 'chorda tympani', 'sense', 'tongue_front', reading('taste_loss'), [[b.tasteAnterior.steps, onSide(x, b.tasteAnterior)]]),
+    build('VIII', 'cochlear nerve', 'sense', 'ear', reading('hearing_loss'), [[b.hearing.steps, onSide(x, b.hearing)]]),
+    build('IX', 'glossopharyngeal nerve', 'sense', 'tongue_back', reading('posterior_tongue_loss'), [[b.posteriorTongue.steps, onSide(x, b.posteriorTongue)]]),
+    build('X', 'vagus nerve', 'motor', 'palate', reading('palate_weakness'), [[b.ambiguus.steps, onSide(x, b.ambiguus)]]),
+    build('XI', 'accessory nerve', 'motor', 'shoulder', reading('accessory_weakness'), [[b.accessory.steps, onSide(x, b.accessory)]]),
+    // The tongue: the crossed corticobulbar route, then the nucleus and nerve of its own side.
+    build('XII', 'hypoglossal nerve', 'motor', 'tongue', reading('tongue_weakness'), [
+      [b.corticobulbarTongue.steps, onSide(x, b.corticobulbarTongue)],
+      [b.hypoglossal.steps, onSide(x, b.hypoglossal)],
+    ]),
+  ];
 }
 
 /** The first brain element this map cuts completely, and whether any is cut in part. */

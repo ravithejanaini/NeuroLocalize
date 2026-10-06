@@ -3,7 +3,16 @@ import { describe, it } from 'node:test';
 import { BRAIN_CASES } from '../spec/expectations/brain.ts';
 import { mapBrain } from '../src/engine/brain.ts';
 import { crossingOffsets, forward, isBrain, isCord, isSacral, mapLesion } from '../src/engine/forward.ts';
-import { faceMotorPath, faceSensoryPath, partPoint } from '../src/geometry/brain.ts';
+import { brainFate, cranialCourses, faceMotorPath, faceSensoryPath, partPoint, targetPoint } from '../src/geometry/brain.ts';
+import { ANGLE_CASES } from '../spec/expectations/angle.ts';
+import { CAVERNOUS_CASES } from '../spec/expectations/cavernous.ts';
+import { CRANIAL_NERVE_CASES } from '../spec/expectations/cranial-nerves.ts';
+import { FACIAL_CANAL_CASES } from '../spec/expectations/facial-canal.ts';
+import { JUGULAR_CASES } from '../spec/expectations/jugular.ts';
+import { MIDBRAIN_CASES } from '../spec/expectations/midbrain.ts';
+import { NERVE_CASES } from '../spec/expectations/nerves.ts';
+import { ORBIT_CASES } from '../spec/expectations/orbit.ts';
+import { POSTERIOR_CASES } from '../spec/expectations/posterior.ts';
 import { fate, motorPath, sensoryPath, type PathOptions } from '../src/geometry/paths.ts';
 import { KB } from '../src/kb/kb.ts';
 import { RENDER } from '../src/kb/render.ts';
@@ -193,6 +202,66 @@ describe('the drawn brain keeps the sourced relations', () => {
       for (const c of row.compartments) assert.ok(partPoint(RENDER, row.level, c, 'R', 'face'), `${row.level} ${c}`);
       // P12: and every part it takes at another level (D77).
       for (const a of row.also ?? []) for (const c of a.compartments) assert.ok(partPoint(RENDER, a.level, c, 'R', 'face'), `${a.level} ${c}`);
+    }
+  });
+});
+
+describe('the cranial nerves are drawn as the engine reads them (P37)', () => {
+  const CASES = [...BRAIN_CASES, ...POSTERIOR_CASES, ...MIDBRAIN_CASES, ...NERVE_CASES, ...CRANIAL_NERVE_CASES, ...CAVERNOUS_CASES, ...ANGLE_CASES, ...ORBIT_CASES, ...JUGULAR_CASES, ...FACIAL_CANAL_CASES];
+
+  it('stops a pulse on a nerve exactly when the engine reports that nerve’s sign, in every case', () => {
+    let checked = 0;
+    let stopped = 0;
+    for (const kase of CASES) {
+      const bmap = mapBrain(KB, kase.lesion.filter(isBrain));
+      const f = forward(kase.lesion, 'chronic');
+      for (const side of SIDES) {
+        for (const course of cranialCourses(KB, RENDER, side)) {
+          const fate = brainFate(bmap, course.elements);
+          const drawn = fate.diesAt >= 0 ? 'cut' : fate.dimmed ? 'part' : 'clear';
+          const where = `${kase.id} ${side} ${course.id}`;
+          if ('division' in course.reads) {
+            const state = f.faceDivision[side][course.reads.division];
+            assert.equal(drawn === 'clear', state === 'intact', `${where}: drawn ${drawn}, engine ${state}`);
+            assert.equal(drawn === 'cut', state === 'lost', `${where}: drawn ${drawn}, engine ${state}`);
+          } else {
+            const state = f.cranial[side][course.reads.sign];
+            if (course.reads.sign === 'palate_weakness') {
+              // The palate also has a supply from both hemispheres, which the nerve's course does not draw.
+              if (drawn !== 'clear') assert.equal(state, 'present', where);
+            } else {
+              assert.equal(drawn !== 'clear', state === 'present', `${where}: drawn ${drawn}, engine ${state}`);
+            }
+          }
+          checked++;
+          if (drawn !== 'clear') stopped++;
+        }
+      }
+    }
+    assert.ok(checked > 1000, `only ${checked} courses checked`);
+    assert.ok(stopped > 60, `only ${stopped} pulses stopped: the cases do not exercise the nerves`);
+  });
+
+  it('draws every course through parts that have a position, to an organ on its own side', () => {
+    for (const side of SIDES) {
+      const courses = cranialCourses(KB, RENDER, side);
+      assert.equal(new Set(courses.map((c) => c.id)).size, courses.length, 'two courses share an id');
+      for (const c of courses) {
+        assert.ok(c.elements.length > 0, `${c.id} passes no part`);
+        assert.equal(c.points.length, c.elements.length + 1, `${c.id}: one point a part, and the organ`);
+        const organ = targetPoint(RENDER, c.target, side);
+        assert.equal(organ.x < 0, side === 'L', `${side} ${c.target} is on the wrong side`);
+        // A motor course ends at its organ; a sensory one begins there.
+        assert.deepEqual(c.dir === 'motor' ? c.points[c.points.length - 1] : c.points[0], organ, `${c.id} does not reach its organ`);
+      }
+    }
+  });
+
+  it('starts the fourth nerve on the side opposite its eye, and no other', () => {
+    for (const c of cranialCourses(KB, RENDER, 'L')) {
+      const first = c.dir === 'motor' ? c.elements[0] : c.elements[c.elements.length - 1];
+      if (c.id === 'IV') assert.equal(first?.side, 'R', 'the trochlear nucleus serves the other eye (S120)');
+      if (c.id === 'III' || c.id === 'VI') assert.equal(first?.side, 'L', `${c.id} is uncrossed`);
     }
   });
 });
