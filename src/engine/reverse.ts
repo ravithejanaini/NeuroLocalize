@@ -536,7 +536,7 @@ export type Verdict = {
   readonly because: string;
 };
 
-const PLACE: Partial<Record<string, string>> = {
+export const PLACE: Partial<Record<string, string>> = {
   dorsal_column: 'posterior column',
   anterolateral: 'spinothalamic tract',
   lateral_cst: 'corticospinal tract',

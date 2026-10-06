@@ -2429,3 +2429,33 @@ legend moves below the station buttons, which now span the stage.
 tract or a nerve.
 
 **D211 — No mutation run.** Nothing the engine reads changed.
+
+## P41 — Finishing what P37 to P40 left half-done
+
+`docs/P41-analysis.md`. No new source and no new finding.
+
+### Decisions
+
+**D212 — Four more kinds of part can be named.** A part of the cord at the slice, a root, a place
+beyond the roots, and an end organ. `cordRows()`, `rootRows()` and `plexusRows()` say which rows a
+card quotes; a test holds that any row naming a part of the cord in its data is quoted for it.
+
+**D213 — An organ has no lesion.** Its card says which nerves reach it and quotes the rows those
+courses were built from, which each course now records (`Course.rows`). The looser rule first
+tried — any row whose steps lie on a course — quoted the tear gland's row for the ear, and was
+dropped.
+
+**D214 — A root is its dorsal and ventral parts together.** One mark and one card per segment and
+side; the two parts separately are named in the cord's slice.
+
+**D215 — Looking down the cord, a tap takes only the slice.** Everything along the limbs projects
+onto it there. A part of the cord has a wider reach than a mark, and the nearest part in
+proportion to its reach wins.
+
+**D216 — A finding is a sentence.** No "present" after a sign that is there; a cranial sign names
+its side once and drops the examiner's "this"; a group leads with the side and the count.
+
+**D217 — On a phone the stations are one scrolling row**, and the long views stand further back on
+a stage narrower than it is tall.
+
+**D218 — No mutation run.** Nothing the engine reads changed.

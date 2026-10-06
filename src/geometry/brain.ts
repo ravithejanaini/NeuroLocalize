@@ -203,6 +203,17 @@ export function fibreFate(vmap: VisionMap, state: FieldState, fibre: Fibre): { r
   return { diesAt: -1, dimmed: true };
 }
 
+type Stepped = { readonly meta: { readonly id: string }; readonly steps: readonly BrainStep[] };
+/** Every row above the cord that has a list of steps: the routes the engine walks. */
+export function steppedRows<K extends Kb>(kb: K): (Stepped & { readonly meta: K['brain']['corticospinal']['meta'] })[] {
+  const out: (Stepped & { readonly meta: K['brain']['corticospinal']['meta'] })[] = [];
+  const is = (v: unknown): v is Stepped & { readonly meta: K['brain']['corticospinal']['meta'] } => typeof v === 'object' && v !== null && 'steps' in v && 'meta' in v;
+  for (const v of Object.values(kb.brain) as unknown[]) {
+    for (const row of Array.isArray(v) ? v : [v]) if (is(row)) out.push(row);
+  }
+  return out;
+}
+
 /** P37: where an end organ of a cranial nerve is drawn on side `side`. */
 export function targetPoint(render: RenderKb, target: CranialTarget, side: Side): Vec3 {
   const p = render.brainLayout.targets[target];
@@ -224,6 +235,8 @@ export type Course = {
   readonly reads: { readonly sign: CranialSign } | { readonly division: TrigeminalDivision };
   readonly points: Vec3[];
   readonly elements: BrainElement[];
+  /** P41: the rows this course was built from, by id. */
+  readonly rows: readonly string[];
 };
 
 /**
@@ -241,7 +254,9 @@ export function cranialCourses(kb: Kb, render: RenderKb, x: Side): Course[] {
     const elements: BrainElement[] = [];
     for (const [steps, side] of legs) walk(render, steps, side, 'face', points, elements);
     if (dir === 'motor') points.push(organ);
-    return { id, name, side: x, dir, target, reads, points, elements };
+    const all = steppedRows(kb);
+    const rows = legs.flatMap(([steps]) => all.filter((r) => r.steps === steps).map((r) => r.meta.id));
+    return { id, name, side: x, dir, target, reads, points, elements, rows };
   };
   const reading = (s: CranialSign): Course['reads'] => ({ sign: s });
   // The face by division: the parts that carry this division, distal first, then the nuclei on

@@ -9,7 +9,10 @@ import { mapPlexus } from '../engine/limb.ts';
 import { hypotheses, type Hypothesis } from '../engine/hypotheses.ts';
 import { mapVision, placeRegions } from '../engine/vision.ts';
 import { sympatheticCourse, sympatheticFate } from '../geometry/sympathetic.ts';
-import { describePart, partCardHtml, partName, type PartRef } from './describe.ts';
+import { rootExit, siteAnchor } from '../geometry/plexus.ts';
+import { place, radiusAt } from '../geometry/paths.ts';
+import { discAt } from '../geometry/section.ts';
+import { describePart, partCardHtml, partName, refKey, type PartRef } from './describe.ts';
 import {
   explain,
   isPrepared,
@@ -25,11 +28,15 @@ import { segmentMid, segmentsBetween } from '../geometry/ruler.ts';
 import { KB } from '../kb/kb.ts';
 import { RENDER } from '../kb/render.ts';
 import {
+  COMPARTMENTS,
   OUTSIDE_BRAINSTEM,
   LEG_SITES,
+  PLEXUS_SITES,
   SEGMENTS,
+  SIDES,
   TIMEPOINTS,
   VERTEBRAE,
+  type Compartment,
   type LesionFamily,
   type SensoryModality,
   type Side,
@@ -181,6 +188,9 @@ const sliceLevel = (): number => {
   return state.followSlice && mid !== undefined ? mid : state.slice;
 };
 
+/** P41: on a stage narrower than it is tall — a phone — the long views stand further back. */
+const tall = (): number => (viewport.clientWidth < viewport.clientHeight * 1.2 ? 1.3 : 1);
+
 function station(name: string): View {
   const y = lesionMidY(RENDER, currentSegments);
   switch (name) {
@@ -200,11 +210,11 @@ function station(name: string): View {
     case 'sympathetic':
       // P40: from the front and a little to one side, far enough back to hold the whole loop —
       // down the cord to T1 and up the neck to the eye.
-      return { theta: Math.PI + 0.45, phi: 1.45, radius: 27, y: -1.4, x: 0 };
+      return { theta: Math.PI + 0.45, phi: 1.45, radius: 27 * tall(), y: -1.4, x: 0 };
     case 'vision':
       // P38: from above and in front, so the pathway runs away from the eyes to the back of the
       // head and the crossing at the chiasm is plain. Not so steep that the cord's cut-away starts.
-      return { theta: Math.PI + 0.25, phi: 0.62, radius: 16, y: 6.2, x: 0 };
+      return { theta: Math.PI + 0.25, phi: 0.62, radius: 16 * tall(), y: 6.2, x: 0 };
     case 'leg':
       // From the front, like the arm: the whole lower limb, turned a little toward the chosen side.
       return { theta: Math.PI + (armSide === 'L' ? 0.3 : -0.3), phi: 1.5, radius: 40, y: -35, x: armSide === 'L' ? -2.6 : 2.6 };
@@ -222,6 +232,8 @@ function go(name: string): void {
   const to = station(name);
   document.querySelectorAll<HTMLButtonElement>('[data-station]').forEach((b) => {
     b.setAttribute('aria-pressed', String(b.dataset.station === name));
+    // P41: on a phone the stations are one row that scrolls; keep the chosen one in sight.
+    if (b.dataset.station === name) b.scrollIntoView({ inline: 'nearest', block: 'nearest' });
   });
   if (reduced) {
     Object.assign(view, to);
@@ -247,35 +259,96 @@ function placeCamera(): void {
 const pointers = new Map<number, { x: number; y: number }>();
 let pinch = 0;
 const canvas = renderer.domElement;
-// P39: a tap that does not drag names the part under it.
+// P39: a tap that does not drag names the part under it. P41: beyond the brain — the roots, the
+// places of the plexus and nerves, and the parts of the cord at the slice.
 let tapStart: { x: number; y: number; at: number } | null = null;
+type Pickable = { readonly ref: PartRef; readonly at: { readonly x: number; readonly y: number; readonly z: number }; /** How near a tap must fall, in pixels; 16 unless said. */ readonly reach?: number };
+const rootPickables: Pickable[] = SIDES.flatMap((side) =>
+  SEGMENTS.map((_, k) => {
+    // Midway along the drawn root, between the cord's edge and where the root leaves.
+    const out = rootExit(RENDER, k, side);
+    const x = ((side === 'L' ? -1 : 1) * radiusAt(RENDER, k) + out.x) / 2;
+    return { ref: { kind: 'root' as const, side, k }, at: { x, y: (-segmentMid(RENDER, k) + out.y) / 2, z: out.z / 2 } };
+  }),
+);
+const plexusPickables: Pickable[] = SIDES.flatMap((side) =>
+  PLEXUS_SITES.flatMap((site) => {
+    try {
+      return [{ ref: { kind: 'plexus' as const, site, side }, at: siteAnchor(RENDER, site, side) }];
+    } catch {
+      return [];
+    }
+  }),
+);
+const cordAt = (compartment: Compartment, side: Side, k: number): Pickable['at'] =>
+  place(RENDER, k, discAt(RENDER, compartment, side, k) ?? { x: 0, z: 0 });
+const cordPickables = (): Pickable[] => {
+  const k = sliceLevel();
+  // A part of the cord is drawn as a disc, far wider than a mark: a tap anywhere on it counts.
+  return SIDES.flatMap((side) => COMPARTMENTS.map((compartment) => ({ ref: { kind: 'cord' as const, compartment, side, k }, at: cordAt(compartment, side, k), reach: 30 })));
+};
+/** Where a part is drawn. */
+const whereIs = (ref: PartRef): Pickable['at'] | null => {
+  if (ref.kind === 'cord') return cordAt(ref.compartment, ref.side, ref.k);
+  const key = refKey(ref);
+  return [...brain.pickables, ...rootPickables, ...plexusPickables].find((p) => refKey(p.ref) === key)?.at ?? null;
+};
 const pickAt = (clientX: number, clientY: number): PartRef | null => {
   const nearBrain = currentStation === 'brain' || currentStation === 'head' || currentStation === 'vision' || (view.y > 0 && view.radius < 34);
-  if (!nearBrain) return null;
+  const nearArm = currentStation === 'arm' || currentStation === 'leg' || view.radius < 20;
+  // Looking down the cord, everything along the limbs falls on top of the slice: only the slice
+  // can be told apart there.
+  const down = view.phi < 0.5 && !nearBrain;
+  const candidates: Pickable[] = [
+    ...(nearBrain ? brain.pickables : []),
+    ...(nearArm && !down ? plexusPickables : []),
+    ...(view.radius < 30 && !nearBrain && !down ? rootPickables : []),
+    // The parts of the cord are a few pixels apart until the camera is close.
+    ...(view.radius < 12 && !nearBrain ? cordPickables() : []),
+  ];
   const box = canvas.getBoundingClientRect();
   const p = new THREE.Vector3();
   let best: PartRef | null = null;
-  let bestD = 16;
-  for (const k of brain.pickables) {
-    p.copy(k.at).project(camera);
+  let bestD = 1;
+  for (const k of candidates) {
+    p.set(k.at.x, k.at.y, k.at.z).project(camera);
     if (p.z >= 1) continue;
     const d = Math.hypot(((p.x + 1) / 2) * box.width + box.left - clientX, ((1 - p.y) / 2) * box.height + box.top - clientY);
-    if (d < bestD) {
-      bestD = d;
+    // Nearest in proportion to its reach, so a wide disc does not take a tap meant for a mark.
+    const ratio = d / (k.reach ?? 16);
+    if (ratio < bestD) {
+      bestD = ratio;
       best = k.ref;
     }
   }
   return best;
 };
+/** Every part in the list by name. A part of the cord there has no segment: it is taken at the slice. */
+const listed: { readonly group: string; readonly label: string; readonly ref: PartRef }[] = [
+  ...brain.pickables.map((k) => ({
+    group: k.ref.kind === 'vision' ? 'visual pathway' : k.ref.kind === 'organ' ? 'end organs of the cranial nerves' : k.ref.kind === 'brain' ? k.ref.level : '',
+    label: partName(k.ref),
+    ref: k.ref,
+  })),
+  ...SIDES.flatMap((side) =>
+    COMPARTMENTS.map((compartment) => {
+      const ref: PartRef = { kind: 'cord', compartment, side, k: -1 };
+      return { group: 'cord, at the slice', label: partName(ref).replace(/ at $/, ''), ref };
+    }),
+  ),
+  ...rootPickables.map((k) => ({ group: 'roots', label: partName(k.ref), ref: k.ref })),
+  ...plexusPickables.map((k) => ({ group: 'plexus and nerves', label: partName(k.ref), ref: k.ref })),
+];
+const listKey = (ref: PartRef): string => refKey(ref.kind === 'cord' ? { ...ref, k: -1 } : ref);
 let chosenPart: PartRef | null = null;
 function showPart(ref: PartRef | null): void {
   chosenPart = ref;
-  brain.select(ref);
+  brain.selectAt(ref ? whereIs(ref) : null, ref?.kind === 'cord' ? 0.45 : 1);
   const card = $('#part-card');
   card.hidden = ref === null;
   if (ref) $('#part-card-body').innerHTML = partCardHtml(describePart(RENDER, ref, state.timepoint));
   const pick = $<HTMLSelectElement>('#part-pick');
-  pick.value = ref ? String(brain.pickables.findIndex((k) => k.ref === ref)) : '';
+  pick.value = ref ? String(listed.findIndex((l) => listKey(l.ref) === listKey(ref))) : '';
 }
 canvas.addEventListener('pointerdown', (e) => {
   tapStart = pointers.size === 0 ? { x: e.clientX, y: e.clientY, at: performance.now() } : null;
@@ -337,22 +410,33 @@ canvas.addEventListener(
 {
   const pick = $<HTMLSelectElement>('#part-pick');
   const groups = new Map<string, string[]>();
-  brain.pickables.forEach((k, i) => {
-    const group = k.ref.kind === 'vision' ? 'visual pathway' : k.ref.level;
-    const list = groups.get(group) ?? [];
-    list.push(`<option value="${i}">${partName(k.ref).replace(/&/g, '&amp;').replace(/</g, '&lt;')}</option>`);
-    groups.set(group, list);
+  listed.forEach((l, i) => {
+    const list = groups.get(l.group) ?? [];
+    list.push(`<option value="${i}">${l.label.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</option>`);
+    groups.set(l.group, list);
   });
   pick.innerHTML = `<option value="">Name a part…</option>${[...groups].map(([g, o]) => `<optgroup label="${g}">${o.join('')}</optgroup>`).join('')}`;
   pick.addEventListener('change', () => {
-    const k = brain.pickables[Number(pick.value)];
-    if (pick.value === '' || !k) {
+    const l = listed[Number(pick.value)];
+    if (pick.value === '' || !l) {
       showPart(null);
       return;
     }
-    showPart(k.ref);
-    if (currentStation !== 'brain' && currentStation !== 'head' && currentStation !== 'vision') {
-      go(k.ref.kind === 'vision' ? 'vision' : OUTSIDE_BRAINSTEM.includes(k.ref.compartment) ? 'head' : 'brain');
+    const ref: PartRef = l.ref.kind === 'cord' ? { ...l.ref, k: sliceLevel() } : l.ref;
+    showPart(ref);
+    // Fly to where the part can be seen, unless the camera is already there.
+    const atBrain = currentStation === 'brain' || currentStation === 'head' || currentStation === 'vision';
+    if (ref.kind === 'vision' && !atBrain) go('vision');
+    else if (ref.kind === 'organ' && !atBrain) go('head');
+    else if (ref.kind === 'brain' && !atBrain) go(OUTSIDE_BRAINSTEM.includes(ref.compartment) ? 'head' : 'brain');
+    else if (ref.kind === 'plexus') {
+      armSide = ref.side;
+      go(limbStationFor(ref.site));
+    } else if (ref.kind === 'cord' && view.radius > 12) go('axial');
+    else if (ref.kind === 'root') {
+      state.followSlice = false;
+      setSlice(ref.k);
+      go('axial');
     }
   });
   $('#part-card-close').addEventListener('click', () => showPart(null));

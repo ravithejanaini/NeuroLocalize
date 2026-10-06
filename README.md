@@ -53,6 +53,7 @@ teaching from a phone.
 | P38 | The visual pathway on the stage: twenty fibres from the two retinas to the occipital cortex, crossing at the chiasm as the model's own rule says, with pulses that stop at the lesion, a mark on every part, and a Vision station to see them from |
 | P39 | Naming the parts: tap any mark above the cord, or choose it by name, to see what the model reports when that part alone is lost, the places that take it, and the model's own sourced statements about the routes through it |
 | P40 | The sympathetic pathway on the stage: the three neurones of a Horner syndrome as one strand — brainstem, down the cord to the ciliospinal centre, out by T1, up the chain and the carotid to the eye — with pulses that stop at the neurone the lesion cuts, and a Sympathetic station |
+| P41 | Finishing P37 to P40: the parts of the cord, the roots, the plexus and nerves and the end organs can be named like the brain; findings on a card read as sentences; the stations and the long views fit a phone |
 
 ## How accuracy is enforced
 

@@ -79,7 +79,7 @@ button,input{font:inherit;color:inherit}
 .pc-note{font-size:10.5px;color:var(--stage-dim);margin-top:10px!important;font-style:italic}
 #part-card-close{position:absolute;top:6px;right:8px;background:none;border:0;color:var(--stage-text);font-size:18px;line-height:1;cursor:pointer;padding:4px 6px}
 body[data-present="true"] .part-pick,body[data-present="true"] .part-card{display:none}
-@media (max-width:760px){.part-pick{top:auto;bottom:64px;left:8px}.part-card{left:8px;right:8px;bottom:8px;width:auto;max-height:55%}}
+@media (max-width:860px){.part-pick{top:58px;left:8px}.part-pick select{max-width:200px;padding:8px}.part-card{left:8px;right:8px;bottom:8px;width:auto;max-height:48%}}
 .lbl-field-l{color:var(--dc-glow);font-style:italic}
 .lbl-field-r{color:var(--stt-glow);font-style:italic}
 .lbl-homunculus{color:var(--cst-glow);opacity:.85}
@@ -377,8 +377,10 @@ body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-
   .btn{min-height:44px}
   .app{grid-template-columns:1fr;grid-template-rows:minmax(0,46fr) minmax(0,54fr)}
   .legend,.hint,.caveats{display:none}
-  .stations{top:8px;left:8px;right:8px}
-  .stations button{flex:1 1 18%;padding:9px 2px;min-height:40px;font-size:10px}
+  /* P41: ten stations are one row that scrolls sideways, not two that cover the stage. */
+  .stations{top:8px;left:8px;right:8px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .stations::-webkit-scrollbar{display:none}
+  .stations button{flex:0 0 auto;padding:9px 12px;min-height:40px;white-space:nowrap}
   .panel{border-left:0;border-top:1px solid var(--rule);overflow-y:auto;display:flex;flex-direction:column}
   .panel > *{flex-shrink:0}
   .panel > .sec,.panel > .foot{display:none}

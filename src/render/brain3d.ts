@@ -9,7 +9,7 @@ import { allParts, cranialCourses, partPoint, targetPoint, visionFibres, visualP
 import type { Kb, RenderKb } from '../kb/types.ts';
 import { BODY_REGIONS, CRANIAL_TARGETS, SIDES, VISUAL_PARTS, type BodyRegion, type BrainLevel, type CranialTarget, type Side, type VisualPart } from '../kb/vocab.ts';
 import { sympatheticCourse, type SympatheticCourse } from '../geometry/sympathetic.ts';
-import { VISUAL_WORD, type PartRef } from './describe.ts';
+import { TARGET_WORD, VISUAL_WORD, type PartRef } from './describe.ts';
 import { basic, glass, lit, tint } from './materials.ts';
 import type { Label, Palette } from './scene.ts';
 
@@ -27,30 +27,8 @@ export type BrainScene = {
   setSympathetic(diesAt: Readonly<Record<Side, number>>): void;
   /** P39: every mark that can be named, with what it stands for and where it is. */
   readonly pickables: readonly { readonly ref: PartRef; readonly at: THREE.Vector3 }[];
-  /** P39: rings the chosen part; null clears it. */
-  select(ref: PartRef | null): void;
-};
-
-/** P39: whether two references name the same drawn mark. */
-export const sameRef = (a: PartRef, b: PartRef): boolean =>
-  a.kind === 'vision'
-    ? b.kind === 'vision' && a.part === b.part && a.side === b.side
-    : b.kind === 'brain' && a.level === b.level && a.compartment === b.compartment && a.side === b.side && a.region === b.region;
-
-/** P37: what each end organ is called on the stage. */
-const TARGET_WORD: Record<CranialTarget, string> = {
-  eye: 'eye',
-  lacrimal: 'tear gland',
-  forehead: 'forehead · V1',
-  cheek: 'cheek · V2',
-  jaw_skin: 'jaw · V3',
-  jaw_muscle: 'jaw muscles',
-  ear: 'ear',
-  tongue: 'tongue',
-  tongue_front: 'taste, front',
-  tongue_back: 'tongue, back',
-  palate: 'palate',
-  shoulder: 'shoulder',
+  /** P39: rings the chosen part, wherever in the scene it is; null clears it. */
+  selectAt(at: { readonly x: number; readonly y: number; readonly z: number } | null, radius?: number): void;
 };
 
 /** P37: the short name each course carries on the stage. */
@@ -332,6 +310,13 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
       at: m.mesh.position,
     })),
     ...visual.map((m) => ({ ref: { kind: 'vision' as const, part: m.part, side: m.side }, at: m.mesh.position })),
+    // P41: the end organs too.
+    ...SIDES.flatMap((side) =>
+      CRANIAL_TARGETS.flatMap((target) => {
+        const mesh = organs.get(`${side}|${target}`);
+        return mesh ? [{ ref: { kind: 'organ' as const, target, side }, at: mesh.position }] : [];
+      }),
+    ),
   ];
   const ring = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.018, 8, 40), basic(palette.cord, 0.95));
   ring.visible = false;
@@ -354,10 +339,12 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
         }
       }
     },
-    select(ref) {
-      const hit = ref ? pickables.find((p) => sameRef(p.ref, ref)) : undefined;
-      ring.visible = hit !== undefined;
-      if (hit) ring.position.copy(hit.at);
+    selectAt(at, radius = 1) {
+      ring.visible = at !== null;
+      if (at) {
+        ring.position.set(at.x, at.y, at.z);
+        ring.scale.setScalar(radius);
+      }
     },
     setVision(vmap) {
       for (const m of visual) {
