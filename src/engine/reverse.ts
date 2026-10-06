@@ -687,7 +687,7 @@ function limbCuts(kb: Kb, pmap: PlexusMap, side: Side, supplies: readonly Supply
 
 const rootsOf = (span: Span | null | undefined): Segment[] => (span ? segsOf(span) : []);
 
-const PART_NAME: Record<BrainCompartment, string> = {
+export const PART_NAME: Record<BrainCompartment, string> = {
   motor_cortex: 'motor cortex',
   sensory_cortex: 'sensory cortex',
   capsule_genu: 'genu of the internal capsule',

@@ -2381,3 +2381,26 @@ colours; labels behind the occipital poles say which is which.
 
 **D200 — No mutation run.** The engine change is an equivalent rewrite and the knowledge base
 gained only a layout row that no finding reads; this is argued, not measured.
+
+## P39 — Naming and explaining the parts
+
+`docs/P39-analysis.md`. No new source and no new finding.
+
+### Decisions
+
+**D201 — A card states nothing of its own.** `describePart()` gives a part's name, the claims of
+the rows whose routes pass through it with their tiers and sources, the model's places that take
+it, and the engine's findings for that part lost alone. A part with no finding says so.
+
+**D202 — Findings are the examination's slots that change.** The engine runs once with no lesion
+and once with the part lost; every slot whose prediction differs is listed under the
+examination's own label. Three or more of one kind, side and value are one line with a count.
+
+**D203 — Tap, or choose by name.** A tap that does not drag takes the nearest mark within sixteen
+pixels on the screen; a list of every part, grouped by level, does the same from the keyboard and
+flies to the station that shows it. The chosen mark is ringed.
+
+**D204 — The part names are the explanation's.** `PART_NAME` in `engine/reverse.ts` is exported
+and reused, so a part is called the same thing on the card and in the working.
+
+**D205 — No mutation run.** Nothing the engine reads changed.

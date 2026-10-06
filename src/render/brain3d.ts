@@ -8,6 +8,7 @@ import type { VisionMap } from '../engine/vision.ts';
 import { allParts, cranialCourses, partPoint, targetPoint, visionFibres, visualPartPoint } from '../geometry/brain.ts';
 import type { Kb, RenderKb } from '../kb/types.ts';
 import { BODY_REGIONS, CRANIAL_TARGETS, SIDES, VISUAL_PARTS, type BodyRegion, type BrainLevel, type CranialTarget, type Side, type VisualPart } from '../kb/vocab.ts';
+import { VISUAL_WORD, type PartRef } from './describe.ts';
 import { basic, glass, lit, tint } from './materials.ts';
 import type { Label, Palette } from './scene.ts';
 
@@ -21,22 +22,17 @@ export type BrainScene = {
   setFindings(f: Findings | null): void;
   /** P38: colours each part of the visual pathway the lesion takes. */
   setVision(vmap: VisionMap): void;
+  /** P39: every mark that can be named, with what it stands for and where it is. */
+  readonly pickables: readonly { readonly ref: PartRef; readonly at: THREE.Vector3 }[];
+  /** P39: rings the chosen part; null clears it. */
+  select(ref: PartRef | null): void;
 };
 
-/** P38: what each part of the visual pathway is called on the stage. */
-const VISUAL_WORD: Record<VisualPart, string> = {
-  optic_nerve: 'optic nerve',
-  chiasm: 'chiasm',
-  optic_tract: 'optic tract',
-  lgn: 'lateral geniculate',
-  lgn_crest: 'LGN crest',
-  lgn_horns: 'LGN horns',
-  meyer_loop: 'Meyer loop',
-  parietal_radiation: 'parietal radiation',
-  calcarine_lower: 'calcarine, lower bank',
-  calcarine_upper: 'calcarine, upper bank',
-  occipital_pole: 'occipital pole',
-};
+/** P39: whether two references name the same drawn mark. */
+export const sameRef = (a: PartRef, b: PartRef): boolean =>
+  a.kind === 'vision'
+    ? b.kind === 'vision' && a.part === b.part && a.side === b.side
+    : b.kind === 'brain' && a.level === b.level && a.compartment === b.compartment && a.side === b.side && a.region === b.region;
 
 /** P37: what each end organ is called on the stage. */
 const TARGET_WORD: Record<CranialTarget, string> = {
@@ -275,9 +271,35 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
     label(side === 'R' ? 'left half of space' : 'right half of space', new THREE.Vector3(pole.x + (side === 'L' ? -0.5 : 0.5), pole.y + 0.1, pole.z + 0.6), `lbl lbl-brain ${side === 'R' ? 'lbl-field-l' : 'lbl-field-r'}`, true);
   }
 
+  // P39: every mark can be named. A part of the two strips carries its body region; the rest
+  // stand for the whole part.
+  const pickables: { ref: PartRef; at: THREE.Vector3 }[] = [
+    ...marks.map((m) => ({
+      ref: {
+        kind: 'brain' as const,
+        level: m.level,
+        compartment: m.compartment,
+        side: m.side,
+        ...(m.level === 'cortex' && (m.compartment === 'motor_cortex' || m.compartment === 'sensory_cortex') ? { region: m.region } : {}),
+      },
+      at: m.mesh.position,
+    })),
+    ...visual.map((m) => ({ ref: { kind: 'vision' as const, part: m.part, side: m.side }, at: m.mesh.position })),
+  ];
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.018, 8, 40), basic(palette.cord, 0.95));
+  ring.visible = false;
+  ring.onBeforeRender = (_r, _s, camera) => ring.quaternion.copy(camera.quaternion);
+  root.add(ring);
+
   return {
     root,
     labels,
+    pickables,
+    select(ref) {
+      const hit = ref ? pickables.find((p) => sameRef(p.ref, ref)) : undefined;
+      ring.visible = hit !== undefined;
+      if (hit) ring.position.copy(hit.at);
+    },
     setVision(vmap) {
       for (const m of visual) {
         // A midline part is one mark for both sides.

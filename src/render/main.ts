@@ -8,6 +8,7 @@ import { territoryRegions } from '../engine/hypotheses.ts';
 import { mapPlexus } from '../engine/limb.ts';
 import { hypotheses, type Hypothesis } from '../engine/hypotheses.ts';
 import { mapVision, placeRegions } from '../engine/vision.ts';
+import { describePart, partCardHtml, partName, type PartRef } from './describe.ts';
 import {
   explain,
   isPrepared,
@@ -240,7 +241,38 @@ function placeCamera(): void {
 const pointers = new Map<number, { x: number; y: number }>();
 let pinch = 0;
 const canvas = renderer.domElement;
+// P39: a tap that does not drag names the part under it.
+let tapStart: { x: number; y: number; at: number } | null = null;
+const pickAt = (clientX: number, clientY: number): PartRef | null => {
+  const nearBrain = currentStation === 'brain' || currentStation === 'head' || currentStation === 'vision' || (view.y > 0 && view.radius < 34);
+  if (!nearBrain) return null;
+  const box = canvas.getBoundingClientRect();
+  const p = new THREE.Vector3();
+  let best: PartRef | null = null;
+  let bestD = 16;
+  for (const k of brain.pickables) {
+    p.copy(k.at).project(camera);
+    if (p.z >= 1) continue;
+    const d = Math.hypot(((p.x + 1) / 2) * box.width + box.left - clientX, ((1 - p.y) / 2) * box.height + box.top - clientY);
+    if (d < bestD) {
+      bestD = d;
+      best = k.ref;
+    }
+  }
+  return best;
+};
+let chosenPart: PartRef | null = null;
+function showPart(ref: PartRef | null): void {
+  chosenPart = ref;
+  brain.select(ref);
+  const card = $('#part-card');
+  card.hidden = ref === null;
+  if (ref) $('#part-card-body').innerHTML = partCardHtml(describePart(RENDER, ref, state.timepoint));
+  const pick = $<HTMLSelectElement>('#part-pick');
+  pick.value = ref ? String(brain.pickables.findIndex((k) => k.ref === ref)) : '';
+}
 canvas.addEventListener('pointerdown', (e) => {
+  tapStart = pointers.size === 0 ? { x: e.clientX, y: e.clientY, at: performance.now() } : null;
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
   canvas.setPointerCapture(e.pointerId);
   tween = null;
@@ -251,7 +283,11 @@ canvas.addEventListener('pointerdown', (e) => {
 });
 canvas.addEventListener('pointermove', (e) => {
   const prev = pointers.get(e.pointerId);
-  if (!prev) return;
+  if (!prev) {
+    // P39: a mouse over a part that can be named shows it.
+    if (e.pointerType === 'mouse') canvas.style.cursor = pickAt(e.clientX, e.clientY) ? 'pointer' : '';
+    return;
+  }
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
   if (pointers.size === 2) {
     const [a, b] = [...pointers.values()];
@@ -273,6 +309,13 @@ const release = (e: PointerEvent): void => {
   pointers.delete(e.pointerId);
   if (pointers.size < 2) pinch = 0;
 };
+canvas.addEventListener('pointerup', (e) => {
+  const tap = tapStart;
+  tapStart = null;
+  if (!tap || Math.hypot(e.clientX - tap.x, e.clientY - tap.y) > 6 || performance.now() - tap.at > 600) return;
+  const ref = pickAt(e.clientX, e.clientY);
+  if (ref) showPart(ref);
+});
 canvas.addEventListener('pointerup', release);
 canvas.addEventListener('pointercancel', release);
 canvas.addEventListener(
@@ -283,6 +326,31 @@ canvas.addEventListener(
   },
   { passive: false },
 );
+
+// P39: the same parts by name, for the keyboard and for parts too small to tap.
+{
+  const pick = $<HTMLSelectElement>('#part-pick');
+  const groups = new Map<string, string[]>();
+  brain.pickables.forEach((k, i) => {
+    const group = k.ref.kind === 'vision' ? 'visual pathway' : k.ref.level;
+    const list = groups.get(group) ?? [];
+    list.push(`<option value="${i}">${partName(k.ref).replace(/&/g, '&amp;').replace(/</g, '&lt;')}</option>`);
+    groups.set(group, list);
+  });
+  pick.innerHTML = `<option value="">Name a part…</option>${[...groups].map(([g, o]) => `<optgroup label="${g}">${o.join('')}</optgroup>`).join('')}`;
+  pick.addEventListener('change', () => {
+    const k = brain.pickables[Number(pick.value)];
+    if (pick.value === '' || !k) {
+      showPart(null);
+      return;
+    }
+    showPart(k.ref);
+    if (currentStation !== 'brain' && currentStation !== 'head' && currentStation !== 'vision') {
+      go(k.ref.kind === 'vision' ? 'vision' : OUTSIDE_BRAINSTEM.includes(k.ref.compartment) ? 'head' : 'brain');
+    }
+  });
+  $('#part-card-close').addEventListener('click', () => showPart(null));
+}
 
 // ── drawing a lesion, whichever mode chose it ────────────────────────────
 type Shown = { regions: readonly AnyRegion[]; shape: Shape | null; top: number; bottom: number };
@@ -774,6 +842,7 @@ timeInputs.innerHTML = TIMEPOINTS.map(
 ).join('');
 timeInputs.addEventListener('change', (e) => {
   state.timepoint = (e.target as HTMLInputElement).value as Timepoint;
+  if (chosenPart) showPart(chosenPart);
   apply();
 });
 
