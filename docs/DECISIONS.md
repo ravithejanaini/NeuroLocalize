@@ -2522,3 +2522,48 @@ near the old direction as the new strand allows, and glides onto it.
 weakens it, as the walk stands for neither signal in particular.
 
 **D234 — No mutation run.** Nothing the engine reads changed.
+
+## P44 — An inspection, and the corrections it called for
+
+`docs/P44-analysis.md`. No new source and no new finding.
+
+### Decisions
+
+**D235 — Names do not overlap.** `declutter()` is greedy: lower rank first, then the name already
+shown, then the order given. Ranks: what the station is about, then the ruler and the levels, then
+nerves, then the limbs, then the body regions and landmarks. A lesion's own segments rank first.
+
+**D236 — A station about one pathway keeps few names.** At Vision and Sympathetic the landmarks
+and body regions are put away; looking down the cord or from the side, the limbs' names are.
+
+**D237 — The lesion is not the corticospinal tract's colour.** `--lesion` is now #F0559E. It was
+#E8674B, the value of `--cst-glow`, so two entries of the legend were one colour and a damaged part
+of the brain could not be told from the tract beside it.
+
+**D238 — The Side station is the cord alone.** The limbs hang between the eye and the cord from
+there; they and their pulses are hidden at that station and nowhere else.
+
+**D239 — A step across says what it is.** `relation()` gives one of four: the two walks pass the
+same named part; they pass different parts that one named place of the model takes; one branches
+from the other; or they are only drawn near. Truer relations are offered first, and nearness alone
+is styled apart. Of 1,126 offers sampled across the walks, 504 were nearness alone.
+
+**D240 — A walk passes more than it stops at.** `Walk.passes` lists every part a long tract or the
+sympathetic strand runs through, so that two tracts in the same column are known to share it at
+every segment and not only where one of them happens to stop.
+
+**D241 — The controls flow.** The top of the stage and the walk's panel are laid out as rows, not
+by fixed offsets. The inspection found three collisions, each from a row that grew.
+
+**D242 — Hover names.** The name of the part under the mouse is shown beside it.
+
+**D243 — The facial nerve's trunk is drawn and walkable.** `faceMotorPath()` had carried pulses
+since P5. A test holds the walk to the engine's face weakness in every frozen case.
+
+**D244 — On a walk** pulses are drawn at a third of their size, a pinch moves along the nerve, the
+scrubber follows unless it is being dragged, and a change of mode ends the walk.
+
+**D245 — Text passes 4.5 to 1.** `--stage-dim` #7E8797; `--ink3` #5F6775 light, #8690A0 dark.
+
+**D246 — No mutation run.** Nothing the engine reads changed. The last full run was at P35; a run
+is the tenth recommendation of the inspection.

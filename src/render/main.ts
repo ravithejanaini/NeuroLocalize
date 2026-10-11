@@ -14,7 +14,8 @@ import { place, radiusAt } from '../geometry/paths.ts';
 import { discAt } from '../geometry/section.ts';
 import { describePart, partCardHtml, partName, refKey, type PartRef } from './describe.ts';
 import { buildWalkView } from './walk-view.ts';
-import { allWalks, crossings, lesionAt, nearestOn, WALK_GROUPS, type Crossing, type Walk, type WalkLesion } from './walks.ts';
+import { declutter, type LabelBox } from './declutter.ts';
+import { allWalks, lesionAt, nearestOn, offers, relationWords, WALK_GROUPS, type Offer, type Walk, type WalkLesion } from './walks.ts';
 import {
   explain,
   isPrepared,
@@ -166,6 +167,30 @@ scene.add(limb.root);
 const brain = buildBrain(KB, RENDER, palette, labelLayer);
 scene.add(brain.root);
 const allLabels = [...anatomy.labels, ...limb.labels, ...brain.labels];
+// P44: each name's box, measured once, and how much it matters when two would overlap.
+type Measured = { w: number; h: number; dx: number; dy: number; rank: number };
+const labelBox = new Map<HTMLElement, Measured>();
+const labelShown = new Map<HTMLElement, boolean>();
+const rankOf = (l: (typeof allLabels)[number]): number => {
+  const c = l.el.className;
+  if (l.only) return 0;
+  if (c.includes('lbl-seg') || c.includes('lbl-vert')) return 1;
+  if (c.includes('lbl-homunculus')) return 4;
+  if (c.includes('lbl-land')) return 5;
+  if (c.includes('lbl-nerve')) return 2;
+  if (c.includes('lbl-limb')) return 3;
+  return 1;
+};
+function measureLabels(): void {
+  for (const l of allLabels) labelBox.set(l.el, { w: l.el.offsetWidth, h: l.el.offsetHeight, dx: l.el.offsetLeft, dy: l.el.offsetTop, rank: rankOf(l) });
+}
+measureLabels();
+void document.fonts?.ready.then(measureLabels);
+// Until the first frame places them, no name is shown: unplaced, they would all sit in one corner.
+for (const l of allLabels) {
+  l.el.style.visibility = 'hidden';
+  labelShown.set(l.el, false);
+}
 /** The side the arm station looks at. */
 let armSide: Side = 'L';
 /** Whether the limb in view is the leg (P7). */
@@ -265,9 +290,10 @@ let walkLesion: WalkLesion = { map: mapLesion([], KB), bmap: mapBrain(KB, []), p
 let walkStop = -1;
 let walkLabels: HTMLElement[] = [];
 // P43: the walks within a step of where the walker stands, and their signposts on the stage.
-let walkCrossings: Crossing[] = [];
+let walkCrossings: Offer[] = [];
 let crossingsAt = 0;
 let crossLabels: HTMLElement[] = [];
+let scrubbing = false;
 const esc = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 /** The walk whose drawn line passes nearest a point of the screen, within reach of a finger. */
@@ -360,12 +386,17 @@ function startWalk(w: Walk, fromStop = 0, landing?: { readonly at: { readonly x:
   $('#walk-route').innerHTML = w.stops.map((s, i) => `<li><button type="button" data-stop="${i}"><b>${i + 1}</b> ${esc(s.label)}</button></li>`).join('');
   $<HTMLSelectElement>('#walk-pick').value = w.id;
   walkView.start(w, camera, fromStop, reduced, forward !== undefined);
+  pulses.setScale(0.32);
+  hideHover();
   if (landing) walkView.land(landing.at, forward);
   walkCrossings = [];
   crossingsAt = 0;
   $('#walk-switch').innerHTML = '';
   $<HTMLButtonElement>('#walk-play').disabled = reduced;
-  for (const l of allLabels) l.el.style.visibility = 'hidden';
+  for (const l of allLabels) {
+    l.el.style.visibility = 'hidden';
+    labelShown.set(l.el, false);
+  }
   walkLabels = w.stops.map((s, i) => {
     const el = document.createElement('span');
     el.className = 'lbl lbl-walk';
@@ -390,6 +421,7 @@ function endWalk(): void {
   walking = null;
   walkStop = -1;
   walkView.stop(camera);
+  pulses.setScale(1);
   for (const el of [...walkLabels, ...crossLabels]) el.remove();
   walkLabels = [];
   crossLabels = [];
@@ -417,15 +449,26 @@ function refreshCrossings(now: number): void {
   const w = walking;
   if (!w || now - crossingsAt < 220) return;
   crossingsAt = now;
-  const found = crossings(walks, w, walkView.position());
-  const same = found.length === walkCrossings.length && found.every((c, i) => c.walk.id === walkCrossings[i]?.walk.id);
+  const here = walkView.position();
+  const found = offers(KB, walks, w, { x: here.x, y: here.y, z: here.z });
+  const key = (c: Offer | undefined): string => (c ? `${c.walk.id}|${relationWords(c.relation)}` : '');
+  const same = found.length === walkCrossings.length && found.every((c, i) => key(c) === key(walkCrossings[i]));
   walkCrossings = found;
   if (same) return;
+  // P44: each offer says what it is — a part both walks pass, a place that takes both, a branch,
+  // or only nearness in the drawing, which is styled apart so it is not mistaken for anatomy.
   $('#walk-switch').innerHTML = found.length
-    ? `<span class="walk-switch-h">Step across to</span>${found.map((c, i) => `<button type="button" data-cross="${i}"><b>${i + 1}</b> ${esc(c.walk.name)}</button>`).join('')}`
+    ? `<span class="walk-switch-h">Step across to</span>${found
+        .map(
+          (c, i) =>
+            `<button type="button" data-cross="${i}" data-rel="${c.relation.kind}"><span><b>${i + 1}</b> ${esc(c.walk.name)}</span><i>${esc(relationWords(c.relation))}</i></button>`,
+        )
+        .join('')}`
     : '';
   crossLabels.forEach((el, i) => {
-    el.textContent = found[i] ? `⇄ ${i + 1} · ${found[i].walk.name}` : '';
+    const c = found[i];
+    el.textContent = c ? `⇄ ${i + 1} · ${c.walk.name}${c.relation.kind === 'near' ? ' (drawn nearby)' : ''}` : '';
+    el.dataset.rel = c?.relation.kind ?? '';
   });
 }
 
@@ -433,7 +476,8 @@ function refreshCrossings(now: number): void {
 function walkFrame(f: { stop: number; progress: number; playing: boolean; facing: 1 | -1 }): void {
   if (f.stop !== walkStop) renderWalkStop(f.stop);
   const scrub = $<HTMLInputElement>('#walk-scrub');
-  if (document.activeElement !== scrub) scrub.value = String(Math.round(f.progress * 1000));
+  // P44: the scrubber follows the walker unless it is being dragged — not merely because it was last touched.
+  if (!scrubbing) scrub.value = String(Math.round(f.progress * 1000));
   if ($('#walk-play').getAttribute('aria-pressed') !== String(f.playing)) setPlayingLabel(f.playing);
   const w = viewport.clientWidth;
   const h = viewport.clientHeight;
@@ -476,6 +520,22 @@ function walkFrame(f: { stop: number; progress: number; playing: boolean; facing
 const pointers = new Map<number, { x: number; y: number }>();
 let pinch = 0;
 const canvas = renderer.domElement;
+// P44: the name of the part under the mouse, beside it.
+const hoverEl = $('#hover-name');
+function showHover(text: string, clientX: number, clientY: number): void {
+  const box = viewport.getBoundingClientRect();
+  hoverEl.textContent = text;
+  hoverEl.hidden = false;
+  // Keep it on the stage: flip to the left of the pointer near the right edge.
+  const x = clientX - box.left;
+  const flip = x > box.width - 220;
+  hoverEl.style.transform = `translate(${flip ? x - 12 : x + 14}px, ${clientY - box.top + 14}px)${flip ? ' translateX(-100%)' : ''}`;
+}
+function hideHover(): void {
+  hoverEl.hidden = true;
+}
+canvas.addEventListener('pointerleave', hideHover);
+
 // P39: a tap that does not drag names the part under it. P41: beyond the brain — the roots, the
 // places of the plexus and nerves, and the parts of the cord at the slice.
 let tapStart: { x: number; y: number; at: number } | null = null;
@@ -518,7 +578,7 @@ const pickAt = (clientX: number, clientY: number): PartRef | null => {
   const down = view.phi < 0.5 && !nearBrain;
   const candidates: Pickable[] = [
     ...(nearBrain ? brain.pickables : []),
-    ...(nearArm && !down ? plexusPickables : []),
+    ...(nearArm && !down && currentStation !== 'side' ? plexusPickables : []),
     ...(view.radius < 30 && !nearBrain && !down ? rootPickables : []),
     // The parts of the cord are a few pixels apart until the camera is close.
     ...(view.radius < 12 && !nearBrain ? cordPickables() : []),
@@ -588,16 +648,24 @@ canvas.addEventListener('pointerdown', (e) => {
 canvas.addEventListener('pointermove', (e) => {
   const prev = pointers.get(e.pointerId);
   if (!prev) {
-    // P39: a mouse over a part that can be named shows it.
-    if (e.pointerType === 'mouse' && !walking) canvas.style.cursor = pickAt(e.clientX, e.clientY) ? 'pointer' : '';
+    // P39: a mouse over a part that can be named shows it. P44: and says its name.
+    if (e.pointerType === 'mouse' && !walking) {
+      const ref = pickAt(e.clientX, e.clientY);
+      canvas.style.cursor = ref ? 'pointer' : '';
+      if (ref) showHover(partName(ref), e.clientX, e.clientY);
+      else hideHover();
+    }
     return;
   }
+  hideHover();
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
   if (pointers.size === 2) {
     const [a, b] = [...pointers.values()];
     if (!a || !b) return;
     const d = Math.hypot(a.x - b.x, a.y - b.y);
-    if (pinch > 0) view.radius = Math.min(60, Math.max(2.5, (view.radius * pinch) / d));
+    // P44: on a walk a pinch moves along the nerve — apart is onward — and leaves the orbit alone.
+    if (pinch > 0 && walking) walkView.nudge((d - pinch) * 0.0015);
+    else if (pinch > 0) view.radius = Math.min(60, Math.max(2.5, (view.radius * pinch) / d));
     pinch = d;
     return;
   }
@@ -743,7 +811,16 @@ canvas.addEventListener(
   $('#walk-next').addEventListener('click', () => walkView.step(1));
   $('#walk-play').addEventListener('click', () => walkView.setPlaying($('#walk-play').getAttribute('aria-pressed') !== 'true'));
   $('#walk-speed').addEventListener('change', (e) => walkView.setSpeed(Number((e.target as HTMLSelectElement).value) || 1));
-  $('#walk-scrub').addEventListener('input', (e) => walkView.setProgress(Number((e.target as HTMLInputElement).value) / 1000));
+  const scrubEl = $<HTMLInputElement>('#walk-scrub');
+  scrubEl.addEventListener('input', (e) => walkView.setProgress(Number((e.target as HTMLInputElement).value) / 1000));
+  scrubEl.addEventListener('pointerdown', () => {
+    scrubbing = true;
+  });
+  for (const ev of ['pointerup', 'pointercancel', 'change', 'blur'] as const) {
+    scrubEl.addEventListener(ev, () => {
+      scrubbing = false;
+    });
+  }
   $('#walk-route').addEventListener('click', (e) => {
     const b = e.target instanceof Element ? e.target.closest<HTMLButtonElement>('[data-stop]') : null;
     if (b) {
@@ -1135,6 +1212,8 @@ function apply(): void {
 }
 
 function setMode(mode: Mode): void {
+  // P44: a walk belongs to the mode it began in.
+  endWalk();
   state.mode = mode;
   document.body.dataset.mode = mode;
   document.querySelectorAll<HTMLElement>('[data-mode]').forEach((el) => {
@@ -1498,19 +1577,48 @@ function placeLabels(): void {
   const nearArm = currentStation === 'arm' || currentStation === 'leg' || view.radius < 20;
   const nearBrain = currentStation === 'brain' || currentStation === 'head' || currentStation === 'vision' || (view.y > 0 && view.radius < 34);
   const close = nearBrain && view.radius < 21;
+  // P44: a station that is about one pathway keeps the names beside it few; looking down the
+  // cord or from the side, the limbs' names would lie on the cord itself.
+  const single = currentStation === 'vision' || currentStation === 'sympathetic';
+  const noLimbs = single || currentStation === 'side' || (view.phi < 0.5 && !nearBrain);
+  const candidates: { l: (typeof allLabels)[number]; x: number; y: number; m: Measured }[] = [];
   for (const l of allLabels) {
     projected.copy(l.at).project(camera);
-    const visible =
-      (!l.limb || nearArm) &&
+    const m = labelBox.get(l.el);
+    const wanted =
+      m !== undefined &&
+      (!l.limb || (nearArm && !noLimbs)) &&
       (!l.brain || nearBrain) &&
       (!l.close || close) &&
-      (l.only ? currentStation === l.only : !(l.close && (currentStation === 'vision' || currentStation === 'sympathetic'))) &&
+      (l.only ? currentStation === l.only : !(l.close && single)) &&
+      !(single && !l.only && m.rank >= 4) &&
       projected.z < 1 &&
       Math.abs(projected.x) < 1.05 &&
       Math.abs(projected.y) < 1.05;
-    l.el.style.visibility = visible ? 'visible' : 'hidden';
-    if (visible) l.el.style.transform = `translate(${((projected.x + 1) / 2) * w}px, ${((1 - projected.y) / 2) * h}px)`;
+    if (wanted && m) candidates.push({ l, x: ((projected.x + 1) / 2) * w, y: ((1 - projected.y) / 2) * h, m });
+    else if (labelShown.get(l.el) !== false) {
+      l.el.style.visibility = 'hidden';
+      labelShown.set(l.el, false);
+    }
   }
+  // No two names on top of each other: the one that matters more keeps its place (declutter.ts).
+  const boxes: LabelBox[] = candidates.map(({ l, x, y, m }) => ({
+    left: x + m.dx,
+    top: y + m.dy,
+    width: m.w,
+    height: m.h,
+    rank: l.el.classList.contains('is-hit') ? 0 : m.rank,
+    shown: labelShown.get(l.el) === true,
+  }));
+  const show = declutter(boxes);
+  candidates.forEach(({ l, x, y }, i) => {
+    const on = show[i] === true;
+    if (on) l.el.style.transform = `translate(${x}px, ${y}px)`;
+    if (labelShown.get(l.el) !== on) {
+      l.el.style.visibility = on ? 'visible' : 'hidden';
+      labelShown.set(l.el, on);
+    }
+  });
 }
 
 let last = performance.now();
@@ -1529,6 +1637,8 @@ function frame(now: number): void {
     if (t >= 1) tween = null;
   }
   if (walking) {
+    limb.root.visible = true;
+    pulses.setLimbs(true);
     // P42: the walk holds the camera; the fog closes in, so what is far is faint.
     const f = walkView.update(dt, camera);
     stage.update(4, null);
@@ -1539,6 +1649,9 @@ function frame(now: number): void {
     return;
   }
   placeCamera();
+  // P44: from the side the arms and legs hang between the eye and the cord; that station is the cord alone.
+  limb.root.visible = currentStation !== 'side';
+  pulses.setLimbs(limb.root.visible);
   pulses.update(dt, camera);
   renderer.render(scene, camera);
   placeLabels();

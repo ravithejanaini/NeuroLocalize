@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import type { BrainMap } from '../engine/brain.ts';
 import type { Findings } from '../engine/forward.ts';
 import type { VisionMap } from '../engine/vision.ts';
-import { allParts, cranialCourses, partPoint, targetPoint, visionFibres, visualPartPoint } from '../geometry/brain.ts';
+import { allParts, cranialCourses, faceMotorPath, partPoint, targetPoint, visionFibres, visualPartPoint } from '../geometry/brain.ts';
 import type { Kb, RenderKb } from '../kb/types.ts';
 import { BODY_REGIONS, CRANIAL_TARGETS, SIDES, VISUAL_PARTS, type BodyRegion, type BrainLevel, type CranialTarget, type Side, type VisualPart } from '../kb/vocab.ts';
 import { sympatheticCourse, type SympatheticCourse } from '../geometry/sympathetic.ts';
@@ -214,6 +214,14 @@ export function buildBrain(kb: Kb, render: RenderKb, palette: Palette, layer: HT
         if (at) label(COURSE_WORD[c.id] ?? c.id, new THREE.Vector3(at.x - 0.18, at.y + 0.12, at.z), 'lbl lbl-brain lbl-nerve', true);
       }
     }
+  }
+  // P44: the facial nerve's own trunk to the face, which the fifteen courses above leave out.
+  for (const side of SIDES) {
+    const p = faceMotorPath(kb, render, side);
+    if (p.points.length < 2) continue;
+    root.add(tube(p.points.map(v3), 0.016, palette.nerve, 1));
+    const at = p.points[p.points.length - 2];
+    if (side === 'L' && at) label('VII', new THREE.Vector3(at.x - 0.18, at.y + 0.12, at.z), 'lbl lbl-brain lbl-nerve', true);
   }
   const organs = new Map<string, THREE.Mesh>();
   for (const side of SIDES) {

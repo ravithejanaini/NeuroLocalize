@@ -11,13 +11,13 @@
 <style>
 :root{
   --ground:#EFF0F3; --surface:#FAFAFC; --sunk:#E6E8ED;
-  --ink:#14181F; --ink2:#4A515E; --ink3:#79818F;
+  --ink:#14181F; --ink2:#4A515E; --ink3:#5F6775;
   --rule:#D3D7DF; --rule2:#AEB4C0;
   --dc:#2F4A9E; --stt:#A8760F; --cst:#BC3B22; --focus:#2F4A9E;
   /* The stage is a lightbox: dark in both themes, by design. */
   --stage:#0E1118; --stage-cord:#C9CFDC; --stage-rule:#5F6878; --stage-grey:#8B94A3;
-  --stage-text:#A4ACBA; --stage-dim:#6F7888;
-  --dc-glow:#7F98EA; --stt-glow:#D6A63E; --cst-glow:#E8674B; --lesion:#E8674B;
+  --stage-text:#A4ACBA; --stage-dim:#7E8797;
+  --dc-glow:#7F98EA; --stt-glow:#D6A63E; --cst-glow:#E8674B; --lesion:#F0559E;
   --nerve-glow:#E3CF8F; --nerve-post:#B9A36B; --artery:#B8565A; --autonomic:#5FC9A7;
   --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
   --f-body:"Source Serif 4",Georgia,serif;
@@ -26,14 +26,14 @@
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --ground:#121620; --surface:#171C27; --sunk:#0D111A;
-    --ink:#E9EBEF; --ink2:#A4ACBA; --ink3:#6F7888;
+    --ink:#E9EBEF; --ink2:#A4ACBA; --ink3:#8690A0;
     --rule:#262D3B; --rule2:#3F4857;
     --dc:#7F98EA; --stt:#D6A63E; --cst:#E8674B; --focus:#7F98EA;
   }
 }
 :root[data-theme="dark"]{
   --ground:#121620; --surface:#171C27; --sunk:#0D111A;
-  --ink:#E9EBEF; --ink2:#A4ACBA; --ink3:#6F7888;
+  --ink:#E9EBEF; --ink2:#A4ACBA; --ink3:#8690A0;
   --rule:#262D3B; --rule2:#3F4857;
   --dc:#7F98EA; --stt:#D6A63E; --cst:#E8674B; --focus:#7F98EA;
 }
@@ -54,18 +54,17 @@ button,input{font:inherit;color:inherit}
 .stage canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
 .stage canvas:active{cursor:grabbing}
 #labels{position:absolute;inset:0;pointer-events:none}
-.lbl{position:absolute;left:0;top:0;font-family:var(--f-mono);font-size:10px;line-height:1;margin-top:-.5em;white-space:nowrap}
+.lbl{position:absolute;left:0;top:0;font-family:var(--f-mono);font-size:11px;line-height:1;margin-top:-.5em;white-space:nowrap;text-shadow:0 0 4px var(--stage),0 0 2px var(--stage)}
 .lbl-seg{color:var(--stage-text)}
 .lbl-vert{color:var(--stage-dim);margin-left:-2.4em}
 .lbl-seg.is-hit{color:var(--lesion);font-weight:600}
-.lbl-limb{color:var(--nerve-glow);font-size:9.5px;opacity:.9}
+.lbl-limb{color:var(--nerve-glow);font-size:10.5px;opacity:.9}
 .lbl-land{color:var(--stage-dim);font-style:italic}
-.lbl-brain{color:var(--stage-text);font-size:9.5px}
+.lbl-brain{color:var(--stage-text);font-size:10.5px}
 .lbl-nerve{color:var(--nerve-glow);font-weight:600}
 .lbl-vision{color:var(--stage-text);font-weight:600}
-.lbl-symp{color:var(--autonomic);font-weight:600;font-size:10px}
+.lbl-symp{color:var(--autonomic);font-weight:600;font-size:11px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.part-pick{top:72px;left:12px}
 .part-pick{gap:6px}
 .part-pick select{background:rgba(14,17,24,.8);border:1px solid #2C3342;color:var(--stage-text);font:inherit;padding:5px 8px;max-width:240px}
 .part-card{position:absolute;right:12px;bottom:12px;width:min(360px,calc(100% - 24px));max-height:62%;overflow:auto;background:rgba(14,17,24,.94);border:1px solid #2C3342;color:var(--stage-text);padding:12px 14px 10px;font-family:var(--f-body);font-size:12.5px;line-height:1.45;z-index:3}
@@ -84,17 +83,18 @@ body[data-present="true"] .part-pick,body[data-present="true"] .part-card{displa
 .pc-walks button{background:none;border:1px solid var(--stage-text);color:var(--stage-text);font:inherit;font-size:11.5px;padding:5px 9px;cursor:pointer}
 .pc-walks button:hover{background:var(--stage-text);color:var(--stage)}
 /* P42: walking along a nerve. The panel floats over the stage; only its own parts take the pointer. */
-.walk{position:absolute;inset:0;pointer-events:none;color:var(--stage-text);font-family:var(--f-body);z-index:4}
+.walk{position:absolute;inset:0;display:flex;flex-direction:column;gap:8px;padding:12px;pointer-events:none;color:var(--stage-text);font-family:var(--f-body);z-index:4}
 .walk[hidden]{display:none}
-.walk > *{pointer-events:auto;position:absolute}
-.walk-top{top:12px;left:12px;right:12px;display:flex;gap:12px;align-items:flex-start;pointer-events:none}
+.walk > *{pointer-events:none;flex:0 0 auto}
+.walk-top{display:flex;gap:12px;align-items:flex-start}
 .walk-top > *{pointer-events:auto}
 .walk-top h2{font-size:16px;margin:0;font-weight:600;text-shadow:0 1px 6px var(--stage)}
 .walk-top p{margin:2px 0 0;font-size:12px;color:var(--stage-dim);max-width:60ch;text-shadow:0 1px 6px var(--stage)}
 .walk button,.walk select{background:rgba(14,17,24,.85);border:1px solid #2C3342;color:var(--stage-text);font-family:var(--f-mono);font-size:11px;padding:7px 11px;cursor:pointer;min-height:32px}
 .walk button:hover:not(:disabled){border-color:var(--stage-text)}
 .walk button:disabled{opacity:.4;cursor:default}
-.walk-card{right:12px;top:74px;max-height:calc(100% - 230px);width:min(350px,calc(100% - 24px));overflow:auto;background:rgba(14,17,24,.9);border:1px solid #2C3342;padding:12px 14px;font-size:12.5px;line-height:1.45}
+.walk > .walk-mid{flex:1 1 auto;min-height:0;display:flex;justify-content:flex-end;align-items:flex-start}
+.walk-card{pointer-events:auto;max-height:100%;width:min(350px,100%);overflow:auto;background:rgba(14,17,24,.9);border:1px solid #2C3342;padding:12px 14px;font-size:12.5px;line-height:1.45}
 .walk-card h3{font-size:14.5px;margin:0 0 6px;font-weight:600}
 .walk-card h4{font-family:var(--f-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--stage-dim);margin:10px 0 4px;font-weight:400}
 .walk-card ul{margin:0;padding-left:16px}
@@ -105,7 +105,7 @@ body[data-present="true"] .part-pick,body[data-present="true"] .part-card{displa
 .walk-lesion{border-left:3px solid var(--lesion);padding:4px 0 4px 8px;color:var(--stage-text)}
 .walk-lesion[data-state="beyond"],.walk-lesion[data-state="weakened"]{border-left-color:var(--stage-dim);color:var(--stage-dim)}
 .walk-note{color:var(--nerve-glow)}
-.walk-foot{left:12px;right:12px;bottom:10px;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.walk-foot{display:flex;flex-direction:column;gap:6px}
 .walk-foot > *{pointer-events:auto}
 .walk-route{display:flex;gap:4px;margin:0;padding:0 0 2px;list-style:none;overflow-x:auto;scrollbar-width:thin}
 .walk-route li{flex:0 0 auto}
@@ -122,33 +122,41 @@ body[data-present="true"] .part-pick,body[data-present="true"] .part-card{displa
 .walk-switch{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:thin;min-height:0}
 .walk-switch:empty{display:none}
 .walk-switch-h{font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--autonomic);flex:0 0 auto;margin-right:4px}
-.walk-switch button{flex:0 0 auto;border-color:var(--autonomic);font-family:var(--f-body);font-size:11.5px;white-space:nowrap}
+.walk-switch button{flex:0 0 auto;border-color:var(--autonomic);font-family:var(--f-body);font-size:11.5px;white-space:nowrap;display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;max-width:300px}
+.walk-switch button span{overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .walk-switch button b{font-family:var(--f-mono);font-weight:400;color:var(--autonomic);margin-right:4px}
 .walk-switch button:hover{background:var(--autonomic);color:var(--stage)}
 .walk-switch button:hover b{color:var(--stage)}
 .walk-roam button{touch-action:none;user-select:none}
 .walk-facing{font-family:var(--f-mono);font-size:10px;color:var(--stage-dim)}
 .lbl-cross{color:var(--autonomic);font-size:11px;font-weight:600;text-shadow:0 0 6px var(--stage),0 0 2px var(--stage)}
+.lbl-cross[data-rel="near"]{color:var(--stage-dim);font-weight:400;font-style:italic}
+.walk-switch button i{font-style:normal;font-family:var(--f-mono);font-size:10px;color:var(--stage-dim);overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.walk-switch button[data-rel="near"]{border-style:dashed;border-color:var(--stage-dim)}
+.walk-switch button[data-rel="near"] b{color:var(--stage-dim)}
+.walk-switch button:hover i{color:var(--stage)}
+.hover-name{position:absolute;left:0;top:0;z-index:5;pointer-events:none;background:rgba(14,17,24,.92);border:1px solid #2C3342;color:var(--stage-text);font-family:var(--f-body);font-size:12px;padding:3px 8px;white-space:nowrap}
+.hover-name[hidden]{display:none}
 .lbl-walk{color:var(--stage-text);font-size:11px;font-weight:600;text-shadow:0 0 6px var(--stage),0 0 2px var(--stage)}
 body[data-walk="true"] .stations,body[data-walk="true"] .hint,body[data-walk="true"] .legend,body[data-walk="true"] .part-pick,body[data-walk="true"] .part-card,body[data-walk="true"] .hud-foot{display:none}
 body[data-walk="true"] .stage canvas{cursor:move}
 @media (max-width:860px){
-  .walk-top{top:8px;left:8px;right:8px}
+  .walk{padding:8px;gap:6px}
+  .walk > .walk-mid{align-items:flex-end}
   .walk-top h2{font-size:13.5px}
   .walk-top p{display:none}
   /* On a phone the walk takes the whole screen: the instrument is put away until it ends. */
   body[data-walk="true"] .app{grid-template-rows:minmax(0,1fr)}
   body[data-walk="true"] .panel,body[data-walk="true"] .tabs{display:none}
-  .walk-card{left:8px;right:8px;top:auto;bottom:204px;width:auto;max-height:30%;padding:8px 10px}
+  .walk-card{width:100%;max-height:min(100%,34vh);padding:8px 10px}
   .walk-facing,.walk-ctl label{display:none}
   .walk-ctl{flex-wrap:nowrap}
   .walk-roam button{flex:1 1 0;min-width:0;padding:7px 2px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .walk-switch-h{display:none}
-  .walk-foot{left:8px;right:8px;bottom:6px}
   .walk-hint{display:none}
   .walk button,.walk select{min-height:40px}
 }
-@media (max-width:860px){.part-pick{top:58px;left:8px;right:8px;flex-wrap:nowrap}.part-pick label{flex:1 1 0;min-width:0}.part-pick select{width:100%;max-width:none;padding:8px}.part-card{left:8px;right:8px;bottom:8px;width:auto;max-height:48%}}
+@media (max-width:860px){.hud-top{top:8px;left:8px;right:8px}.part-pick{width:100%;flex-wrap:nowrap}.part-pick label{flex:1 1 0;min-width:0}.part-pick select{width:100%;max-width:none;padding:8px}.part-card{left:8px;right:8px;bottom:8px;width:auto;max-height:48%}}
 .lbl-field-l{color:var(--dc-glow);font-style:italic}
 .lbl-field-r{color:var(--stt-glow);font-style:italic}
 .lbl-homunculus{color:var(--cst-glow);opacity:.85}
@@ -160,11 +168,13 @@ body[data-walk="true"] .stage canvas{cursor:move}
 .crossed{font-size:13px;margin:0 0 8px;padding:6px 10px;border-left:3px solid var(--ink);background:var(--sunk)}
 
 .hud{position:absolute;display:flex;gap:6px;flex-wrap:wrap;font-family:var(--f-mono);font-size:10.5px;color:var(--stage-text)}
-.stations{top:12px;left:12px;right:12px}
+/* P44: the top controls flow in one column; nothing in it is placed by a fixed offset. */
+.hud-top{position:absolute;top:12px;left:12px;right:12px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;pointer-events:none;z-index:2}
+.hud-top > .hud{position:static;pointer-events:auto;max-width:100%}
 .stations button{background:rgba(14,17,24,.7);border:1px solid #2C3342;color:var(--stage-text);padding:5px 10px;cursor:pointer;letter-spacing:.03em}
 .stations button[aria-pressed="true"]{background:var(--stage-cord);color:var(--stage);border-color:var(--stage-cord)}
 .stations button:hover{border-color:var(--stage-text)}
-.legend{top:46px;right:12px;flex-direction:column;gap:4px;margin:0;padding:8px 10px;list-style:none;background:rgba(14,17,24,.7);border:1px solid #2C3342}
+.legend{bottom:76px;right:12px;flex-direction:column;gap:4px;margin:0;padding:8px 10px;list-style:none;background:rgba(14,17,24,.7);border:1px solid #2C3342}
 .legend li{display:flex;align-items:center;gap:8px}
 .legend i{width:16px;height:3px;border-radius:2px;display:block}
 .hud-foot{bottom:10px;left:12px;right:12px;flex-direction:column;gap:6px;pointer-events:none}
@@ -172,7 +182,7 @@ body[data-walk="true"] .stage canvas{cursor:move}
 .caveats{display:flex;flex-wrap:wrap;gap:2px 14px;color:var(--stage-dim);font-size:10px}
 .caveats span+span::before{content:"· ";color:#3A4252}
 .conv{margin:0;padding:0 0 0 16px;display:grid;gap:6px;font-size:12.5px;color:var(--ink2)}
-.hint{top:48px;left:12px;color:var(--stage-dim);font-size:10px;white-space:nowrap}
+.hint{margin:0;color:var(--stage-dim);font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;pointer-events:none}
 
 .panel{background:var(--surface);border-left:1px solid var(--rule);overflow-y:auto;min-height:0}
 .sec{padding:14px 18px 16px;border-bottom:1px solid var(--rule)}
@@ -447,7 +457,7 @@ body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-
   .app{grid-template-columns:1fr;grid-template-rows:minmax(0,46fr) minmax(0,54fr)}
   .legend,.hint,.caveats{display:none}
   /* P41: ten stations are one row that scrolls sideways, not two that cover the stage. */
-  .stations{top:8px;left:8px;right:8px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .stations{width:100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
   .stations::-webkit-scrollbar{display:none}
   .stations button{flex:0 0 auto;padding:9px 12px;min-height:40px;white-space:nowrap}
   .panel{border-left:0;border-top:1px solid var(--rule);overflow-y:auto;display:flex;flex-direction:column}
@@ -485,6 +495,7 @@ body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-
 <main class="app">
   <div class="stage" id="viewport">
     <div id="labels" aria-hidden="true"></div>
+    <div class="hud-top">
     <div class="hud stations" role="group" aria-label="Camera">
       <button type="button" data-station="whole" aria-pressed="false">Whole cord</button>
       <button type="button" data-station="lesion" aria-pressed="true">Lesion</button>
@@ -497,21 +508,25 @@ body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-
       <button type="button" data-station="vision" aria-pressed="false">Vision</button>
       <button type="button" data-station="sympathetic" aria-pressed="false">Sympathetic</button>
     </div>
-    <p class="hud hint">Drag to turn · scroll or pinch to zoom · shift-drag to move along the cord · keys 1–9 and 0 · tap a part to name it · double-click a nerve to roam along it</p>
+    <p class="hud hint" title="Shift-drag moves along the cord. Keys 1–9 and 0 choose a view; [ ] move the lesion; , . move the slice.">Drag to turn · scroll to zoom · tap a part to name it · double-click a nerve to roam along it</p>
     <div class="hud part-pick">
       <label><span class="sr-only">Name a part</span><select id="part-pick"></select></label>
       <label><span class="sr-only">Walk along a nerve or pathway</span><select id="walk-pick"></select></label>
     </div>
+    </div>
+    <span class="hover-name" id="hover-name" aria-hidden="true" hidden></span>
     <section class="walk" id="walk" aria-label="Walking along a nerve" hidden>
       <header class="walk-top">
         <button type="button" id="walk-exit">← Leave</button>
         <div><h2 id="walk-name"></h2><p id="walk-runs"></p></div>
       </header>
-      <aside class="walk-card" aria-live="polite">
-        <p class="walk-count" id="walk-count"></p>
-        <p class="walk-lesion" id="walk-lesion" hidden></p>
-        <div id="walk-body"></div>
-      </aside>
+      <div class="walk-mid">
+        <aside class="walk-card" aria-live="polite">
+          <p class="walk-count" id="walk-count"></p>
+          <p class="walk-lesion" id="walk-lesion" hidden></p>
+          <div id="walk-body"></div>
+        </aside>
+      </div>
       <footer class="walk-foot">
         <div class="walk-switch" id="walk-switch" aria-live="polite" aria-label="Nerves within a step"></div>
         <div class="walk-ctl walk-roam">

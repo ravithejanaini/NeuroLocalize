@@ -14,7 +14,8 @@ nerve ran to an eye, the face, the ear or the tongue.
 
 ## What this phase draws
 
-- **Sixteen courses a side**, one for each nerve the model reads a finding from: III, IV and VI to
+- **Fifteen courses a side** (this said sixteen until the inspection of 2026-10-12 counted them; the
+  sixteenth strand, the facial nerve's own trunk, was added in P44), one for each nerve the model reads a finding from: III, IV and VI to
   the eye; V1, V2 and V3 in from the forehead, cheek and jaw; the trigeminal motor root to the jaw
   muscles; the greater petrosal nerve to the tear gland, the nerve to stapedius to the ear and the
   chorda tympani in from the front of the tongue; VIII in from the ear; IX in from the back of the

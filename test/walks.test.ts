@@ -13,7 +13,21 @@ import { KB } from '../src/kb/kb.ts';
 import { RENDER } from '../src/kb/render.ts';
 import { ARM_NERVES, LEG_NERVES, NERVES, SEGMENTS, SIDES } from '../src/kb/vocab.ts';
 import { describePart } from '../src/render/describe.ts';
-import { allWalks, crossings, lesionAt, nearestOn, pointAlong, REACH, reachable, stopIndexAt, WALK_GROUPS, type WalkLesion } from '../src/render/walks.ts';
+import {
+  allWalks,
+  crossings,
+  lesionAt,
+  nearestOn,
+  offers,
+  pointAlong,
+  REACH,
+  reachable,
+  relationWords,
+  stopIndexAt,
+  WALK_GROUPS,
+  type Relation,
+  type WalkLesion,
+} from '../src/render/walks.ts';
 
 const WALKS = allWalks(KB, RENDER);
 const lesionOf = (regions: readonly AnyRegion[]): WalkLesion => ({
@@ -254,5 +268,101 @@ describe('the walks are one world that can be roamed (P43)', () => {
       for (const n of groups.values()) assert.ok(n <= 3);
       assert.ok(!found.some((c) => c.walk.id === w.id));
     }
+  });
+});
+
+describe('a step across says what it is (P44)', () => {
+  const end = (id: string): number => walk(id).points.length - 1;
+  const from = (id: string, pointProgress: number): Map<string, Relation> =>
+    new Map(offers(KB, WALKS, walk(id), pointAlong(walk(id), pointProgress), REACH, 99).map((o) => [o.walk.id, o.relation]));
+
+  it('names the part two walks share where they truly meet', () => {
+    // The three nerves that move the eye, and the sympathetic pathway, all end at the eye.
+    const eye = from('cranial|L|III', end('cranial|L|III'));
+    for (const id of ['cranial|L|IV', 'cranial|L|VI', 'sympathetic|L']) assert.deepEqual(eye.get(id), { kind: 'part', name: 'Left eye' }, id);
+    // The radial and axillary nerves both arise from the posterior cord.
+    assert.deepEqual(from('nerve|L|radial', 0).get('nerve|L|axillary'), { kind: 'part', name: 'Left posterior cord' });
+    // The corticospinal walk ends at the C8 root, whichever way the root is named.
+    assert.deepEqual(from('tract|L|motor', end('tract|L|motor')).get('root|L|C8'), { kind: 'part', name: 'Left C8 root' });
+    // A nerve drawn from the roots names its root.
+    assert.deepEqual(from('nerve|L|dorsal_scapular', 0).get('root|L|C5'), { kind: 'part', name: 'Left C5 root' });
+    // Fibres of one optic nerve.
+    assert.deepEqual(from('vision|L|central_left', 1).get('vision|L|central_right'), { kind: 'part', name: 'Left optic nerve' });
+  });
+
+  it('says a nerve branches where the model gives it another nerve as its origin', () => {
+    const fork = from('nerve|L|sciatic', end('nerve|L|sciatic'));
+    assert.equal(fork.get('nerve|L|tibial')?.kind, 'branch');
+    assert.equal(fork.get('nerve|L|common_fibular')?.kind, 'branch');
+    assert.equal(from('nerve|L|tibial', 0).get('nerve|L|sciatic')?.kind, 'branch');
+    // The two branches are each other's sibling there.
+    assert.equal(from('nerve|L|tibial', 0).get('nerve|L|common_fibular')?.kind, 'branch');
+  });
+
+  it('names the place that takes both, where two walks pass different parts of it', () => {
+    const sinus = from('sympathetic|L', 16).get('cranial|L|V1');
+    assert.equal(sinus?.kind, 'place');
+    assert.match(sinus?.kind === 'place' ? sinus.name : '', /^cavernous sinus/);
+    const medulla = from('sympathetic|L', 2).get('tract|R|pain');
+    assert.deepEqual(medulla, { kind: 'place', name: 'lateral medulla' });
+  });
+
+  it('owns up when two walks are only drawn close', () => {
+    // In the cord the corticospinal tract and the descending sympathetic fibres are different
+    // parts that no named place takes together: the drawing puts them side by side, no more.
+    assert.deepEqual(from('tract|L|motor', 9).get('sympathetic|L'), { kind: 'near' });
+    // The retina is drawn at the eye, but no nerve to the eye joins the visual pathway.
+    assert.deepEqual(from('cranial|L|III', end('cranial|L|III')).get('vision|L|central_left'), { kind: 'near' });
+  });
+
+  it('offers what truly meets before what is only near, and says each in a few words', () => {
+    let near = 0;
+    let met = 0;
+    for (const w of WALKS) {
+      for (const pp of [0, (w.points.length - 1) / 2, w.points.length - 1]) {
+        const found = offers(KB, WALKS, w, pointAlong(w, pp), REACH, 99);
+        const rank = found.map((o) => (o.relation.kind === 'near' ? 2 : o.relation.kind === 'place' ? 1 : 0));
+        assert.deepEqual(rank, [...rank].sort((a, b) => a - b), `${w.id}: out of order`);
+        for (const o of found) {
+          if (o.relation.kind === 'near') near++;
+          else met++;
+          assert.ok(relationWords(o.relation).length > 5);
+        }
+        // The six on offer are the first six of all that are within reach, group caps aside.
+        assert.ok(offers(KB, WALKS, w, pointAlong(w, pp)).length <= 6);
+      }
+    }
+    // The inspection's finding, kept as a number: a large share of steps are nearness alone.
+    assert.ok(near > 300 && met > 400, `${near} only near, ${met} that meet`);
+    assert.equal(relationWords({ kind: 'part', name: 'Left eye' }), 'at the left eye');
+    assert.equal(relationWords({ kind: 'part', name: 'The chiasm' }), 'at the chiasm');
+    assert.equal(relationWords({ kind: 'place', name: 'cavernous sinus (III, IV, VI, V1, V2 and the carotid sympathetic plexus)' }), 'together in the cavernous sinus');
+    assert.equal(relationWords({ kind: 'branch', name: 'Left sciatic nerve' }), 'branches here');
+    assert.equal(relationWords({ kind: 'near' }), 'only drawn nearby');
+  });
+});
+
+describe('the facial nerve has a strand and a walk of its own (P44)', () => {
+  it('walks from the motor cortex of the other side to the face, and is cut exactly when the engine reports the face weak', async () => {
+    const { BRAIN_CASES } = await import('../spec/expectations/brain.ts');
+    const { FACIAL_CANAL_CASES } = await import('../spec/expectations/facial-canal.ts');
+    const { ANGLE_CASES } = await import('../spec/expectations/angle.ts');
+    const seen = new Set<string>();
+    for (const kase of [...BRAIN_CASES, ...FACIAL_CANAL_CASES, ...CRANIAL_NERVE_CASES, ...ANGLE_CASES]) {
+      const regions: readonly AnyRegion[] = kase.lesion;
+      const f = forward(regions, 'chronic');
+      for (const x of SIDES) {
+        const fate = walk(`cranial|${x}|VII`).fate(lesionOf(regions));
+        assert.equal(fate.diesAt >= 0 || fate.dimmed, f.faceWeakness[x] !== 'none', `${kase.id} ${x}`);
+        seen.add(f.faceWeakness[x]);
+      }
+    }
+    // The cases reach a face spared, a lower face weak from above the nucleus, and a whole face weak from the nerve.
+    for (const state of ['none', 'lower', 'whole']) assert.ok(seen.has(state), `no case with the face ${state}`);
+    const w = walk('cranial|L|VII');
+    assert.equal(w.name, 'Left facial nerve');
+    // It begins in the other hemisphere and ends on its own side.
+    assert.ok((w.points[0]?.x ?? 0) > 0 && (w.points[w.points.length - 1]?.x ?? 0) < 0);
+    assert.ok(w.stops.some((q) => q.ref?.kind === 'brain' && q.ref.compartment === 'facial_nerve' && q.ref.side === 'L'));
   });
 });

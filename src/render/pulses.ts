@@ -112,6 +112,10 @@ export class PulseField {
   private readonly limbCache = new Map<string, { path: Path; times: number[]; limb: LimbLeg } | null>();
   private options: PathOptions = { model: 'classical', painFibre: 'adelta' };
   private frozen = false;
+  /** P44: how large a pulse is drawn, as a share of its size from the orbit. */
+  private scale = 1;
+  /** P44: whether pulses in the limbs are drawn; off while the limbs themselves are put away. */
+  private limbs = true;
   private readonly tmp = new THREE.Object3D();
   private readonly colour = new THREE.Color();
 
@@ -374,7 +378,7 @@ export class PulseField {
 
   private spawnRandom(): void {
     const roll = Math.random();
-    // P37: a quarter of the pulses run in the cranial nerves, now that there are sixteen a side.
+    // P37: a quarter of the pulses run in the cranial nerves, now that there are fifteen courses a side and the facial nerve.
     if (roll < 0.25) {
       // P38: two in five of those in the visual pathway; P40: one in ten in the sympathetic.
       const r = Math.random();
@@ -489,10 +493,10 @@ export class PulseField {
         if (!this.frozen) this.pulses.splice(i, 1);
         continue;
       }
-      if (n >= this.max) continue;
+      if (n >= this.max || (!this.limbs && p.limb)) continue;
       positionAt(p, pos);
       this.tmp.position.copy(pos);
-      this.tmp.scale.setScalar(p.fate.dimmed ? 0.7 : 1);
+      this.tmp.scale.setScalar((p.fate.dimmed ? 0.7 : 1) * this.scale);
       this.tmp.updateMatrix();
       this.mesh.setMatrixAt(n, this.tmp.matrix);
       this.colour.set(this.hue(p.kind)).multiplyScalar(p.fate.dimmed ? 0.35 : 1);
@@ -509,7 +513,7 @@ export class PulseField {
       f.mesh.quaternion.copy(camera.quaternion);
       if (!this.frozen) f.age += dt;
       const life = f.age / FLASH_LIFE;
-      f.mesh.scale.setScalar(1 + life * 2.5);
+      f.mesh.scale.setScalar((1 + life * 2.5) * this.scale);
       (f.mesh.material as THREE.MeshBasicMaterial).opacity = this.frozen ? 0.9 : Math.max(0, 1 - life);
       if (!this.frozen && life >= 1) {
         this.scene.remove(f.mesh);
@@ -518,6 +522,18 @@ export class PulseField {
         this.flashes.splice(i, 1);
       }
     }
+  }
+
+  /**
+   * P44: from a few units away a pulse is a bead on its strand; ridden beside, the same bead is a
+   * boulder. A walk draws them at a fraction of their size.
+   */
+  setScale(scale: number): void {
+    this.scale = scale;
+  }
+
+  setLimbs(on: boolean): void {
+    this.limbs = on;
   }
 
   /** Remove held flashes, for when the frozen field is rebuilt. */

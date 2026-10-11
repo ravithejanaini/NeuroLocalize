@@ -10,7 +10,8 @@ strand a little above it, looking ahead, from one stop to the next. A stop is a 
 passes; at each the panel shows that part's card (P39, P41): what the model reports when it alone
 is lost, the places that take it, and the model's own sourced statements.
 
-- **A hundred walks**: the sixteen cranial-nerve courses a side, the twenty fibres of the visual
+- **A hundred walks**: the fifteen cranial-nerve courses a side (written as sixteen until P44
+  counted them), the twenty fibres of the visual
   field, the sympathetic pathway a side, the twenty-one nerves of the arm and leg a side, and the
   three long tracts to and from each hand.
 - **Three ways in**: double-click (or double-tap) a drawn nerve; choose it from the list "Walk

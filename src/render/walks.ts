@@ -4,16 +4,18 @@
 // cut is decided by the same functions that stop the pulses. Pure: no renderer, no DOM.
 import type { BrainMap } from '../engine/brain.ts';
 import { crossingOffsets, isSacral, type Findings, type LesionMap } from '../engine/forward.ts';
+import { territoryRegions } from '../engine/hypotheses.ts';
 import { CORD_SITE, PART_SITE, TRUNK_SITE, type PlexusMap } from '../engine/limb.ts';
+import { SITE_NAME } from '../engine/reverse.ts';
 import type { VisionMap } from '../engine/vision.ts';
-import { brainFate, cranialCourses, fibreFate, visionFibres } from '../geometry/brain.ts';
+import { brainFate, cranialCourses, faceMotorPath, fibreFate, visionFibres } from '../geometry/brain.ts';
 import { fate, motorPath, place, sensoryPath, type Path, type Vec3 } from '../geometry/paths.ts';
-import { legStrands, mirror, nerveCourse, plexusStrands, siteAnchor, trunkOfRoot } from '../geometry/plexus.ts';
+import { legStrands, mirror, nerveCourse, plexusStrands, rootExit, siteAnchor, trunkOfRoot } from '../geometry/plexus.ts';
 import { discAt } from '../geometry/section.ts';
 import { sympatheticCourse, sympatheticFate } from '../geometry/sympathetic.ts';
 import type { Kb, LimbPoint, RenderKb } from '../kb/types.ts';
-import { ARM_NERVES, LEG_NERVES, LEG_PLEXUS_PARTS, PLEXUS_CORDS, SEGMENTS, SIDES, type Muscle, type Nerve, type PlexusSite, type Side, type SkinArea } from '../kb/vocab.ts';
-import { partName, TARGET_WORD, type PartRef } from './describe.ts';
+import { ARM_NERVES, LEG_NERVES, LEG_PLEXUS_PARTS, PLEXUS_CORDS, SEGMENTS, SIDES, TERRITORIES, type Muscle, type Nerve, type PlexusSite, type Side, type SkinArea } from '../kb/vocab.ts';
+import { partName, refKey, TARGET_WORD, type PartRef } from './describe.ts';
 import { AREA_NAME, MUSCLE_NAME, SECTOR_NAME } from './examine.ts';
 
 export const WALK_GROUPS = ['cranial nerves', 'visual pathway', 'sympathetic pathway', 'nerves of the arm', 'nerves of the leg', 'long tracts'] as const;
@@ -50,15 +52,50 @@ export type Walk = {
   readonly stops: readonly WalkStop[];
   /** The point at which the lesion stops the signal (-1: nowhere), and whether it arrives weakened. */
   fate(lesion: WalkLesion): { readonly diesAt: number; readonly dimmed: boolean };
+  /**
+   * P44: every part the walk passes, where a walk passes more than it stops at — a long tract
+   * runs through a part of the cord at every segment and stops only where the part changes.
+   * Absent, the stops that are parts are all there is.
+   */
+  readonly passes?: readonly Passed[];
+  /** P44: the walk this one branches from, where the model gives a nerve another nerve as its origin. */
+  readonly arisesFrom?: string;
 };
+
+/** A part a walk passes, and the point of the walk where it lies. */
+export type Passed = { readonly point: number; readonly ref: PartRef };
 
 const SIDE_WORD: Record<Side, string> = { L: 'Left', R: 'Right' };
 const ordered = (stops: WalkStop[]): WalkStop[] => stops.map((s, i) => ({ s, i })).sort((a, b) => a.s.point - b.s.point || a.i - b.i).map((x) => x.s);
 const stopAt = (point: number, ref: PartRef): WalkStop => ({ point, ref, label: partName(ref) });
 const cortexRegion = (level: string, compartment: string): boolean => level === 'cortex' && (compartment === 'motor_cortex' || compartment === 'sensory_cortex');
 
+const same = (a: Vec3 | undefined, b: Vec3 | undefined): boolean => !!a && !!b && Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z) < 1e-6;
 const NERVE_WORD = (n: Nerve): string => (n.startsWith('nerve_') ? n.replace(/_/g, ' ') : `${n.replace(/_/g, ' ')} nerve`);
 const targetWord = (t: Muscle | SkinArea): string => (t in MUSCLE_NAME ? MUSCLE_NAME[t as Muscle].muscle : `skin of the ${AREA_NAME[t as SkinArea]}`);
+
+/**
+ * P44: the facial nerve's own way to the face. It had pulses from P5 and no strand: the fifteen
+ * courses of P37 gave the nerve's three branches in the canal and left out its trunk.
+ */
+function facialWalks(kb: Kb, render: RenderKb): Walk[] {
+  return SIDES.map((x): Walk => {
+    const p = faceMotorPath(kb, render, x);
+    const parts = p.elements.map((e) =>
+      stopAt(e.point, { kind: 'brain', level: e.level, compartment: e.compartment, side: e.side, ...(cortexRegion(e.level, e.compartment) ? { region: e.region } : {}) }),
+    );
+    return {
+      id: `cranial|${x}|VII`,
+      group: 'cranial nerves',
+      name: `${SIDE_WORD[x]} facial nerve`,
+      runs: 'outward, from the motor cortex of the other side to the facial nucleus, and along the nerve to the muscles of the face',
+      side: x,
+      points: p.points,
+      stops: ordered([...parts, { point: p.points.length - 1, label: `Muscles of the ${SIDE_WORD[x].toLowerCase()} side of the face` }]),
+      fate: ({ bmap }) => brainFate(bmap, p.elements),
+    };
+  });
+}
 
 function cranialWalks(kb: Kb, render: RenderKb): Walk[] {
   return SIDES.flatMap((x) =>
@@ -126,6 +163,7 @@ function sympatheticWalks(kb: Kb, render: RenderKb): Walk[] {
       side: x,
       points: c.points,
       stops: ordered(stops),
+      passes: [...c.stops.map((q): Passed => ({ point: q.point, ref: q.at })), { point: c.points.length - 1, ref: { kind: 'organ', target: 'eye', side: x } }],
       fate: ({ map, bmap }) => ({ diesAt: sympatheticFate(map, bmap, c).diesAt, dimmed: false }),
     };
   });
@@ -137,10 +175,13 @@ function nerveWalks(kb: Kb, render: RenderKb): Walk[] {
     if (c.points.length < 2) return null;
     const stops: WalkStop[] = c.stops.map((s): WalkStop => {
       const note = s.branches?.length ? `Branches drawn from here: ${s.branches.map(targetWord).join(', ')}.` : undefined;
-      const ref: PartRef | undefined = s.site ? { kind: 'plexus', site: s.site, side: x } : undefined;
+      // P44: a nerve that leaves the roots is drawn from the first of them; its origin is that root.
+      const start = c.points[s.point];
+      const k = s.origin?.from === 'roots' && start ? SEGMENTS.findIndex((_, i) => same(rootExit(render, i, x), start)) : -1;
+      const ref: PartRef | undefined = s.site ? { kind: 'plexus', site: s.site, side: x } : k >= 0 ? { kind: 'root', side: x, k } : undefined;
       const label = s.origin
         ? ref
-          ? `${partName(ref)} — where the nerve arises`
+          ? `${partName(ref)} — where the nerve ${k >= 0 ? 'is drawn from' : 'arises'}`
           : s.origin.from === 'nerve'
             ? `End of the ${NERVE_WORD(s.origin.nerve)} — where this nerve begins`
             : 'The roots — where the nerve arises'
@@ -161,7 +202,9 @@ function nerveWalks(kb: Kb, render: RenderKb): Walk[] {
     if (!stops.some((q) => q.point === 0)) stops.push({ point: 0, label: 'Where the drawn nerve begins' });
     // The first named place the lesion takes, going outward, is where the signal stops.
     const sites = c.stops.flatMap((s) => (s.site ? [{ point: s.point, site: s.site }] : []));
+    const origin = kb.plexus.nerves[nerve].origin;
     return {
+      ...(origin.from === 'nerve' ? { arisesFrom: `nerve|${x}|${origin.nerve}` } : {}),
       id: `nerve|${x}|${nerve}`,
       group,
       name: `${SIDE_WORD[x]} ${NERVE_WORD(nerve)}`,
@@ -213,7 +256,15 @@ function tractWalks(kb: Kb, render: RenderKb): Walk[] {
     const gone = periphery === 'first' ? 0 : path.points.length - 1;
     const points = periphery === 'first' ? path.points.slice(1) : path.points.slice(0, -1);
     const kept = stops.filter((q) => q.point !== gone && (q.ref || !named.has(q.point))).map((q) => ({ ...q, point: q.point - off }));
+    const passes: Passed[] = [
+      ...path.route.elements.flatMap((e, i): Passed[] => {
+        const point = path.elementPoint[i];
+        return point === undefined || point === gone ? [] : [{ point: point - off, ref: { kind: 'cord', compartment: e.compartment, side: e.side, k: e.segment } }];
+      }),
+      ...path.brain.map((e): Passed => ({ point: e.point - off, ref: { kind: 'brain', level: e.level, compartment: e.compartment, side: e.side } })),
+    ];
     return {
+      passes,
       id,
       group: 'long tracts',
       name,
@@ -273,7 +324,6 @@ function tractWalks(kb: Kb, render: RenderKb): Walk[] {
  * that the limbs can be reached on foot from the cord.
  */
 function plexusWalks(kb: Kb, render: RenderKb): Walk[] {
-  const same = (a: Vec3 | undefined, b: Vec3 | undefined): boolean => !!a && !!b && Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z) < 1e-6;
   const join = (...runs: (readonly Vec3[])[]): Vec3[] => {
     const out: Vec3[] = [];
     for (const run of runs) for (const q of run) if (!same(out[out.length - 1], q)) out.push(q);
@@ -371,6 +421,7 @@ function plexusWalks(kb: Kb, render: RenderKb): Walk[] {
 export function allWalks(kb: Kb, render: RenderKb): Walk[] {
   return [
     ...cranialWalks(kb, render),
+    ...facialWalks(kb, render),
     ...visionWalks(kb, render),
     ...sympatheticWalks(kb, render),
     ...plexusWalks(kb, render),
@@ -451,6 +502,136 @@ export function crossings(walks: readonly Walk[], current: Walk, position: Vec3,
     if (out.length >= limit) break;
   }
   return out;
+}
+
+// ── P44: what a step across means ──
+// Nearness in a schematic drawing is not anatomy. A step across now says which it is: the two
+// walks pass the same named part; they pass different parts that one named place of the model
+// takes together; one is the branch of the other; or they are only drawn close.
+
+export type Relation =
+  | { readonly kind: 'part'; readonly name: string }
+  | { readonly kind: 'place'; readonly name: string }
+  | { readonly kind: 'branch'; readonly name: string }
+  | { readonly kind: 'near' };
+
+const passed = (w: Walk): readonly Passed[] => w.passes ?? w.stops.flatMap((q): Passed[] => (q.ref ? [{ point: q.point, ref: q.ref }] : []));
+const apart = (a: Vec3, b: Vec3): number => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
+/** How far from where the walker stands a part may lie and still count as "here". */
+const HERE = 1;
+const partsHere = (w: Walk, at: Vec3): Passed[] =>
+  passed(w).filter((q) => {
+    const p = w.points[q.point];
+    return p !== undefined && apart(p, at) <= HERE;
+  });
+
+/** One structure may be named two ways: a root, and its dorsal or ventral part in the cord's slice. A strip's body regions are one part to stand in. */
+const structureKeys = (ref: PartRef): string[] => {
+  if (ref.kind === 'root') return [`root|${ref.side}|${ref.k}`];
+  if (ref.kind === 'cord' && (ref.compartment === 'dorsal_root' || ref.compartment === 'ventral_root')) return [`root|${ref.side}|${ref.k}`, refKey(ref)];
+  if (ref.kind === 'brain') return [`brain|${ref.level}|${ref.compartment}|${ref.side}`];
+  return [refKey(ref)];
+};
+
+const territoryParts = new WeakMap<Kb, Map<string, Set<string>>>();
+/** The parts each named place of the model takes on one side, as level|part. */
+function placesOf(kb: Kb, side: Side): Map<string, Set<string>> {
+  let all = territoryParts.get(kb);
+  if (!all) {
+    all = new Map();
+    for (const t of TERRITORIES) {
+      for (const x of SIDES) {
+        const parts = new Set<string>();
+        for (const r of territoryRegions(kb, t, x)) if ('brain' in r && r.sides.includes(x)) for (const c of r.compartments) parts.add(`${r.brain}|${c}`);
+        all.set(`${t}|${x}`, parts);
+      }
+    }
+    territoryParts.set(kb, all);
+  }
+  const out = new Map<string, Set<string>>();
+  for (const t of TERRITORIES) out.set(t, all.get(`${t}|${side}`) ?? new Set());
+  return out;
+}
+
+/** What two walks have to do with each other where they come within a step: `at` on the first, `landing` on the second. */
+export function relation(kb: Kb, a: Walk, at: Vec3, b: Walk, landing: Vec3): Relation {
+  const [first, second] = [a.points[0], b.points[0]];
+  // A branch: one arises from the other, or both from the same nerve, and the walker is where that happens.
+  if (b.arisesFrom === a.id && second && apart(second, landing) <= HERE) return { kind: 'branch', name: a.name };
+  if (a.arisesFrom === b.id && first && apart(first, at) <= HERE) return { kind: 'branch', name: b.name };
+  if (a.arisesFrom && a.arisesFrom === b.arisesFrom && first && second && apart(first, at) <= HERE && apart(second, landing) <= HERE) {
+    return { kind: 'branch', name: a.arisesFrom };
+  }
+  const here = partsHere(a, at);
+  const there = partsHere(b, landing);
+  const keys = new Map<string, PartRef>();
+  for (const q of here) for (const key of structureKeys(q.ref)) if (!keys.has(key)) keys.set(key, q.ref);
+  for (const q of there) {
+    for (const key of structureKeys(q.ref)) {
+      const mine = keys.get(key);
+      if (!mine) continue;
+      const side = 'side' in mine ? mine.side : 'L';
+      const k = mine.kind === 'root' || mine.kind === 'cord' ? mine.k : 0;
+      return { kind: 'part', name: key.startsWith('root|') ? partName({ kind: 'root', side, k }) : partName(mine.kind === 'brain' ? { kind: 'brain', level: mine.level, compartment: mine.compartment, side: mine.side } : mine) };
+    }
+  }
+  // Different parts, but one named place of the model takes both: the smallest such place.
+  let best: { name: string; size: number } | null = null;
+  for (const p of here) {
+    for (const q of there) {
+      if (p.ref.kind !== 'brain' || q.ref.kind !== 'brain' || p.ref.side !== q.ref.side) continue;
+      for (const [t, parts] of placesOf(kb, p.ref.side)) {
+        if (parts.has(`${p.ref.level}|${p.ref.compartment}`) && parts.has(`${q.ref.level}|${q.ref.compartment}`) && (!best || parts.size < best.size)) {
+          best = { name: SITE_NAME[t as keyof typeof SITE_NAME], size: parts.size };
+        }
+      }
+    }
+  }
+  return best ? { kind: 'place', name: best.name } : { kind: 'near' };
+}
+
+export type Offer = Crossing & { readonly relation: Relation };
+const STRENGTH: Record<Relation['kind'], number> = { part: 0, branch: 0, place: 1, near: 2 };
+
+/**
+ * The walks within a step of where the walker stands, each with what it has to do with the
+ * current one: those that truly meet it first, those only drawn close last. At most six, and no
+ * more than three of one group.
+ */
+export function offers(kb: Kb, walks: readonly Walk[], current: Walk, position: Vec3, reach = REACH, limit = 6): Offer[] {
+  const found: Offer[] = [];
+  for (const w of walks) {
+    if (w.id === current.id) continue;
+    const n = nearestOn(w, position);
+    if (n.distance <= reach) found.push({ walk: w, ...n, relation: relation(kb, current, position, w, n.at) });
+  }
+  found.sort((p, q) => STRENGTH[p.relation.kind] - STRENGTH[q.relation.kind] || p.distance - q.distance || p.walk.name.localeCompare(q.walk.name));
+  const perGroup = new Map<string, number>();
+  const out: Offer[] = [];
+  for (const c of found) {
+    const n = perGroup.get(c.walk.group) ?? 0;
+    if (n >= 3) continue;
+    perGroup.set(c.walk.group, n + 1);
+    out.push(c);
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+
+/** A relation in a few words, for a button or a signpost. */
+export function relationWords(r: Relation): string {
+  const plain = (name: string): string => name.replace(/ \(.*\)$/, '');
+  const lower = (name: string): string => name.charAt(0).toLowerCase() + name.slice(1);
+  switch (r.kind) {
+    case 'part':
+      return r.name.startsWith('The ') ? `at ${lower(plain(r.name))}` : `at the ${lower(plain(r.name))}`;
+    case 'place':
+      return `together in the ${plain(r.name)}`;
+    case 'branch':
+      return 'branches here';
+    case 'near':
+      return 'only drawn nearby';
+  }
 }
 
 /** The point of the scene at a fractional position along a walk's points. */

@@ -49,13 +49,14 @@ teaching from a phone.
 | P34 | Horner syndrome by neurone: where sweating is lost — the half body, the face, or only the brow — tells first, second and third order apart; the lung apex and the carotid artery in the neck become places |
 | P35 | The facial nerve by segment: tears, hyperacusis and taste place a lower-motor-neurone facial palsy above the geniculate ganglion, above the nerve to stapedius, above the chorda tympani, or below all three |
 | P36 | Depth on the stage: lit, solid tracts and nerves that hide what is behind them, fog with distance, glass shells for the cord and brain, and an axial view that cuts away what lies above the slice. A drawing change only |
-| P37 | The cranial nerves on the stage: sixteen courses a side from nucleus to end organ, built from the model's own routes, with pulses that stop at the lesion, end organs that take the colour of their finding, and a Head station to see them from |
+| P37 | The cranial nerves on the stage: fifteen courses a side from nucleus to end organ, built from the model's own routes, with pulses that stop at the lesion, end organs that take the colour of their finding, and a Head station to see them from |
 | P38 | The visual pathway on the stage: twenty fibres from the two retinas to the occipital cortex, crossing at the chiasm as the model's own rule says, with pulses that stop at the lesion, a mark on every part, and a Vision station to see them from |
 | P39 | Naming the parts: tap any mark above the cord, or choose it by name, to see what the model reports when that part alone is lost, the places that take it, and the model's own sourced statements about the routes through it |
 | P40 | The sympathetic pathway on the stage: the three neurones of a Horner syndrome as one strand — brainstem, down the cord to the ciliospinal centre, out by T1, up the chain and the carotid to the eye — with pulses that stop at the neurone the lesion cuts, and a Sympathetic station |
 | P41 | Finishing P37 to P40: the parts of the cord, the roots, the plexus and nerves and the end organs can be named like the brain; findings on a card read as sentences; the stations and the long views fit a phone |
 | P42 | Walking along a nerve: double-click any drawn nerve or pathway to ride it in first person, stop by stop, each stop with its sourced card, and the lesion in place shown as a wall where it cuts the way |
 | P43 | Roaming: hold to move either way along a nerve, turn round, look freely, and step across to any nerve that meets or passes it — 148 walks joined into one world, with the roots, trunks and cords of the plexuses walkable, so the motor cortex can be followed on foot to the hand |
+| P44 | An inspection and its corrections: names no longer overlap, the lesion has a colour of its own, the Side view is the cord alone, a step across says whether two nerves truly meet or are only drawn close, the facial nerve has its strand, the name of a part shows under the mouse, and the controls no longer collide |
 
 ## How accuracy is enforced
 
