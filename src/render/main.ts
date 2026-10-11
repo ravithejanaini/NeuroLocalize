@@ -14,7 +14,7 @@ import { place, radiusAt } from '../geometry/paths.ts';
 import { discAt } from '../geometry/section.ts';
 import { describePart, partCardHtml, partName, refKey, type PartRef } from './describe.ts';
 import { buildWalkView } from './walk-view.ts';
-import { allWalks, lesionAt, WALK_GROUPS, type Walk, type WalkLesion } from './walks.ts';
+import { allWalks, crossings, lesionAt, nearestOn, WALK_GROUPS, type Crossing, type Walk, type WalkLesion } from './walks.ts';
 import {
   explain,
   isPrepared,
@@ -264,6 +264,10 @@ let walking: Walk | null = null;
 let walkLesion: WalkLesion = { map: mapLesion([], KB), bmap: mapBrain(KB, []), pmap: mapPlexus([]), vmap: mapVision(KB, []), fields: null };
 let walkStop = -1;
 let walkLabels: HTMLElement[] = [];
+// P43: the walks within a step of where the walker stands, and their signposts on the stage.
+let walkCrossings: Crossing[] = [];
+let crossingsAt = 0;
+let crossLabels: HTMLElement[] = [];
 const esc = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 /** The walk whose drawn line passes nearest a point of the screen, within reach of a finger. */
@@ -274,6 +278,7 @@ function walkAt(clientX: number, clientY: number): Walk | null {
   let best: Walk | null = null;
   let bestD = 14;
   for (const w of walks) {
+    if (w === walking) continue;
     for (let i = 1; i < w.points.length; i++) {
       const p = w.points[i - 1];
       const q = w.points[i];
@@ -340,7 +345,9 @@ function refreshWalkLesion(): void {
   if (walkStop >= 0) renderWalkStop(walkStop);
 }
 
-function startWalk(w: Walk, fromStop = 0): void {
+function startWalk(w: Walk, fromStop = 0, landing?: { readonly at: { readonly x: number; readonly y: number; readonly z: number } }): void {
+  // P43: stepping from one walk onto another keeps the eye and the way it was looking.
+  const forward = walking && landing ? camera.getWorldDirection(new THREE.Vector3()) : undefined;
   if (walking) endWalk();
   showPart(null);
   walking = w;
@@ -352,7 +359,11 @@ function startWalk(w: Walk, fromStop = 0): void {
   $('#walk-runs').textContent = `Walking ${w.runs}.`;
   $('#walk-route').innerHTML = w.stops.map((s, i) => `<li><button type="button" data-stop="${i}"><b>${i + 1}</b> ${esc(s.label)}</button></li>`).join('');
   $<HTMLSelectElement>('#walk-pick').value = w.id;
-  walkView.start(w, camera, fromStop, reduced);
+  walkView.start(w, camera, fromStop, reduced, forward !== undefined);
+  if (landing) walkView.land(landing.at, forward);
+  walkCrossings = [];
+  crossingsAt = 0;
+  $('#walk-switch').innerHTML = '';
   $<HTMLButtonElement>('#walk-play').disabled = reduced;
   for (const l of allLabels) l.el.style.visibility = 'hidden';
   walkLabels = w.stops.map((s, i) => {
@@ -362,9 +373,16 @@ function startWalk(w: Walk, fromStop = 0): void {
     labelLayer.append(el);
     return el;
   });
+  crossLabels = Array.from({ length: 6 }, () => {
+    const el = document.createElement('span');
+    el.className = 'lbl lbl-cross';
+    el.style.visibility = 'hidden';
+    labelLayer.append(el);
+    return el;
+  });
   refreshWalkLesion();
-  renderWalkStop(Math.min(w.stops.length - 1, Math.max(0, fromStop)));
-  $<HTMLButtonElement>('#walk-next').focus();
+  if (!landing) renderWalkStop(Math.min(w.stops.length - 1, Math.max(0, fromStop)));
+  if (!landing) $<HTMLButtonElement>('#walk-next').focus();
 }
 
 function endWalk(): void {
@@ -372,8 +390,10 @@ function endWalk(): void {
   walking = null;
   walkStop = -1;
   walkView.stop(camera);
-  for (const el of walkLabels) el.remove();
+  for (const el of [...walkLabels, ...crossLabels]) el.remove();
   walkLabels = [];
+  crossLabels = [];
+  walkCrossings = [];
   delete document.body.dataset.walk;
   $('#walk').hidden = true;
   $<HTMLSelectElement>('#walk-pick').value = '';
@@ -386,14 +406,57 @@ const setPlayingLabel = (on: boolean): void => {
   b.setAttribute('aria-pressed', String(on));
 };
 
+/** P43: steps onto the nth walk on offer. */
+function stepAcross(n: number): void {
+  const c = walkCrossings[n];
+  if (c) startWalk(c.walk, 0, { at: c.at });
+}
+
+/** P43: the walks within a step, looked for a few times a second, as buttons and as signposts on the stage. */
+function refreshCrossings(now: number): void {
+  const w = walking;
+  if (!w || now - crossingsAt < 220) return;
+  crossingsAt = now;
+  const found = crossings(walks, w, walkView.position());
+  const same = found.length === walkCrossings.length && found.every((c, i) => c.walk.id === walkCrossings[i]?.walk.id);
+  walkCrossings = found;
+  if (same) return;
+  $('#walk-switch').innerHTML = found.length
+    ? `<span class="walk-switch-h">Step across to</span>${found.map((c, i) => `<button type="button" data-cross="${i}"><b>${i + 1}</b> ${esc(c.walk.name)}</button>`).join('')}`
+    : '';
+  crossLabels.forEach((el, i) => {
+    el.textContent = found[i] ? `⇄ ${i + 1} · ${found[i].walk.name}` : '';
+  });
+}
+
 /** Each frame of a walk: the panel follows the stop, the scrubber the position, the names the stops ahead. */
-function walkFrame(f: { stop: number; progress: number; playing: boolean }): void {
+function walkFrame(f: { stop: number; progress: number; playing: boolean; facing: 1 | -1 }): void {
   if (f.stop !== walkStop) renderWalkStop(f.stop);
   const scrub = $<HTMLInputElement>('#walk-scrub');
   if (document.activeElement !== scrub) scrub.value = String(Math.round(f.progress * 1000));
   if ($('#walk-play').getAttribute('aria-pressed') !== String(f.playing)) setPlayingLabel(f.playing);
   const w = viewport.clientWidth;
   const h = viewport.clientHeight;
+  refreshCrossings(performance.now());
+  const here = walkView.position();
+  crossLabels.forEach((el, i) => {
+    const c = walkCrossings[i];
+    if (!c) {
+      el.style.visibility = 'hidden';
+      return;
+    }
+    // The signpost stands a little along the other walk, away from where the walker is, so it points the way.
+    const lead = nearestOn(c.walk, { x: here.x, y: here.y, z: here.z });
+    const j = Math.min(c.walk.points.length - 1, Math.floor(lead.pointProgress) + 1);
+    const q = c.walk.points[j] ?? c.at;
+    const d = Math.hypot(q.x - c.at.x, q.y - c.at.y, q.z - c.at.z) || 1;
+    const t = Math.min(1, 1.2 / d);
+    projected.set(c.at.x + (q.x - c.at.x) * t, c.at.y + (q.y - c.at.y) * t + 0.12 * (i % 3), c.at.z + (q.z - c.at.z) * t).project(camera);
+    const visible = projected.z < 1 && Math.abs(projected.x) < 1 && Math.abs(projected.y) < 1;
+    el.style.visibility = visible ? 'visible' : 'hidden';
+    if (visible) el.style.transform = `translate(${((projected.x + 1) / 2) * w}px, ${((1 - projected.y) / 2) * h}px)`;
+  });
+  $('#walk-facing').textContent = f.facing === 1 ? 'facing the way the signal runs' : 'facing against the signal';
   walkLabels.forEach((el, i) => {
     const at = walkView.anchors[i];
     if (!at) return;
@@ -559,11 +622,18 @@ const release = (e: PointerEvent): void => {
 canvas.addEventListener('pointerup', (e) => {
   const tap = tapStart;
   tapStart = null;
-  if (walking || !tap || Math.hypot(e.clientX - tap.x, e.clientY - tap.y) > 6 || performance.now() - tap.at > 600) return;
+  if (!tap || Math.hypot(e.clientX - tap.x, e.clientY - tap.y) > 6 || performance.now() - tap.at > 600) return;
   // P42: a second tap in the same place, soon after, walks the nerve under it.
   const now = performance.now();
   const twice = lastTap !== null && now - lastTap.at < 420 && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 30;
   lastTap = twice ? null : { x: e.clientX, y: e.clientY, at: now };
+  if (walking) {
+    // P43: on a walk, a double tap on another nerve in sight goes over to it, at its nearest place.
+    const other = twice ? walkAt(e.clientX, e.clientY) : null;
+    const here = walkView.position();
+    if (other) startWalk(other, 0, { at: nearestOn(other, { x: here.x, y: here.y, z: here.z }).at });
+    return;
+  }
   window.clearTimeout(naming);
   const ref = pickAt(e.clientX, e.clientY);
   if (twice) {
@@ -647,6 +717,28 @@ canvas.addEventListener(
     else endWalk();
   });
   $('#walk-exit').addEventListener('click', endWalk);
+  // P43: the roaming controls. Forward and Backward move for as long as they are held.
+  for (const [id, way] of [
+    ['#walk-fwd', 1],
+    ['#walk-rev', -1],
+  ] as const) {
+    const b = $<HTMLButtonElement>(id);
+    b.addEventListener('pointerdown', (e) => {
+      b.setPointerCapture(e.pointerId);
+      walkView.drive(way);
+    });
+    for (const ev of ['pointerup', 'pointercancel', 'lostpointercapture'] as const) b.addEventListener(ev, () => walkView.drive(0));
+    // From the keyboard a press moves a short way.
+    b.addEventListener('click', (e) => {
+      if (e.detail === 0) walkView.nudge(way * 0.02);
+    });
+  }
+  $('#walk-turn').addEventListener('click', () => walkView.turnRound());
+  $('#walk-ahead').addEventListener('click', () => walkView.lookAhead());
+  $('#walk-switch').addEventListener('click', (e) => {
+    const b = e.target instanceof Element ? e.target.closest<HTMLButtonElement>('[data-cross]') : null;
+    if (b) stepAcross(Number(b.dataset.cross));
+  });
   $('#walk-prev').addEventListener('click', () => walkView.step(-1));
   $('#walk-next').addEventListener('click', () => walkView.step(1));
   $('#walk-play').addEventListener('click', () => walkView.setPlaying($('#walk-play').getAttribute('aria-pressed') !== 'true'));
@@ -1334,9 +1426,16 @@ window.addEventListener('keydown', (e) => {
   if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
   if (walking) {
     // P42: on a walk the arrows move between stops, space plays, Escape leaves.
+    const k = e.key.toLowerCase();
     if (e.key === 'Escape') endWalk();
-    else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') walkView.step(1);
-    else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') walkView.step(-1);
+    // P43: W and S (or the up and down arrows) move while held; Q turns round; C looks ahead; 1–6 step across.
+    else if (k === 'w' || e.key === 'ArrowUp') walkView.drive(1);
+    else if (k === 's' || e.key === 'ArrowDown') walkView.drive(-1);
+    else if (k === 'q') walkView.turnRound();
+    else if (k === 'c') walkView.lookAhead();
+    else if (/^[1-6]$/.test(e.key)) stepAcross(Number(e.key) - 1);
+    else if (e.key === 'ArrowRight') walkView.step(1);
+    else if (e.key === 'ArrowLeft') walkView.step(-1);
     else if (e.key === 'Home') walkView.goTo(0);
     else if (e.key === 'End') walkView.goTo(walking.stops.length - 1);
     else if (e.key === ' ' && !(e.target instanceof HTMLButtonElement)) walkView.setPlaying($('#walk-play').getAttribute('aria-pressed') !== 'true');
@@ -1358,6 +1457,12 @@ window.addEventListener('keydown', (e) => {
   else return;
   e.preventDefault();
 });
+
+window.addEventListener('keyup', (e) => {
+  const k = e.key.toLowerCase();
+  if (k === 'w' || k === 's' || e.key === 'ArrowUp' || e.key === 'ArrowDown') walkView.drive(0);
+});
+window.addEventListener('blur', () => walkView.drive(0));
 
 const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 const motionToggle = $<HTMLInputElement>('#still');

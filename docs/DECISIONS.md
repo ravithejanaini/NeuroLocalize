@@ -2492,3 +2492,33 @@ the second tap.
 model's own list of such parts, so the sympathetic chain is no longer "…, medulla".
 
 **D227 — No mutation run.** Nothing the engine reads changed.
+
+## P43 — Roaming: the walks as one world
+
+`docs/P43-analysis.md`. No new source and no new finding.
+
+### Decisions
+
+**D228 — The walker drives.** Forward and Backward move while held; the walker has a facing along
+the strand that Turn round reverses; the head no longer springs back by itself. Play still carries
+the walker the way the signal runs.
+
+**D229 — A step across is nearness between drawn lines.** `crossings()` offers the walks whose line
+passes within 0.45 of a unit of where the walker stands, nearest first, at most six and at most
+three of one group. It claims nothing about the nerves beyond the drawing; the panel's words are
+"step across".
+
+**D230 — The world is joined.** Root, trunk and cord walks, built from the strands already drawn,
+and long-tract walks for the foot at S1, make every walk reachable from every other; a test holds
+it.
+
+**D231 — A long-tract walk ends at the root.** The path's schematic point for the limb, beside the
+cord, is dropped: standing there offered the walker trunks that have nothing to do with it.
+
+**D232 — Stepping keeps the eye.** The new walk starts with the camera where it was, facing as
+near the old direction as the new strand allows, and glides onto it.
+
+**D233 — A root walk needs both parts lost to stop.** One of the dorsal and ventral roots alone
+weakens it, as the walk stands for neither signal in particular.
+
+**D234 — No mutation run.** Nothing the engine reads changed.

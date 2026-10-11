@@ -16,7 +16,7 @@ const DWELL = 2.2;
 /** A stretch between two stops never takes longer than this at normal speed. */
 const LONGEST = 5;
 
-export type WalkFrame = { readonly stop: number; readonly progress: number; readonly playing: boolean; readonly arrived: boolean };
+export type WalkFrame = { readonly stop: number; readonly progress: number; readonly playing: boolean; readonly arrived: boolean; readonly facing: 1 | -1 };
 
 export type WalkView = {
   readonly active: boolean;
@@ -24,7 +24,8 @@ export type WalkView = {
   readonly stopProgress: readonly number[];
   /** Where each stop's name is shown. */
   readonly anchors: readonly THREE.Vector3[];
-  start(walk: Walk, camera: THREE.PerspectiveCamera, fromStop: number, still: boolean): void;
+  /** `glide` keeps the eye where it is and lets it travel to the new strand, for stepping from one walk to another. */
+  start(walk: Walk, camera: THREE.PerspectiveCamera, fromStop: number, still: boolean, glide?: boolean): void;
   stop(camera: THREE.PerspectiveCamera): void;
   /** The point of the walk at which the lesion stops the signal, or -1. */
   setCut(point: number): void;
@@ -40,6 +41,17 @@ export type WalkView = {
   /** Turns the head: radians right and up. */
   look(yaw: number, pitch: number): void;
   release(): void;
+  // P43: roaming.
+  /** Moves while held: 1 the way the walker faces, -1 backward, 0 stop. */
+  drive(way: -1 | 0 | 1): void;
+  /** Faces the other way along the strand. */
+  turnRound(): void;
+  /** Brings the head back to look along the strand. */
+  lookAhead(): void;
+  /** Puts the walker at the place on this walk nearest a point of the scene, facing as near `forward` as the strand allows. */
+  land(at: { readonly x: number; readonly y: number; readonly z: number }, forward?: THREE.Vector3): void;
+  /** Where on the strand the walker is. */
+  position(): THREE.Vector3;
 };
 
 export function buildWalkView(scene: THREE.Scene, palette: Palette): WalkView {
@@ -62,6 +74,10 @@ export function buildWalkView(scene: THREE.Scene, palette: Palette): WalkView {
   let yaw = 0;
   let pitch = 0;
   let held = false;
+  let facing: 1 | -1 = 1;
+  let driving: -1 | 0 | 1 = 0;
+  let centring = false;
+  const here3 = new THREE.Vector3();
   let savedFov = 38;
   let settled = false;
   const up = new THREE.Vector3(0, 1, 0);
@@ -120,7 +136,7 @@ export function buildWalkView(scene: THREE.Scene, palette: Palette): WalkView {
       return anchors;
     },
 
-    start(w, camera, fromStop, isStill) {
+    start(w, camera, fromStop, isStill, glide = false) {
       clear();
       walk = w;
       still = isStill;
@@ -196,10 +212,15 @@ export function buildWalkView(scene: THREE.Scene, palette: Palette): WalkView {
       target = u;
       playing = false;
       dwell = 0;
-      yaw = 0;
-      pitch = 0;
-      settled = false;
-      up.set(0, 1, 0);
+      facing = 1;
+      driving = 0;
+      centring = false;
+      if (!glide) {
+        yaw = 0;
+        pitch = 0;
+        settled = false;
+        up.set(0, 1, 0);
+      }
     },
 
     stop(camera) {
@@ -230,7 +251,7 @@ export function buildWalkView(scene: THREE.Scene, palette: Palette): WalkView {
     },
 
     update(dt, camera) {
-      if (!curve || !walk) return { stop: 0, progress: 0, playing: false, arrived: true };
+      if (!curve || !walk) return { stop: 0, progress: 0, playing: false, arrived: true, facing: 1 };
       // Move toward the target: the next stop when playing, or wherever the walker asked to be.
       if (playing && Math.abs(target - u) < 1e-4) {
         dwell += dt;
@@ -240,6 +261,12 @@ export function buildWalkView(scene: THREE.Scene, palette: Palette): WalkView {
           dwell = 0;
           target = stopU[here + 1] ?? 1;
         }
+      }
+      // P43: held, the walker moves the way they face, or backs away from it.
+      if (driving !== 0) {
+        playing = false;
+        u = Math.min(1, Math.max(0, u + (driving * facing * PACE * 1.6 * speed * dt) / length));
+        target = u;
       }
       const gap = target - u;
       if (Math.abs(gap) > 1e-5) {
@@ -258,16 +285,23 @@ export function buildWalkView(scene: THREE.Scene, palette: Palette): WalkView {
       const wantEye = tmp.copy(curve.getPointAt(Math.min(1, Math.max(0, u)))).addScaledVector(up, LIFT);
       const k = still || !settled ? 1 : 1 - Math.exp(-dt * 9);
       eye.lerp(wantEye, k);
-      const aheadU = u + AHEAD / length;
-      const wantAim = aheadU <= 1 ? curve.getPointAt(aheadU).addScaledVector(up, LIFT * 0.15) : curve.getPointAt(1).addScaledVector(tangent, AHEAD).addScaledVector(up, LIFT * 0.15);
+      const aheadU = u + (facing * AHEAD) / length;
+      const wantAim =
+        aheadU >= 0 && aheadU <= 1
+          ? curve.getPointAt(aheadU).addScaledVector(up, LIFT * 0.15)
+          : curve
+              .getPointAt(facing === 1 ? 1 : 0)
+              .addScaledVector(tangent, facing * AHEAD)
+              .addScaledVector(up, LIFT * 0.15);
       aim.lerp(wantAim, k);
       settled = true;
 
-      // The head turns while it is held, and comes back when let go.
-      if (!held) {
-        const back = still ? 0 : Math.exp(-dt * 3.5);
+      // P43: the head stays where it is turned, until the walker asks to look ahead again.
+      if (centring && !held) {
+        const back = still ? 0 : Math.exp(-dt * 5);
         yaw *= back;
         pitch *= back;
+        if (Math.abs(yaw) + Math.abs(pitch) < 1e-3) centring = false;
       }
       const dir = tmp.copy(aim).sub(eye);
       right.crossVectors(dir, up).normalize();
@@ -280,7 +314,7 @@ export function buildWalkView(scene: THREE.Scene, palette: Palette): WalkView {
       gates.forEach((g, i) => {
         if (!g.wall.visible) g.ring.scale.setScalar(i === here ? 1.12 : 1);
       });
-      return { stop: here, progress: u, playing, arrived: Math.abs(target - u) < 1e-4 };
+      return { stop: here, progress: u, playing, arrived: Math.abs(target - u) < 1e-4, facing };
     },
 
     goTo(stop) {
@@ -299,6 +333,11 @@ export function buildWalkView(scene: THREE.Scene, palette: Palette): WalkView {
     },
     setPlaying(on) {
       playing = on && !still;
+      if (playing) {
+        // Carried along, the walker faces the way the signal runs.
+        facing = 1;
+        centring = true;
+      }
       dwell = DWELL;
       if (playing && u >= 1 - 1e-4) {
         // Played from the end: start again.
@@ -328,6 +367,40 @@ export function buildWalkView(scene: THREE.Scene, palette: Palette): WalkView {
     },
     release() {
       held = false;
+    },
+    drive(way) {
+      driving = way;
+    },
+    turnRound() {
+      facing = facing === 1 ? -1 : 1;
+      centring = true;
+    },
+    lookAhead() {
+      centring = true;
+    },
+    land(at, forward) {
+      if (!curve) return;
+      const p = new THREE.Vector3(at.x, at.y, at.z);
+      const n = 600;
+      let best = 0;
+      let bestD = Infinity;
+      for (let i = 0; i <= n; i++) {
+        const d = curve.getPointAt(i / n).distanceToSquared(p);
+        if (d < bestD) {
+          bestD = d;
+          best = i / n;
+        }
+      }
+      u = best;
+      target = best;
+      playing = false;
+      if (forward) {
+        const along = curve.getTangentAt(best).dot(forward);
+        if (Math.abs(along) > 0.15) facing = along > 0 ? 1 : -1;
+      }
+    },
+    position() {
+      return curve ? here3.copy(curve.getPointAt(Math.min(1, Math.max(0, u)))) : here3.set(0, 0, 0);
     },
   };
 }

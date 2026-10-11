@@ -55,6 +55,7 @@ teaching from a phone.
 | P40 | The sympathetic pathway on the stage: the three neurones of a Horner syndrome as one strand — brainstem, down the cord to the ciliospinal centre, out by T1, up the chain and the carotid to the eye — with pulses that stop at the neurone the lesion cuts, and a Sympathetic station |
 | P41 | Finishing P37 to P40: the parts of the cord, the roots, the plexus and nerves and the end organs can be named like the brain; findings on a card read as sentences; the stations and the long views fit a phone |
 | P42 | Walking along a nerve: double-click any drawn nerve or pathway to ride it in first person, stop by stop, each stop with its sourced card, and the lesion in place shown as a wall where it cuts the way |
+| P43 | Roaming: hold to move either way along a nerve, turn round, look freely, and step across to any nerve that meets or passes it — 148 walks joined into one world, with the roots, trunks and cords of the plexuses walkable, so the motor cortex can be followed on foot to the hand |
 
 ## How accuracy is enforced
 

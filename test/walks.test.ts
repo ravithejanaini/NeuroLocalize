@@ -13,7 +13,7 @@ import { KB } from '../src/kb/kb.ts';
 import { RENDER } from '../src/kb/render.ts';
 import { ARM_NERVES, LEG_NERVES, NERVES, SEGMENTS, SIDES } from '../src/kb/vocab.ts';
 import { describePart } from '../src/render/describe.ts';
-import { allWalks, lesionAt, stopIndexAt, WALK_GROUPS, type WalkLesion } from '../src/render/walks.ts';
+import { allWalks, crossings, lesionAt, nearestOn, pointAlong, REACH, reachable, stopIndexAt, WALK_GROUPS, type WalkLesion } from '../src/render/walks.ts';
 
 const WALKS = allWalks(KB, RENDER);
 const lesionOf = (regions: readonly AnyRegion[]): WalkLesion => ({
@@ -38,8 +38,8 @@ describe('every drawn nerve and pathway can be walked (P42)', () => {
       for (const t of ['motor', 'posterior', 'pain']) assert.ok(WALKS.some((w) => w.id === `tract|${x}|${t}`));
     }
     assert.equal(WALKS.filter((w) => w.group === 'visual pathway').length, visionFibres(KB, RENDER).length);
-    assert.equal(WALKS.filter((w) => w.group === 'nerves of the arm').length, ARM_NERVES.length * 2);
-    assert.equal(WALKS.filter((w) => w.group === 'nerves of the leg').length, LEG_NERVES.length * 2);
+    assert.equal(WALKS.filter((w) => w.id.startsWith('nerve|') && w.group === 'nerves of the arm').length, ARM_NERVES.length * 2);
+    assert.equal(WALKS.filter((w) => w.id.startsWith('nerve|') && w.group === 'nerves of the leg').length, LEG_NERVES.length * 2);
     for (const w of WALKS) assert.ok(WALK_GROUPS.includes(w.group));
   });
 
@@ -171,5 +171,88 @@ describe('every drawn nerve and pathway can be walked (P42)', () => {
     assert.equal(stopIndexAt(w, 0), 0);
     assert.equal(stopIndexAt(w, (w.stops[here]?.point ?? 0) + 0.4), here);
     assert.equal(stopIndexAt(w, w.points.length - 1), w.stops.length - 1);
+  });
+});
+
+describe('the walks are one world that can be roamed (P43)', () => {
+  const at = (id: string, pointProgress: number) => crossings(WALKS, walk(id), pointAlong(walk(id), pointProgress)).map((c) => c.walk.id);
+
+  it('joins every walk to every other: from any nerve, any other can be reached by stepping across', () => {
+    const first = WALKS[0];
+    assert.ok(first);
+    const world = reachable(WALKS, first);
+    assert.equal(world.size, WALKS.length, `${WALKS.filter((w) => !world.has(w.id)).map((w) => w.id).join(', ')} cannot be reached`);
+  });
+
+  it('walks the plexuses too: every root into its trunk or part, and every trunk into the cords it forms', () => {
+    for (const x of SIDES) {
+      for (const seg of ['C5', 'C6', 'C7', 'C8', 'T1']) assert.ok(WALKS.some((w) => w.id === `root|${x}|${seg}`), `${x} ${seg}`);
+      for (const c of ['lateral', 'posterior', 'medial'] as const) {
+        for (const t of KB.plexus.cords.formedBy[c]) assert.ok(WALKS.some((w) => w.id === `plexus|${x}|${t}|${c}`), `${x} ${t} to ${c}`);
+      }
+      // L4 serves both parts of the lumbosacral plexus, so it has a walk into each.
+      assert.ok(WALKS.some((w) => w.id === `root|${x}|L4|lumbar`) && WALKS.some((w) => w.id === `root|${x}|L4|sacral`));
+      for (const limb of ['', '|foot']) for (const t of ['motor', 'posterior', 'pain']) assert.ok(WALKS.some((w) => w.id === `tract|${x}|${t}${limb}`));
+    }
+    // A root walk is cut at its start when the whole root is lost, and at the trunk by a lesion of the trunk.
+    const c8 = walk('root|L|C8');
+    const root = lesionOf([{ at: { segments: ['C8', 'C8'] }, sides: ['L'], compartments: ['dorsal_root', 'ventral_root'], severity: 'complete', portion: 'whole' }]);
+    assert.equal(c8.fate(root).diesAt, 0);
+    assert.equal(walk('root|R|C8').fate(root).diesAt, -1);
+    const trunk = c8.fate(lesionOf([{ plexus: 'lower_trunk', sides: ['L'], severity: 'complete' }])).diesAt;
+    assert.ok(trunk > 0 && c8.stops.some((q) => q.point === trunk && q.ref?.kind === 'plexus' && q.ref.site === 'lower_trunk'));
+    // Only the ventral root lost: the walk is weakened, not stopped.
+    const ventral = c8.fate(lesionOf([{ at: { segments: ['C8', 'C8'] }, sides: ['L'], compartments: ['ventral_root'], severity: 'complete', portion: 'whole' }]));
+    assert.deepEqual(ventral, { diesAt: -1, dimmed: true });
+  });
+
+  it('offers, where the walker stands, the walks that meet there and no others', () => {
+    // At the eye the three nerves that move it meet; midway along the third nerve, nothing does.
+    const eye = at('cranial|L|III', walk('cranial|L|III').points.length - 1);
+    for (const id of ['cranial|L|IV', 'cranial|L|VI']) assert.ok(eye.includes(id), `${id} at the eye`);
+    assert.ok(!eye.some((id) => id.includes('|R|')), 'the other side is not within reach at the eye');
+    // Where the sciatic nerve ends, its two branches begin.
+    const end = at('nerve|L|sciatic', walk('nerve|L|sciatic').points.length - 1);
+    assert.deepEqual(end.slice(0, 2).sort(), ['nerve|L|common_fibular', 'nerve|L|tibial']);
+    // Where the radial nerve arises, the posterior cord's walks arrive and the axillary nerve leaves.
+    const origin = at('nerve|L|radial', 0);
+    assert.ok(origin.includes('nerve|L|axillary'));
+    assert.ok(origin.some((id) => id.startsWith('plexus|L|') && id.endsWith('|posterior')));
+    // The corticospinal walk to the hand ends at the C8 root, which leads on into the plexus.
+    assert.ok(at('tract|L|motor', walk('tract|L|motor').points.length - 1).includes('root|L|C8'));
+  });
+
+  it('lands the walker on the other walk at its nearest place, within reach, and can step back', () => {
+    let pairs = 0;
+    for (const w of WALKS) {
+      for (const pp of [0, (w.points.length - 1) / 2, w.points.length - 1]) {
+        const here = pointAlong(w, pp);
+        const found = crossings(WALKS, w, here, REACH, 99);
+        let last = -1;
+        for (const c of found) {
+          assert.ok(c.distance <= REACH + 1e-9 && c.distance >= last - 1e-9, `${w.id}: out of order or out of reach`);
+          last = c.distance;
+          // The landing is on the other walk's own line, and is the nearest place on it.
+          const landed = pointAlong(c.walk, c.pointProgress);
+          assert.ok(Math.hypot(landed.x - c.at.x, landed.y - c.at.y, landed.z - c.at.z) < 1e-9);
+          assert.ok(Math.abs(nearestOn(c.walk, here).distance - c.distance) < 1e-12);
+          // From the landing, the walk just left is within reach again.
+          assert.ok(nearestOn(w, c.at).distance <= REACH + 1e-9, `${w.id} → ${c.walk.id}: no way back`);
+          pairs++;
+        }
+      }
+    }
+    assert.ok(pairs > 300, `${pairs} crossings checked`);
+  });
+
+  it('offers at most six, and no more than three of one kind', () => {
+    for (const w of WALKS) {
+      const found = crossings(WALKS, w, pointAlong(w, 1));
+      assert.ok(found.length <= 6);
+      const groups = new Map<string, number>();
+      for (const c of found) groups.set(c.walk.group, (groups.get(c.walk.group) ?? 0) + 1);
+      for (const n of groups.values()) assert.ok(n <= 3);
+      assert.ok(!found.some((c) => c.walk.id === w.id));
+    }
   });
 });
