@@ -85,7 +85,7 @@ In the order advised. None of it needs a new source except where said.
 5. **Draw calls**: merge the fixed strands by material; the aim is under a hundred a frame.
 6. **A way to check the scene without eyes**: a hook that steps the frame loop by hand, and the
    camera's path mathematics moved out of the renderer into something the tests can reach.
-7. **One search** in place of two lists of 344 and 151 entries.
+7. **One search** in place of two lists of 341 and 150 entries.
 8. **A first screen** that says what this is and offers three things to try.
 9. **Split `main.ts`** (1,558 lines) by concern.
 10. **A full mutation run**, eight phases overdue.
