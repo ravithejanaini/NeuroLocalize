@@ -294,6 +294,32 @@ let walkCrossings: Offer[] = [];
 let crossingsAt = 0;
 let crossLabels: HTMLElement[] = [];
 let scrubbing = false;
+/** P45: the walk's card is folded to its name until asked, and stays as the walker left it. */
+let walkCardOpen = false;
+/** P45: each walk name's box, measured when its text is set, so a frame never reads the layout. */
+const walkBox = new Map<HTMLElement, { w: number; h: number; dx: number; dy: number }>();
+const measureWalkLabel = (el: HTMLElement): void => {
+  walkBox.set(el, { w: el.offsetWidth, h: el.offsetHeight, dx: el.offsetLeft, dy: el.offsetTop });
+};
+/** P45: the walk's own panels, as boxes on the stage that no name may lie under. Read a few times a second. */
+let walkPanels: LabelBox[] = [];
+function measureWalkPanels(): void {
+  const base = viewport.getBoundingClientRect();
+  // Each control by itself, not the rows they sit in: a row is mostly empty stage.
+  walkPanels = [...document.querySelectorAll<HTMLElement>('#walk-exit, .walk-title, #walk-card, .walk-switch > *, .walk-ctl, .walk-route:not([hidden]), .walk-hint:not([hidden])')]
+    .map((el) => el.getBoundingClientRect())
+    .filter((r) => r.width > 0 && r.height > 0)
+    .map((r) => ({ left: r.left - base.left, top: r.top - base.top, width: r.width, height: r.height, rank: -1, shown: true }));
+}
+const setWalkCard = (open: boolean): void => {
+  walkCardOpen = open;
+  $('#walk-card').dataset.open = String(open);
+  $('#walk-body').hidden = !open;
+  const b = $('#walk-more');
+  b.setAttribute('aria-expanded', String(open));
+  b.textContent = open ? 'Less' : 'More';
+  measureWalkPanels();
+};
 const esc = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 /** The walk whose drawn line passes nearest a point of the screen, within reach of a finger. */
@@ -348,7 +374,8 @@ function renderWalkStop(i: number): void {
           ? 'The lesion weakens the signal on this pathway.'
           : '';
   const card = s.ref ? partCardHtml(describePart(RENDER, s.ref, state.timepoint)).replace(/<h3>[\s\S]*?<\/h3>/, '') : '';
-  $('#walk-body').innerHTML = `<h3>${esc(s.label)}</h3>${s.note ? `<p class="walk-note">${esc(s.note)}</p>` : ''}${card}`;
+  $('#walk-stop').textContent = s.label;
+  $('#walk-body').innerHTML = `${s.note ? `<p class="walk-note">${esc(s.note)}</p>` : ''}${card}`;
   $('#walk-body').scrollTop = 0;
   document.querySelectorAll<HTMLButtonElement>('#walk-route button').forEach((b, j) => {
     if (j === i) {
@@ -401,7 +428,9 @@ function startWalk(w: Walk, fromStop = 0, landing?: { readonly at: { readonly x:
     const el = document.createElement('span');
     el.className = 'lbl lbl-walk';
     el.textContent = `${i + 1} · ${s.label}`;
+    el.style.visibility = 'hidden';
     labelLayer.append(el);
+    measureWalkLabel(el);
     return el;
   });
   crossLabels = Array.from({ length: 6 }, () => {
@@ -411,6 +440,7 @@ function startWalk(w: Walk, fromStop = 0, landing?: { readonly at: { readonly x:
     labelLayer.append(el);
     return el;
   });
+  setWalkCard(walkCardOpen);
   refreshWalkLesion();
   if (!landing) renderWalkStop(Math.min(w.stops.length - 1, Math.max(0, fromStop)));
   if (!landing) $<HTMLButtonElement>('#walk-next').focus();
@@ -422,7 +452,10 @@ function endWalk(): void {
   walkStop = -1;
   walkView.stop(camera);
   pulses.setScale(1);
-  for (const el of [...walkLabels, ...crossLabels]) el.remove();
+  for (const el of [...walkLabels, ...crossLabels]) {
+    el.remove();
+    walkBox.delete(el);
+  }
   walkLabels = [];
   crossLabels = [];
   walkCrossings = [];
@@ -461,7 +494,7 @@ function refreshCrossings(now: number): void {
     ? `<span class="walk-switch-h">Step across to</span>${found
         .map(
           (c, i) =>
-            `<button type="button" data-cross="${i}" data-rel="${c.relation.kind}"><span><b>${i + 1}</b> ${esc(c.walk.name)}</span><i>${esc(relationWords(c.relation))}</i></button>`,
+            `<button type="button" data-cross="${i}" data-rel="${c.relation.kind}" title="${esc(`${c.walk.name}: ${relationWords(c.relation)}`)}"><b>${i + 1}</b>${esc(c.walk.name)}<i>${esc(relationWords(c.relation))}</i></button>`,
         )
         .join('')}`
     : '';
@@ -469,7 +502,9 @@ function refreshCrossings(now: number): void {
     const c = found[i];
     el.textContent = c ? `⇄ ${i + 1} · ${c.walk.name}${c.relation.kind === 'near' ? ' (drawn nearby)' : ''}` : '';
     el.dataset.rel = c?.relation.kind ?? '';
+    measureWalkLabel(el);
   });
+  measureWalkPanels();
 }
 
 /** Each frame of a walk: the panel follows the stop, the scrubber the position, the names the stops ahead. */
@@ -483,12 +518,12 @@ function walkFrame(f: { stop: number; progress: number; playing: boolean; facing
   const h = viewport.clientHeight;
   refreshCrossings(performance.now());
   const here = walkView.position();
+  // P45: every name that could be drawn, then thinned so that none lies on another or under a panel.
+  // The step-across signposts matter most, then the stops in the order they come.
+  const wanted: { el: HTMLElement; x: number; y: number; rank: number; opacity: number }[] = [];
   crossLabels.forEach((el, i) => {
     const c = walkCrossings[i];
-    if (!c) {
-      el.style.visibility = 'hidden';
-      return;
-    }
+    if (!c) return;
     // The signpost stands a little along the other walk, away from where the walker is, so it points the way.
     const lead = nearestOn(c.walk, { x: here.x, y: here.y, z: here.z });
     const j = Math.min(c.walk.points.length - 1, Math.floor(lead.pointProgress) + 1);
@@ -496,9 +531,8 @@ function walkFrame(f: { stop: number; progress: number; playing: boolean; facing
     const d = Math.hypot(q.x - c.at.x, q.y - c.at.y, q.z - c.at.z) || 1;
     const t = Math.min(1, 1.2 / d);
     projected.set(c.at.x + (q.x - c.at.x) * t, c.at.y + (q.y - c.at.y) * t + 0.12 * (i % 3), c.at.z + (q.z - c.at.z) * t).project(camera);
-    const visible = projected.z < 1 && Math.abs(projected.x) < 1 && Math.abs(projected.y) < 1;
-    el.style.visibility = visible ? 'visible' : 'hidden';
-    if (visible) el.style.transform = `translate(${((projected.x + 1) / 2) * w}px, ${((1 - projected.y) / 2) * h}px)`;
+    if (projected.z < 1 && Math.abs(projected.x) < 1 && Math.abs(projected.y) < 1)
+      wanted.push({ el, x: ((projected.x + 1) / 2) * w, y: ((1 - projected.y) / 2) * h, rank: 0, opacity: 1 });
   });
   $('#walk-facing').textContent = f.facing === 1 ? 'facing the way the signal runs' : 'facing against the signal';
   walkLabels.forEach((el, i) => {
@@ -507,13 +541,28 @@ function walkFrame(f: { stop: number; progress: number; playing: boolean; facing
     const far = camera.position.distanceTo(at);
     projected.copy(at).project(camera);
     // Only the stops ahead and near: the rest would pile up.
-    const visible = projected.z < 1 && Math.abs(projected.x) < 1 && Math.abs(projected.y) < 1 && far < 9 && far > 0.5 && i >= f.stop;
-    el.style.visibility = visible ? 'visible' : 'hidden';
-    if (visible) {
-      el.style.opacity = String(Math.min(1, Math.max(0.25, 1.3 - far / 7)));
-      el.style.transform = `translate(${((projected.x + 1) / 2) * w + 14}px, ${((1 - projected.y) / 2) * h}px)`;
-    }
+    if (projected.z < 1 && Math.abs(projected.x) < 1 && Math.abs(projected.y) < 1 && far < 9 && far > 0.5 && i >= f.stop)
+      wanted.push({ el, x: ((projected.x + 1) / 2) * w + 14, y: ((1 - projected.y) / 2) * h, rank: 1 + i - f.stop, opacity: Math.min(1, Math.max(0.25, 1.3 - far / 7)) });
   });
+  const boxes: LabelBox[] = [
+    ...walkPanels,
+    ...wanted.map((n) => {
+      const m = walkBox.get(n.el) ?? { w: 0, h: 0, dx: 0, dy: 0 };
+      // A name that would run off the stage's right edge is drawn ending at it.
+      n.x = Math.max(4 - m.dx, Math.min(n.x, w - 4 - m.w - m.dx));
+      return { left: n.x + m.dx, top: n.y + m.dy, width: m.w, height: m.h, rank: n.rank, shown: n.el.style.visibility === 'visible' };
+    }),
+  ];
+  const show = declutter(boxes, 4).slice(walkPanels.length);
+  const placed = new Set<HTMLElement>();
+  wanted.forEach(({ el, x, y, opacity }, i) => {
+    if (show[i] !== true) return;
+    placed.add(el);
+    el.style.visibility = 'visible';
+    el.style.opacity = String(opacity);
+    el.style.transform = `translate(${x}px, ${y}px)`;
+  });
+  for (const el of [...crossLabels, ...walkLabels]) if (!placed.has(el) && el.style.visibility !== 'hidden') el.style.visibility = 'hidden';
 }
 
 // Pointer: one finger turns (shift moves along the cord), two fingers pinch to zoom.
@@ -785,6 +834,23 @@ canvas.addEventListener(
     else endWalk();
   });
   $('#walk-exit').addEventListener('click', endWalk);
+  // P45: the card's body, the list of stops and the keys each open on asking and fold away again.
+  $('#walk-more').addEventListener('click', () => setWalkCard(!walkCardOpen));
+  for (const [button, part] of [
+    ['#walk-stops', '#walk-route'],
+    ['#walk-help', '#walk-hint'],
+  ] as const) {
+    $(button).addEventListener('click', () => {
+      const el = $(part);
+      el.hidden = !el.hidden;
+      $(button).setAttribute('aria-expanded', String(!el.hidden));
+      if (!el.hidden && part === '#walk-route') document.querySelector('#walk-route [aria-current="step"]')?.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+      measureWalkPanels();
+    });
+  }
+  // The card grows and shrinks with each stop's name, and the controls with the offers: each is watched.
+  const panelWatch = new ResizeObserver(measureWalkPanels);
+  for (const sel of ['#walk', '#walk-card', '.walk-top', '.walk-foot']) panelWatch.observe($(sel));
   // P43: the roaming controls. Forward and Backward move for as long as they are held.
   for (const [id, way] of [
     ['#walk-fwd', 1],

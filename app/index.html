@@ -82,32 +82,42 @@ body[data-present="true"] .part-pick,body[data-present="true"] .part-card{displa
 .pc-walks{display:flex;flex-wrap:wrap;gap:6px}
 .pc-walks button{background:none;border:1px solid var(--stage-text);color:var(--stage-text);font:inherit;font-size:11.5px;padding:5px 9px;cursor:pointer}
 .pc-walks button:hover{background:var(--stage-text);color:var(--stage)}
-/* P42: walking along a nerve. The panel floats over the stage; only its own parts take the pointer. */
-.walk{position:absolute;inset:0;display:flex;flex-direction:column;gap:8px;padding:12px;pointer-events:none;color:var(--stage-text);font-family:var(--f-body);z-index:4}
+/* P42: walking along a nerve. The panel floats over the stage; only its own parts take the pointer.
+   P45: the scene comes first. One row on top, one bar of controls below, the card folded to its
+   name until asked, and the list of stops and the keys put behind a button each. */
+.walk{position:absolute;inset:0;display:flex;flex-direction:column;gap:8px;padding:10px 12px;pointer-events:none;color:var(--stage-text);font-family:var(--f-body);z-index:4}
 .walk[hidden]{display:none}
 .walk > *{pointer-events:none;flex:0 0 auto}
 .walk-top{display:flex;gap:12px;align-items:flex-start}
 .walk-top > *{pointer-events:auto}
-.walk-top h2{font-size:16px;margin:0;font-weight:600;text-shadow:0 1px 6px var(--stage)}
-.walk-top p{margin:2px 0 0;font-size:12px;color:var(--stage-dim);max-width:60ch;text-shadow:0 1px 6px var(--stage)}
-.walk button,.walk select{background:rgba(14,17,24,.85);border:1px solid #2C3342;color:var(--stage-text);font-family:var(--f-mono);font-size:11px;padding:7px 11px;cursor:pointer;min-height:32px}
+.walk-title{min-width:0}
+.walk-top h2{font-size:15px;margin:0;font-weight:600;text-shadow:0 1px 6px var(--stage);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.walk-top p{margin:2px 0 0;font-size:11.5px;color:var(--stage-dim);text-shadow:0 1px 6px var(--stage);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.walk button,.walk select{background:rgba(14,17,24,.85);border:1px solid #2C3342;color:var(--stage-text);font-family:var(--f-mono);font-size:11px;padding:6px 10px;cursor:pointer;min-height:32px}
 .walk button:hover:not(:disabled){border-color:var(--stage-text)}
 .walk button:disabled{opacity:.4;cursor:default}
+.walk button[aria-expanded="true"]{background:var(--stage-text);color:var(--stage);border-color:var(--stage-text)}
 .walk > .walk-mid{flex:1 1 auto;min-height:0;display:flex;justify-content:flex-end;align-items:flex-start}
-.walk-card{pointer-events:auto;max-height:100%;width:min(350px,100%);overflow:auto;background:rgba(14,17,24,.9);border:1px solid #2C3342;padding:12px 14px;font-size:12.5px;line-height:1.45}
-.walk-card h3{font-size:14.5px;margin:0 0 6px;font-weight:600}
+.walk-card{pointer-events:auto;max-height:100%;width:min(340px,100%);display:flex;flex-direction:column;background:rgba(14,17,24,.88);border:1px solid #2C3342;font-size:12.5px;line-height:1.45}
+.walk-card-head{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;padding:8px 10px 8px 12px}
+.walk-card-head > div{min-width:0}
+.walk-card h3{font-size:13.5px;margin:1px 0 0;font-weight:600;line-height:1.3}
+.walk-card-head button{flex:0 0 auto}
+#walk-body{overflow:auto;scrollbar-width:thin;scrollbar-color:#3A4253 transparent;min-height:0;padding:0 14px 12px;border-top:1px solid #2C3342}
+#walk-body[hidden]{display:none}
 .walk-card h4{font-family:var(--f-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--stage-dim);margin:10px 0 4px;font-weight:400}
 .walk-card ul{margin:0;padding-left:16px}
 .walk-card li{margin:0 0 4px}
 .walk-card p{margin:0 0 6px}
 .walk-card .quiet{color:var(--stage-dim)}
-.walk-count{font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--stage-dim)}
-.walk-lesion{border-left:3px solid var(--lesion);padding:4px 0 4px 8px;color:var(--stage-text)}
+.walk-count{font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--stage-dim);margin:0!important}
+.walk-lesion{border-left:3px solid var(--lesion);padding:4px 10px 4px 8px;margin:0 10px 8px 12px!important;color:var(--stage-text)}
 .walk-lesion[data-state="beyond"],.walk-lesion[data-state="weakened"]{border-left-color:var(--stage-dim);color:var(--stage-dim)}
-.walk-note{color:var(--nerve-glow)}
+.walk-note{color:var(--nerve-glow);margin-top:10px!important}
 .walk-foot{display:flex;flex-direction:column;gap:6px}
 .walk-foot > *{pointer-events:auto}
-.walk-route{display:flex;gap:4px;margin:0;padding:0 0 2px;list-style:none;overflow-x:auto;scrollbar-width:thin}
+.walk-route{display:flex;gap:4px;margin:0;padding:0 0 2px;list-style:none;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#3A4253 transparent}
+.walk-route[hidden]{display:none}
 .walk-route li{flex:0 0 auto}
 .walk-route button{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;font-family:var(--f-body);font-size:11.5px}
 .walk-route b{font-family:var(--f-mono);font-weight:400;color:var(--stage-dim);margin-right:4px}
@@ -115,29 +125,32 @@ body[data-present="true"] .part-pick,body[data-present="true"] .part-card{displa
 .walk-route button[aria-current="step"] b{color:var(--stage)}
 .walk-route button[data-cut="here"]{border-color:var(--lesion);box-shadow:inset 0 -3px 0 var(--lesion)}
 .walk-route button[data-cut="beyond"]{opacity:.55}
-.walk-ctl{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.walk-ctl input[type=range]{flex:1 1 140px;min-width:100px;accent-color:var(--stage-cord)}
-.walk-ctl label{font-family:var(--f-mono);font-size:10.5px;color:var(--stage-dim);display:flex;align-items:center;gap:6px}
-.walk-hint{margin:0;font-family:var(--f-mono);font-size:10px;color:var(--stage-dim)}
-.walk-switch{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:thin;min-height:0}
+.walk-ctl{display:flex;gap:8px;align-items:center;background:rgba(14,17,24,.72);border:1px solid #2C3342;padding:5px}
+.walk-group{display:flex;gap:4px;align-items:center;flex:0 0 auto}
+.walk-group button{min-width:34px}
+.walk-ctl input[type=range]{flex:1 1 120px;min-width:80px;accent-color:var(--stage-cord)}
+.walk-hint{margin:0;align-self:flex-start;font-family:var(--f-mono);font-size:10.5px;color:var(--stage-text);background:rgba(14,17,24,.9);border:1px solid #2C3342;padding:6px 10px}
+.walk-hint[hidden]{display:none}
+.walk-switch{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#3A4253 transparent;min-height:0}
 .walk-switch:empty{display:none}
-.walk-switch-h{font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--autonomic);flex:0 0 auto;margin-right:4px}
-.walk-switch button{flex:0 0 auto;border-color:var(--autonomic);font-family:var(--f-body);font-size:11.5px;white-space:nowrap;display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;max-width:300px}
-.walk-switch button span{overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.walk-switch-h{font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--autonomic);flex:0 0 auto;margin-right:4px;text-shadow:0 1px 6px var(--stage)}
+.walk-switch button{flex:0 0 auto;border-color:var(--autonomic);font-family:var(--f-body);font-size:11.5px;white-space:nowrap;text-align:left;max-width:280px;overflow:hidden;text-overflow:ellipsis;min-height:30px;padding:5px 9px}
 .walk-switch button b{font-family:var(--f-mono);font-weight:400;color:var(--autonomic);margin-right:4px}
+.walk-switch button i{font-style:normal;font-family:var(--f-mono);font-size:10px;color:var(--stage-dim);margin-left:6px}
 .walk-switch button:hover{background:var(--autonomic);color:var(--stage)}
-.walk-switch button:hover b{color:var(--stage)}
-.walk-roam button{touch-action:none;user-select:none}
-.walk-facing{font-family:var(--f-mono);font-size:10px;color:var(--stage-dim)}
-.lbl-cross{color:var(--autonomic);font-size:11px;font-weight:600;text-shadow:0 0 6px var(--stage),0 0 2px var(--stage)}
-.lbl-cross[data-rel="near"]{color:var(--stage-dim);font-weight:400;font-style:italic}
-.walk-switch button i{font-style:normal;font-family:var(--f-mono);font-size:10px;color:var(--stage-dim);overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.walk-switch button:hover b,.walk-switch button:hover i{color:var(--stage)}
 .walk-switch button[data-rel="near"]{border-style:dashed;border-color:var(--stage-dim)}
 .walk-switch button[data-rel="near"] b{color:var(--stage-dim)}
-.walk-switch button:hover i{color:var(--stage)}
+.walk-roam button{touch-action:none;user-select:none}
+.walk-facing{font-family:var(--f-mono);font-size:10px;color:var(--stage-dim)}
+.walk-facing::before{content:"· "}
+.lbl-cross{color:var(--autonomic);font-size:11px;font-weight:600;text-shadow:0 0 6px var(--stage),0 0 2px var(--stage)}
+.lbl-cross[data-rel="near"]{color:var(--stage-dim);font-weight:400;font-style:italic}
 .hover-name{position:absolute;left:0;top:0;z-index:5;pointer-events:none;background:rgba(14,17,24,.92);border:1px solid #2C3342;color:var(--stage-text);font-family:var(--f-body);font-size:12px;padding:3px 8px;white-space:nowrap}
 .hover-name[hidden]{display:none}
 .lbl-walk{color:var(--stage-text);font-size:11px;font-weight:600;text-shadow:0 0 6px var(--stage),0 0 2px var(--stage)}
+/* P45: a name on the walk is never wider than a phone's stage; the full name is on its button. */
+.lbl-walk,.lbl-cross{max-width:min(44ch,calc(100vw - 32px));overflow:hidden;text-overflow:ellipsis}
 body[data-walk="true"] .stations,body[data-walk="true"] .hint,body[data-walk="true"] .legend,body[data-walk="true"] .part-pick,body[data-walk="true"] .part-card,body[data-walk="true"] .hud-foot{display:none}
 body[data-walk="true"] .stage canvas{cursor:move}
 @media (max-width:860px){
@@ -148,12 +161,15 @@ body[data-walk="true"] .stage canvas{cursor:move}
   /* On a phone the walk takes the whole screen: the instrument is put away until it ends. */
   body[data-walk="true"] .app{grid-template-rows:minmax(0,1fr)}
   body[data-walk="true"] .panel,body[data-walk="true"] .tabs{display:none}
-  .walk-card{width:100%;max-height:min(100%,34vh);padding:8px 10px}
-  .walk-facing,.walk-ctl label{display:none}
-  .walk-ctl{flex-wrap:nowrap}
-  .walk-roam button{flex:1 1 0;min-width:0;padding:7px 2px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .walk-card{width:100%;max-height:min(100%,40vh)}
+  .walk-ctl{flex-wrap:wrap;gap:6px}
+  .walk-ctl input[type=range]{order:-1;flex:1 1 100%}
+  .walk-group{flex:1 1 auto}
+  .walk-group button,.walk-group label,.walk-group select{flex:1 1 0;min-width:0}
+  .walk-group select{width:100%}
   .walk-switch-h{display:none}
-  .walk-hint{display:none}
+  .walk-switch button i{display:none}
+  .walk-ctl label{display:none}
   .walk button,.walk select{min-height:40px}
 }
 @media (max-width:860px){.hud-top{top:8px;left:8px;right:8px}.part-pick{width:100%;flex-wrap:nowrap}.part-pick label{flex:1 1 0;min-width:0}.part-pick select{width:100%;max-width:none;padding:8px}.part-card{left:8px;right:8px;bottom:8px;width:auto;max-height:48%}}
@@ -518,33 +534,41 @@ body[data-present="true"] .hud.hint,body[data-present="true"] .legend,body[data-
     <section class="walk" id="walk" aria-label="Walking along a nerve" hidden>
       <header class="walk-top">
         <button type="button" id="walk-exit">← Leave</button>
-        <div><h2 id="walk-name"></h2><p id="walk-runs"></p></div>
+        <div class="walk-title"><h2 id="walk-name"></h2><p><span id="walk-runs"></span> <span class="walk-facing" id="walk-facing"></span></p></div>
       </header>
       <div class="walk-mid">
-        <aside class="walk-card" aria-live="polite">
-          <p class="walk-count" id="walk-count"></p>
+        <aside class="walk-card" id="walk-card" data-open="false" aria-live="polite">
+          <div class="walk-card-head">
+            <div><p class="walk-count" id="walk-count"></p><h3 id="walk-stop"></h3></div>
+            <button type="button" id="walk-more" aria-expanded="false" aria-controls="walk-body">More</button>
+          </div>
           <p class="walk-lesion" id="walk-lesion" hidden></p>
-          <div id="walk-body"></div>
+          <div id="walk-body" hidden></div>
         </aside>
       </div>
       <footer class="walk-foot">
+        <ol class="walk-route" id="walk-route" aria-label="Stops along the way" hidden></ol>
+        <p class="walk-hint" id="walk-hint" hidden>Hold W / S or ▲ ▼ to move · drag to look · Q turns round · 1–6 or double-click a nerve to step across · ← → stops · space plays · Esc leaves</p>
         <div class="walk-switch" id="walk-switch" aria-live="polite" aria-label="Nerves within a step"></div>
-        <div class="walk-ctl walk-roam">
-          <button type="button" id="walk-fwd" aria-label="Move forward, while held">▲ Forward</button>
-          <button type="button" id="walk-rev" aria-label="Move backward, while held">▼ Backward</button>
-          <button type="button" id="walk-turn">⟲ Turn round</button>
-          <button type="button" id="walk-ahead">Look ahead</button>
-          <span class="walk-facing" id="walk-facing"></span>
-        </div>
-        <ol class="walk-route" id="walk-route" aria-label="Stops along the way"></ol>
         <div class="walk-ctl">
-          <button type="button" id="walk-prev" aria-label="Previous stop">◀ Back</button>
-          <button type="button" id="walk-play" aria-pressed="false">Play</button>
-          <button type="button" id="walk-next" aria-label="Next stop">On ▶</button>
+          <span class="walk-group">
+            <button type="button" id="walk-prev" aria-label="Previous stop" title="Previous stop (←)">◀</button>
+            <button type="button" id="walk-play" aria-pressed="false">Play</button>
+            <button type="button" id="walk-next" aria-label="Next stop" title="Next stop (→)">▶</button>
+          </span>
           <input type="range" id="walk-scrub" min="0" max="1000" value="0" aria-label="Position along the walk">
-          <label>Pace <select id="walk-speed"><option value="0.5">slow</option><option value="1" selected>steady</option><option value="2">quick</option></select></label>
+          <span class="walk-group walk-roam">
+            <button type="button" id="walk-fwd" aria-label="Move forward, while held" title="Move forward while held (W)">▲</button>
+            <button type="button" id="walk-rev" aria-label="Move backward, while held" title="Move backward while held (S)">▼</button>
+            <button type="button" id="walk-turn" aria-label="Turn round" title="Turn round (Q)">⟲</button>
+            <button type="button" id="walk-ahead" title="Look along the nerve again">Ahead</button>
+          </span>
+          <span class="walk-group">
+            <label><span class="sr-only">Pace</span><select id="walk-speed" title="Pace"><option value="0.5">slow</option><option value="1" selected>steady</option><option value="2">quick</option></select></label>
+            <button type="button" id="walk-stops" aria-expanded="false" aria-controls="walk-route" title="List the stops">Stops</button>
+            <button type="button" id="walk-help" aria-expanded="false" aria-controls="walk-hint" aria-label="Keys and gestures" title="Keys and gestures">?</button>
+          </span>
         </div>
-        <p class="walk-hint">Hold W / S to move · drag to look · Q turns round · 1–6 or double-click a nerve to step across · ← → stops · space plays · Esc leaves</p>
       </footer>
     </section>
     <aside class="part-card" id="part-card" aria-live="polite" aria-label="The chosen part" hidden>

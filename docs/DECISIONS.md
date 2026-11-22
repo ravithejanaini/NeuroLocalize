@@ -2567,3 +2567,17 @@ scrubber follows unless it is being dragged, and a change of mode ends the walk.
 
 **D246 — No mutation run.** Nothing the engine reads changed. The last full run was at P35; a run
 is the tenth recommendation of the inspection.
+
+## P45 — The walk, given back to the scene
+
+**D247 — The walk's card is folded until asked.** It shows the stop's count and name, and the
+lesion line when there is one. **More** opens the rest, and the choice holds from stop to stop.
+
+**D248 — One bar of controls.** Playing, scrubbing, moving and turning sit in one bar; the list of
+stops and the keys are each behind a button. A button that shows only a mark is named for a screen
+reader and carries its key in its title.
+
+**D249 — The walk's names are thinned like the stations'.** The signposts and stop names go
+through `declutter()` with the walk's own controls as boxes that always win, so no name lies on
+another, under a control, or past the stage's edge. The controls are measured when they change
+size, not every frame.
