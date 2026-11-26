@@ -2581,3 +2581,56 @@ reader and carries its key in its title.
 through `declutter()` with the walk's own controls as boxes that always win, so no name lies on
 another, under a control, or past the stage's edge. The controls are measured when they change
 size, not every frame.
+
+## Mobile — the iOS and Android apps
+
+`docs/mobile-plan.md`. Decided with the user on 2026-11-26, who took every recommendation in the
+plan's section 5. These entries are decided and not yet built; each names the task that makes it
+true. No knowledge-base row, engine rule or frozen expectation changes.
+
+**D250 — The apps are the web build inside Capacitor 8.** Not a rewrite: `src/` is 15,840 lines and
+`render/` decides nothing, so a native rewrite would redo about 5,000 lines of Three.js and DOM and
+re-check P36–P45 by hand. Approved packages (A1), pinned exactly: `@capacitor/core`, `cli`, `ios`
+and `android` 8.6.3; `app` 8.1.2; `preferences` 8.0.1; `filesystem` 8.1.5; `share` 8.0.3;
+`splash-screen` 8.0.2; `three` 0.170.0 as a dev dependency; `@fontsource/archivo` 5.3.0,
+`@fontsource-variable/source-serif-4` 5.3.1 and `@fontsource/ibm-plex-mono` 5.3.0; and a one-off
+`npx @capacitor/assets@4.0.0`, not saved. Anything else needs a new approval. Only
+`src/render/platform.ts` sees the native layer (M2-2). iOS builds on GitHub's macOS runners, so no
+Mac is needed (A6).
+
+**D251 — One self-contained build for the web and the apps.** Three.js and the fonts are served
+from `dist/`, copied from the pinned packages, not fetched from a CDN (A8). This supersedes the
+part of D50 that caches "the pinned Three.js build" from its remote URL; the rest of D50 stands.
+Made true by M1-1 and M1-2.
+
+**D252 — In the apps, progress is kept by Capacitor Preferences.** The same key,
+`neurolocalize.progress.v1`, every access still guarded. The operating system may clear a WebView's
+storage; Preferences survives it and goes into device backups. D49's file carry is unchanged, and
+the web and claude.ai keep browser storage. Made true by M2-2 and M3-3.
+
+**D253 — No offline worker in the apps.** The files are already on the device, and a cache-first
+worker at Android's `https://localhost` would show the old build after every update. The worker
+stays for the standalone web build (D50). Made true by M2-2.
+
+**D254 — The education-only notice shows on phones.** Today it is hidden at 860 px and below, so on
+a phone the page never says it is a teaching tool. Its words do not change. Made true by M1-3; a
+first-run notice in the apps follows in M5-5.
+
+**D255 — Devices and orientation.** Universal on iOS, iPhone and iPad (A3). Phones are held in
+portrait for the first release; tablets turn either way, as Android 16 requires at 600 dp and up
+for apps targeting API 36 (A4). Made true by M3-3, M3-4 and M5-3.
+
+**D256 — The app ID is `io.github.ravithejanaini.neurolocalize`.** Reverse-DNS from the GitHub
+Pages domain the user owns (A2). It cannot change once a build reaches either store, so the first
+upload (M4-4) is the last moment to choose differently.
+
+**D257 — Free, with no purchases, listed under Education.** Medical is the secondary category on
+iOS (A5, A9). No paid-apps agreement, tax forms or bank account are needed.
+
+**D258 — "At the bedside" stays in the page for now.** It is render copy, not a knowledge-base
+claim (`app/index.html:660`, and D51). The plan made no recommendation; the user has not asked to
+change it. The store listing does not use it (M6-2), and the release review (M7-2) raises it again
+before submission, since reviewers read it as clinical use (A10).
+
+Open: which devices the user has for the manual gates (A7), needed from M2-1 on. No code licence
+for now (A11); decided before contributions are invited.

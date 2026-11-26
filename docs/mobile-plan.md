@@ -48,7 +48,7 @@ check it. An agent must look those facts up and must not fill them in from memor
 | Renderer: antialias on, pixel ratio capped at 2, a `requestAnimationFrame` loop every frame | `src/render/main.ts:154–155, 1691–1724` |
 | The theme follows the system only; nothing sets `data-theme` | `grep data-theme src/render/main.ts` → none |
 | Built size is 863 KB in 5 top-level entries, with Three.js and fonts not counted | `du -sh dist` |
-| Tests: 345 pass (the last `npm run verify` in this session) | |
+| Tests: 515 pass | `npm run verify`, 2026-11-26 |
 | The repo is public on GitHub, has no `.github/` CI and no LICENSE file | `gh repo view`, `ls` |
 | Node v24.18.0 is installed | `node --version` |
 | The latest decision is D249, so the next is D250 | `docs/DECISIONS.md` |
@@ -224,6 +224,11 @@ docs/             mobile-plan.md (this), mobile-spike.md, mobile-device-checks.m
 | A10 | **Wording "at the bedside"** (`app/index.html:660`) | Keep or reword | Your call. It is render copy, not a `kb/` claim, and reviewers read "bedside" as clinical use. The store listing (M6-2) won't use it either way |
 | A11 | **Code licence** | None today, so all rights reserved | Not needed for the stores. Decide before inviting contributions |
 
+**Answered 2026-11-26:** you took every recommendation. Recorded as D250–D258 in
+`docs/DECISIONS.md`. The app ID is `io.github.ravithejanaini.neurolocalize` (D256). "At the bedside"
+stays for now and comes up again at M7-2 (D258). No licence for now (A11).
+**Still open: A7.** Say which phones and tablets you have before M2-1.
+
 ---
 
 ## 6. Choosing the model and effort
@@ -305,10 +310,10 @@ while the testers stay opted in.
 
 | ID | Task | Who | Status |
 |---|---|---|---|
-| M0-1 | Decisions and approvals | You | todo |
+| M0-1 | Decisions and approvals | You | done except A7 |
 | M0-2 | Apple Developer Program and app record | You | todo |
 | M0-3 | Google Play Console and app | You | todo |
-| M0-4 | Record the decisions | Opus 5.5 · high | todo |
+| M0-4 | Record the decisions | Opus 5.5 · high | done (D250–D258) |
 | M1-1 | Serve Three.js from the build | Sonnet 5.5 · high | todo |
 | M1-2 | Serve the fonts from the build | Sonnet 5.5 · medium | todo |
 | M1-3 | Phone notice and the local date | Sonnet 5.5 · medium | todo |
@@ -1000,7 +1005,7 @@ each answer before you submit it.
   1. `git diff <commit before M1-1>..HEAD -- src/kb src/engine src/geometry src/practice
      spec/expectations` is **empty**. That proves no clinical claim changed. Then run
      `node scripts/check-freeze.ts`.
-  2. `npm run verify` exits 0, and the count equals 345 plus every test this plan added.
+  2. `npm run verify` exits 0, and the count equals 515 plus every test this plan added.
   3. Skip the mutation run, because nothing the engine reads changed. Record it the way D246 does.
   4. Fresh-install both release builds. Run the full device checklist in flight mode.
   5. Search the bundle for `http://` and `https://` and list each match. Only the links the user
